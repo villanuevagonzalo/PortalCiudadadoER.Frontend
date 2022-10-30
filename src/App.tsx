@@ -1,5 +1,3 @@
-
-import './Styles/App.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { DefaultLayout } from './Components/Layout/DefaultLayout';
 import { HomePage } from './Pages/HomePage';
@@ -10,13 +8,13 @@ import { RegisterPage } from './Pages/Auth/Register';
 import { LoginPage } from './Pages/Auth/Login';
 import { HomeRoute, PrivateRoute } from './Routes/PrivateRoute';
 import { DashboardCiudadanoPage } from './Pages/Dashboard/DashboardCiudadano';
+import { DashboardLayout } from './Components/Layout/DashboardLayout';
 
 function App() {
   return (
-    <div className="App">
     <BrowserRouter>
         <Routes>
-          <Route path="/" element={<DefaultLayout />}>
+          <Route element={<DefaultLayout />}>
             <Route index element={<HomeRoute />} />
             <Route path="Inicio" element={<HomePage />} />
             <Route path="Ingresar" element={<LoginPage />} />
@@ -31,9 +29,11 @@ function App() {
             />
             <Route path="*" element={<ErrorPage />} />
           </Route>
+          <Route element={<DashboardLayout />}>
+            <Route path="DashboardCiudadano" element={<DashboardCiudadanoPage />} />
+          </Route>
         </Routes>
     </BrowserRouter>
-    </div>
   );
 }
 
