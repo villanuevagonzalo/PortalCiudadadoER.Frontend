@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
+import { Spinner } from '../../Components/Elements/StyledComponents';
 
 const fields = signupFields;
 let fieldsState = {};
@@ -13,7 +14,7 @@ fields.forEach(field => (fieldsState as any)[field.id] = '');
 
 export const RegisterPage = () =>{
     
-    const { Signup } = useContext(AuthContext);
+    const { Signup, isLoading } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
@@ -48,7 +49,7 @@ export const RegisterPage = () =>{
                     />)}
                     <div className="text-center mt-6">
                         <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={HandleRegister}>
-                            Crear Cuenta
+                        {isLoading ? <Spinner/> : 'Crear Cuenta'} 
                         </button>
                     </div>
                 </form>
