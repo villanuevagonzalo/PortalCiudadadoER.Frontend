@@ -1,16 +1,23 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment } from 'react'
+import { Fragment, useContext } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 
 import { CgClose } from 'react-icons/cg'
 import { AiOutlineMenu, AiFillHome, AiOutlinePaperClip, AiOutlineSchedule } from 'react-icons/ai'
 import { BiLogIn, BiUserCircle } from 'react-icons/bi'
+import { MdHelpOutline } from 'react-icons/md'
 import { FaSearch } from 'react-icons/fa'
 
 import LogoER from '../../Assets/LOGO-ER.svg'
 import { Link, NavLink } from 'react-router-dom'
+import { AuthContext } from '../../Contexts/AuthContext'
 
 const navigation = [
+  { name: 'Inicio', icon: AiFillHome, href: '/', current: true },
+  { name: 'Servicios', icon: AiOutlinePaperClip, href: 'DashboardCiudadano', current: false },
+  { name: 'Ayuda', icon: MdHelpOutline, href: '/ayuda', current: false }
+]
+const navigation2 = [
   { name: 'Inicio', icon: AiFillHome, href: '/', current: true },
   { name: 'Mis Tramites', icon: AiOutlinePaperClip, href: 'tramites', current: false },
   { name: 'Servicios Online', icon: AiOutlineSchedule, href: 'servicios', current: false }
@@ -21,6 +28,9 @@ function classNames(...classes: string[]) {
 }
 
 export const HeaderComponet = () =>{
+
+  const { Logout, userData, isLogged } = useContext(AuthContext);
+
   return (
     <Disclosure as="nav" className="bg-white">
       {({ open }) => (
@@ -69,6 +79,7 @@ export const HeaderComponet = () =>{
                 </button>
 
                 {/* Profile dropdown */}
+                {isLogged ? 
                 <Menu as="div" className="ml-3 relative z-50">
                   <div>
                     <Menu.Button className="flex text-sm rounded-full ring-5 ring-gray-500 text-gray-500 hover:text-gray-700">
@@ -111,6 +122,7 @@ export const HeaderComponet = () =>{
                           <Link
                             to="#"
                             className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
+                            onClick={Logout} 
                           >
                             Cerrar Sesión
                           </Link>
@@ -118,7 +130,7 @@ export const HeaderComponet = () =>{
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu>:<></>}
               </div>
             </div>
           </div>

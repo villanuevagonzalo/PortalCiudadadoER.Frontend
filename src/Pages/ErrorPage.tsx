@@ -5,6 +5,7 @@ import { Hero } from "../Components/Elements/Hero";
 export const ErrorPage = () => {
   return (
     <Hero classes="bg-gradient-to-r from-rose-500 to-orange-500 text-white" tail={true}>
+    <div className="p-4">
       <h1 className="my-4 text-4xl lg:text-5xl font-bold leading-tight flex space-x-4 justify-center w-full md:justify-start">
         <BiError aria-hidden="true" className="h-10 lg:h-14 w-auto mr-4"/>
         ERROR
@@ -17,6 +18,7 @@ export const ErrorPage = () => {
          
         <BiArrowToLeft aria-hidden="true" className="h-6 w-auto mr-4"/> Volver al Inicio
         </Link>
+      </div>
       </div>
     </Hero>
   );

@@ -1,59 +1,33 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { loginFields } from "../../Interfaces/formFields";
 import Input from '../../Components/Forms/Input';
 import { Hero } from '../../Components/Elements/Hero';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FaEnvira } from 'react-icons/fa';
+import { AuthAPI } from '../../Config/AuthAPI';
+import { AuthContext } from '../../Contexts/AuthContext';
+import { Spinner } from '../../Components/Elements/StyledComponents';
 
 const fields = loginFields;
 let fieldsState = {};
 fields.forEach(field => (fieldsState as any)[field.id] = '');
 
 export const LoginPage = () =>{
+
+    const { Login, isLoading } = useContext(AuthContext);
     
     const [loginState,setLoginState]=useState (fieldsState);
     
-    const navigate = useNavigate();
-
     const handleChange=(e: any)=>{
         setLoginState({...loginState,[e.target.id]:e.target.value})
-        
     }
 
-    const buttonHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const HandleLogin = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
 
-        authenticateUser()
+        Login(loginState)
     };
-
-
-    //loginState[password]
-    
-    const authenticateUser = () =>{
-        axios
-        .post("https://urlBase/portal-ciudadano/v1/ciudadano/login", JSON.stringify(loginState))
-        .then(function (response) {
-
-          if (response.data.success === false) {
-            
-              //mensaje de cuil o contraseña incorrecta
-              //utilizar un toast o algo por el estilo
-              
-          } else {
-            
-            //mostrar mensaje de login correcto  
-            localStorage.setItem("auth", response.data.token);
-            setTimeout(() => {
-              navigate("/");
-            }, 3000);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-          
-        });
-    }
 
     return(
         <Hero classes="bg-gradient-to-r from-emerald-500 to-lime-600 text-white" tail={true}>
@@ -80,8 +54,8 @@ export const LoginPage = () =>{
                             <span className="ml-2 text-sm font-semibold text-gray-500">Recordarme</span>
                         </div>
                         <div className="text-center mt-6">
-                            <button className="bg-gradient-to-r from-emerald-500 to-lime-600 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={buttonHandler} >
-                                Iniciar Sesión
+                            <button className="bg-gradient-to-r from-emerald-500 to-lime-600 text-white text-center active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={HandleLogin} disabled={isLoading}>
+                                {isLoading ? <Spinner/> : 'Iniciar Sesión'}                                
                             </button>
                         </div>
                     </form>
