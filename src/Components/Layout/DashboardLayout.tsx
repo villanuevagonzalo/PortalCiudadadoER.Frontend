@@ -7,9 +7,10 @@ export const DashboardLayout = () =>{
   return (
     <>
       <HeaderComponet />
-      <Container>
-        <Outlet></Outlet>
-      </Container>
+      <Outlet></Outlet>
+      <div>
+        <FooterComponet />
+      </div>
     </>
   )
 }

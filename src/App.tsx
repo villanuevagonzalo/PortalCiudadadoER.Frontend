@@ -9,10 +9,19 @@ import { LoginPage } from './Pages/Auth/Login';
 import { HomeRoute, PrivateRoute } from './Routes/PrivateRoute';
 import { DashboardCiudadanoPage } from './Pages/Dashboard/DashboardCiudadano';
 import { DashboardLayout } from './Components/Layout/DashboardLayout';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from './Contexts/AuthContext';
 
 function App() {
+  
+  const { CheckToken } = useContext(AuthContext);
+
+  useEffect(()=>{
+      CheckToken()
+  },[])
+
+  
   return (
-    <BrowserRouter>
         <Routes>
           <Route element={<DefaultLayout />}>
             <Route index element={<HomeRoute />} />
@@ -33,7 +42,6 @@ function App() {
             <Route path="DashboardCiudadano" element={<DashboardCiudadanoPage />} />
           </Route>
         </Routes>
-    </BrowserRouter>
   );
 }
 

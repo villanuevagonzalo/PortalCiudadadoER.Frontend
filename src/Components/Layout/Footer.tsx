@@ -6,7 +6,7 @@ export const FooterComponet = () =>(<footer className="bg-white max-w-7xl mt-10 
     <div className="md:flex md:justify-between">
         <div className="mb-6 md:mb-0">
             <a href="#" className="flex items-center">
-                <img src={"./assets/escudo-gobierno.png"} className="block h-10 w-auto mr-4 grayscale" />
+                <img src={"./assets/escudo-gobierno.png"} className="block h-8 w-auto mr-4 grayscale" />
                 <span className="self-center text-2xl whitespace-nowrap ">Secretaria de Modernización</span>
             </a>
         </div>
