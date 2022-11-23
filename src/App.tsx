@@ -39,7 +39,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
           </Route>
           <Route element={<DashboardLayout />}>
-            <Route path="DashboardCiudadano" element={<DashboardCiudadanoPage />} />
+            <Route path="DashboardCiudadano" element={<PrivateRoute><DashboardCiudadanoPage /></PrivateRoute>} />
           </Route>
         </Routes>
   );

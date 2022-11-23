@@ -12,7 +12,7 @@ interface IUser{
     name: string;
     lastname: string;
     email: string;
-    roles: string[]
+    roles: string[][]
 }
 
 const DefaultValues:IUser = {
@@ -20,7 +20,7 @@ const DefaultValues:IUser = {
     name: '',
     lastname: '',
     email: '',
-    roles: ['ciudadano']
+    roles: [['Ciudadano','Nivel 1']]
 }
 
 const TestValues:IUser = {
@@ -28,7 +28,7 @@ const TestValues:IUser = {
     name: 'Gonzalo Eduardo',
     lastname: 'Villanueva',
     email: 'gonzalo_villanueva@outlook.com',
-    roles: ['ciudadano']
+    roles: [['Ciudadano','Nivel 3']]
 }
 
 const ContextValues = () => {
@@ -54,6 +54,7 @@ const ContextValues = () => {
 
         })
         .catch((error)=>{
+            setIsLoading(false)
             console.log(error);
         });
     }
@@ -80,6 +81,7 @@ const ContextValues = () => {
             }
         })
         .catch((error)=>{
+            setIsLoading(false)
             console.log(error);
         });
     }

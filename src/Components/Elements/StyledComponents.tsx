@@ -22,8 +22,9 @@ export const Spinner = styled.div`
   border-left-color: var(--primary-gradient-color)!important;
   border-radius: 50%;
   border: 4px solid transparent;
-  height: 1rem;
-  width: 1rem;
+  height: 1.25rem;
+  width: 1.25rem;
+  margin: 0 auto;
 
   @keyframes spin {
       0% {

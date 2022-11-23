@@ -54,8 +54,8 @@ export const LoginPage = () =>{
                             <span className="ml-2 text-sm font-semibold text-gray-500">Recordarme</span>
                         </div>
                         <div className="text-center mt-6">
-                            <button className="bg-gradient-to-r from-emerald-500 to-lime-600 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={HandleLogin} disabled={isLoading}>
-                                {isLoading ? <Spinner /> : 'Iniciar Sesión'}                                
+                            <button className="bg-gradient-to-r from-emerald-500 to-lime-600 text-white text-center active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={HandleLogin} disabled={isLoading}>
+                                {isLoading ? <Spinner/> : 'Iniciar Sesión'}                                
                             </button>
                         </div>
                     </form>

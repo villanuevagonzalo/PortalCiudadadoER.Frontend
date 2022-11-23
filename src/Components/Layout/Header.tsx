@@ -15,7 +15,7 @@ import { AuthContext } from '../../Contexts/AuthContext'
 const navigation = [
   { name: 'Inicio', icon: AiFillHome, href: '/', current: true },
   { name: 'Servicios', icon: AiOutlinePaperClip, href: 'DashboardCiudadano', current: false },
-  { name: 'Ayuda', icon: MdHelpOutline, href: '/', current: false }
+  { name: 'Ayuda', icon: MdHelpOutline, href: '/ayuda', current: false }
 ]
 const navigation2 = [
   { name: 'Inicio', icon: AiFillHome, href: '/', current: true },
@@ -29,7 +29,7 @@ function classNames(...classes: string[]) {
 
 export const HeaderComponet = () =>{
 
-  const { Logout, userData } = useContext(AuthContext);
+  const { Logout, userData, isLogged } = useContext(AuthContext);
 
   return (
     <Disclosure as="nav" className="bg-white">
@@ -79,6 +79,7 @@ export const HeaderComponet = () =>{
                 </button>
 
                 {/* Profile dropdown */}
+                {isLogged ? 
                 <Menu as="div" className="ml-3 relative z-50">
                   <div>
                     <Menu.Button className="flex text-sm rounded-full ring-5 ring-gray-500 text-gray-500 hover:text-gray-700">
@@ -129,7 +130,7 @@ export const HeaderComponet = () =>{
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>
-                </Menu>
+                </Menu>:<></>}
               </div>
             </div>
           </div>
