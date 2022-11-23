@@ -16,7 +16,7 @@ export class AuthAPI {
     }
 
     public UserSignup(params: any){
-        return this.baseService.post('/v0/user/singup', null, { params: params})
+        return this.baseService.post('/v0/user/signup', null, { params: params})
     }
 
     public UserLogin(params: any){
