@@ -4,29 +4,25 @@ const fixedInputClass =
 
 interface Props{
     label: any;
-    handleChange: any;
-    labelText: any;
     labelFor: any;
     id: any;
     name: any;
     type: any;
-    isRequired: any;
-    autofocus: any;
     placeholder: any;
     customClass: any;
     value: any;
 }
 
 
-export const MyTextIntput = ({label, ...props}: Props) => {
+export const MyTextIntput = ({label, labelFor, customClass, ...props}: Props) => {
     const[ field ] = useField(props)
     // console.log(field);
 
     return (
         <div className="relative w-full mb-3">
         <>
-            <label htmlFor={props.labelFor} className="sr-only">{label}</label>
-            <input className={fixedInputClass + props.customClass} autoFocus= {false} style={{ transition: "all .15s ease" }} {...field} {...props} />
+            <label htmlFor={labelFor} className="sr-only">{label}</label>
+            <input className={fixedInputClass + customClass} autoFocus= {false} style={{ transition: "all .15s ease" }} {...field} {...props} />
             <ErrorMessage name={props.name} component="span" className="ml-2 text-sm font-semibold text-red-500"/>
         </>
         </div>

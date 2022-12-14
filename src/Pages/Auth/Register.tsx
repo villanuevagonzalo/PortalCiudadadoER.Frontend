@@ -58,18 +58,14 @@ export const RegisterPage = () =>{
                                 {
                                     fields.map( (field) => {
                                         return <MyTextIntput 
-                                            key={field.name}
-                                            handleChange={undefined}
+                                            key={field.id}
                                             value={undefined}
-                                            labelText={field.labelText}
                                             labelFor={field.labelFor}
                                             id={field.id}
                                             name={field.name}
                                             type={field.type}
-                                            isRequired={field.isRequired}
-                                            autofocus={field.autofocus}
                                             placeholder={field.placeholder}
-                                            customClass={undefined} 
+                                            customClass={"undefined"} 
                                             label={""}/>
                                     })
                                 }
@@ -82,6 +78,11 @@ export const RegisterPage = () =>{
                         )
                     }            
                 </Formik>
+                <div className="flex flex-wrap my-6 ">
+                    <Link to="/Ingresar" className="text-white w-full text-right">
+                        <small>¿Ya tenes una cuenta? <strong>¡Inicia Sesión!</strong></small>
+                    </Link>
+                </div>
             </div>
           </div></Hero>
     )
