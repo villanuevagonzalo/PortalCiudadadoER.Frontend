@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { signupFields } from "../../Interfaces/formFields";
+import { loginFields, signupFields } from "../../Interfaces/formFields";
 import Input from '../../Components/Forms/Input';
 import { Hero } from '../../Components/Elements/Hero';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,57 +7,81 @@ import axios from 'axios';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { Spinner } from '../../Components/Elements/StyledComponents';
+import { Formik, Field, Form } from 'formik';
+import * as Yup from 'yup';
+import { MyTextIntput } from '../../Components/Forms/MyTextIntput';
 
 const fields = signupFields;
-let fieldsState = {};
-fields.forEach(field => (fieldsState as any)[field.id] = '');
+const fieldsState: {[key: string]: any} = {};
+const requiredFields: {[key: string]: any}= {};
+
+for(const input of fields){
+    fieldsState[input.name] = input.value;
+    if( !input.validations ) continue;    //revisar si el campo tiene validaciones(opcional)
+
+    let schema = Yup.string();
+    // let schema2 = Yup.number();
+
+    for(const rule of input.validations){
+        if(rule.type === 'required'){
+            schema = schema.required('Requerido');
+        }
+
+        // if(rule.type === 'number'){
+        //     schema2 = schema2.integer('Debe ser un número');
+        // }
+    }
+
+    requiredFields[input.name] = schema;
+}
+
+const validationSchema = Yup.object({...requiredFields});
 
 export const RegisterPage = () =>{
     
     const { Signup, isLoading } = useContext(AuthContext);
 
-    const navigate = useNavigate();
-
-    const [registerState,setRegisterState]=useState<any>(fieldsState);
-
-    const handleChange=(e: any)=>{
-        setRegisterState({...registerState,[e.target.id]:e.target.value})
-    }
-
-    const HandleRegister = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        Signup(registerState)
-    };
-
-    return(<Hero classes="bg-gradient-to-r from-cyan-500 to-blue-500 text-white" tail={true}>
+    return(
+    <Hero classes="bg-gradient-to-r from-cyan-500 to-blue-500 text-white" tail={true}>
         <div className="container mx-auto flex content-center items-center justify-center h-full px-4">
               <div className="w-full lg:w-4/12">
-                <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-lg bg-gray-100 border-0">
-
-                    {fields.map(field=><Input
-                        key={field.id}
-                        handleChange={handleChange}
-                        value={(registerState as any)[field.id]}
-                        labelText={field.labelText}
-                        labelFor={field.labelFor}
-                        id={field.id}
-                        name={field.name}
-                        type={field.type}
-                        isRequired={field.isRequired}
-                        autoFocus={field.autofocus}
-                        placeholder={field.placeholder}
-                    />)}
-                    <div className="text-center mt-6">
-                        <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={HandleRegister}>
-                        {isLoading ? <Spinner/> : 'Crear Cuenta'} 
-                        </button>
-                    </div>
-                </form>
-                <div className="flex flex-wrap my-6 ">
-                    <Link to="/Ingresar" className="text-white w-full text-right">
-                        <small>¿Ya tenes una cuenta? <strong>¡Inicia Sesión!</strong></small>
-                    </Link>
-                </div>
+              <Formik
+                initialValues= {fieldsState}
+                validationSchema={validationSchema}
+                onSubmit={ (values) => {
+                    console.log(values)
+                    Signup(values)
+                }}>
+                    {
+                        (formik) => (
+                            <Form noValidate className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-lg bg-gray-100 border-0">
+                                {
+                                    fields.map( (field) => {
+                                        return <MyTextIntput 
+                                            key={field.name}
+                                            handleChange={undefined}
+                                            value={undefined}
+                                            labelText={field.labelText}
+                                            labelFor={field.labelFor}
+                                            id={field.id}
+                                            name={field.name}
+                                            type={field.type}
+                                            isRequired={field.isRequired}
+                                            autofocus={field.autofocus}
+                                            placeholder={field.placeholder}
+                                            customClass={undefined} 
+                                            label={""}/>
+                                    })
+                                }
+                            <div className="text-center mt-6">
+                                <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="submit" style={{ transition: "all .15s ease" }}>
+                                {isLoading ? <Spinner/> : 'Crear Cuenta'} 
+                                </button>
+                            </div>
+                            </Form>
+                        )
+                    }            
+                </Formik>
             </div>
           </div></Hero>
     )

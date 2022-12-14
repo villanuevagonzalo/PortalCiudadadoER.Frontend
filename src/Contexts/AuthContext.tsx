@@ -31,6 +31,8 @@ const TestValues:IUser = {
     roles: [['Ciudadano','Nivel 3']]
 }
 
+
+
 const ContextValues = () => {
 
     const AxiosAuthAPI = new AuthAPI();
@@ -48,12 +50,14 @@ const ContextValues = () => {
             if (response.data.success === false) {
                 console.log(response.data)
                 
+                
             } else {
                 navigate("/Ingresar");
             }
 
         })
         .catch((error)=>{
+            console.log('Entro al catch');
             setIsLoading(false)
             console.log(error);
         });

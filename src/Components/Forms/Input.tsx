@@ -1,3 +1,4 @@
+import { ErrorMessage, useField } from "formik";
 const fixedInputClass =
   "border-0 px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ring-gray-300"
 
@@ -5,6 +6,7 @@ export default function Input({
   handleChange,
   value,
   labelText,
+  label,
   labelFor,
   id,
   name,
@@ -16,8 +18,9 @@ export default function Input({
 }: any) {
   return (
     <div className="relative w-full mb-3">
+      <>
       <label htmlFor={labelFor} className="sr-only">
-        {labelText}
+        {label}
       </label>
       <input
         onChange={handleChange}
@@ -31,6 +34,9 @@ export default function Input({
         placeholder={placeholder}
         style={{ transition: "all .15s ease" }}
       />
+      {/* <span className="ml-2 text-sm font-semibold text-red-500">Aca va el error de campo requerido</span> */}
+      <ErrorMessage name={name} component="span" className="ml-2 text-sm font-semibold text-red-500"/>
+      </>
     </div>
   );
 }

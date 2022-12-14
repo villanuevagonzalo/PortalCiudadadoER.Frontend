@@ -33,7 +33,24 @@ const signupFields=[
         autoComplete:"CUIL",
         isRequired:true,
         autofocus:false,
-        placeholder:"CUIL"   
+        placeholder:"CUIL",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        },
+        // {
+        //     type:"number"
+        // },
+        // {
+        //     type:"minLength",
+        //     value: 5
+        // },
+        // {
+        //     type:"maxLength",
+        //     type:10
+        // }
+    ]
     },
     {
         labelText:"Apellido/s",
@@ -44,7 +61,12 @@ const signupFields=[
         autoComplete:"apellido",
         isRequired:true,
         autofocus:false,
-        placeholder:"Apellido/s"   
+        placeholder:"Apellido/s", 
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }]  
     },
     {
         labelText:"Nombre/s",
@@ -55,7 +77,12 @@ const signupFields=[
         autoComplete:"nombre",
         isRequired:true,
         autofocus:false,
-        placeholder:"Nombre/s"   
+        placeholder:"Nombre/s",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }]    
     },
     {
         labelText:"Email",
@@ -66,7 +93,12 @@ const signupFields=[
         autoComplete:"email",
         isRequired:true,
         autofocus:false,
-        placeholder:"Email"   
+        placeholder:"Email",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }]  
     },
     {
         labelText:"Confirmar Email",
@@ -77,7 +109,12 @@ const signupFields=[
         autoComplete:"email-confirm",
         isRequired:true,
         autofocus:false,
-        placeholder:"Confirmar Email"   
+        placeholder:"Confirmar Email",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }]  
     },
     {
         labelText:"Password",
@@ -88,7 +125,12 @@ const signupFields=[
         autoComplete:"current-password",
         isRequired:true,
         autofocus:false,
-        placeholder:"Password"   
+        placeholder:"Password",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }] 
     },
     {
         labelText:"Confirm Password",
@@ -99,7 +141,12 @@ const signupFields=[
         autoComplete:"confirm-password",
         isRequired:true,
         autofocus:false,
-        placeholder:"Confirm Password"   
+        placeholder:"Confirm Password",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }]  
     }
 ]
 
