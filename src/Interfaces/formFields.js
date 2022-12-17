@@ -8,7 +8,12 @@ const loginFields=[
         autoComplete:"CUIL",
         isRequired:true,
         autofocus: true,
-        placeholder:"CUIL"   
+        placeholder:"CUIL",  
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }] 
     },
     {
         labelText:"Contraseña",
@@ -19,7 +24,12 @@ const loginFields=[
         autoComplete:"current-password",
         isRequired:true,
         autofocus: false,
-        placeholder:"Contraseña"   
+        placeholder:"Contraseña", 
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }] 
     }
 ]
 
@@ -29,7 +39,7 @@ const signupFields=[
         labelFor:"cuil",
         id:"cuil",
         name:"cuil",
-        type:"text",
+        type:"number",
         autoComplete:"CUIL",
         isRequired:true,
         autofocus:false,

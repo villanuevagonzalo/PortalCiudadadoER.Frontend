@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import { loginFields, signupFields } from "../../Interfaces/formFields";
-import Input from '../../Components/Forms/Input';
 import { Hero } from '../../Components/Elements/Hero';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -9,7 +8,7 @@ import { AuthContext } from '../../Contexts/AuthContext';
 import { Spinner } from '../../Components/Elements/StyledComponents';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-import { MyTextIntput } from '../../Components/Forms/MyTextIntput';
+import { Input } from '../../Components/Forms/Input';
 
 const fields = signupFields;
 const fieldsState: {[key: string]: any} = {};
@@ -17,7 +16,7 @@ const requiredFields: {[key: string]: any}= {};
 
 for(const input of fields){
     fieldsState[input.name] = input.value;
-    if( !input.validations ) continue;    //revisar si el campo tiene validaciones(opcional)
+    if( !input.validations ) continue; 
 
     let schema = Yup.string();
     // let schema2 = Yup.number();
@@ -57,7 +56,7 @@ export const RegisterPage = () =>{
                             <Form noValidate className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-lg bg-gray-100 border-0">
                                 {
                                     fields.map( (field) => {
-                                        return <MyTextIntput 
+                                        return <Input 
                                             key={field.id}
                                             value={undefined}
                                             labelFor={field.labelFor}
