@@ -27,8 +27,9 @@ for(const input of fields){
             schema = schema.required('Requerido');
         }
 
-        // if(rule.type === 'number'){
-        //     schema2 = schema2.integer('Debe ser un número');
+        // if(rule.type === 'minLength'){
+        //     schema = schema.min((rule as any).value, `Debe tener al menos ${rule.value} caracteres`);
+
         // }
     }
 

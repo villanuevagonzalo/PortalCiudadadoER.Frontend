@@ -26,9 +26,9 @@ for(const input of fields){
             schema = schema.required('Requerido');
         }
 
-        // if(rule.type === 'number'){
-        //     schema2 = schema2.integer('Debe ser un número');
-        // }
+        if(rule.type === 'email'){
+            schema = schema.email('Debe ser un email válido');
+        }
     }
 
     requiredFields[input.name] = schema;

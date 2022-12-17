@@ -13,7 +13,12 @@ const loginFields=[
         validations:
         [{
             type:"required",
-        }] 
+        },
+        {
+            type:"minLength",
+            value: 11
+        },
+    ] 
     },
     {
         labelText:"Contraseña",
@@ -108,7 +113,11 @@ const signupFields=[
         validations:
         [{
             type:"required",
-        }]  
+        },
+        {
+            type:"email",
+        },
+        ]  
     },
     {
         labelText:"Confirmar Email",
@@ -124,7 +133,11 @@ const signupFields=[
         validations:
         [{
             type:"required",
-        }]  
+        },
+        {
+            type:"email",
+        },
+        ]  
     },
     {
         labelText:"Password",
