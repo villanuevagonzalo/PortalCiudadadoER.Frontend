@@ -153,7 +153,11 @@ const signupFields=[
         validations:
         [{
             type:"required",
-        }] 
+        },
+        {
+            type:"password",
+        },
+    ] 
     },
     {
         labelText:"Confirm Password",
@@ -169,7 +173,11 @@ const signupFields=[
         validations:
         [{
             type:"required",
-        }]  
+        },
+        {
+            type:"confirmPassword",
+        },
+    ]  
     }
 ]
 
