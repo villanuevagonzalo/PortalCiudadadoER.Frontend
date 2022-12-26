@@ -27,10 +27,14 @@ for(const input of fields){
             schema = schema.required('Requerido');
         }
 
-        // if(rule.type === 'minLength'){
-        //     schema = schema.min((rule as any).value, `Debe tener al menos ${rule.value} caracteres`);
+        if(rule.type === 'minLength'){
+            schema = schema.min((rule as any).value, `Debe tener al menos ${rule.value} caracteres`);
+        }
 
-        // }
+        if(rule.type === 'maxLength'){
+            schema = schema.max((rule as any).value, `Debe tener como máximo ${rule.value} caracteres`);
+        }
+
     }
 
     requiredFields[input.name] = schema;

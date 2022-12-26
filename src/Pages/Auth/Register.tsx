@@ -19,7 +19,6 @@ for(const input of fields){
     if( !input.validations ) continue; 
 
     let schema = Yup.string();
-    // let schema2 = Yup.number();
 
     for(const rule of input.validations){
         if(rule.type === 'required'){
@@ -37,6 +36,16 @@ for(const input of fields){
         if(rule.type === 'confirmPassword'){
             schema = schema.oneOf([Yup.ref('password')],'Las contraseñas no coinciden');
         }
+
+        if(rule.type === 'minLength'){
+            schema = schema.min((rule as any).value, `Debe tener al menos ${rule.value} caracteres`);
+        }
+
+        if(rule.type === 'maxLength'){
+            schema = schema.max((rule as any).value, `Debe tener como máximo ${rule.value} caracteres`);
+        }
+
+
     }
 
     requiredFields[input.name] = schema;

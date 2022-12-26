@@ -16,8 +16,12 @@ const loginFields=[
         },
         {
             type:"minLength",
-            value: 11
+            value: 10
         },
+        {
+            type:"maxLength",
+            value: 11
+        }
     ] 
     },
     {
@@ -54,17 +58,14 @@ const signupFields=[
         [{
             type:"required",
         },
-        // {
-        //     type:"number"
-        // },
-        // {
-        //     type:"minLength",
-        //     value: 5
-        // },
-        // {
-        //     type:"maxLength",
-        //     type:10
-        // }
+        {
+            type:"minLength",
+            value: 10
+        },
+        {
+            type:"maxLength",
+            value: 11
+        }
     ]
     },
     {
