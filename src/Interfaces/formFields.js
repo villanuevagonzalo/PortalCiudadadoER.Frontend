@@ -135,7 +135,7 @@ const signupFields=[
             type:"required",
         },
         {
-            type:"email",
+            type:"confirmEmail",
         },
         ]  
     },

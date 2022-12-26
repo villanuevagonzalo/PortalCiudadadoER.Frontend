@@ -30,6 +30,10 @@ for(const input of fields){
             schema = schema.email('Debe ser un email válido');
         }
 
+        if(rule.type === 'confirmEmail'){
+            schema = schema.oneOf([Yup.ref('email')],'Los emails no coinciden');
+        }
+
         if(rule.type === 'confirmPassword'){
             schema = schema.oneOf([Yup.ref('password')],'Las contraseñas no coinciden');
         }
