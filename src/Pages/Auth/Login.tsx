@@ -7,7 +7,10 @@ import axios from 'axios';
 import { FaEnvira } from 'react-icons/fa';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { Spinner } from '../../Components/Elements/StyledComponents';
+import { LabelDiv, MainContainer, Spinner, TitleDiv } from '../../Components/Elements/StyledComponents';
+import { Sidebar } from '../../Components/NewLayout/Sidebar';
+import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
+import { Button } from '../../Components/Form/Button';
 
 const fields = loginFields;
 let fieldsState = {};
@@ -29,8 +32,61 @@ export const LoginPage = () =>{
         Login(loginState)
     };
 
-    return(
-        <Hero classes="bg-gradient-to-r from-emerald-500 to-lime-600 text-white" tail={true}>
+    return(<>
+        <Sidebar open={true}>
+            <br /><br /><br />
+            <LogoCiudadanoDigital />
+            <br />
+            <TitleDiv>Iniciar Sesión</TitleDiv>
+            <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full">
+
+                        {fields.map(field=><Input
+                            key={field.id}
+                            handleChange={handleChange}
+                            value={(loginState as any)[field.id]}
+                            labelText={field.labelText}
+                            labelFor={field.labelFor}
+                            id={field.id}
+                            name={field.name}
+                            type={field.type}
+                            isRequired={field.isRequired}
+                            autoFocus={field.autofocus}
+                            placeholder={field.placeholder}
+                        />)}
+
+                        <div className="inline-flex items-center cursor-pointer mt-2">
+                            <input id="customCheckLogin"type="checkbox" className="form-checkbox border-0 rounded text-gray-800 ml-1 w-4 h-4" style={{ transition: "all .15s ease" }}/>
+                            <span className="ml-2 text-sm font-semibold text-gray-500">Recordarme</span>
+                        </div>
+                        <div className="text-center mt-6">
+                            <Button onClick={HandleLogin} disabled={isLoading}>
+                                {isLoading ? <Spinner/> : 'Iniciar Sesión'}                                
+                            </Button>
+                            <br />
+                            <br />
+                            <LabelDiv>¿Sos nuevo en Ciudadano Digital?</LabelDiv>
+                            <Link to="/Registro"><Button disabled={isLoading} color="secondary">
+                                Crear una cuenta                               
+                            </Button></Link>
+                            <br />
+                            <br />
+                            <Link to="/RestaurarPassword"><Button disabled={isLoading} color="disabled_tint">
+                                No recuerdo mi contraseña                              
+                            </Button></Link>
+                            <Button disabled={isLoading} color="disabled_tint">
+                                No pude validar mi correo electrónico                            
+                            </Button>
+                        </div>
+                    </form>
+        </Sidebar>
+        <MainContainer>
+            <TitleDiv>Normativas</TitleDiv>
+        </MainContainer>
+    </>)
+}
+
+/*
+<Hero classes="bg-gradient-to-r from-emerald-500 to-lime-600 text-white" tail={true}>
             <div className="container mx-auto flex content-center items-center justify-center h-full px-4">
                 <div className="w-full lg:w-4/12">
                     <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-lg bg-gray-100 border-0">
@@ -69,6 +125,4 @@ export const LoginPage = () =>{
                     </div>
                 </div>
             </div>
-        </Hero>
-    )
-}
+        </Hero>*/

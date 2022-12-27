@@ -36,9 +36,79 @@ export const Spinner = styled.div`
   }
 `;
 
-
-
 //// Layout
+export const MainContainer = styled.div`
+  align-items: center;
+  align-self: center;
+  background: var(--${props => (props.color ? props.color : 'main-background')});
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap:0;
+  width: 100%;
+  height: 100%
+`;
+
+
+export const SidebarWrapper = styled.div<{ width?: string, open: boolean }>`
+  align-items: center;
+  align-self: center;
+  background: var(--main-background);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap:0;
+  width:100%;
+  max-width: ${props => props.width ? props.width : '200px'};
+  margin-left: ${props => (props.open ? '0px' : (props.width ? '-'+props.width : '-200px'))};
+  height: 100%;
+  position:absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-right: 2px solid var(--disabled);
+  
+  transition: margin 0.25s ease;
+`;
+
+export const SidebarBurger = styled.div<{ open?: boolean }>`
+  cursor:pointer;
+  font-size:2em;  
+  position:absolute;
+  left:0.25em;
+  top:0.25em;
+  user-select: none;
+`;
+
+
+export const TitleDiv = styled.div<{ open?: boolean }>`
+  font-size: 1.5rem;
+  color: var(--main-color);
+  width:100%;
+  padding: 0.5rem 1rem;
+`;
+
+export const LabelDiv = styled.div<{ open?: boolean }>`
+  font-size: 0.8rem;
+  color: var(--${props => (props.color ? props.color : 'primary')});
+  width:100%;
+  padding: 0.5rem 1rem;
+  text-align:center;
+`;
+
+
+export const ButtonWrapper = styled.button`
+  font-size: 0.9rem;
+  color: var(--main-background);
+  width:100%;
+  padding: 0.5rem 1rem;
+  text-align:center;
+  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
+  border-radius: 2rem;
+  margin-bottom: 0.5rem;
+`;
+
+
+
 export const Container = styled.div`
   align-items: center;
   align-self: center;

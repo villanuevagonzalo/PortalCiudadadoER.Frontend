@@ -1,13 +1,13 @@
 :root {
-    --main-background: #fafafa;
+    --main-background: #F3F4F6;
     --main-color: #555555;
     --main-border: #cccccc;
 
-    --primary: #06b6d4;
-    --primary_tint: #3b82f6;
+    --primary: #7ca157;
+    --primary_tint: #5b8532;
 
-    --secondary: #7ca157;
-    --secondary_tint: #5b8532;
+    --secondary: #06b6d4;
+    --secondary_tint: #3b82f6;
 
     --disabled: #cccccc;
     --disabled_tint: #aaaaaa;
@@ -22,15 +22,10 @@
     --disabled-gradient-background: var(--disabled) linear-gradient(80deg, var(--disabled) 0%, var(--disabled_tint) 100%);
     --disabled-gradient-color: #fafafa;
 
-
-
     --secondary-background: #eeeeee;
     --secondary-color: #555555;
 
     --disabled-background: #cccccc;
     --disabled-color: #888888;
-
-
-
 
 }

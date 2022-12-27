@@ -6,7 +6,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { Spinner } from '../../Components/Elements/StyledComponents';
+import { LabelDiv, MainContainer, Spinner, TitleDiv } from '../../Components/Elements/StyledComponents';
+import { Sidebar } from '../../Components/NewLayout/Sidebar';
+import { Button } from '../../Components/Form/Button';
+import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
 
 const fields = signupFields;
 let fieldsState = {};
@@ -29,7 +32,60 @@ export const RegisterPage = () =>{
         Signup(registerState)
     };
 
-    return(<Hero classes="bg-gradient-to-r from-cyan-500 to-blue-500 text-white" tail={true}>
+    return(<>
+        <Sidebar open={true}>
+            <br /><br /><br />
+            <LogoCiudadanoDigital />
+            <br />
+            <TitleDiv>Crear una Cuenta</TitleDiv>
+            <LabelDiv>Ingresá tus datos para registrarte en la plataforma.</LabelDiv>
+
+            
+            <TitleDiv>Crear una Cuenta</TitleDiv>
+            <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full">
+
+                {fields.map(field=><Input
+                    key={field.id}
+                    handleChange={handleChange}
+                    value={(registerState as any)[field.id]}
+                    labelText={field.labelText}
+                    labelFor={field.labelFor}
+                    id={field.id}
+                    name={field.name}
+                    type={field.type}
+                    isRequired={field.isRequired}
+                    autoFocus={field.autofocus}
+                    placeholder={field.placeholder}
+                />)}
+
+                <div className="inline-flex items-center cursor-pointer mt-2">
+                    <input id="customCheckLogin"type="checkbox" className="form-checkbox border-0 rounded text-gray-800 ml-1 w-4 h-4" style={{ transition: "all .15s ease" }}/>
+                    <span className="ml-2 text-sm font-semibold text-gray-500">Recordarme</span>
+                </div>
+                <div className="text-center mt-6">
+                    <Button onClick={HandleRegister} disabled={isLoading}>
+                        {isLoading ? <Spinner/> : 'Iniciar Sesión'}                                
+                    </Button>
+                    <br />
+                    <br />
+                    <LabelDiv>¿Ya te registraste?</LabelDiv>
+                    <Link to="/Ingresar"><Button disabled={isLoading}>
+                        Iniciar Sesión
+                    </Button></Link>
+                </div>
+            </form>
+        </Sidebar>
+        <MainContainer>
+            <TitleDiv>Normativas</TitleDiv>
+        </MainContainer>
+    </>
+    )
+}
+
+
+/*
+
+<Hero classes="bg-gradient-to-r from-cyan-500 to-blue-500 text-white" tail={true}>
         <div className="container mx-auto flex content-center items-center justify-center h-full px-4">
               <div className="w-full lg:w-4/12">
                 <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-lg bg-gray-100 border-0">
@@ -60,5 +116,5 @@ export const RegisterPage = () =>{
                 </div>
             </div>
           </div></Hero>
-    )
-}
+
+*/

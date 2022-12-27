@@ -1,5 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { DefaultLayout } from './Components/Layout/DefaultLayout';
+import { DefaultLayout } from './Components/NewLayout/Default';
 import { HomePage } from './Pages/HomePage';
 import { TramitesPage } from './Pages/Tramites/index';
 import { ErrorPage } from './Pages/ErrorPage';
