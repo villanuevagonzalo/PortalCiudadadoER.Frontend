@@ -37,7 +37,7 @@ export const Spinner = styled.div`
 `;
 
 //// NEW LAYOUT
-export const Sidebar2 = styled.div<{ width?: string, open: boolean }>`
+export const Sidebar = styled.div<{ width?: string, open: boolean }>`
   align-items: center;
   align-self: center;
   background: var(--main-background);
@@ -54,9 +54,10 @@ export const Sidebar2 = styled.div<{ width?: string, open: boolean }>`
   border-bottom: 2px solid var(--disabled);
 `;
 
-export const MainContainer2 = styled.div`
+export const MainContainer = styled.div`
   align-items: center;
   align-self: center;
+  background: var(--${props => (props.color ? props.color : 'main-background')});
   display: flex;
   flex-direction: column;
   gap:0;
@@ -65,6 +66,8 @@ export const MainContainer2 = styled.div`
   height: 100%;
   min-height:200px;
 `;
+
+
 
 export const NavigatorWrapper = styled.div<{ open?: boolean }>`
   border-top: 1px solid var(--disabled);
@@ -84,20 +87,9 @@ export const NavigatorSpacer = styled.div<{ open?: boolean }>`
 
 
 //// Layout
-export const MainContainer = styled.div`
-  align-items: center;
-  align-self: center;
-  background: var(--${props => (props.color ? props.color : 'main-background')});
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap:0;
-  width: 100%;
-  height: 100%
-`;
 
 
-export const SidebarWrapper = styled.div<{ width?: string, open: boolean }>`
+export const SidebarHideableWrapper = styled.div<{ width?: string, open: boolean }>`
   align-items: center;
   align-self: center;
   background: var(--main-background);

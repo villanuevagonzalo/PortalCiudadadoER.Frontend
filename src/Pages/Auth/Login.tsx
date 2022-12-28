@@ -7,8 +7,8 @@ import { FaEnvira } from 'react-icons/fa';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
 
-import { LabelDiv, MainContainer, MainContainer2, Sidebar2, Spinner, TitleDiv } from '../../Components/Elements/StyledComponents';
-import { Sidebar } from '../../Components/NewLayout/Sidebar';
+import { LabelDiv, MainContainer, Sidebar, Spinner, TitleDiv } from '../../Components/Elements/StyledComponents';
+import { SidebarHideable } from '../../Components/NewLayout/SidebarHideable';
 import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form, Field } from 'formik';
@@ -64,7 +64,7 @@ export const LoginPage = () =>{
     };*/
 
     return(<>
-        <Sidebar2 open={true}>
+        <Sidebar open={true}>
             <LogoCiudadanoDigital />
             <br />
             <TitleDiv>Iniciar Sesión</TitleDiv>
@@ -97,7 +97,7 @@ export const LoginPage = () =>{
                         <span className="ml-2 text-sm font-semibold text-gray-500">Recordarme</span>
                     </div>
                     <div className="text-center mt-6">
-                        <Button disabled={isLoading}>
+                        <Button disabled={isLoading} type="submit">
                             {isLoading ? <Spinner/> : 'Iniciar Sesión'}                                
                         </Button>
                         <br />
@@ -118,10 +118,10 @@ export const LoginPage = () =>{
                     </Form>
                 )}
             </Formik>
-        </Sidebar2>
-        <MainContainer2>
+        </Sidebar>
+        <MainContainer>
             <TitleDiv>Normativas</TitleDiv>
-        </MainContainer2>
+        </MainContainer>
     </>)
 }
 

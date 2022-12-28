@@ -23,4 +23,8 @@ export class AuthAPI {
         return this.baseService.get('/v0/user/login', { params: params })
     }
 
+    public GetUserData(params: any){
+        return this.baseService.get('/v0/user/check/cuil', { params: params })
+    }
+
 }

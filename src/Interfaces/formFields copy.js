@@ -1,30 +1,3 @@
-import * as Yup from 'yup';
-
-const formValidations = {
-    
-}
-
-const formFields = {
-    cuil:{
-        name: 'cuil',
-        type: 'number',
-        placeholder: 'Ingresa tu CUIL (sin guiones)',
-        validations:[
-            Yup.string()
-        ]
-    },
-    
-    password:{
-        name: 'password',
-        type: 'number',
-        placeholder: 'Ingresa tu contraseña',
-        validations:[
-
-        ]
-    }
-}
-
-
 const loginFields=[
     {
         labelText:"Cuil",

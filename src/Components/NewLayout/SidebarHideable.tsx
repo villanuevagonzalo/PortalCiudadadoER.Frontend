@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
-import { SidebarWrapper, SidebarBurger } from "../Elements/StyledComponents"
+import { SidebarHideableWrapper, SidebarBurger } from "../Elements/StyledComponents"
 import { CgClose } from 'react-icons/cg'
 
 
 
-export const Sidebar = (props: any) => {
+export const SidebarHideable = (props: any) => {
  
   const [isOpen, setIsOpen] = useState<boolean>((props.open?props.open:false));
 
@@ -14,9 +14,9 @@ export const Sidebar = (props: any) => {
   }
 
   return (<>
-    <SidebarWrapper open={isOpen} width="400px">
+    <SidebarHideableWrapper open={isOpen} width="400px">
       {props.children}
-    </SidebarWrapper>
+    </SidebarHideableWrapper>
     <SidebarBurger onClick={handleMenu}>
       {isOpen ? <CgClose color="var(--primary)"/> : <AiOutlineMenu color="var(--primary)"/>}
     </SidebarBurger>

@@ -9,43 +9,32 @@ export const Navigator = (props:any) => {
   let currentPage = props.state;
   let pages = props.pages;
 
-  const getback = () =>{
+  const setBackward = () =>{
     props.setstate(currentPage?currentPage-1:0)
   }
 
-  const getforward = async () =>{
-    props.setstate(pages.length-currentPage-1?currentPage+1:pages.length-1)
-    /*
-    const mypromise = new Promise(pages[currentPage].afterfunction()).then(()=>{
+  const setForward = async () =>{
+    if(pages[currentPage].afterfunction){
+      setIsLoading(true)
+      await pages[currentPage].afterfunction()
       console.log('DESPUES')
-      props.setstate(pages.length-currentPage-1?currentPage+1:pages.length-1)
-    })
-
-    /*if(pages[currentPage].afterfunction){
-      pages[currentPage].afterfunction().then(()=>{
-        console.log('DESPUES')
-        props.setstate(pages.length-currentPage-1?currentPage+1:pages.length-1)
-    })
+      setIsLoading(false)
     }
-    setIsLoading(false)*/
-  }
-
-  const getfinish = () =>{
-    props.finish()
+    props.setstate(pages.length-currentPage-1?currentPage+1:pages.length-1)
   }
 
   return (<>
     {pages[currentPage].html}
     <NavigatorWrapper>
-      {currentPage>0?<Button color="disabled_tint" onClick={getback} fullwidth={false}>
+      {currentPage>0?<Button color="disabled_tint" onClick={setBackward} fullwidth={false}>
         « Anterior
       </Button>:<></>}
       <NavigatorSpacer />
       {currentPage<pages.length-1?
-      <Button color="disabled_tint" onClick={getforward} fullwidth={false} disabled={isLoading}>
+      <Button color="disabled_tint" onClick={setForward} fullwidth={false} disabled={isLoading}>
         {isLoading ? <Spinner/> : 'Siguiente »'} 
-      </Button>:<Button color="secondary" onClick={getfinish} fullwidth={false}>
-        Finalizar
+      </Button>:<Button color="secondary" onClick={setForward} fullwidth={false}>
+      {isLoading ? <Spinner/> : 'Finalizar'}
       </Button>}
     </NavigatorWrapper>
   </>)

@@ -92,12 +92,13 @@ export const RegisterPage = () =>{
             </LabelDiv></Link>
         </>),
         afterfunction: async () =>{
-            /*await AxiosAuthAPI.GetUserData({'cuil':ref.current.values.cuil}).then((response)=>{
+            console.log()
+            await AxiosAuthAPI.GetUserData({'cuil':ref.current.values.cuil}).then((response)=>{
                 let userdata = JSON.parse(response.data.user)[0]
                 fieldsState.nombre = userdata.NOMBRES
                 fieldsState.apellido = userdata.APELLIDO
                 console.log(userdata)
-            })*/
+            })
         }
     },{
         html: (<>
@@ -116,19 +117,11 @@ export const RegisterPage = () =>{
     },{
         html: (<>
             <Title2Div>Paso 4</Title2Div>
-            <SubtitleDiv>Contraseña</SubtitleDiv>
-            {InputBuild(5)}
-            {InputBuild(6)}
-        </>)
-    },{
-        html: (<>
-            <Title2Div>Paso 4</Title2Div>
             <SubtitleDiv>Confirmación Final</SubtitleDiv>
             Al registrarme en la plataforma Gobierno Digital acepto los Términos y condiciones de uso del servicio.
         </>),
         afterfunction: async () =>{
-            console.log(ref.current.values)
-            Signup(ref.current.values)
+            console.log('send')
         }
     }]
 
@@ -152,7 +145,19 @@ export const RegisterPage = () =>{
             <TitleDiv>Crear una Cuenta</TitleDiv>
             <SubtitleDiv>Ingresá tus datos para registrarte en la plataforma.</SubtitleDiv>
 
-            <Navigator state={currentPage} setstate={setCurrentPage} pages={pages}/>
+            <Formik
+                innerRef={ref}
+                enableReinitialize={true}
+                initialValues= {fieldsState}
+                validationSchema={validationSchema}
+                onSubmit={ (values) => {
+                    console.log(values)
+                    Signup(values)
+                }}>{(formik) => (
+                <Form noValidate className="w-full ">                   
+                    <Navigator state={currentPage} setstate={setCurrentPage} pages={pages}/>
+                </Form>
+            )}</Formik>
             
             <br />
                                
@@ -171,19 +176,7 @@ export const RegisterPage = () =>{
 
 /*
 
-<Formik
-                innerRef={ref}
-                enableReinitialize={true}
-                initialValues= {fieldsState}
-                validationSchema={validationSchema}
-                onSubmit={ (values) => {
-                    console.log(values)
-                    Signup(values)
-                }}>{(formik) => (
-                <Form noValidate className="w-full ">                   
-                    <Navigator state={currentPage} setstate={setCurrentPage} pages={pages}/>
-                </Form>
-            )}</Formik>
+
 
 
 {
