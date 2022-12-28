@@ -8,7 +8,21 @@ const loginFields=[
         autoComplete:"CUIL",
         isRequired:true,
         autofocus: true,
-        placeholder:"CUIL"   
+        placeholder:"Ingrese CUIL (sin guiones)",  
+        value: "",
+        validations:
+        [{
+            type:"required",
+        },
+        {
+            type:"minLength",
+            value: 10
+        },
+        {
+            type:"maxLength",
+            value: 11
+        }
+    ] 
     },
     {
         labelText:"Contraseña",
@@ -19,7 +33,12 @@ const loginFields=[
         autoComplete:"current-password",
         isRequired:true,
         autofocus: false,
-        placeholder:"Contraseña"   
+        placeholder:"Contraseña", 
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }] 
     }
 ]
 
@@ -29,11 +48,25 @@ const signupFields=[
         labelFor:"cuil",
         id:"cuil",
         name:"cuil",
-        type:"text",
+        type:"number",
         autoComplete:"CUIL",
         isRequired:true,
         autofocus:false,
-        placeholder:"CUIL"   
+        placeholder:"Ingrese CUIL (sin guiones)",  
+        value: "",
+        validations:
+        [{
+            type:"required",
+        },
+        {
+            type:"minLength",
+            value: 10
+        },
+        {
+            type:"maxLength",
+            value: 11
+        }
+    ]
     },
     {
         labelText:"Apellido/s",
@@ -44,7 +77,12 @@ const signupFields=[
         autoComplete:"apellido",
         isRequired:true,
         autofocus:false,
-        placeholder:"Apellido/s"   
+        placeholder:"Apellido/s", 
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }]  
     },
     {
         labelText:"Nombre/s",
@@ -55,7 +93,12 @@ const signupFields=[
         autoComplete:"nombre",
         isRequired:true,
         autofocus:false,
-        placeholder:"Nombre/s"   
+        placeholder:"Nombre/s",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        }]    
     },
     {
         labelText:"Email",
@@ -66,7 +109,16 @@ const signupFields=[
         autoComplete:"email",
         isRequired:true,
         autofocus:false,
-        placeholder:"Email"   
+        placeholder:"Email",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        },
+        {
+            type:"email",
+        },
+        ]  
     },
     {
         labelText:"Confirmar Email",
@@ -77,7 +129,16 @@ const signupFields=[
         autoComplete:"email-confirm",
         isRequired:true,
         autofocus:false,
-        placeholder:"Confirmar Email"   
+        placeholder:"Confirmar Email",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        },
+        {
+            type:"confirmEmail",
+        },
+        ]  
     },
     {
         labelText:"Password",
@@ -88,7 +149,16 @@ const signupFields=[
         autoComplete:"current-password",
         isRequired:true,
         autofocus:false,
-        placeholder:"Password"   
+        placeholder:"Password",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        },
+        {
+            type:"password",
+        },
+    ] 
     },
     {
         labelText:"Confirm Password",
@@ -99,7 +169,16 @@ const signupFields=[
         autoComplete:"confirm-password",
         isRequired:true,
         autofocus:false,
-        placeholder:"Confirm Password"   
+        placeholder:"Confirm Password",
+        value: "",
+        validations:
+        [{
+            type:"required",
+        },
+        {
+            type:"confirmPassword",
+        },
+    ]  
     }
 ]
 

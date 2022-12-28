@@ -29,12 +29,18 @@ body {
   align-items: top;
   align-self: top;
   display: flex;
-  display: flexbox;
+  justify-content: left;
   flex-direction: row;
   gap: 0;
   height: 100%;
   justify-content: top;
   width: 100%;
+}
+
+@media (max-width: 800px) {
+  #root {
+    flex-direction: column;
+  }
 }
 
 .App-header {

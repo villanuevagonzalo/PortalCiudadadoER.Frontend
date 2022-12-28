@@ -36,6 +36,53 @@ export const Spinner = styled.div`
   }
 `;
 
+//// NEW LAYOUT
+export const Sidebar2 = styled.div<{ width?: string, open: boolean }>`
+  align-items: center;
+  align-self: center;
+  background: var(--main-background);
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  padding:2rem;
+  box-sizing: border-box;
+  width:100%;
+  min-width: 350px;
+  max-width: 450px;
+  min-height: 100%;
+  border-right: 2px solid var(--disabled);
+  border-bottom: 2px solid var(--disabled);
+`;
+
+export const MainContainer2 = styled.div`
+  align-items: center;
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  flex:1;
+  width:100%;
+  height: 100%;
+  min-height:200px;
+`;
+
+export const NavigatorWrapper = styled.div<{ open?: boolean }>`
+  border-top: 1px solid var(--disabled);
+  padding-top: 1rem;
+  display: flex;
+  gap: 2;
+  margin-top: 1rem;
+  flex-direction: row;
+`;
+
+export const NavigatorSpacer = styled.div<{ open?: boolean }>`
+  flex:1;
+`;
+
+
+
+
+
 //// Layout
 export const MainContainer = styled.div`
   align-items: center;
@@ -84,7 +131,20 @@ export const TitleDiv = styled.div<{ open?: boolean }>`
   font-size: 1.5rem;
   color: var(--main-color);
   width:100%;
-  padding: 0.5rem 1rem;
+`;
+
+export const Title2Div = styled.div<{ open?: boolean }>`
+  font-size: 1.25rem;
+  color: var(--secondary);
+  font-weight:bold;
+  width:100%;
+`;
+
+export const SubtitleDiv = styled.div<{ open?: boolean }>`
+  font-size:0.8rem;
+  color: var(--main-color);
+  width:100%;
+  margin-bottom:1rem;
 `;
 
 export const LabelDiv = styled.div<{ open?: boolean }>`
@@ -96,15 +156,20 @@ export const LabelDiv = styled.div<{ open?: boolean }>`
 `;
 
 
-export const ButtonWrapper = styled.button`
+export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
   font-size: 0.9rem;
   color: var(--main-background);
-  width:100%;
+  width:${props => props.fullwidth?'100%':'auto'};
+  min-width:150px;
   padding: 0.5rem 1rem;
   text-align:center;
   background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
   border-radius: 2rem;
   margin-bottom: 0.5rem;
+
+  &:disabled{
+    background-color:var(--disabled)!important;
+  }
 `;
 
 

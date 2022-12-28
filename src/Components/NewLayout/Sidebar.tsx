@@ -14,7 +14,7 @@ export const Sidebar = (props: any) => {
   }
 
   return (<>
-    <SidebarWrapper open={isOpen} width="350px">
+    <SidebarWrapper open={isOpen} width="400px">
       {props.children}
     </SidebarWrapper>
     <SidebarBurger onClick={handleMenu}>

@@ -1,25 +1,120 @@
 import { useContext, useState } from 'react';
-import { signupFields } from "../../Interfaces/formFields";
-import Input from '../../Components/Forms/Input';
+import { loginFields, signupFields } from "../../Interfaces/formFields";
 import { Hero } from '../../Components/Elements/Hero';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { LabelDiv, MainContainer, Spinner, TitleDiv } from '../../Components/Elements/StyledComponents';
+import { LabelDiv, MainContainer, MainContainer2, Sidebar2, Spinner, SubtitleDiv, Title2Div, TitleDiv } from '../../Components/Elements/StyledComponents';
 import { Sidebar } from '../../Components/NewLayout/Sidebar';
-import { Button } from '../../Components/Form/Button';
+import { Navigator } from '../../Components/NewLayout/Navigator';
+import { Button } from '../../Components/Forms/Button';
 import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
+import { Formik, Field, Form } from 'formik';
+import * as Yup from 'yup';
+import { Input } from '../../Components/Forms/Input';
 
 const fields = signupFields;
-let fieldsState = {};
-fields.forEach(field => (fieldsState as any)[field.id] = '');
+const fieldsState: {[key: string]: any} = {};
+const requiredFields: {[key: string]: any}= {};
+
+for(const input of fields){
+    fieldsState[input.name] = input.value;
+    if( !input.validations ) continue; 
+
+    let schema = Yup.string();
+
+    for(const rule of input.validations){
+        if(rule.type === 'required'){
+            schema = schema.required('Requerido');
+        }
+
+        if(rule.type === 'email'){
+            schema = schema.email('Debe ser un email válido');
+        }
+
+        if(rule.type === 'confirmEmail'){
+            schema = schema.oneOf([Yup.ref('email')],'Los emails no coinciden');
+        }
+
+        if(rule.type === 'confirmPassword'){
+            schema = schema.oneOf([Yup.ref('password')],'Las contraseñas no coinciden');
+        }
+
+        if(rule.type === 'minLength'){
+            schema = schema.min((rule as any).value, `Debe tener al menos ${rule.value} caracteres`);
+        }
+
+        if(rule.type === 'maxLength'){
+            schema = schema.max((rule as any).value, `Debe tener como máximo ${rule.value} caracteres`);
+        }
+
+
+    }
+
+    requiredFields[input.name] = schema;
+}
+
+const validationSchema = Yup.object({...requiredFields});
+
+const InputBuild = (iid:number) => (<Input 
+    key={fields[iid].id}
+    value={undefined}
+    labelFor={fields[iid].labelFor}
+    id={fields[iid].id}
+    name={fields[iid].name}
+    type={fields[iid].type}
+    placeholder={fields[iid].placeholder}
+    customClass={"undefined"} 
+    label={""}
+/>)
 
 export const RegisterPage = () =>{
     
     const { Signup, isLoading } = useContext(AuthContext);
+    
+    const [currentPage,setCurrentPage]=useState<number>(0);
 
-    const navigate = useNavigate();
+    const pages = [{
+        html: (<>
+            <Title2Div>Paso 1</Title2Div>
+            <SubtitleDiv>Verifica tu CUIL</SubtitleDiv>
+            {InputBuild(0)}
+            <Link to="/Ingresar" className="w-full"><LabelDiv>
+                No lo recuerdo / no tengo mi CUIL
+            </LabelDiv></Link>
+        </>),
+        afterfunction: async () =>{
+            await setTimeout(function(){
+                console.log('test')
+            },1000)
+        }
+    },{
+        html: (<>
+            <Title2Div>Paso 2</Title2Div>
+            <SubtitleDiv>Datos Personales</SubtitleDiv>
+            {InputBuild(1)}
+            {InputBuild(2)}
+        </>)
+    },{
+        html: (<>
+            <Title2Div>Paso 3</Title2Div>
+            <SubtitleDiv>Datos de Contacto</SubtitleDiv>
+            {InputBuild(3)}
+            {InputBuild(4)}
+        </>)
+    },{
+        html: (<>
+            <Title2Div>Paso 4</Title2Div>
+            <SubtitleDiv>Confirmación Final</SubtitleDiv>
+            Al registrarme en la plataforma Gobierno Digital acepto los Términos y condiciones de uso del servicio.
+        </>),
+        afterfunction: async () =>{
+            console.log('send')
+        }
+    }]
+
+    /*const navigate = useNavigate();
 
     const [registerState,setRegisterState]=useState<any>(fieldsState);
 
@@ -30,54 +125,37 @@ export const RegisterPage = () =>{
     const HandleRegister = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         Signup(registerState)
-    };
+    };*/
 
     return(<>
-        <Sidebar open={true}>
-            <br /><br /><br />
+        <Sidebar2 open={true}>
             <LogoCiudadanoDigital />
             <br />
             <TitleDiv>Crear una Cuenta</TitleDiv>
-            <LabelDiv>Ingresá tus datos para registrarte en la plataforma.</LabelDiv>
+            <SubtitleDiv>Ingresá tus datos para registrarte en la plataforma.</SubtitleDiv>
 
+            <Formik
+                initialValues= {fieldsState}
+                validationSchema={validationSchema}
+                onSubmit={ (values) => {
+                    console.log(values)
+                    Signup(values)
+                }}>{(formik) => (
+                <Form noValidate className="w-full ">                   
+                    <Navigator state={currentPage} setstate={setCurrentPage} pages={pages} finish={()=>{console.log('send')}}/>
+                </Form>
+            )}</Formik>
             
-            <TitleDiv>Crear una Cuenta</TitleDiv>
-            <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full">
-
-                {fields.map(field=><Input
-                    key={field.id}
-                    handleChange={handleChange}
-                    value={(registerState as any)[field.id]}
-                    labelText={field.labelText}
-                    labelFor={field.labelFor}
-                    id={field.id}
-                    name={field.name}
-                    type={field.type}
-                    isRequired={field.isRequired}
-                    autoFocus={field.autofocus}
-                    placeholder={field.placeholder}
-                />)}
-
-                <div className="inline-flex items-center cursor-pointer mt-2">
-                    <input id="customCheckLogin"type="checkbox" className="form-checkbox border-0 rounded text-gray-800 ml-1 w-4 h-4" style={{ transition: "all .15s ease" }}/>
-                    <span className="ml-2 text-sm font-semibold text-gray-500">Recordarme</span>
-                </div>
-                <div className="text-center mt-6">
-                    <Button onClick={HandleRegister} disabled={isLoading}>
-                        {isLoading ? <Spinner/> : 'Iniciar Sesión'}                                
-                    </Button>
-                    <br />
-                    <br />
-                    <LabelDiv>¿Ya te registraste?</LabelDiv>
-                    <Link to="/Ingresar"><Button disabled={isLoading}>
-                        Iniciar Sesión
-                    </Button></Link>
-                </div>
-            </form>
-        </Sidebar>
-        <MainContainer>
+            <br />
+                               
+            <LabelDiv>¿Ya te registraste?</LabelDiv>
+            <Link to="/Ingresar" className="w-full"><Button disabled={isLoading}>
+                Iniciar Sesión
+            </Button></Link>
+        </Sidebar2>
+        <MainContainer2>
             <TitleDiv>Normativas</TitleDiv>
-        </MainContainer>
+        </MainContainer2>
     </>
     )
 }
@@ -85,30 +163,26 @@ export const RegisterPage = () =>{
 
 /*
 
+{
+                                    fields.map( (field) => {
+                                        return <Input 
+                                            key={field.id}
+                                            value={undefined}
+                                            labelFor={field.labelFor}
+                                            id={field.id}
+                                            name={field.name}
+                                            type={field.type}
+                                            placeholder={field.placeholder}
+                                            customClass={"undefined"} 
+                                            label={""}/>
+                                    })
+                                }
+
+
 <Hero classes="bg-gradient-to-r from-cyan-500 to-blue-500 text-white" tail={true}>
         <div className="container mx-auto flex content-center items-center justify-center h-full px-4">
               <div className="w-full lg:w-4/12">
-                <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-lg bg-gray-100 border-0">
-
-                    {fields.map(field=><Input
-                        key={field.id}
-                        handleChange={handleChange}
-                        value={(registerState as any)[field.id]}
-                        labelText={field.labelText}
-                        labelFor={field.labelFor}
-                        id={field.id}
-                        name={field.name}
-                        type={field.type}
-                        isRequired={field.isRequired}
-                        autoFocus={field.autofocus}
-                        placeholder={field.placeholder}
-                    />)}
-                    <div className="text-center mt-6">
-                        <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={HandleRegister}>
-                        {isLoading ? <Spinner/> : 'Crear Cuenta'} 
-                        </button>
-                    </div>
-                </form>
+              
                 <div className="flex flex-wrap my-6 ">
                     <Link to="/Ingresar" className="text-white w-full text-right">
                         <small>¿Ya tenes una cuenta? <strong>¡Inicia Sesión!</strong></small>
