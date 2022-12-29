@@ -1,26 +1,53 @@
-import * as Yup from 'yup';
+import * as yup from 'yup';
 
 const formValidations = {
     
 }
 
-const formFields = {
-    cuil:{
-        name: 'cuil',
+interface FieldProps {
+    [key: string]: {
+        type: string;
+        placeholder: string;
+        validations: any;
+    }
+}
+
+const formFields:FieldProps = {
+    CUIL:{
         type: 'number',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
-        validations:[
-            Yup.string()
-        ]
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+                        .min(11, 'El CUIL debe tener 11 digitos')
+                        .max(11, 'El CUIL debe tener 11 digitos')
     },
-    
-    password:{
-        name: 'password',
+
+    Name:{
+        type: 'string',
+        placeholder: 'Ingresa tu/s nombre/s',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    LastName:{
+        type: 'string',
+        placeholder: 'Ingresa tu/s apellido/s',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Password:{
         type: 'number',
         placeholder: 'Ingresa tu contraseña',
-        validations:[
+        validations: null
+    },
 
-        ]
+    Email:{
+        type: 'email',
+        placeholder: 'Ingresa tu email',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+                        .email('Debe ser un email válido')
     }
 }
 
@@ -209,4 +236,4 @@ const signupFields=[
     }
 ]
 
-export {loginFields,signupFields}
+export {loginFields,signupFields,formFields}

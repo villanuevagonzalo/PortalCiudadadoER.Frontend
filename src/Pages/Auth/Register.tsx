@@ -1,81 +1,30 @@
 import { useContext, useRef, useState } from 'react';
-import { loginFields, signupFields } from "../../Interfaces/formFields";
-import { Hero } from '../../Components/Elements/Hero';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { formFields } from "../../Interfaces/formFields";
+import { Link } from 'react-router-dom';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { LabelDiv, MainContainer, Sidebar, Spinner, SubtitleDiv, Title2Div, TitleDiv } from '../../Components/Elements/StyledComponents';
-import { SidebarHideable } from '../../Components/NewLayout/SidebarHideable';
 import { Navigator } from '../../Components/NewLayout/Navigator';
 import { Button } from '../../Components/Forms/Button';
 import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
-import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-import { Input } from '../../Components/Forms/Input';
+import { InputField } from '../../Components/Forms/InputField';
 
 
 
-const fields = signupFields;
-const fieldsState: {[key: string]: any} = {};
-const requiredFields: {[key: string]: any}= {};
+const InputFields = formFields;
 
-for(const input of fields){
-    fieldsState[input.name] = input.value;
-    if( !input.validations ) continue; 
-
-    let schema = Yup.string();
-
-    for(const rule of input.validations){
-        if(rule.type === 'required'){
-            schema = schema.required('Requerido');
-        }
-
-        if(rule.type === 'email'){
-            schema = schema.email('Debe ser un email válido');
-        }
-
-        if(rule.type === 'confirmEmail'){
-            schema = schema.oneOf([Yup.ref('email')],'Los emails no coinciden');
-        }
-
-        if(rule.type === 'confirmPassword'){
-            schema = schema.oneOf([Yup.ref('password')],'Las contraseñas no coinciden');
-        }
-
-        if(rule.type === 'minLength'){
-            schema = schema.min((rule as any).value, `Debe tener al menos ${rule.value} caracteres`);
-        }
-
-        if(rule.type === 'maxLength'){
-            schema = schema.max((rule as any).value, `Debe tener como máximo ${rule.value} caracteres`);
-        }
-
-
-    }
-
-    requiredFields[input.name] = schema;
-}
-
-const validationSchema = Yup.object({...requiredFields});
-
-const InputBuild = (iid:number) => (<Input 
-    key={fields[iid].id}
+const InputBuild = (iid:string) => (<InputField
     value={undefined}
-    labelFor={fields[iid].labelFor}
-    id={fields[iid].id}
-    name={fields[iid].name}
-    type={fields[iid].type}
-    placeholder={fields[iid].placeholder}
-    customClass={"undefined"} 
-    label={""}
+    name={iid}
+    type={InputFields[iid].type}
+    placeholder={InputFields[iid].placeholder}
+    autoFocus={true}
+    validations={InputFields[iid].validations}
 />)
 
 export const RegisterPage = () =>{
 
-    
-    const ref:any = useRef(null);
-    
     const AxiosAuthAPI = new AuthAPI();
     
     const { Signup, isLoading } = useContext(AuthContext);
@@ -86,7 +35,7 @@ export const RegisterPage = () =>{
         html: (<>
             <Title2Div>Paso 1</Title2Div>
             <SubtitleDiv>Verifica tu CUIL</SubtitleDiv>
-            {InputBuild(0)}
+            <InputField />
             <Link to="/Ingresar" className="w-full"><LabelDiv>
                 No lo recuerdo / no tengo mi CUIL
             </LabelDiv></Link>
@@ -103,22 +52,19 @@ export const RegisterPage = () =>{
         html: (<>
             <Title2Div>Paso 2</Title2Div>
             <SubtitleDiv>Datos Personales</SubtitleDiv>
-            {InputBuild(1)}
-            {InputBuild(2)}
+            {InputBuild('Name')}
+            {InputBuild('LastName')}
         </>)
     },{
         html: (<>
             <Title2Div>Paso 3</Title2Div>
             <SubtitleDiv>Datos de Contacto</SubtitleDiv>
-            {InputBuild(3)}
-            {InputBuild(4)}
+            {InputBuild('Email')}
         </>)
     },{
         html: (<>
             <Title2Div>Paso 4</Title2Div>
             <SubtitleDiv>Contraseña</SubtitleDiv>
-            {InputBuild(5)}
-            {InputBuild(6)}
         </>)
     },{
         html: (<>
@@ -127,8 +73,8 @@ export const RegisterPage = () =>{
             Al registrarme en la plataforma Gobierno Digital acepto los Términos y condiciones de uso del servicio.
         </>),
         afterfunction: async () =>{
-            console.log(ref.current.values)
-            Signup(ref.current.values)
+            //console.log(ref.current.values)
+            //Signup(ref.current.values)
         }
     }]
 
