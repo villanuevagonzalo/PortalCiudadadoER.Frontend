@@ -49,7 +49,6 @@ export const LoginPage = () =>{
             ><Form autoComplete="off">
                 <FormikField name="CUIL" disabled={formState.loading}/>
                 <FormikField name="Password" disabled={formState.loading}/>
-                <FormikField name="RememberMe" disabled={formState.loading}/>
                 <Button disabled={formState.loading} type="submit">
                     {formState.loading ? <Spinner/> : 'Iniciar Sesión'}                                
                 </Button>
