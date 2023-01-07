@@ -17,12 +17,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   background: var(--bg-main);
-  display:block;
   font-family: 'Open Sans', sans-serif;
-  height: 100%;
-  margin: 0;
   position: absolute;
+  top:0;
+  left:0;
   width: 100%;
+  margin: 0;
+  display:flex;
 }
 
 #root{
@@ -30,17 +31,25 @@ body {
   align-self: top;
   display: flex;
   justify-content: left;
-  flex-direction: row;
+  flex-direction: column;
   gap: 0;
-  height: 100%;
+  flex: 1;
   justify-content: top;
-  width: 100%;
 }
 
-@media (max-width: 800px) {
-  #root {
-    flex-direction: column;
+@media (min-width: 600px) {
+  body{
+    min-height: 100%;
   }
+
+  #root {
+    min-height: 100%;
+    flex-direction: row;
+  }
+}
+
+form{
+  width: 100%;
 }
 
 .App-header {
@@ -76,4 +85,11 @@ body {
   text-align: center;
   width: 100%;
   height:100%;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
 }

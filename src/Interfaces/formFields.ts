@@ -1,20 +1,41 @@
 import * as yup from 'yup';
 
-const formValidations = {
-    
+// Estado General de un Formulario
+
+export interface FormStateProps {
+    loading: boolean;
+    error: string;
+    finish: boolean;
 }
+
+export const FormStateDefault:FormStateProps = {
+    loading: false,
+    error: '',
+    finish: false,
+}
+
+// Campos de formularios
 
 interface FieldProps {
     [key: string]: {
         type: string;
+        defaultvalue?: any;
         placeholder: string;
         validations: any;
     }
 }
 
-const formFields:FieldProps = {
+export const FormFields:FieldProps = {
+    Default:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Input Genérico - Revisa el campo Name',
+        validations: yup.string()
+    },
+
     CUIL:{
         type: 'number',
+        defaultvalue: '',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -24,6 +45,7 @@ const formFields:FieldProps = {
 
     Name:{
         type: 'string',
+        defaultvalue: '',
         placeholder: 'Ingresa tu/s nombre/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -31,209 +53,83 @@ const formFields:FieldProps = {
 
     LastName:{
         type: 'string',
+        defaultvalue: '',
         placeholder: 'Ingresa tu/s apellido/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
     },
 
-    Password:{
-        type: 'number',
-        placeholder: 'Ingresa tu contraseña',
-        validations: null
-    },
-
     Email:{
         type: 'email',
+        defaultvalue: '',
         placeholder: 'Ingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
                         .email('Debe ser un email válido')
-    }
+    },
+
+    Email_Validation:{
+        type: 'email',
+        defaultvalue: '',
+        placeholder: 'Reingresa tu email',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+                        .email('Debe ser un email válido')
+                        .oneOf([yup.ref('Email')],'Los emails no coinciden')
+    },
+
+    Password:{
+        type: 'password',
+        defaultvalue: '',
+        placeholder: 'Ingresa tu contraseña',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Password_Validation:{
+        type: 'password',
+        defaultvalue: '',
+        placeholder: 'Ingresa tu contraseña',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+                        .oneOf([yup.ref('Password')],'Las contraseñas no coinciden')
+    },
+
+    Captcha:{
+        type: 'checkbox',
+        defaultvalue: false,
+        placeholder: '',
+        validations: yup.boolean()
+                        .oneOf([true], "Debes Verificar el Captcha")
+    },
+
+    AcceptTerms:{
+        type: 'checkbox',
+        defaultvalue: false,
+        placeholder: 'Al registrarme en la plataforma Gobierno Digital acepto los Términos y condiciones de uso del servicio.',
+        validations: yup.boolean()
+                        .required('El campo es obligatorio')
+                        .oneOf([true], "Debes aceptar los terminos y condiciones")
+    },
+
+    RememberMe:{
+        type: 'checkbox',
+        defaultvalue: false,
+        placeholder: 'Recordarme',
+        validations: yup.boolean()
+    },
+
+    prs_id:{
+        type: 'number',
+        defaultvalue: '',
+        placeholder: 'Id Ciudadano',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
 }
 
+// Funciones de Obtención de Información
 
-const loginFields=[
-    {
-        labelText:"Cuil",
-        labelFor:"cuil",
-        id:"cuil",
-        name:"cuil",
-        type:"number",
-        autoComplete:"CUIL",
-        isRequired:true,
-        autofocus: true,
-        placeholder:"Ingrese CUIL (sin guiones)",  
-        value: "",
-        validations:
-        [{
-            type:"required",
-        },
-        {
-            type:"minLength",
-            value: 11
-        },
-        {
-            type:"maxLength",
-            value: 11
-        }
-    ] 
-    },
-    {
-        labelText:"Contraseña",
-        labelFor:"password",
-        id:"password",
-        name:"password",
-        type:"password",
-        autoComplete:"current-password",
-        isRequired:true,
-        autofocus: false,
-        placeholder:"Contraseña", 
-        value: "",
-        validations:
-        [{
-            type:"required",
-        }] 
-    }
-]
-
-const signupFields=[
-    {
-        labelText:"CUIL",
-        labelFor:"cuil",
-        id:"cuil",
-        name:"cuil",
-        type:"number",
-        autoComplete:"CUIL",
-        isRequired:true,
-        autofocus:false,
-        placeholder:"Ingrese CUIL (sin guiones)",  
-        value: "",
-        validations:
-        [{
-            type:"required",
-        },
-        {
-            type:"minLength",
-            value: 10
-        },
-        {
-            type:"maxLength",
-            value: 11
-        }
-    ]
-    },
-    {
-        labelText:"Apellido/s",
-        labelFor:"apellido",
-        id:"apellido",
-        name:"apellido",
-        type:"text",
-        autoComplete:"apellido",
-        isRequired:true,
-        autofocus:false,
-        placeholder:"Apellido/s", 
-        value: "",
-        validations:
-        [{
-            type:"required",
-        }]  
-    },
-    {
-        labelText:"Nombre/s",
-        labelFor:"nombre",
-        id:"nombre",
-        name:"nombre",
-        type:"text",
-        autoComplete:"nombre",
-        isRequired:true,
-        autofocus:false,
-        placeholder:"Nombre/s",
-        value: "",
-        validations:
-        [{
-            type:"required",
-        }]    
-    },
-    {
-        labelText:"Email",
-        labelFor:"email",
-        id:"email",
-        name:"email",
-        type:"email",
-        autoComplete:"email",
-        isRequired:true,
-        autofocus:false,
-        placeholder:"Email",
-        value: "",
-        validations:
-        [{
-            type:"required",
-        },
-        {
-            type:"email",
-        },
-        ]  
-    },
-    {
-        labelText:"Confirmar Email",
-        labelFor:"email-confirm",
-        id:"email-confirm",
-        name:"email-confirm",
-        type:"email",
-        autoComplete:"email-confirm",
-        isRequired:true,
-        autofocus:false,
-        placeholder:"Confirmar Email",
-        value: "",
-        validations:
-        [{
-            type:"required",
-        },
-        {
-            type:"confirmEmail",
-        },
-        ]  
-    },
-    {
-        labelText:"Password",
-        labelFor:"password",
-        id:"password",
-        name:"password",
-        type:"password",
-        autoComplete:"current-password",
-        isRequired:true,
-        autofocus:false,
-        placeholder:"Password",
-        value: "",
-        validations:
-        [{
-            type:"required",
-        },
-        {
-            type:"password",
-        },
-    ] 
-    },
-    {
-        labelText:"Confirm Password",
-        labelFor:"confirm-password",
-        id:"confirm-password",
-        name:"confirm-password",
-        type:"password",
-        autoComplete:"confirm-password",
-        isRequired:true,
-        autofocus:false,
-        placeholder:"Confirm Password",
-        value: "",
-        validations:
-        [{
-            type:"required",
-        },
-        {
-            type:"confirmPassword",
-        },
-    ]  
-    }
-]
-
-export {loginFields,signupFields,formFields}
+export const formGetFieldProps = (field:string) => FormFields[field] ?? FormFields['Default']
+export const formGetValidations = (fields:string[]) => yup.object(fields.reduce((a, v) => ({ ...a, [v]: formGetFieldProps(v).validations}), {}));
+export const formGetInitialValues = (fields:string[]) => fields.reduce((a, v) => ({ ...a, [v]: formGetFieldProps(v).defaultvalue}), {});

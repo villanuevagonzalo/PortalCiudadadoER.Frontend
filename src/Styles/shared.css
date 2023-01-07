@@ -7,10 +7,16 @@
     --primary_tint: #5b8532;
 
     --secondary: #06b6d4;
-    --secondary_tint: #3b82f6;
+    --secondary_tint: #2293ad;
+    --secondary_tint2: #3b82f6;
+
+    --error: #d44006;
 
     --disabled: #cccccc;
     --disabled_tint: #aaaaaa;
+
+    --gray: #aaaaaa;
+    --gray_tint: #888888;
 
     
     --primary-gradient-background: var(--primary) linear-gradient(80deg, var(--primary) 0%, var(--primary_tint) 100%);
