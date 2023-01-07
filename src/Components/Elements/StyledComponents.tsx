@@ -36,9 +36,274 @@ export const Spinner = styled.div`
   }
 `;
 
+//// NEW LAYOUT
+export const Sidebar = styled.div<{ width?: string, open: boolean }>`
+  align-items: center;
+  align-self: center;
+  background: var(--main-background);
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  padding:2rem;
+  box-sizing: border-box;
+  width:100%;
+  min-width: 350px;
+  max-width: 450px;
+  min-height: 100%;
+`;
+
+export const MainContainer = styled.div`
+  align-items: center;
+  align-self: center;
+  background: var(--${props => (props.color ? props.color : 'main-background')});
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  flex:1;
+  width:100%;
+  height: 100%;
+`;
+
+export const ToDo = styled.div`
+  background: var(--${props => (props.color ? props.color : 'primary-gradient-background')});
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  width:100%;
+  height:100%;
+  padding:2rem;
+`;
+
+
+
+export const NavigatorWrapper = styled.div<{ open?: boolean }>`
+  border-top: 1px solid var(--disabled);
+  padding-top: 1rem;
+  display: flex;
+  gap: 2;
+  margin-top: 1rem;
+  flex-direction: row;
+`;
+
+export const NavigatorSpacer = styled.div<{ open?: boolean }>`
+  flex:1;
+`;
+
+
+export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean }>`
+  background-color: var(--main-background);
+  width:${props => props.fullwidth?'100%':'auto'};
+  min-width:150px;
+  margin-bottom: 1.5rem;
+  border: 2px solid var(${props => props.error?'--error':'--disabled'});
+  position: relative;
+  display:flex;
+  opacity: ${props => props.disabled?'0.5':'1'};
+  border-radius: 0.5rem;
+
+  & input{
+    position: relative;
+    padding: 0.6rem 0.75rem 0.5rem;
+    background: transparent;
+    outline:none;
+    width: 100%;
+    z-index: 1;
+    font-size: 0.9rem;
+  }
+  
+  & div{
+    outline:none;
+    padding 0.5rem;
+    font-size: 1.5rem;
+    color: var(${props => props.error?'--error':'--disabled_tint'});
+    cursor: pointer;
+    z-index: 1;
+  }
+
+
+  & span, label{
+    position: absolute;
+    transition 0.1s;
+    background: var(--main-background);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  & label{
+    top: ${props => props.focus?'-0.65rem':'0.45rem'};
+    color:var(${props => props.error?'--error':(props.focus?'--main-color':'--disabled')});
+    left: 0.5rem;
+    padding: 0 0.25rem;
+    font-size: ${props => props.focus?'0.75rem':'0.90rem'};
+  }
+
+  & span{
+    top: 2.75rem;
+    color:var(--error);
+    right: 0;
+    font-size: 0.75rem;
+  }
+  
+
+
+`;
+
+export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean }>`
+  background-color: var(--main-background);
+  width:${props => props.fullwidth?'100%':'auto'};
+  min-width:150px;
+  margin-bottom: 1.5rem;
+  position: relative;
+  display:flex;
+  flex-direction: column;
+  opacity: ${props => props.disabled?'0.5':'1'};
+  transition: all .1s ease-in;
+  
+  & div.CheckboxText{
+    display:flex;
+    transition: all .1s ease-in;
+    color: var(${props => props.error?'--error':'--main-color'});
+    z-index: 1;
+    justify-content:top;
+    align-items:top;
+
+    & div{
+      font-size:1rem;
+      padding:0.25rem 0.5rem 0 0;
+    }
+
+    & *{
+      cursor: pointer;
+    }
+  }
+
+  & span{
+    transition 0.1s;
+    z-index: 2;
+    pointer-events: none;
+    margin-top:0.5rem;
+    text-align:right;
+    color:var(--error);
+    font-size: 0.75rem;
+  }
+`;
+
+
+export const FormikError = styled.div<{ open?: boolean }>`
+  font-size: 1rem;
+  color: var(--error);
+  width:100%;
+  display:${props => props.open?'flex':'none'};
+  justify-content:center;
+  text-align:center;
+  align-items:center;
+  border: 1px solid  var(--error);
+  padding:1rem;
+  margin-top:1rem;
+  border-radius:0.25rem;
+
+`;
+
+export const CaptchaWrapper = styled.div<{ open?: boolean }>`
+  font-size: 1.5rem;
+  color: var(--main-color);
+  width:100%;
+  display:flex;
+  justify-content:center;
+  text-align:center;
+  align-items:center;
+`;
 
 
 //// Layout
+
+
+export const SidebarHideableWrapper = styled.div<{ width?: string, open: boolean }>`
+  align-items: center;
+  align-self: center;
+  background: var(--main-background);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap:0;
+  width:100%;
+  max-width: ${props => props.width ? props.width : '200px'};
+  margin-left: ${props => (props.open ? '0px' : (props.width ? '-'+props.width : '-200px'))};
+  height: 100%;
+  position:absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-right: 2px solid var(--disabled);
+  
+  transition: margin 0.25s ease;
+`;
+
+export const SidebarBurger = styled.div<{ open?: boolean }>`
+  cursor:pointer;
+  font-size:2em;  
+  position:absolute;
+  left:0.25em;
+  top:0.25em;
+  user-select: none;
+`;
+
+
+export const TitleDiv = styled.div<{ open?: boolean }>`
+  font-size: 1.5rem;
+  color: var(--main-color);
+  width:100%;
+  display:flex;
+  justify-content:start;
+  align-items:center;
+  gap:0.5rem;
+`;
+
+export const Title2Div = styled.div<{ open?: boolean }>`
+  font-size: 1.25rem;
+  color: var(--secondary);
+  font-weight:bold;
+  width:100%;
+`;
+
+export const SubtitleDiv = styled.div<{ open?: boolean }>`
+  font-size:0.8rem;
+  color: var(--main-color);
+  width:100%;
+  margin-bottom:1rem;
+`;
+
+export const LabelDiv = styled.div<{ open?: boolean }>`
+  font-size: 0.8rem;
+  color: var(--${props => (props.color ? props.color : 'primary')});
+  width:100%;
+  padding: 0.5rem 1rem;
+  text-align:center;
+`;
+
+
+export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
+  font-size: 0.9rem;
+  color: var(--main-background);
+  width:${props => props.fullwidth?'100%':'auto'};
+  min-width:150px;
+  padding: 0.5rem 1rem;
+  text-align:center;
+  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
+  border-radius: 2rem;
+  margin-bottom: 0.5rem;
+
+  &:disabled{
+    opacity:0.5;
+  }
+
+  &:hover{
+    background-color: var(--${props => (props.color ? props.color : 'primary')}_tint)!important;
+  }
+`;
+
+
+
 export const Container = styled.div`
   align-items: center;
   align-self: center;

@@ -23,4 +23,12 @@ export class AuthAPI {
         return this.baseService.get('/v0/user/login', { params: params })
     }
 
+    public GetUserData(params: any){
+        return this.baseService.get('/v0/user/check/cuil', { params: params })
+    }
+
+    public UserValidateEmail(params: any){
+        return this.baseService.post('/v0/user/validate/email', { params: params })
+    }
+
 }

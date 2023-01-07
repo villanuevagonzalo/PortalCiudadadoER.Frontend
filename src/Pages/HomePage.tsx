@@ -11,7 +11,7 @@ export const HomePage = () => {
 
 
   return (
-    <Hero classes="bg-gradient-to-r from-cyan-500 to-blue-500 text-white" tail={true}>
+    <Hero classes="bg-gradient-to-r from-emerald-500 to-lime-600 text-white">
       {isLogged?
         <div className="p-4">
           <h1 className="mt-4 text-4xl lg:text-5xl leading-tight">
@@ -40,7 +40,7 @@ export const HomePage = () => {
         :
         <div className="p-4">
           <h1 className="my-4 text-4xl lg:text-5xl font-bold leading-tight">
-            Bienvenido a tu Gobierno Digital!
+            ¡Bienvenido a Ciudadano Digital!
           </h1>
           <p className="leading-normal text-1xl lg:text-2xl mb-8">
             Una forma fácil y segura de acceder a los servicios digitales del Estado con una única sesión y en un sólo lugar.

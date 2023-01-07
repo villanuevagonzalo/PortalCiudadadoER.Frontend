@@ -1,64 +1,144 @@
-import { useContext, useState } from 'react';
-import { signupFields } from "../../Interfaces/formFields";
-import Input from '../../Components/Forms/Input';
-import { Hero } from '../../Components/Elements/Hero';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useContext, useEffect, useRef, useState } from 'react';
+import { formGetValidations, formGetInitialValues, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { Link } from 'react-router-dom';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { Spinner } from '../../Components/Elements/StyledComponents';
+import { FormikError, LabelDiv, MainContainer, Sidebar, SubtitleDiv, Title2Div, TitleDiv, ToDo } from '../../Components/Elements/StyledComponents';
+import { Button } from '../../Components/Forms/Button';
+import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
 
-const fields = signupFields;
-let fieldsState = {};
-fields.forEach(field => (fieldsState as any)[field.id] = '');
+import React from 'react';
+import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper';
+import { FormikField } from '../../Components/Forms/FormikField';
+import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
+import ReCAPTCHA from "react-google-recaptcha";
+import { CapitalizeWords, Sleep } from '../../Utils/generalFunctions';
+import { CgPassword } from 'react-icons/cg';
+import { MdOutlineSwitchAccount } from 'react-icons/md';
+    
+const FormRequiredFields = [
+    'CUIL',
+    'Name',
+    'LastName',
+    'Password',
+    'Password_Validation',
+    'Email',
+    'Email_Validation',
+    'Captcha',
+    'AcceptTerms',
+    'prs_id'
+]
+
+const AxiosAuthAPI = new AuthAPI();
 
 export const RegisterPage = () =>{
+
+    const ref:any = useRef(null);
+    const { Signup } = useContext(AuthContext);
+
+    const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
+    const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
+
+    const [formError, setFormError] = useState<string>('');
+
+    useEffect(() => {
+      console.log(FieldValues)
+    }, [FieldValues])
     
-    const { Signup, isLoading } = useContext(AuthContext);
-
-    const navigate = useNavigate();
-
-    const [registerState,setRegisterState]=useState<any>(fieldsState);
-
-    const handleChange=(e: any)=>{
-        setRegisterState({...registerState,[e.target.id]:e.target.value})
-    }
-
-    const HandleRegister = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
-        Signup(registerState)
-    };
-
-    return(<Hero classes="bg-gradient-to-r from-cyan-500 to-blue-500 text-white" tail={true}>
-        <div className="container mx-auto flex content-center items-center justify-center h-full px-4">
-              <div className="w-full lg:w-4/12">
-                <form className="flex-auto px-4 lg:px-10 py-8 relative flex flex-col min-w-0 break-words w-full shadow-lg rounded-lg bg-gray-100 border-0">
-
-                    {fields.map(field=><Input
-                        key={field.id}
-                        handleChange={handleChange}
-                        value={(registerState as any)[field.id]}
-                        labelText={field.labelText}
-                        labelFor={field.labelFor}
-                        id={field.id}
-                        name={field.name}
-                        type={field.type}
-                        isRequired={field.isRequired}
-                        autoFocus={field.autofocus}
-                        placeholder={field.placeholder}
-                    />)}
-                    <div className="text-center mt-6">
-                        <button className="bg-gradient-to-r from-cyan-500 to-blue-500 text-white active:bg-gray-700 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full" type="button" style={{ transition: "all .15s ease" }} onClick={HandleRegister}>
-                        {isLoading ? <Spinner/> : 'Crear Cuenta'} 
-                        </button>
-                    </div>
-                </form>
-                <div className="flex flex-wrap my-6 ">
-                    <Link to="/Ingresar" className="text-white w-full text-right">
-                        <small>¿Ya tenes una cuenta? <strong>¡Inicia Sesión!</strong></small>
-                    </Link>
-                </div>
-            </div>
-          </div></Hero>
-    )
+    return(<>
+        <Sidebar open={true}>
+            <LogoCiudadanoDigital/>
+            <br />
+            <TitleDiv>Crear una Cuenta</TitleDiv>
+            <SubtitleDiv>Ingresá tus datos para registrarte en la plataforma.</SubtitleDiv>
+            <FormikStepper
+                innerRef={ref}
+                initialValues={FieldValues}
+                onSubmit={async (values:any) =>{
+                    await Signup({
+                        cuil: values.CUIL,
+                        nombre: values.Name,
+                        apellido: values.LastName,
+                        email: values.Email_Validation,
+                        password: values.Password_Validation,
+                        prs_id: values.prs_id
+                    }, setFormError)
+                }}
+                enableReinitialize={true}
+                validateOnChange={false}
+                validateOnBlur={false}
+                formState2={[formState, setFormState]}
+            >
+                <FormikStep
+                    label="CUIL"
+                    validationSchema={formGetValidations(['CUIL'])}
+                    afterFunction={async (values:any) =>{
+                        await AxiosAuthAPI.GetUserData({'cuil':ref.current.values.CUIL}).then((response)=>{
+                            let userdata = response.data.user
+                            console.log(response)
+                            setFieldValues({...values, 
+                                Name: CapitalizeWords(userdata.Nombres), 
+                                LastName: CapitalizeWords(userdata.Apellido), 
+                                prs_id: userdata.id
+                            });
+                        })
+                    }}
+                >
+                    <Title2Div>Paso 1</Title2Div>
+                    <SubtitleDiv>Verifica tu CUIL</SubtitleDiv>
+                    <FormikField name="CUIL" autoFocus disabled={formState.loading}/>
+                    <Link to="/Ingresar"><LabelDiv>
+                        No lo recuerdo / no tengo mi CUIL
+                    </LabelDiv></Link>
+                </FormikStep>
+                <FormikStep
+                    label="Datos Personales"
+                    validationSchema={formGetValidations(['Name','LastName'])}
+                >
+                    <Title2Div>Paso 2</Title2Div>
+                    <SubtitleDiv>Datos Personales</SubtitleDiv>
+                    <FormikField name="Name" autoFocus disabled={formState.loading}/>
+                    <FormikField name="LastName" disabled={formState.loading}/>
+                </FormikStep>
+                <FormikStep
+                    label="Email"
+                    validationSchema={formGetValidations(['Email','Email_Validation'])}
+                >
+                    <Title2Div>Paso 3</Title2Div>
+                    <SubtitleDiv>Datos de Contacto</SubtitleDiv>
+                    <FormikField name="Email" autoFocus disabled={formState.loading}/>
+                    <FormikField name="Email_Validation" disabled={formState.loading}/>
+                </FormikStep>
+                <FormikStep
+                    label="Contraseña"
+                    validationSchema={formGetValidations(['Password','Password_Validation'])}
+                >
+                    <Title2Div>Paso 4</Title2Div>
+                    <SubtitleDiv>Contraseña</SubtitleDiv>
+                    <FormikField name="Password" autoFocus disabled={formState.loading}/>
+                    <FormikField name="Password_Validation" disabled={formState.loading}/>
+                </FormikStep>
+                <FormikStep
+                    label="Final"
+                    validationSchema={formGetValidations(['Captcha','AcceptTerms'])}
+                >
+                    <Title2Div>Paso 5</Title2Div>
+                    <SubtitleDiv>Confirmación Final</SubtitleDiv>
+                    <FormikCaptcha name="Captcha"/>
+                    <FormikField name="Captcha" hidden/>
+                    <FormikField name="AcceptTerms"/>
+                </FormikStep>
+            </FormikStepper>
+            <FormikError open={formError?true:false}>{formError}</FormikError>
+            <br />
+                               
+            <LabelDiv>¿Ya te registraste?</LabelDiv>
+            <Link to="/Ingresar" className="w-full"><Button disabled={formState.loading}>
+                Iniciar Sesión
+            </Button></Link>
+        </Sidebar>
+        <MainContainer>
+            <ToDo>Normativas</ToDo>
+        </MainContainer>
+    </>)
 }

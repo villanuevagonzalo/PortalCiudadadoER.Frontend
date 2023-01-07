@@ -31,6 +31,8 @@ const TestValues:IUser = {
     roles: [['Ciudadano','Nivel 3']]
 }
 
+
+
 const ContextValues = () => {
 
     const AxiosAuthAPI = new AuthAPI();
@@ -41,12 +43,13 @@ const ContextValues = () => {
     const [authToken, setAuthToken] = useState<string>(localStorage.getItem("authToken") || '');
     const [userData, setUserData] = useState<IUser>(DefaultValues)
 
-    const Signup = (data: any) => {
+    const Signup = async (data: any, setError:Function) => {
         setIsLoading(true)
-        AxiosAuthAPI.UserSignup(data).then((response)=>{
+        await AxiosAuthAPI.UserSignup(data).then((response)=>{
             setIsLoading(false)
             if (response.data.success === false) {
                 console.log(response.data)
+                
                 
             } else {
                 navigate("/Ingresar");
@@ -54,14 +57,16 @@ const ContextValues = () => {
 
         })
         .catch((error)=>{
+            console.log('Entro al catch');
+            console.log(error.response.data.errors);
+            setError(error.response.data.message)
             setIsLoading(false)
-            console.log(error);
         });
     }
 
-    const Login = (data: any) => {
+    const Login = async (data: any, setError?:Function) => {
         setIsLoading(true)
-        AxiosAuthAPI.UserLogin(data).then((response)=>{
+        await AxiosAuthAPI.UserLogin(data).then((response)=>{
             setIsLoading(false)
             if (response.data.success === false) {
               
