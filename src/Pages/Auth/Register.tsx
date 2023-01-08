@@ -11,10 +11,7 @@ import React from 'react';
 import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper';
 import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
-import ReCAPTCHA from "react-google-recaptcha";
-import { CapitalizeWords, Sleep } from '../../Utils/generalFunctions';
-import { CgPassword } from 'react-icons/cg';
-import { MdOutlineSwitchAccount } from 'react-icons/md';
+import { CapitalizeWords } from '../../Utils/generalFunctions';
     
 const FormRequiredFields = [
     'CUIL',
