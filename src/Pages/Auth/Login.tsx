@@ -9,6 +9,7 @@ import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
 import { FormikField } from '../../Components/Forms/FormikField';
 import { AiOutlineLock } from 'react-icons/ai';
+import { Descripcion } from '../../Components/Elements/Descripcion';
 
 const FormRequiredFields = [
     'CUIL',
@@ -58,17 +59,17 @@ export const LoginPage = () =>{
                 Crear una cuenta                               
             </Button></Link>
             <br />
-            <br />
-            <LabelDiv>¿Tuviste algun problema al registrarte?</LabelDiv>
-            <Link to="/RestaurarPassword" className="w-full"><Button disabled={formState.loading} color="disabled">
-                No recuerdo mi contraseña                              
+            <LabelDiv color="gray_tint">¿Tuviste algun problema al registrarte?</LabelDiv>
+            <Link to="/RestaurarPassword" className="w-full"><Button disabled={formState.loading} color="gray">
+                No recuerdo mi contraseña
+                <AiOutlineLock/>                        
             </Button></Link>
-            <Button disabled={formState.loading} color="disabled" className="w-full">
+            <Button disabled={formState.loading} color="gray" className="w-full">
                 No pude validar mi correo electrónico                            
             </Button>  
         </Sidebar>
         <MainContainer>
-            <ToDo>Normativas</ToDo>
+            <Descripcion />
         </MainContainer>
     </>)
 }

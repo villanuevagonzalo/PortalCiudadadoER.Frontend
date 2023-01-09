@@ -251,7 +251,7 @@ export const SidebarBurger = styled.div<{ open?: boolean }>`
 
 export const TitleDiv = styled.div<{ open?: boolean }>`
   font-size: 1.5rem;
-  color: var(--main-color);
+  color: var(--${props => (props.color ? props.color : 'main-color')});
   width:100%;
   display:flex;
   justify-content:start;
@@ -268,7 +268,7 @@ export const Title2Div = styled.div<{ open?: boolean }>`
 
 export const SubtitleDiv = styled.div<{ open?: boolean }>`
   font-size:0.8rem;
-  color: var(--main-color);
+  color: var(--${props => (props.color ? props.color : 'main-color')});
   width:100%;
   margin-bottom:1rem;
 `;
@@ -292,6 +292,10 @@ export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
   background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
   border-radius: 2rem;
   margin-bottom: 0.5rem;
+  display:flex;
+  align-items: center;
+  justify-content:center;
+  gap:0.5rem;
 
   &:disabled{
     opacity:0.5;

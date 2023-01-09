@@ -12,6 +12,7 @@ import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper'
 import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { CapitalizeWords } from '../../Utils/generalFunctions';
+import { Descripcion } from '../../Components/Elements/Descripcion';
     
 const FormRequiredFields = [
     'CUIL',
@@ -37,10 +38,6 @@ export const RegisterPage = () =>{
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
 
     const [formError, setFormError] = useState<string>('');
-
-    useEffect(() => {
-      console.log(FieldValues)
-    }, [FieldValues])
     
     return(<>
         <Sidebar open={true}>
@@ -72,7 +69,7 @@ export const RegisterPage = () =>{
                     afterFunction={async (values:any) =>{
                         await AxiosAuthAPI.GetUserData({'cuil':ref.current.values.CUIL}).then((response)=>{
                             let userdata = response.data.user
-                            console.log(response)
+                            //console.log(response)
                             setFieldValues({...values, 
                                 Name: CapitalizeWords(userdata.Nombres), 
                                 LastName: CapitalizeWords(userdata.Apellido), 
@@ -135,7 +132,7 @@ export const RegisterPage = () =>{
             </Button></Link>
         </Sidebar>
         <MainContainer>
-            <ToDo>Normativas</ToDo>
+            <Descripcion />
         </MainContainer>
     </>)
 }

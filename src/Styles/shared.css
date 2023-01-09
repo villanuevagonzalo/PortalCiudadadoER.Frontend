@@ -15,8 +15,11 @@
     --disabled: #cccccc;
     --disabled_tint: #aaaaaa;
 
-    --gray: #aaaaaa;
-    --gray_tint: #888888;
+    --gray: #888888;
+    --gray_tint: #666666;
+
+    --white: #f0f0f0;
+    --white_tint: #d0d0d0;
 
     
     --primary-gradient-background: var(--primary) linear-gradient(80deg, var(--primary) 0%, var(--primary_tint) 100%);
