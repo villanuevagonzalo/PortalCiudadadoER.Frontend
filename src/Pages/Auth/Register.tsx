@@ -13,6 +13,7 @@ import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { CapitalizeWords } from '../../Utils/generalFunctions';
 import { Descripcion } from '../../Components/Elements/Descripcion';
+import { ImagenMedalla } from '../../Components/Images/ImagenMedalla';
     
 const FormRequiredFields = [
     'CUIL',
@@ -37,10 +38,9 @@ export const RegisterPage = () =>{
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
 
-    const [formError, setFormError] = useState<string>('');
-
     const handleFinish = ()=>{
-        setFormState(prev=>({...prev, finish:!formState.finish}))
+        setFormState(prev=>({...prev, finish:!formState.finish, error:''}))
+        
     }
     
     return(<>
@@ -48,10 +48,11 @@ export const RegisterPage = () =>{
             <LogoCiudadanoDigital/>
             <br />
             <TitleDiv onClick={handleFinish}>Crear una Cuenta</TitleDiv>
-            {formState.finish?<>
+            {(formState.finish && !formState.error)?<>
                 <SubtitleDiv>Te haz registrado exitosamente.</SubtitleDiv>
                 <br />
-                <img src="https://www.svgrepo.com/show/276289/award-reward.svg" width="100px"/>
+                <ImagenMedalla width="100px"/>
+                <br />
                 <Title2Div>¡Felitaciones!</Title2Div>
                 <SubtitleDiv>Revisa tu correo electronico para validar tu cuenta y terminar tu proceso de registro.</SubtitleDiv>
                 <LabelDiv color="gray_tint">¿Tuviste algun problema?</LabelDiv>
@@ -74,7 +75,7 @@ export const RegisterPage = () =>{
                         email: values.Email_Validation,
                         password: values.Password_Validation,
                         prs_id: values.prs_id
-                    }, setFormError)
+                    }, setFormState)
                 }}
                 enableReinitialize={true}
                 validateOnChange={false}
@@ -132,7 +133,6 @@ export const RegisterPage = () =>{
                 </FormikStep>
                 <FormikStep
                     label="Final"
-                    validationSchema={formGetValidations(['Captcha','AcceptTerms'])}
                 >
                     <Title2Div>Paso 5</Title2Div>
                     <SubtitleDiv>Confirmación Final</SubtitleDiv>
@@ -141,7 +141,7 @@ export const RegisterPage = () =>{
                     <FormikField name="AcceptTerms"/>
                 </FormikStep>
             </FormikStepper>
-            <FormikError open={formError?true:false}>{formError}</FormikError>
+            <FormikError open={formState.error?true:false}>{formState.error}</FormikError>
             </>}
             <br />
                                

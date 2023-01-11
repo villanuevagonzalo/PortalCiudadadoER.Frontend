@@ -5,6 +5,7 @@ import { NavigatorSpacer, NavigatorWrapper, Spinner } from "../Elements/StyledCo
 import { Button } from "../Forms/Button";
 
 import { FormStateProps } from "../../Interfaces/FormFields";
+import { Sleep } from "../../Utils/generalFunctions";
 
 export interface FormikStepProps
   extends Pick<FormikConfig<FormikValues>, 'children' | 'validationSchema'> {
@@ -23,7 +24,7 @@ export interface FormikStepperProps extends FormikConfig<FormikValues>{
 export function FormikStepper({ children, formState2, ...props }:FormikStepperProps) {
 
   const [step, setStep] = useState(0);
-  const [formState, setFormState] = formState2
+  let [formState, setFormState] = formState2
 
   const childrenArray = React.Children.toArray(children).filter((e:any)=>e.type===FormikStep) as React.ReactElement<FormikStepProps>[];
   const currentChild = childrenArray[step];
@@ -39,6 +40,7 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
         if(currentChild.props.afterFunction){
           await currentChild.props.afterFunction(values, helpers)
                                   .then((e:any)=>{
+                                    console.log('AFTERFUNCION THEN', e)
                                       //props.setstate(pages.length-currentPage-1?currentPage+1:pages.length-1)
                                   })
                                   .catch((e:any)=>{
@@ -46,7 +48,7 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
                                   })
         }
         if(isLastStep()){
-          //await props.onSubmit(values, helpers);
+          await props.onSubmit(values, helpers);
           setFormState(prev=>({...prev, finish:true}))
         } else{
           setStep((s) => s + 1);

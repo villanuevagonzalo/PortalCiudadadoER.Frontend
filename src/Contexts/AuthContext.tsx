@@ -43,10 +43,11 @@ const ContextValues = () => {
     const [authToken, setAuthToken] = useState<string>(localStorage.getItem("authToken") || '');
     const [userData, setUserData] = useState<IUser>(DefaultValues)
 
-    const Signup = async (data: any, setError:Function) => {
+    const Signup = async (data: any, setFormState:Function) => {
         setIsLoading(true)
         await AxiosAuthAPI.UserSignup(data).then((response)=>{
             setIsLoading(false)
+            console.log(response);
             if (response.data.success === false) {
                 console.log(response.data)
                 
@@ -57,10 +58,9 @@ const ContextValues = () => {
 
         })
         .catch((error)=>{
-            console.log('Entro al catch');
-            console.log(error.response.data.errors);
-            setError(error.response.data.message)
             setIsLoading(false)
+            console.log(error);
+            setFormState((prev:any)=>({...prev, error:'El proceso de Registro fallo.'}))
         });
     }
 

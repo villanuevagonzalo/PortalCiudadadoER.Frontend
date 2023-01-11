@@ -16,11 +16,11 @@ export class AuthAPI {
     }
 
     public UserSignup(params: any){
-        return this.baseService.post('/v0/user/signup', null, { params: params})
+        return this.baseService.post('/v0/user/signup', null, { params })
     }
 
     public UserLogin(params: any){
-        return this.baseService.get('/v0/user/login', { params: params })
+        return this.baseService.post('/v0/user/login', params )
     }
 
     public GetUserData(params: any){
@@ -28,7 +28,7 @@ export class AuthAPI {
     }
 
     public UserValidateEmail(params: any){
-        return this.baseService.post('/v0/user/validate/email', { params: params })
+        return this.baseService.post('/v0/user/validate/email', params )
     }
 
 }

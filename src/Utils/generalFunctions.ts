@@ -14,53 +14,34 @@ export const Sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
 
 
-interface GetParamsProps {
-  value: string;
-  error: string;
-}
 
 export const GetParams = (params: string[]) => {
-    const [searchParams] = useSearchParams()
-    const newParams: {[key: string]: { value: string; error: string; }} = {}
-  
-    for (let param in params) {
-        const paramname = params[param]
-      const paramvalue = searchParams.get(params[param]) as string
-      if (paramvalue) {
-        try {
-          newParams[paramname] = {value:atob(paramvalue),error:''}
-        } catch (e) {
-            
-          newParams[paramname] = {value:'',error:`El campo <b>${paramname}</b> presenta un valor invalido`}
-        }
-      } else {
-        newParams[paramname] = {value:'',error:`El campo <b>${paramname}</b> no existe`}
-    }
-    }
-  
-    return newParams
+
+  const values: {[key: string]: string } = {};
+  let status: boolean = true;
+  const errors: any[] = [];
+
+  const [searchParams] = useSearchParams();
+
+  for (let param in params) {
+      const paramname = params[param]
+    const paramvalue = searchParams.get(params[param]) as string
+    if (paramvalue) {
+      try {
+        values[paramname] = atob(paramvalue);
+      } catch (e) {
+        values[paramname] = '';
+        errors.push(`El campo ${paramname} presenta un valor invalido`);
+        status = false;
+      }
+    } else {
+      values[paramname] = '';
+      errors.push(`El campo ${paramname} no existe`);
+      status = false;
+  }
   }
 
+  return { status, params, values, errors }
+}
   
-  
-export const GetParams2 = (params: string[]) => {
-    const [searchParams] = useSearchParams()
-    const newParams: string[] = []
-  
-    for (let param in params) {
-      console.log(params[param])
-      const tempparam = searchParams.get(params[param]) as string
-      if (tempparam) {
-        try {
-          newParams.push(atob(tempparam))
-        } catch (e) {
-          newParams.push('string invalido')
-        }
-      } else {
-        newParams.push('')
-      }
-    }
-  
-    return newParams
-  }
-  
+

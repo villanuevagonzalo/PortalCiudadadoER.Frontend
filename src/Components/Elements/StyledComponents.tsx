@@ -17,13 +17,13 @@ export const Title = styled.div`
   width: 100%;
 `;
 
-export const Spinner = styled.div`
+export const Spinner = styled.div<{ size?: string }>`
   animation: spin 1s ease infinite;
-  border-left-color: var(--primary-gradient-color)!important;
   border-radius: 50%;
   border: 4px solid transparent;
-  height: 1.25rem;
-  width: 1.25rem;
+  border-left-color: var(--${props => (props.color ? props.color : 'primary-gradient-color')});
+  height:${props => props.size?props.size:'1.25rem'};
+  width:${props => props.size?props.size:'1.25rem'};
   margin: 0 auto;
 
   @keyframes spin {

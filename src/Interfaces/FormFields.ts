@@ -35,7 +35,7 @@ export const FormFields:FieldProps = {
 
     CUIL:{
         type: 'number',
-        defaultvalue: '',
+        defaultvalue: '20390317213',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -45,7 +45,7 @@ export const FormFields:FieldProps = {
 
     Name:{
         type: 'string',
-        defaultvalue: '',
+        defaultvalue: '1',
         placeholder: 'Ingresa tu/s nombre/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -53,7 +53,7 @@ export const FormFields:FieldProps = {
 
     LastName:{
         type: 'string',
-        defaultvalue: '',
+        defaultvalue: '1',
         placeholder: 'Ingresa tu/s apellido/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -61,7 +61,7 @@ export const FormFields:FieldProps = {
 
     Email:{
         type: 'email',
-        defaultvalue: '',
+        defaultvalue: 'gonzalo_villanueva@outlook.com',
         placeholder: 'Ingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -70,7 +70,7 @@ export const FormFields:FieldProps = {
 
     Email_Validation:{
         type: 'email',
-        defaultvalue: '',
+        defaultvalue: 'gonzalo_villanueva@outlook.com',
         placeholder: 'Reingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -80,7 +80,7 @@ export const FormFields:FieldProps = {
 
     Password:{
         type: 'password',
-        defaultvalue: '',
+        defaultvalue: '1',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -88,7 +88,7 @@ export const FormFields:FieldProps = {
 
     Password_Validation:{
         type: 'password',
-        defaultvalue: '',
+        defaultvalue: '1',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
