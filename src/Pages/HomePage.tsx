@@ -6,7 +6,7 @@ import { MdOutlineLogout } from 'react-icons/md';
 import { AiOutlineLock, AiOutlinePaperClip } from 'react-icons/ai'
 import { LabelDiv, MainContainer, Sidebar, SubtitleDiv, TitleDiv } from "../Components/Elements/StyledComponents";
 import { Descripcion } from "../Components/Elements/Descripcion";
-import { LogoCiudadanoDigital } from "../Components/Elements/LogoCiudadanoDigital";
+import { LogoCiudadanoDigital } from "../Components/Images/LogoCiudadanoDigital";
 import { Button } from "../Components/Forms/Button";
 
 export const HomePage = () => {

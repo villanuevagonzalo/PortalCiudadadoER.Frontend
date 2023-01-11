@@ -3,7 +3,7 @@ import { DefaultLayout } from './Components/NewLayout/Default';
 import { HomePage } from './Pages/HomePage';
 import { TramitesPage } from './Pages/Tramites/index';
 import { ErrorPage } from './Pages/ErrorPage';
-import { ResetPassword } from './Pages/Auth/ResetPassword';
+import { ValidarCorreo } from './Pages/Auth/ValidarCorreo';
 import { RegisterPage } from './Pages/Auth/Register';
 import { LoginPage } from './Pages/Auth/Login';
 import { HomeRoute, PrivateRoute } from './Routes/PrivateRoute';
@@ -28,7 +28,7 @@ function App() {
             <Route path="Inicio" element={<HomePage />} />
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
-            <Route path="RestaurarPassword" element={<ResetPassword />} />
+            <Route path="ValidarCorreo" element={<ValidarCorreo />} />
             <Route path="servicios"
               element={
                 <PrivateRoute>

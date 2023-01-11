@@ -46,7 +46,8 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
                                   })
         }
         if(isLastStep()){
-          await props.onSubmit(values, helpers);
+          //await props.onSubmit(values, helpers);
+          setFormState(prev=>({...prev, finish:true}))
         } else{
           setStep((s) => s + 1);
         }

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
 
 import { LabelDiv, MainContainer, Sidebar, Spinner, SubtitleDiv, TitleDiv, ToDo } from '../../Components/Elements/StyledComponents';
-import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
+import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
 import { FormikField } from '../../Components/Forms/FormikField';

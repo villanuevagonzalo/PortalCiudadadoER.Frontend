@@ -5,7 +5,7 @@ import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { FormikError, LabelDiv, MainContainer, Sidebar, SubtitleDiv, Title2Div, TitleDiv, ToDo } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
-import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
+import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 
 import React from 'react';
 import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper';
@@ -38,12 +38,30 @@ export const RegisterPage = () =>{
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
 
     const [formError, setFormError] = useState<string>('');
+
+    const handleFinish = ()=>{
+        setFormState(prev=>({...prev, finish:!formState.finish}))
+    }
     
     return(<>
         <Sidebar open={true}>
             <LogoCiudadanoDigital/>
             <br />
-            <TitleDiv>Crear una Cuenta</TitleDiv>
+            <TitleDiv onClick={handleFinish}>Crear una Cuenta</TitleDiv>
+            {formState.finish?<>
+                <SubtitleDiv>Te haz registrado exitosamente.</SubtitleDiv>
+                <br />
+                <img src="https://www.svgrepo.com/show/276289/award-reward.svg" width="100px"/>
+                <Title2Div>¡Felitaciones!</Title2Div>
+                <SubtitleDiv>Revisa tu correo electronico para validar tu cuenta y terminar tu proceso de registro.</SubtitleDiv>
+                <LabelDiv color="gray_tint">¿Tuviste algun problema?</LabelDiv>
+                <Button disabled={formState.loading} color="gray" className="w-full">
+                    No me llego ningun correo de validación                            
+                </Button>  
+                <Link to="/RestaurarPassword" className="w-full"><Button disabled={formState.loading} color="gray">
+                    No recuerdo mi contraseña                
+                </Button></Link>
+            </>:<>
             <SubtitleDiv>Ingresá tus datos para registrarte en la plataforma.</SubtitleDiv>
             <FormikStepper
                 innerRef={ref}
@@ -124,6 +142,7 @@ export const RegisterPage = () =>{
                 </FormikStep>
             </FormikStepper>
             <FormikError open={formError?true:false}>{formError}</FormikError>
+            </>}
             <br />
                                
             <LabelDiv>¿Ya te registraste?</LabelDiv>
