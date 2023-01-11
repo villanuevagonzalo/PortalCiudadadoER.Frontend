@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { number } from 'yup';
 
 const REACTENV = process.env
 
@@ -16,11 +17,14 @@ export class AuthAPI {
     }
 
     public UserSignup(params: any){
-        return this.baseService.post('/v0/user/signup', null, { params: params})
+        return this.baseService.post('/v0/user/signup', null, { params })
     }
 
-    public UserLogin(params: any){
-        return this.baseService.get('/v0/user/login', { params: params })
+    public UserLogin(params: {
+        cuil: number;
+        password: string;
+    }){
+        return this.baseService.post('/v0/user/login', params )
     }
 
     public GetUserData(params: any){
@@ -28,7 +32,21 @@ export class AuthAPI {
     }
 
     public UserValidateEmail(params: any){
-        return this.baseService.post('/v0/user/validate/email', { params: params })
+        return this.baseService.post('/v0/user/validate/email', params )
+    }
+
+    public UserPasswordReset(params: {
+        cuil: number;
+    }){
+        return this.baseService.get('/v0/user/password/reset/validation', {params} )
+    }
+
+    public UserPasswordSave(params: {
+        cuil: number;
+        new_password: string;
+        verification_code: string;
+    }){
+        return this.baseService.post('/v0/user/password/reset', { params } )
     }
 
 }

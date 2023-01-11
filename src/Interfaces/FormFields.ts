@@ -6,12 +6,14 @@ export interface FormStateProps {
     loading: boolean;
     error: string;
     finish: boolean;
+    changing: boolean;
 }
 
 export const FormStateDefault:FormStateProps = {
     loading: false,
     error: '',
     finish: false,
+    changing: false,
 }
 
 // Campos de formularios
@@ -35,7 +37,7 @@ export const FormFields:FieldProps = {
 
     CUIL:{
         type: 'number',
-        defaultvalue: '',
+        defaultvalue: '27271187179',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -61,7 +63,7 @@ export const FormFields:FieldProps = {
 
     Email:{
         type: 'email',
-        defaultvalue: '',
+        defaultvalue: 'gonzalo_villanueva@outlook.com',
         placeholder: 'Ingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -70,7 +72,7 @@ export const FormFields:FieldProps = {
 
     Email_Validation:{
         type: 'email',
-        defaultvalue: '',
+        defaultvalue: 'gonzalo_villanueva@outlook.com',
         placeholder: 'Reingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -80,7 +82,7 @@ export const FormFields:FieldProps = {
 
     Password:{
         type: 'password',
-        defaultvalue: '',
+        defaultvalue: '1234',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -88,7 +90,7 @@ export const FormFields:FieldProps = {
 
     Password_Validation:{
         type: 'password',
-        defaultvalue: '',
+        defaultvalue: '1234',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')

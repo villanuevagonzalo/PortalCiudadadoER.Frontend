@@ -1,6 +1,6 @@
 import { AiOutlinePaperClip, AiOutlineSchedule } from "react-icons/ai";
 import { BiNotification, BiRightArrow, BiUserCircle } from "react-icons/bi";
-import { LogoER } from "./LogoEntreRios";
+import { LogoER } from "../Images/LogoEntreRios";
 import { SubtitleDiv, Title, TitleDiv, ToDo } from "./StyledComponents";
 
 export const Descripcion = (props: any) => {

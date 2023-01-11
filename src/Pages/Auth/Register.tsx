@@ -5,7 +5,7 @@ import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { FormikError, LabelDiv, MainContainer, Sidebar, SubtitleDiv, Title2Div, TitleDiv, ToDo } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
-import { LogoCiudadanoDigital } from '../../Components/Elements/LogoCiudadanoDigital';
+import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 
 import React from 'react';
 import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper';
@@ -13,6 +13,8 @@ import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { CapitalizeWords } from '../../Utils/generalFunctions';
 import { Descripcion } from '../../Components/Elements/Descripcion';
+import { ImagenMedalla } from '../../Components/Images/ImagenMedalla';
+import { GetMessage } from '../../Interfaces/MessageHandler';
     
 const FormRequiredFields = [
     'CUIL',
@@ -37,13 +39,33 @@ export const RegisterPage = () =>{
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
 
-    const [formError, setFormError] = useState<string>('');
+    const setError = (errormessage:string) => setFormState(prev=>({...prev, error:errormessage}))
+
+    const handleFinish = ()=>{
+        setFormState(prev=>({...prev, finish:!formState.finish, error:''}))
+        
+    }
     
     return(<>
         <Sidebar open={true}>
             <LogoCiudadanoDigital/>
             <br />
-            <TitleDiv>Crear una Cuenta</TitleDiv>
+            <TitleDiv onClick={handleFinish}>Crear una Cuenta</TitleDiv>
+            {(formState.finish && !formState.error)?<>
+                <SubtitleDiv>Te haz registrado exitosamente.</SubtitleDiv>
+                <br />
+                <ImagenMedalla width="100px"/>
+                <br />
+                <Title2Div>¡Felitaciones!</Title2Div>
+                <SubtitleDiv>Revisa tu correo electronico para validar tu cuenta y terminar tu proceso de registro.</SubtitleDiv>
+                <LabelDiv color="gray_tint">¿Tuviste algun problema?</LabelDiv>
+                <Button disabled={formState.loading} color="gray" className="w-full">
+                    No me llego ningun correo de validación                            
+                </Button>  
+                <Link to="/RestaurarPassword" className="w-full"><Button disabled={formState.loading} color="gray">
+                    No recuerdo mi contraseña                
+                </Button></Link>
+            </>:<>
             <SubtitleDiv>Ingresá tus datos para registrarte en la plataforma.</SubtitleDiv>
             <FormikStepper
                 innerRef={ref}
@@ -56,7 +78,7 @@ export const RegisterPage = () =>{
                         email: values.Email_Validation,
                         password: values.Password_Validation,
                         prs_id: values.prs_id
-                    }, setFormError)
+                    }, setFormState)
                 }}
                 enableReinitialize={true}
                 validateOnChange={false}
@@ -66,7 +88,7 @@ export const RegisterPage = () =>{
                 <FormikStep
                     label="CUIL"
                     validationSchema={formGetValidations(['CUIL'])}
-                    afterFunction={async (values:any) =>{
+                    afterFunction={async (values:any, ) =>{
                         await AxiosAuthAPI.GetUserData({'cuil':ref.current.values.CUIL}).then((response)=>{
                             let userdata = response.data.user
                             //console.log(response)
@@ -75,6 +97,9 @@ export const RegisterPage = () =>{
                                 LastName: CapitalizeWords(userdata.Apellido), 
                                 prs_id: userdata.id
                             });
+                            setError('')
+                        }).catch((e:any)=>{
+                            setError(GetMessage(e.response.data.message))
                         })
                     }}
                 >
@@ -114,7 +139,7 @@ export const RegisterPage = () =>{
                 </FormikStep>
                 <FormikStep
                     label="Final"
-                    validationSchema={formGetValidations(['Captcha','AcceptTerms'])}
+                    /*validationSchema={formGetValidations(['Captcha','AcceptTerms'])}*/
                 >
                     <Title2Div>Paso 5</Title2Div>
                     <SubtitleDiv>Confirmación Final</SubtitleDiv>
@@ -123,7 +148,8 @@ export const RegisterPage = () =>{
                     <FormikField name="AcceptTerms"/>
                 </FormikStep>
             </FormikStepper>
-            <FormikError open={formError?true:false}>{formError}</FormikError>
+            <FormikError open={formState.error?true:false}>{formState.error}</FormikError>
+            </>}
             <br />
                                
             <LabelDiv>¿Ya te registraste?</LabelDiv>

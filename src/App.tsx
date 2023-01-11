@@ -3,7 +3,7 @@ import { DefaultLayout } from './Components/NewLayout/Default';
 import { HomePage } from './Pages/HomePage';
 import { TramitesPage } from './Pages/Tramites/index';
 import { ErrorPage } from './Pages/ErrorPage';
-import { ResetPassword } from './Pages/Auth/ResetPassword';
+import { ValidarCorreo } from './Pages/Auth/ValidarCorreo';
 import { RegisterPage } from './Pages/Auth/Register';
 import { LoginPage } from './Pages/Auth/Login';
 import { HomeRoute, PrivateRoute } from './Routes/PrivateRoute';
@@ -11,6 +11,7 @@ import { DashboardCiudadanoPage } from './Pages/Dashboard/DashboardCiudadano';
 import { DashboardLayout } from './Components/Layout/DashboardLayout';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './Contexts/AuthContext';
+import { ReenviarCodigo } from './Pages/Auth/ReenviarCodigo';
 
 function App() {
   
@@ -28,7 +29,9 @@ function App() {
             <Route path="Inicio" element={<HomePage />} />
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
-            <Route path="RestaurarPassword" element={<ResetPassword />} />
+            <Route path="ValidarCorreo" element={<ValidarCorreo />} />
+            <Route path="ReenviarCodigo" element={<ReenviarCodigo />} />
+            
             <Route path="servicios"
               element={
                 <PrivateRoute>

@@ -1,0 +1,45 @@
+.st0{fill:#C69C18;}
+.st1{fill:#F0C419;}
+.st2{fill:#F29C1F;}
+
+#Numero{
+    fill:#FFFFFF;
+    font-family:'OpenSans-Semibold',sans-serif;
+    font-size:300px;
+}
+
+@keyframes textScaleAndShow {
+    from {
+        opacity: 0.9;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeInBottom {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#Estrellas{
+    z-index:1;
+    transform-origin: center;
+    animation: 1.5s ease-in-out infinite alternate textScaleAndShow;
+}
+#Medalla{
+    z-index:2;
+}
+#Icono{
+    animation: 0.5s fadeInBottom;
+    z-index:2;
+    transform-origin: center;
+}
