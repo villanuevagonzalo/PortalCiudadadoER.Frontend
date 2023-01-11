@@ -28,11 +28,8 @@ export const ValidarCorreo = () =>{
     const [isSuccess, setIsSuccess] = useState<boolean>(true);
 
     const ValidateEmail = async () => {
-        await AxiosAuthAPI.UserValidateEmail({'confirmation_code':SearchParams.values.code,'cuil':SearchParams.values.cuil}).then((response)=>{
-            console.log('VALIDACIÓN COMPLETADA: ',response)
-        }).catch((reason)=>{
-            setIsSuccess(false)
-            console.log('ERROR EN LA VALIDACIÓN: ',reason)
+        await AxiosAuthAPI.UserValidateEmail({'confirmation_code':SearchParams.values.code,'cuil':SearchParams.values.cuil}).catch((reason)=>{
+            setIsSuccess(reason.response.data.code == 0)
         })
         setIsLoading(false)
     }
@@ -53,48 +50,48 @@ export const ValidarCorreo = () =>{
                     <Spinner color='primary' size="3rem"/>
                 </>:<>
                     {isSuccess?<>            
-                <SubtitleDiv>Validaste exitosamente tu cuenta</SubtitleDiv>
-                <br />
-                <ImagenMedalla width="100px"/>
-                <br />
-                <Title2Div>¡Felitaciones!</Title2Div>
-                <SubtitleDiv>Alcanzaste el <strong>NIVEL 1</strong> de autenticación.</SubtitleDiv>
-  
-                <LabelDiv>Inicia Sesión para empezar a utilizar a Ciudadano Digital</LabelDiv>
-            <Link to="/Ingresar" className="w-full"><Button>
-                Iniciar Sesión
-            </Button></Link>
+                        <SubtitleDiv>Validaste exitosamente tu cuenta</SubtitleDiv>
+                        <br />
+                        <ImagenMedalla width="100px" number="1"/>
+                        <br />
+                        <Title2Div>¡Felitaciones!</Title2Div>
+                        <SubtitleDiv>Alcanzaste el <strong>NIVEL 1</strong> de autenticación.</SubtitleDiv>
+
+                        <LabelDiv>Inicia Sesión para empezar a utilizar a Ciudadano Digital</LabelDiv>
+                        <Link to="/Ingresar" className="w-full"><Button>
+                        Iniciar Sesión
+                        </Button></Link>
                     </>:<>
                         <br />   
                         <div>Se produjo un error en la validación.</div>
                         <br />
-                        <SubtitleDiv>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</SubtitleDiv>
-                        <Link to="/" className="w-full"><Button color="secondary">
+                        <SubtitleDiv>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</SubtitleDiv>
+                        <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
                             Solicitar Nuevo Codigo
                             <AiOutlineLock/>                        
                         </Button></Link>
-                        
-            <Link to="/" className="w-full"><Button>
-                <AiFillHome />
-                Volver al Inicio
-            </Button></Link>
+                        <Link to="/" className="w-full"><Button>
+                            <AiFillHome />
+                            Volver al Inicio
+                        </Button></Link>
                     </>}
                 </>}
-            
-            
             </>:<>
                 <TitleDiv>Validar Correo<AiOutlineLock/></TitleDiv>            
-                <SubtitleDiv>Los siguientes campos presentan error</SubtitleDiv>
+                <SubtitleDiv>Los siguientes campos presentan error:</SubtitleDiv>
                 {SearchParams.errors.map(e=><div>{e}</div>)}
                 <br />
                 <SubtitleDiv>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</SubtitleDiv>
             
-                <Link to="/" className="w-full"><Button color="secondary">
+                <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
                     Solicitar Nuevo Codigo
                     <AiOutlineLock/>                        
                 </Button></Link>
+                <Link to="/" className="w-full"><Button>
+                    <AiFillHome />
+                    Volver al Inicio
+                </Button></Link>
             </>}
-            
         </Sidebar>
         <MainContainer>
             <Descripcion />

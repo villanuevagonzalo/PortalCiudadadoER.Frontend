@@ -81,6 +81,7 @@ export const NavigatorWrapper = styled.div<{ open?: boolean }>`
   border-top: 1px solid var(--disabled);
   padding-top: 1rem;
   display: flex;
+  width:100%;
   gap: 2;
   margin-top: 1rem;
   flex-direction: row;
@@ -192,15 +193,15 @@ export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, f
 
 export const FormikError = styled.div<{ open?: boolean }>`
   font-size: 1rem;
-  color: var(--error);
+  color: var(--${props => (props.color ? props.color : 'error')});
   width:100%;
   display:${props => props.open?'flex':'none'};
   justify-content:center;
   text-align:center;
   align-items:center;
-  border: 1px solid  var(--error);
+  cursor:pointer;
+  border: 2px solid  var(--${props => (props.color ? props.color : 'error')});
   padding:1rem;
-  margin-top:1rem;
   border-radius:0.25rem;
 
 `;

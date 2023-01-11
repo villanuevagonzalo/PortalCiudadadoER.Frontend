@@ -11,6 +11,7 @@ import { DashboardCiudadanoPage } from './Pages/Dashboard/DashboardCiudadano';
 import { DashboardLayout } from './Components/Layout/DashboardLayout';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './Contexts/AuthContext';
+import { ReenviarCodigo } from './Pages/Auth/ReenviarCodigo';
 
 function App() {
   
@@ -29,6 +30,8 @@ function App() {
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
             <Route path="ValidarCorreo" element={<ValidarCorreo />} />
+            <Route path="ReenviarCodigo" element={<ReenviarCodigo />} />
+            
             <Route path="servicios"
               element={
                 <PrivateRoute>

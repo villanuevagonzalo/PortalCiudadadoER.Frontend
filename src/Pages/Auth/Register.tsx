@@ -38,6 +38,8 @@ export const RegisterPage = () =>{
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
 
+    const setError = (errormessage:string) => setFormState(prev=>({...prev, error:errormessage}))
+
     const handleFinish = ()=>{
         setFormState(prev=>({...prev, finish:!formState.finish, error:''}))
         
@@ -94,6 +96,9 @@ export const RegisterPage = () =>{
                                 LastName: CapitalizeWords(userdata.Apellido), 
                                 prs_id: userdata.id
                             });
+                        }).catch((e:any)=>{
+                            setError('hola')
+                            console.log(e)
                         })
                     }}
                 >
@@ -133,6 +138,7 @@ export const RegisterPage = () =>{
                 </FormikStep>
                 <FormikStep
                     label="Final"
+                    /*validationSchema={formGetValidations(['Captcha','AcceptTerms'])}*/
                 >
                     <Title2Div>Paso 5</Title2Div>
                     <SubtitleDiv>Confirmación Final</SubtitleDiv>

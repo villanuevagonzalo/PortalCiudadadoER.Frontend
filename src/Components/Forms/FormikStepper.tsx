@@ -41,9 +41,11 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
           await currentChild.props.afterFunction(values, helpers)
                                   .then((e:any)=>{
                                     console.log('AFTERFUNCION THEN', e)
+                                    console.log('ERRORS: ',formState2[0].error)
                                       //props.setstate(pages.length-currentPage-1?currentPage+1:pages.length-1)
                                   })
                                   .catch((e:any)=>{
+                                    console.log('AFTERFUNCION CATG', e)
                                       console.log(e)
                                   })
         }

@@ -35,7 +35,7 @@ export const FormFields:FieldProps = {
 
     CUIL:{
         type: 'number',
-        defaultvalue: '20390317213',
+        defaultvalue: '27201890042',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -45,7 +45,7 @@ export const FormFields:FieldProps = {
 
     Name:{
         type: 'string',
-        defaultvalue: '1',
+        defaultvalue: '',
         placeholder: 'Ingresa tu/s nombre/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -53,7 +53,7 @@ export const FormFields:FieldProps = {
 
     LastName:{
         type: 'string',
-        defaultvalue: '1',
+        defaultvalue: '',
         placeholder: 'Ingresa tu/s apellido/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -80,7 +80,7 @@ export const FormFields:FieldProps = {
 
     Password:{
         type: 'password',
-        defaultvalue: '1',
+        defaultvalue: '1234',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -88,7 +88,7 @@ export const FormFields:FieldProps = {
 
     Password_Validation:{
         type: 'password',
-        defaultvalue: '1',
+        defaultvalue: '1234',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
