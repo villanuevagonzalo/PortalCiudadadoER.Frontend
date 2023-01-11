@@ -3,8 +3,10 @@
 export const Messages: {[key: string]:string} = {
 
     // AUTH
-    ['Login successful']: 'Inicio de Sesión exitoso.',
-    ['Invalid Credentials']: 'Los datos ingresados no son validos.',
+    'Login successful': 'Inicio de Sesión exitoso.',
+    'Invalid Credentials': 'Los datos ingresados no son validos.',
+    'Undefined array key 0': 'Error interno del servidor.',
+    'User already registered': 'El CUIL ingresado ya se encuentra registrado.'
 
 
 

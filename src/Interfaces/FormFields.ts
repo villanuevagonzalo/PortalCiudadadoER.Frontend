@@ -6,12 +6,14 @@ export interface FormStateProps {
     loading: boolean;
     error: string;
     finish: boolean;
+    changing: boolean;
 }
 
 export const FormStateDefault:FormStateProps = {
     loading: false,
     error: '',
     finish: false,
+    changing: false,
 }
 
 // Campos de formularios
@@ -35,7 +37,7 @@ export const FormFields:FieldProps = {
 
     CUIL:{
         type: 'number',
-        defaultvalue: '27201890042',
+        defaultvalue: '27271187179',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')

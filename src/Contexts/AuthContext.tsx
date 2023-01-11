@@ -67,6 +67,12 @@ const ContextValues = () => {
 
     const Signup = async (data: any, setFormState:Function) => {
         setIsLoading(true)
+        const response = {
+            status: true,
+            code: null,
+            message: '',
+            response: null
+        }
         await AxiosAuthAPI.UserSignup(data).then((response)=>{
             console.log(response);
             if (response.data.success === false) {
@@ -85,7 +91,7 @@ const ContextValues = () => {
         setIsLoading(false)
     }
 
-    const Login = async (data: any, setError?:Function) => {
+    const Login = async (data: any) => {
         setIsLoading(true)
         const response = {
             status: true,

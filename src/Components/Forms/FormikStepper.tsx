@@ -1,5 +1,5 @@
 import { Form, Formik, FormikConfig, FormikValues } from "formik";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { NavigatorSpacer, NavigatorWrapper, Spinner } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
@@ -25,17 +25,50 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
 
   const [step, setStep] = useState(0);
   let [formState, setFormState] = formState2
+  let temperror = '';
 
   const childrenArray = React.Children.toArray(children).filter((e:any)=>e.type===FormikStep) as React.ReactElement<FormikStepProps>[];
   const currentChild = childrenArray[step];
 
   const isLastStep = () => step === childrenArray.length - 1;
 
+  const setError = useCallback(
+    () => {
+      console.log(test)
+    },
+    [formState.changing],
+  )
+  
+
+  useEffect(() => {
+    if(formState.changing){
+      console.log(formState)
+      if(!isLastStep() && !formState.error){
+        setStep((s) => s + 1);
+      }
+      setFormState(prev=>({...prev, changing:false}))
+    }
+  }, [formState.changing])
+
+
   return (
     <Formik
       {...props}
       validationSchema={currentChild.props.validationSchema}
-      onSubmit={ async (values, helpers) => {
+      onSubmit={ async (values, helpers, test=true) => {        
+        setFormState(prev=>({...prev, loading:true}))
+        if(currentChild.props.afterFunction){
+          await currentChild.props.afterFunction(values, helpers).then(()=>setFormState(prev=>({...prev, changing:true})))
+        } else{
+          setFormState(prev=>({...prev, changing:true}))
+        }
+        if(isLastStep()){
+          await props.onSubmit(values, helpers);
+          setFormState(prev=>({...prev, finish:true}))
+        }
+        setFormState(prev=>({...prev, loading:false}))
+
+        /*
         setFormState(prev=>({...prev, loading:true}))
         if(currentChild.props.afterFunction){
           await currentChild.props.afterFunction(values, helpers)
@@ -53,9 +86,12 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
           await props.onSubmit(values, helpers);
           setFormState(prev=>({...prev, finish:true}))
         } else{
+          console.log('LOS ESTEPES', formState)
           setStep((s) => s + 1);
         }
-        setFormState(prev=>({...prev, loading:false}))
+        setFormState(prev=>({...prev, loading:false}))*/
+
+
       }}
     >
       {({ isSubmitting }) => (

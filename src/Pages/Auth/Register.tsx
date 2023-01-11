@@ -14,6 +14,7 @@ import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { CapitalizeWords } from '../../Utils/generalFunctions';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { ImagenMedalla } from '../../Components/Images/ImagenMedalla';
+import { GetMessage } from '../../Interfaces/MessageHandler';
     
 const FormRequiredFields = [
     'CUIL',
@@ -87,7 +88,7 @@ export const RegisterPage = () =>{
                 <FormikStep
                     label="CUIL"
                     validationSchema={formGetValidations(['CUIL'])}
-                    afterFunction={async (values:any) =>{
+                    afterFunction={async (values:any, ) =>{
                         await AxiosAuthAPI.GetUserData({'cuil':ref.current.values.CUIL}).then((response)=>{
                             let userdata = response.data.user
                             //console.log(response)
@@ -96,9 +97,9 @@ export const RegisterPage = () =>{
                                 LastName: CapitalizeWords(userdata.Apellido), 
                                 prs_id: userdata.id
                             });
+                            setError('')
                         }).catch((e:any)=>{
-                            setError('hola')
-                            console.log(e)
+                            setError(GetMessage(e.response.data.message))
                         })
                     }}
                 >
