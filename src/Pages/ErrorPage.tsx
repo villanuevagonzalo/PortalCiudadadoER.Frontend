@@ -12,8 +12,6 @@ export const ErrorPage = () => {
         <br />
         <br />
         <div className="flex gap-4 justify-center">
-        </div>
-        <div className="flex gap-4 justify-center">
         <TitleDiv>¡Error!</TitleDiv>
         </div>
         <div className="flex gap-4 justify-center">

@@ -8,7 +8,9 @@ import { DashBoard_Default } from "../../Components/DashboardCiudadano/Default";
 import { DashBoard_Mensajes } from "../../Components/DashboardCiudadano/Mensajes";
 import { DashBoard_Tramites } from "../../Components/DashboardCiudadano/Tramites";
 import { Hero } from "../../Components/Elements/Hero";
-import { Container, IconContainer, IconBox, Title, Box, NavigationBar, ContainerBody, ContainerCard } from "../../Components/Elements/StyledComponents";
+import { Container, IconContainer, IconBox, Title, Box, NavigationBar, ContainerBody, ContainerCard, Sidebar, TitleDiv, MainContainer } from "../../Components/Elements/StyledComponents";
+import { LogoCiudadanoDigital } from "../../Components/Images/LogoCiudadanoDigital";
+import { Descripcion } from "../../Components/Elements/Descripcion";
 
 const navigation = [
   { name: 'Default', icon: AiOutlineFileProtect, href: '', current: true, component: DashBoard_Default },
@@ -26,9 +28,14 @@ export const DashboardCiudadanoPage = () => {
     setCurrentPage(index)
   }
 
-  return (<>
-    <Container>
-      <NavigationBar color="primary">
+  return(<>
+    <Sidebar open={true}>
+      <LogoCiudadanoDigital/>
+        <br />
+        <TitleDiv>¡Bienvenido!</TitleDiv>
+        <div className="flex gap-4 justify-center">
+        <Container>
+      <NavigationBar>
         {navigation.map((item, index) => {
           if(index==0){ return (<></>) }
           return (<IconBox onClick={()=>handlePage(index)} color={currentPage==index?"primary":""}>
@@ -45,11 +52,13 @@ export const DashboardCiudadanoPage = () => {
           return (<></>)
         })}
       </ContainerBody>
-
     </Container>
-
-  
-  </>);
+        </div>
+    </Sidebar>
+    <MainContainer>
+      <Descripcion />
+    </MainContainer>
+  </>)
 };
 
 /*
