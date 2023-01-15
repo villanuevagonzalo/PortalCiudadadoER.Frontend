@@ -4,6 +4,8 @@ import { AuthAPI } from "../Config/AuthAPI";
 import { CapitalizeWords } from '../Utils/generalFunctions';
 import moment from 'moment'
 import { GetMessage } from "../Interfaces/MessageHandler";
+import jwt_decode from "jwt-decode";
+import { GetLevel } from "../Interfaces/UserLevels";
 
 interface IAuth{
     token: string;
@@ -15,7 +17,7 @@ interface IUser{
     name: string;
     lastname: string;
     email: string;
-    roles: string[][]
+    roles: { type: string; level:number; message: string }[]
 }
 
 const DefaultToken:IAuth = {
@@ -28,7 +30,7 @@ const DefaultValues:IUser = {
     name: '',
     lastname: '',
     email: '',
-    roles: [['Ciudadano','Nivel 1']]
+    roles: GetLevel(['level_1'])
 }
 
 const TestValues:IUser = {
@@ -36,7 +38,7 @@ const TestValues:IUser = {
     name: 'Gonzalo Eduardo',
     lastname: 'Villanueva',
     email: 'gonzalo_villanueva@outlook.com',
-    roles: [['Ciudadano','Nivel 3']]
+    roles: GetLevel(['level_3'])
 }
 
 const getLSData = (item:string) => {
@@ -58,13 +60,7 @@ const ContextValues = () => {
     const [isLogged, setIsLogged] = useState<boolean>(false);
     const [authToken, setAuthToken] = useState<IAuth>(getLSData("authToken") || DefaultToken);
     const [userData, setUserData] = useState<IUser>(DefaultValues)
-
-    useEffect(() => {
-      console.log(userData)
-    
-    }, [userData])
-    
-
+  
     const Signup = async (data: any, setFormState:Function) => {
         setIsLoading(true)
         const response = {
@@ -108,12 +104,13 @@ const ContextValues = () => {
                 token: res.data.access_token,
                 expiration: moment(res.data.expires_at,"MMM DD, YYYY LT").toDate()
             };
+            const decodetoken:any = jwt_decode(newtoken.token)
             const newdata = {
                 cuil: newuserdata.user.cuil,
                 name: CapitalizeWords(newuserdata.user.name),
                 lastname: CapitalizeWords(newuserdata.user.last_name),
                 email: newuserdata.user.email,
-                roles: [['Ciudadano','Nivel 1']]
+                roles: GetLevel(decodetoken.scopes)
             }
             setIsLogged(true);
             setAuthToken(newtoken);
@@ -130,58 +127,6 @@ const ContextValues = () => {
         setIsLoading(false);
         return response
     }
-
-/*
-    const Login = async (data: any, setError?:Function) => {
-        setIsLoading(true)
-        await AxiosAuthAPI.UserLogin(data).then((response)=>{
-            let responsedata = response.data
-            if(responsedata.status){
-                const newuserdata = responsedata.user_data;
-                const newtoken:IAuth = {
-                    token: responsedata.access_token,
-                    expiration: moment(responsedata.expires_at,"MMM DD, YYYY LT").toDate()
-                };
-                const newdata = {
-                    cuil: newuserdata.user.cuil,
-                    name: CapitalizeWords(newuserdata.user.name),
-                    lastname: CapitalizeWords(newuserdata.user.last_name),
-                    email: newuserdata.user.email,
-                    roles: [['Ciudadano','Nivel 1']]
-                }
-                setIsLogged(true);
-                setAuthToken(newtoken);
-                setUserData(newdata)
-                setLSData("authToken", newtoken);
-                setLSData("userData", newdata);
-                navigate("/");
-            }
-        })
-        .catch(async (error)=>{
-            let responsedata = error.response.data;
-            switch(responsedata.message){
-                case 'test': 'hola'
-            };
-            //setIsLoading(false)
-            console.log("FALLO ALGO 2: ",);
-/*
-            await AxiosAuthAPI.GetUserData({'cuil':data.cuil}).then((response)=>{
-                let userdata = response.data.user
-                console.log(response)
-                setUserData({
-                    cuil: data.cuil,
-                    name: CapitalizeWords(userdata.Nombres),
-                    lastname: CapitalizeWords(userdata.Apellido),
-                    email: 'gonzalo_villanueva@outlook.com',
-                    roles: [['Ciudadano','Nivel 1']]
-                })
-            })
-            
-            setIsLogged(true);
-            navigate("/");
-        });
-        setIsLoading(false)
-    }*/
 
 
     const Logout = () => {

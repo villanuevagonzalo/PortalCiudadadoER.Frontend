@@ -37,7 +37,7 @@ export const Spinner = styled.div<{ size?: string }>`
 `;
 
 //// NEW LAYOUT
-export const Sidebar = styled.div<{ width?: string, open: boolean }>`
+export const Sidebar = styled.div<{ width?: string, open?: boolean }>`
   align-items: center;
   align-self: center;
   background: var(--main-background);
@@ -51,6 +51,7 @@ export const Sidebar = styled.div<{ width?: string, open: boolean }>`
   max-width: 450px;
   min-height: 100%;
 `;
+Sidebar.defaultProps = { open: true };
 
 export const MainContainer = styled.div`
   align-items: center;
@@ -96,7 +97,7 @@ export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fu
   background-color: var(--main-background);
   width:${props => props.fullwidth?'100%':'auto'};
   min-width:150px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
   border: 2px solid var(${props => props.error?'--error':'--disabled'});
   position: relative;
   display:flex;
@@ -150,7 +151,7 @@ export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fu
 
 `;
 
-export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean }>`
+export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, checked?: boolean }>`
   background-color: var(--main-background);
   width:${props => props.fullwidth?'100%':'auto'};
   min-width:150px;
@@ -160,18 +161,29 @@ export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, f
   flex-direction: column;
   opacity: ${props => props.disabled?'0.5':'1'};
   transition: all .1s ease-in;
+  font-size: 0.9rem;
+  
+
   
   & div.CheckboxText{
     display:flex;
     transition: all .1s ease-in;
-    color: var(${props => props.error?'--error':'--main-color'});
+    color: var(--${props => props.error?'error':(props.checked?'primary_tint':'gray')});
     z-index: 1;
     justify-content:top;
     align-items:top;
+    width:100%;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    border: 2px solid var(--${props => props.error?'error':(props.checked?'primary_tint':'gray')});
+    padding:1rem;
+    border-radius:0.25rem;
 
     & div{
-      font-size:1rem;
-      padding:0.25rem 0.5rem 0 0;
+      font-size:1.5rem;
+      padding:0.25rem 1rem 0 0;
+
     }
 
     & *{
@@ -191,20 +203,6 @@ export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, f
 `;
 
 
-export const FormikError = styled.div<{ open?: boolean }>`
-  font-size: 1rem;
-  color: var(--${props => (props.color ? props.color : 'error')});
-  width:100%;
-  display:${props => props.open?'flex':'none'};
-  justify-content:center;
-  text-align:center;
-  align-items:center;
-  cursor:pointer;
-  border: 2px solid  var(--${props => (props.color ? props.color : 'error')});
-  padding:1rem;
-  border-radius:0.25rem;
-
-`;
 
 export const CaptchaWrapper = styled.div<{ open?: boolean }>`
   font-size: 1.5rem;
@@ -249,8 +247,19 @@ export const SidebarBurger = styled.div<{ open?: boolean }>`
   user-select: none;
 `;
 
+export const ContainerImageWrapper = styled.div<{ open?: boolean }>`
+  cursor:pointer;
+  background-size: cover;
+  background-position: center;
+  background-image: url('path/to/image.jpg');
+  overflow:auto;
+  user-select: none;
+  width:100%;
+  height:100%;
+`;
 
-export const TitleDiv = styled.div<{ open?: boolean }>`
+
+export const DivTitle = styled.div<{ open?: boolean }>`
   font-size: 1.5rem;
   color: var(--${props => (props.color ? props.color : 'main-color')});
   width:100%;
@@ -260,27 +269,46 @@ export const TitleDiv = styled.div<{ open?: boolean }>`
   gap:0.5rem;
 `;
 
-export const Title2Div = styled.div<{ open?: boolean }>`
+export const DivTitle2 = styled.div<{ open?: boolean }>`
   font-size: 1.25rem;
-  color: var(--secondary);
+  color: var(--${props => (props.color ? props.color : 'primary')});
   font-weight:bold;
   width:100%;
 `;
 
-export const SubtitleDiv = styled.div<{ open?: boolean }>`
+export const DivSubtitle = styled.div<{ open?: boolean }>`
   font-size:0.8rem;
   color: var(--${props => (props.color ? props.color : 'main-color')});
   width:100%;
   margin-bottom:1rem;
 `;
 
-export const LabelDiv = styled.div<{ open?: boolean }>`
+export const DivLabel = styled.div<{ open?: boolean }>`
   font-size: 0.8rem;
   color: var(--${props => (props.color ? props.color : 'primary')});
   width:100%;
   padding: 0.5rem 1rem;
   text-align:center;
 `;
+
+
+export const DivOutlined = styled.div<{ open?: boolean }>`
+  align-items:center;
+  border-radius:0.25rem;
+  border: 2px solid  var(--${props => (props.color ? props.color : 'error')});
+  color: var(--${props => (props.color ? props.color : 'error')});
+  cursor:pointer;
+  display:${props => props.open?'flex':'none'};
+  font-size: 1rem;
+  justify-content:center;
+  padding:1rem;
+  text-align:center;
+  width:100%;
+`
+
+DivOutlined.defaultProps = {
+  open: true
+};
 
 
 export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
@@ -306,7 +334,6 @@ export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
     background-color: var(--${props => (props.color ? props.color : 'primary')}_tint)!important;
   }
 `;
-
 
 
 export const Container = styled.div`

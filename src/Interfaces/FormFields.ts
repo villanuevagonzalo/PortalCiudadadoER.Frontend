@@ -1,4 +1,49 @@
+import { isNumber } from 'lodash';
 import * as yup from 'yup';
+import YupPassword from 'yup-password'
+YupPassword(yup) // extend yup
+
+function hasConsecutiveSequence(str:string) {
+    let lastDigit = str[0];
+    let direction;
+    let consecutiveCount = 1;
+    for (let i = 1; i < str.length; i++) {
+        if (isNaN(Number(str[i]))) {
+            consecutiveCount = 1;
+            lastDigit = str[i];
+            direction = undefined;
+            continue;
+        }
+        if (direction === undefined) {
+            if (str[i] > lastDigit) {
+                direction = 'asc';
+            } else if (str[i] < lastDigit) {
+                direction = 'desc';
+            } else {
+                consecutiveCount = 1;
+                lastDigit = str[i];
+                direction = undefined;
+                continue;
+            }
+        } else {
+            if ((direction === 'asc' && str[i] > lastDigit) || (direction === 'desc' && str[i] < lastDigit)) {
+                consecutiveCount++;
+                if (consecutiveCount >= 4) {
+                    return true;
+                }
+            } else {
+                consecutiveCount = 1;
+                lastDigit = str[i];
+                direction = undefined;
+                continue;
+            }
+        }
+        lastDigit = str[i];
+    }
+    return false;
+}
+
+
 
 // Estado General de un Formulario
 
@@ -37,7 +82,7 @@ export const FormFields:FieldProps = {
 
     CUIL:{
         type: 'number',
-        defaultvalue: '27271187179',
+        defaultvalue: '20390317213',//'27271187179',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -82,16 +127,31 @@ export const FormFields:FieldProps = {
 
     Password:{
         type: 'password',
-        defaultvalue: '1234',
+        defaultvalue: '',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
+                        .min(8, 'La contraseña debe ser como mínimo de 8 caracteres.')
+                        .test('', 'La contraseña posee mas de 4 caracteres iguales consecutivos.', (value:any) => !/(.)\1{3}/g.test(value))
+                        .test('', 'La contraseña no puede tener mas de 4 numeros consecutivos.', (value:any) => {
+                            if (!value) return true;
+                            let consecutive = 0;
+                            for (let i = 1; i < value.length; i++) {
+                                consecutive=Number(value[i])-Number(value[i-1])==1?consecutive+1:0
+                                if(consecutive>=3){ return false }
+                            }
+                            return true
+                        })
+                        .test('','La contraseña debe contener como mínimo 4 letras.', (value:any)=>[...value.matchAll(/[a-zA-Z]/g)].length>3)
+                        .minUppercase(1, 'La contraseña debe contener al menos 1 letra mayúscula.')
+                        .minNumbers(2, 'La contraseña debe contener al menos 2 caracteres numéricos.')
+                        .minSymbols(1, 'La contraseña debe contener como mínimo un carácter especial.')
     },
 
     Password_Validation:{
         type: 'password',
-        defaultvalue: '1234',
-        placeholder: 'Ingresa tu contraseña',
+        defaultvalue: '',
+        placeholder: 'Reingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
                         .oneOf([yup.ref('Password')],'Las contraseñas no coinciden')
@@ -108,7 +168,7 @@ export const FormFields:FieldProps = {
     AcceptTerms:{
         type: 'checkbox',
         defaultvalue: false,
-        placeholder: 'Al registrarme en la plataforma Gobierno Digital acepto los Términos y condiciones de uso del servicio.',
+        placeholder: 'Al registrarme en la plataforma Gobierno Digital acepto los <b>Términos y condiciones de uso</b> del servicio.',
         validations: yup.boolean()
                         .required('El campo es obligatorio')
                         .oneOf([true], "Debes aceptar los terminos y condiciones")

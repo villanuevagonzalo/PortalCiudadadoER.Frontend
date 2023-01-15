@@ -1,24 +1,15 @@
-import { useContext, useEffect, useRef, useState } from 'react';
-import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
-import { Link, useSearchParams } from 'react-router-dom';
-import { AuthContext } from '../../Contexts/AuthContext';
+import { useEffect, useState } from 'react';
+import { Link} from 'react-router-dom';
 
-import { LabelDiv, MainContainer, Sidebar, Spinner, SubtitleDiv, Title2Div, TitleDiv, ToDo } from '../../Components/Elements/StyledComponents';
+import { DivOutlined, DivLabel, MainContainer, Sidebar, Spinner, DivSubtitle, DivTitle2 } from '../../Components/Elements/StyledComponents';
 import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 import { Button } from '../../Components/Forms/Button';
-import { Formik, Form } from 'formik';
-import { FormikField } from '../../Components/Forms/FormikField';
 import { AiFillHome, AiOutlineLock } from 'react-icons/ai';
-import { HiOutlineMail } from 'react-icons/hi';
 import { Descripcion } from '../../Components/Elements/Descripcion';
-import { GetParams, Sleep } from '../../Utils/generalFunctions';
-import { ImagenMedalla } from '../../Components/Images/ImagenMedalla';
+import { GetParams } from '../../Utils/generalFunctions';
 import { AuthAPI } from '../../Config/AuthAPI';
 
-
-
 const AxiosAuthAPI = new AuthAPI();
-
 
 export const ValidarCorreo = () =>{
 
@@ -36,36 +27,36 @@ export const ValidarCorreo = () =>{
 
     useEffect(() => {if(SearchParams.status){ ValidateEmail() }}, [])
 
-    console.log(SearchParams)
-
     return(<>
-        <Sidebar open={true}>
+        <Sidebar>
             <LogoCiudadanoDigital/>
             <br />
+            <br />
+            <br />
+            <br />
             {SearchParams.status?<>
-                <TitleDiv>Validación de Correo<HiOutlineMail/></TitleDiv>
-                {isLoading?<>            
-                    <SubtitleDiv>Estamos validando tu correo. Por favor aguarde.</SubtitleDiv>
+                {isLoading?<>
+                    <DivTitle2 className='text-center mb-2'>Validación de Correo</DivTitle2>
+                    <DivSubtitle className='text-center'>Estamos validando tu correo. Por favor aguarde.</DivSubtitle>
                     <br />
                     <Spinner color='primary' size="3rem"/>
                 </>:<>
-                    {isSuccess?<>            
-                        <SubtitleDiv>Validaste exitosamente tu cuenta</SubtitleDiv>
+                    {isSuccess?<>
+                        <DivTitle2 className='text-center mb-2'>¡Validación de usuario realizada!</DivTitle2>
+                        <DivSubtitle className='text-center'>Alcanzaste el <strong>NIVEL 1</strong> de autenticación.</DivSubtitle>
                         <br />
-                        <ImagenMedalla width="100px" number="1"/>
                         <br />
-                        <Title2Div>¡Felitaciones!</Title2Div>
-                        <SubtitleDiv>Alcanzaste el <strong>NIVEL 1</strong> de autenticación.</SubtitleDiv>
-
-                        <LabelDiv>Inicia Sesión para empezar a utilizar a Ciudadano Digital</LabelDiv>
+                        <br />
+                        <DivLabel>Inicia Sesión para empezar a utilizar a Ciudadano Digital</DivLabel>
                         <Link to="/Ingresar" className="w-full"><Button>
                         Iniciar Sesión
                         </Button></Link>
                     </>:<>
-                        <br />   
-                        <div>Se produjo un error en la validación.</div>
+                        <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
+                        <DivOutlined color="error">Se produjo un error en la validación</DivOutlined>
                         <br />
-                        <SubtitleDiv>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</SubtitleDiv>
+                        <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</DivSubtitle>
+                        <br />
                         <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
                             Solicitar Nuevo Codigo
                             <AiOutlineLock/>                        
@@ -77,12 +68,12 @@ export const ValidarCorreo = () =>{
                     </>}
                 </>}
             </>:<>
-                <TitleDiv>Validar Correo<AiOutlineLock/></TitleDiv>            
-                <SubtitleDiv>Los siguientes campos presentan error:</SubtitleDiv>
-                {SearchParams.errors.map(e=><div>{e}</div>)}
+                <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
+                <DivSubtitle className='text-center'>Los siguientes campos presentan un error:</DivSubtitle>
+                <DivOutlined color="error">{SearchParams.errors.map(e=><div>{e}</div>)}</DivOutlined>
                 <br />
-                <SubtitleDiv>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</SubtitleDiv>
-            
+                <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</DivSubtitle>
+                <br />
                 <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
                     Solicitar Nuevo Codigo
                     <AiOutlineLock/>                        

@@ -3,7 +3,7 @@ import { formGetInitialValues, formGetValidations, FormStateDefault, FormStatePr
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
 
-import { FormikError, LabelDiv, MainContainer, Sidebar, Spinner, SubtitleDiv, TitleDiv, ToDo } from '../../Components/Elements/StyledComponents';
+import { DivOutlined, DivLabel, MainContainer, Sidebar, Spinner, DivSubtitle, DivTitle, ToDo } from '../../Components/Elements/StyledComponents';
 import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
@@ -30,8 +30,8 @@ export const LoginPage = () =>{
         <Sidebar open={true}>
             <LogoCiudadanoDigital/>
             <br />
-            <TitleDiv>Iniciar Sesión<AiOutlineLock/></TitleDiv>
-            <SubtitleDiv>Ingresá tus datos para iniciar sesión en la plataforma.</SubtitleDiv>
+            <DivTitle>Iniciar Sesión</DivTitle>
+            <DivSubtitle>Ingresá tus datos para iniciar sesión en la plataforma.</DivSubtitle>
             <Formik
                 innerRef={ref}
                 initialValues= {FieldValues}
@@ -62,13 +62,13 @@ export const LoginPage = () =>{
                     {formState.loading ? <Spinner/> : 'Iniciar Sesión'}                                
                 </Button>
             </Form></Formik>
-            <FormikError open={formState.error?true:false}>{formState.error}</FormikError>
+            <DivOutlined open={formState.error?true:false}>{formState.error}</DivOutlined>
             <br />
-            <LabelDiv color="secondary">¿Sos nuevo en Ciudadano Digital?</LabelDiv>
+            <DivLabel color="secondary">¿Sos nuevo en Ciudadano Digital?</DivLabel>
             <Link to="/Registro" className="w-full"><Button disabled={formState.loading} color="secondary">
                 Crear una cuenta                               
             </Button></Link>
-            <LabelDiv color="gray_tint">¿Tuviste algun problema al registrarte?</LabelDiv>
+            <DivLabel color="gray_tint">¿Tuviste algun problema al registrarte?</DivLabel>
             <Link to="/RestaurarPassword" className="w-full"><Button disabled={formState.loading} color="gray">
                 No recuerdo mi contraseña
                 <AiOutlineLock/>                        

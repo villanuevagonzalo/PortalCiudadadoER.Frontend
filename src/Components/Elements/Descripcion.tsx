@@ -1,7 +1,7 @@
 import { AiOutlinePaperClip, AiOutlineSchedule } from "react-icons/ai";
 import { BiNotification, BiRightArrow, BiUserCircle } from "react-icons/bi";
 import { LogoER } from "../Images/LogoEntreRios";
-import { SubtitleDiv, Title, TitleDiv, ToDo } from "./StyledComponents";
+import { DivSubtitle, Title, DivTitle, ToDo } from "./StyledComponents";
 
 export const Descripcion = (props: any) => {
 
@@ -15,14 +15,14 @@ export const Descripcion = (props: any) => {
         </p>
         <p>Podrás tener tu propio escritorio virtual con los servicios mas utilizados:</p>
         <br />
-        <TitleDiv color="white"><AiOutlineSchedule className="w-6"/>Servicios Online</TitleDiv>
-        <SubtitleDiv color="white">Accedé a múltiples sistemas y portales estatales.</SubtitleDiv>
-        <TitleDiv color="white"><AiOutlinePaperClip className="w-6"/>Mis Trámites</TitleDiv>
-        <SubtitleDiv color="white">Realizá el seguimiento de los trámites o iniciá nuevos de forma On Line.</SubtitleDiv>
-        <TitleDiv color="white"><BiNotification className="w-6"/>Alertas y Mensajes</TitleDiv>
-        <SubtitleDiv color="white">Recibí todas las notificaciones sobre los sistemas utilizados y trámites realizados.</SubtitleDiv>
-        <TitleDiv color="white"><BiUserCircle className="w-6"/>Cuentas de usuario</TitleDiv>
-        <SubtitleDiv color="white">Gestioná los datos y trámites realizados dentro del estado, tanto propios como de terceros.</SubtitleDiv>
+        <DivTitle color="white"><AiOutlineSchedule className="w-6"/>Servicios Online</DivTitle>
+        <DivSubtitle color="white">Accedé a múltiples sistemas y portales estatales.</DivSubtitle>
+        <DivTitle color="white"><AiOutlinePaperClip className="w-6"/>Mis Trámites</DivTitle>
+        <DivSubtitle color="white">Realizá el seguimiento de los trámites o iniciá nuevos de forma On Line.</DivSubtitle>
+        <DivTitle color="white"><BiNotification className="w-6"/>Alertas y Mensajes</DivTitle>
+        <DivSubtitle color="white">Recibí todas las notificaciones sobre los sistemas utilizados y trámites realizados.</DivSubtitle>
+        <DivTitle color="white"><BiUserCircle className="w-6"/>Cuentas de usuario</DivTitle>
+        <DivSubtitle color="white">Gestioná los datos y trámites realizados dentro del estado, tanto propios como de terceros.</DivSubtitle>
 
         <br />
         <LogoER />

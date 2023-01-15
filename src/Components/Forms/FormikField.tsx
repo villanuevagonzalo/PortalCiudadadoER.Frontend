@@ -11,6 +11,7 @@ interface Props{
     hidden?: boolean;
     disabled?: boolean;
     component?: React.Component;
+    label?: string;
 }
 
 export const FormikField = ({...props}: Props) => {
@@ -25,7 +26,6 @@ export const FormikField = ({...props}: Props) => {
     const [empty, setEmpty] = useState(field.value==='');
     
     const handleCheckbox = (e:any) => {
-        console.log('test')
         setFieldValue(field.name,!field.value)
     }
 
@@ -42,12 +42,12 @@ export const FormikField = ({...props}: Props) => {
     
     return (
         (fieldprops.type === 'checkbox')?
-        <InputWrapper2 error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}>
+        <InputWrapper2 error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} checked={field.value}>
             <input type={fieldprops.type} id={props.name}{...field} {...props} hidden/>
             {props.hidden?<></>:<>
                 <div onClick={handleCheckbox} className="CheckboxText">
                     <div>{field.value?<AiOutlineCheckCircle />:<MdRadioButtonUnchecked />}</div>
-                    <label>{fieldprops.placeholder}</label>
+                    <label dangerouslySetInnerHTML={{__html: fieldprops.placeholder}} />
                 </div>
             </>}
             <ErrorMessage name={props.name} component="span"/>
@@ -55,7 +55,7 @@ export const FormikField = ({...props}: Props) => {
         :
         <InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} >
             <input type={fieldprops.type === 'password'?(passwordType?'password':'text'):fieldprops.type} autoFocus={props.autoFocus} {...field} {...props} onFocus={handleFocus} onBlur={handleFocus}/>
-            <label>{fieldprops.placeholder}</label>
+            <label>{props.label?props.label:fieldprops.placeholder}</label>
             <ErrorMessage name={props.name} component="span"/>
             {fieldprops.type === 'password'?<div onClick={handleClick}>{passwordType?<AiOutlineEye />:<AiOutlineEyeInvisible />}</div>:<></>}
         </InputWrapper>

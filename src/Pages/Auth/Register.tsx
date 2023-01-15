@@ -3,7 +3,7 @@ import { formGetValidations, formGetInitialValues, FormStateDefault, FormStatePr
 import { Link } from 'react-router-dom';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { FormikError, LabelDiv, MainContainer, Sidebar, SubtitleDiv, Title2Div, TitleDiv, ToDo } from '../../Components/Elements/StyledComponents';
+import { DivOutlined, DivLabel, MainContainer, Sidebar, SidebarBurger, DivSubtitle, DivTitle2, DivTitle, ToDo } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 
@@ -15,6 +15,9 @@ import { CapitalizeWords } from '../../Utils/generalFunctions';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { ImagenMedalla } from '../../Components/Images/ImagenMedalla';
 import { GetMessage } from '../../Interfaces/MessageHandler';
+import { CgClose } from 'react-icons/cg';
+import { AiOutlineMenu } from 'react-icons/ai';
+import { ContainerImage } from '../../Components/Elements/ContainerImage';
     
 const FormRequiredFields = [
     'CUIL',
@@ -38,6 +41,9 @@ export const RegisterPage = () =>{
 
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
+    
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [InitialData, setInitialData] = useState<boolean>(false);
 
     const setError = (errormessage:string) => setFormState(prev=>({...prev, error:errormessage}))
 
@@ -48,17 +54,17 @@ export const RegisterPage = () =>{
     
     return(<>
         <Sidebar open={true}>
+            <SidebarBurger onClick={()=>setIsOpen(!isOpen)}>
+            {isOpen ? <CgClose color="var(--primary)"/> : <AiOutlineMenu color="var(--primary)"/>}
+            </SidebarBurger>
             <LogoCiudadanoDigital/>
             <br />
-            <TitleDiv onClick={handleFinish}>Crear una Cuenta</TitleDiv>
             {(formState.finish && !formState.error)?<>
-                <SubtitleDiv>Te haz registrado exitosamente.</SubtitleDiv>
-                <br />
-                <ImagenMedalla width="100px"/>
-                <br />
-                <Title2Div>¡Felitaciones!</Title2Div>
-                <SubtitleDiv>Revisa tu correo electronico para validar tu cuenta y terminar tu proceso de registro.</SubtitleDiv>
-                <LabelDiv color="gray_tint">¿Tuviste algun problema?</LabelDiv>
+                <br/>
+                <DivTitle2 className='text-center mb-2'>¡Bien Hecho!</DivTitle2>
+                <DivSubtitle className='text-center'>Revisa tu correo electronico para validar tu cuenta y terminar tu proceso de registro.</DivSubtitle>
+                <br/>
+                <DivLabel color="gray_tint">¿Tuviste algun problema?</DivLabel>
                 <Button disabled={formState.loading} color="gray" className="w-full">
                     No me llego ningun correo de validación                            
                 </Button>  
@@ -66,7 +72,8 @@ export const RegisterPage = () =>{
                     No recuerdo mi contraseña                
                 </Button></Link>
             </>:<>
-            <SubtitleDiv>Ingresá tus datos para registrarte en la plataforma.</SubtitleDiv>
+            <DivTitle onClick={handleFinish}>Crear una Cuenta</DivTitle>
+            <DivSubtitle>Ingresá tus datos para registrarte en la plataforma.</DivSubtitle>
             <FormikStepper
                 innerRef={ref}
                 initialValues={FieldValues}
@@ -84,6 +91,7 @@ export const RegisterPage = () =>{
                 validateOnChange={false}
                 validateOnBlur={false}
                 formState2={[formState, setFormState]}
+                extraHTML={formState.error?<><DivOutlined open={formState.error?true:false} className="mt-4">{formState.error}</DivOutlined></>:<></>}
             >
                 <FormikStep
                     label="CUIL"
@@ -97,34 +105,43 @@ export const RegisterPage = () =>{
                                 LastName: CapitalizeWords(userdata.Apellido), 
                                 prs_id: userdata.id
                             });
+                            setInitialData(true)
                             setError('')
                         }).catch((e:any)=>{
                             setError(GetMessage(e.response.data.message))
                         })
                     }}
+                    afterHTML={<> 
+                        <DivLabel>¿Ya te registraste?</DivLabel>
+                        <Link to="/Ingresar" className="w-full"><Button disabled={formState.loading}>
+                            Iniciar Sesión
+                        </Button></Link>
+                    </>}
                 >
-                    <Title2Div>Paso 1</Title2Div>
-                    <SubtitleDiv>Verifica tu CUIL</SubtitleDiv>
+                    <DivTitle2>Paso 1</DivTitle2>
+                    <br/>
                     <FormikField name="CUIL" autoFocus disabled={formState.loading}/>
-                    <Link to="/Ingresar"><LabelDiv>
+                    <a href="https://www.anses.gob.ar/consultas/constancia-de-cuil" target="_blank"><DivLabel>
                         No lo recuerdo / no tengo mi CUIL
-                    </LabelDiv></Link>
+                    </DivLabel></a>
                 </FormikStep>
                 <FormikStep
                     label="Datos Personales"
                     validationSchema={formGetValidations(['Name','LastName'])}
                 >
-                    <Title2Div>Paso 2</Title2Div>
-                    <SubtitleDiv>Datos Personales</SubtitleDiv>
-                    <FormikField name="Name" autoFocus disabled={formState.loading}/>
-                    <FormikField name="LastName" disabled={formState.loading}/>
+                    <DivTitle2>Paso 2</DivTitle2>
+                    <DivSubtitle>Datos Personales</DivSubtitle>
+                    <FormikField name="CUIL" disabled={true} label="CUIL"/>
+                    <FormikField name="Name" autoFocus disabled={InitialData || formState.loading} label={InitialData?"Nombre/s":undefined}/>
+                    <FormikField name="LastName" disabled={InitialData || formState.loading} label={InitialData?"Apellido/s":undefined}/>
+                    {InitialData?<DivLabel>¿Tus datos estan mal?</DivLabel>:<></>}
                 </FormikStep>
                 <FormikStep
                     label="Email"
                     validationSchema={formGetValidations(['Email','Email_Validation'])}
                 >
-                    <Title2Div>Paso 3</Title2Div>
-                    <SubtitleDiv>Datos de Contacto</SubtitleDiv>
+                    <DivTitle2>Paso 3</DivTitle2>
+                    <DivSubtitle>Datos de Contacto</DivSubtitle>
                     <FormikField name="Email" autoFocus disabled={formState.loading}/>
                     <FormikField name="Email_Validation" disabled={formState.loading}/>
                 </FormikStep>
@@ -132,33 +149,28 @@ export const RegisterPage = () =>{
                     label="Contraseña"
                     validationSchema={formGetValidations(['Password','Password_Validation'])}
                 >
-                    <Title2Div>Paso 4</Title2Div>
-                    <SubtitleDiv>Contraseña</SubtitleDiv>
+                    <DivTitle2>Paso 4</DivTitle2>
+                    <DivSubtitle>Contraseña</DivSubtitle>
                     <FormikField name="Password" autoFocus disabled={formState.loading}/>
                     <FormikField name="Password_Validation" disabled={formState.loading}/>
                 </FormikStep>
                 <FormikStep
                     label="Final"
-                    /*validationSchema={formGetValidations(['Captcha','AcceptTerms'])}*/
+                    validationSchema={formGetValidations(['Captcha','AcceptTerms'])}
                 >
-                    <Title2Div>Paso 5</Title2Div>
-                    <SubtitleDiv>Confirmación Final</SubtitleDiv>
+                    <DivTitle2>Paso 5</DivTitle2>
+                    <DivSubtitle>Confirmación Final</DivSubtitle>
+                    <FormikField name="AcceptTerms"/>
                     <FormikCaptcha name="Captcha"/>
                     <FormikField name="Captcha" hidden/>
-                    <FormikField name="AcceptTerms"/>
                 </FormikStep>
             </FormikStepper>
-            <FormikError open={formState.error?true:false}>{formState.error}</FormikError>
             </>}
             <br />
-                               
-            <LabelDiv>¿Ya te registraste?</LabelDiv>
-            <Link to="/Ingresar" className="w-full"><Button disabled={formState.loading}>
-                Iniciar Sesión
-            </Button></Link>
+                              
         </Sidebar>
         <MainContainer>
-            <Descripcion />
+            {isOpen?<Descripcion />:<ContainerImage />}
         </MainContainer>
     </>)
 }

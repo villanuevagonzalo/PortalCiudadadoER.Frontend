@@ -11,6 +11,7 @@ export interface FormikStepProps
   extends Pick<FormikConfig<FormikValues>, 'children' | 'validationSchema'> {
   label: string;
   afterFunction?: any;
+  afterHTML?: any;
 }
 
 export function FormikStep({ children }: FormikStepProps) {
@@ -18,31 +19,22 @@ export function FormikStep({ children }: FormikStepProps) {
 }
 
 export interface FormikStepperProps extends FormikConfig<FormikValues>{
-  formState2: [FormStateProps, React.Dispatch<React.SetStateAction<FormStateProps>>]
+  formState2: [FormStateProps, React.Dispatch<React.SetStateAction<FormStateProps>>];
+  extraHTML?: any;
 }
 
-export function FormikStepper({ children, formState2, ...props }:FormikStepperProps) {
+export function FormikStepper({ children, formState2, extraHTML, ...props }:FormikStepperProps) {
 
   const [step, setStep] = useState(0);
   let [formState, setFormState] = formState2
-  let temperror = '';
 
   const childrenArray = React.Children.toArray(children).filter((e:any)=>e.type===FormikStep) as React.ReactElement<FormikStepProps>[];
   const currentChild = childrenArray[step];
 
   const isLastStep = () => step === childrenArray.length - 1;
 
-  const setError = useCallback(
-    () => {
-      console.log(test)
-    },
-    [formState.changing],
-  )
-  
-
   useEffect(() => {
     if(formState.changing){
-      console.log(formState)
       if(!isLastStep() && !formState.error){
         setStep((s) => s + 1);
       }
@@ -67,38 +59,14 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
           setFormState(prev=>({...prev, finish:true}))
         }
         setFormState(prev=>({...prev, loading:false}))
-
-        /*
-        setFormState(prev=>({...prev, loading:true}))
-        if(currentChild.props.afterFunction){
-          await currentChild.props.afterFunction(values, helpers)
-                                  .then((e:any)=>{
-                                    console.log('AFTERFUNCION THEN', e)
-                                    console.log('ERRORS: ',formState2[0].error)
-                                      //props.setstate(pages.length-currentPage-1?currentPage+1:pages.length-1)
-                                  })
-                                  .catch((e:any)=>{
-                                    console.log('AFTERFUNCION CATG', e)
-                                      console.log(e)
-                                  })
-        }
-        if(isLastStep()){
-          await props.onSubmit(values, helpers);
-          setFormState(prev=>({...prev, finish:true}))
-        } else{
-          console.log('LOS ESTEPES', formState)
-          setStep((s) => s + 1);
-        }
-        setFormState(prev=>({...prev, loading:false}))*/
-
-
       }}
     >
       {({ isSubmitting }) => (
         <Form autoComplete="off">
             {currentChild}
+            {extraHTML?extraHTML:<></>}
             <NavigatorWrapper>
-                {step>0?<Button color="gray" type="button" onClick={() => setStep((s) => s - 1)} fullwidth={false} disabled={formState.loading}>
+                {step>0?<Button color="secondary" type="button" onClick={() => setStep((s) => s - 1)} fullwidth={false} disabled={formState.loading}>
                     « Anterior
                 </Button>:<></>}
                 <NavigatorSpacer />
@@ -106,10 +74,11 @@ export function FormikStepper({ children, formState2, ...props }:FormikStepperPr
                 <Button color="secondary" type="submit" fullwidth={false} disabled={formState.loading}>
                   {formState.loading ? <Spinner/> : 'Finalizar'}
                 </Button>:
-                <Button color="gray" type="submit" fullwidth={false} disabled={formState.loading}>
+                <Button color="secondary" type="submit" fullwidth={false} disabled={formState.loading}>
                   {formState.loading ? <Spinner/> : 'Siguiente »'} 
                 </Button>}
             </NavigatorWrapper>
+            {currentChild.props.afterHTML?currentChild.props.afterHTML:<></>}
         </Form>
       )}
     </Formik>
