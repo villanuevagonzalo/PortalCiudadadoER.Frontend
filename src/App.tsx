@@ -32,7 +32,7 @@ function App() {
         <Routes>
           <Route element={<DefaultLayout />}>
             <Route index element={<HomeRoute />} />
-            <Route path="Inicio" element={<HomePage />} />
+            <Route path="Inicio" element={<DashboardCiudadanoPage />} />
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
             <Route path="ValidarCorreo" element={<ValidarCorreo />} />
