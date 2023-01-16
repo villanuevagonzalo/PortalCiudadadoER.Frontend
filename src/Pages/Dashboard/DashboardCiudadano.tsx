@@ -46,17 +46,22 @@ export const DashboardCiudadanoPage = () => {
           </IconBox>)
         })}
       </NavigationBar>
-      <ContainerBody>
+      {/* <ContainerBody>
+      {navigation.map((item, index) => {
+          if(currentPage==index){ return (<item.component/>) }
+          return (<></>)
+        })}
+      </ContainerBody> */}
+    </Container>
+        </div>
+    </Sidebar>
+    <MainContainer>
+    <ContainerBody>
       {navigation.map((item, index) => {
           if(currentPage==index){ return (<item.component/>) }
           return (<></>)
         })}
       </ContainerBody>
-    </Container>
-        </div>
-    </Sidebar>
-    <MainContainer>
-      <Descripcion />
     </MainContainer>
   </>)
 };
