@@ -18,6 +18,7 @@ import { DashBoard_Credenciales } from './Components/DashboardCiudadano/Credenci
 import { DashBoard_Aplicaciones } from './Components/DashboardCiudadano/Aplicaciones';
 import { DashBoard_Mensajes } from './Components/DashboardCiudadano/Mensajes';
 import { DashBoard_Tramites } from './Components/DashboardCiudadano/Tramites';
+import { InicioPage } from './Pages//Dashboard/InicioPage';
 
 function App() {
   
@@ -32,7 +33,7 @@ function App() {
         <Routes>
           <Route element={<DefaultLayout />}>
             <Route index element={<HomeRoute />} />
-            <Route path="Inicio" element={<DashboardCiudadanoPage />} />
+            <Route path="Inicio" element={<HomePage />} />
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
             <Route path="ValidarCorreo" element={<ValidarCorreo />} />

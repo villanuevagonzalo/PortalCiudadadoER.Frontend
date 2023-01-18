@@ -10,6 +10,7 @@ module.exports = {
       
       colors: {
         'celeste': '#00AEEE',
+        'verde' : '#7ca157',
       },
     },
   },
