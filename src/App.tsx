@@ -12,6 +12,7 @@ import { DashboardLayout } from './Components/Layout/DashboardLayout';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './Contexts/AuthContext';
 import { ReenviarCodigo } from './Pages/Auth/ReenviarCodigo';
+import { InicioPage } from './Pages//Dashboard/InicioPage';
 
 function App() {
   
@@ -26,7 +27,7 @@ function App() {
         <Routes>
           <Route element={<DefaultLayout />}>
             <Route index element={<HomeRoute />} />
-            <Route path="Inicio" element={<DashboardCiudadanoPage />} />
+            <Route path="Inicio" element={<HomePage />} />
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
             <Route path="ValidarCorreo" element={<ValidarCorreo />} />
