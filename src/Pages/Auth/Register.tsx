@@ -105,7 +105,7 @@ export const RegisterPage = () =>{
                                 LastName: CapitalizeWords(userdata.Apellido), 
                                 prs_id: userdata.id
                             });
-                            setInitialData(true)
+                            setInitialData(false)
                             setError('')
                         }).catch((e:any)=>{
                             setError(GetMessage(e.response.data.message))

@@ -1,48 +1,8 @@
 import { isNumber } from 'lodash';
 import * as yup from 'yup';
 import YupPassword from 'yup-password'
+import { CheckCUIL } from '../Utils/generalFunctions';
 YupPassword(yup) // extend yup
-
-function hasConsecutiveSequence(str:string) {
-    let lastDigit = str[0];
-    let direction;
-    let consecutiveCount = 1;
-    for (let i = 1; i < str.length; i++) {
-        if (isNaN(Number(str[i]))) {
-            consecutiveCount = 1;
-            lastDigit = str[i];
-            direction = undefined;
-            continue;
-        }
-        if (direction === undefined) {
-            if (str[i] > lastDigit) {
-                direction = 'asc';
-            } else if (str[i] < lastDigit) {
-                direction = 'desc';
-            } else {
-                consecutiveCount = 1;
-                lastDigit = str[i];
-                direction = undefined;
-                continue;
-            }
-        } else {
-            if ((direction === 'asc' && str[i] > lastDigit) || (direction === 'desc' && str[i] < lastDigit)) {
-                consecutiveCount++;
-                if (consecutiveCount >= 4) {
-                    return true;
-                }
-            } else {
-                consecutiveCount = 1;
-                lastDigit = str[i];
-                direction = undefined;
-                continue;
-            }
-        }
-        lastDigit = str[i];
-    }
-    return false;
-}
-
 
 
 // Estado General de un Formulario
@@ -76,7 +36,7 @@ export const FormFields:FieldProps = {
     Default:{
         type: 'string',
         defaultvalue: '',
-        placeholder: 'Input Genérico - Revisa el campo Name',
+        placeholder: 'Input no encontrado - Revisar atributo Name',
         validations: yup.string()
     },
 
@@ -88,6 +48,7 @@ export const FormFields:FieldProps = {
                         .required('El campo es obligatorio')
                         .min(11, 'El CUIL debe tener 11 digitos')
                         .max(11, 'El CUIL debe tener 11 digitos')
+                        .test('','CUIL invalido', (value:any)=>CheckCUIL(value))    
     },
 
     Name:{
@@ -96,6 +57,7 @@ export const FormFields:FieldProps = {
         placeholder: 'Ingresa tu/s nombre/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
+                        .test('','El campo posee caracteres invalidos', (value:any)=>!/[^a-zA-Z\u00C0-\u017F ']/g.test(value))
     },
 
     LastName:{
@@ -104,6 +66,7 @@ export const FormFields:FieldProps = {
         placeholder: 'Ingresa tu/s apellido/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
+                        .test('','El campo posee caracteres invalidos', (value:any)=>!/[^a-zA-Z\u00C0-\u017F ']/g.test(value))
     },
 
     Email:{

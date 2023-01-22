@@ -8,16 +8,12 @@ export const Messages: {[key: string]:string} = {
     'Undefined array key 0': 'Error interno del servidor.',
     'User already registered': 'El CUIL ingresado ya se encuentra registrado.'
 
-
-
 }
 
 export const StatusCodes: {[key: number]:string} = {
 
     // AUTH
     404: 'Pagina no Encontrada',
-
-
 
 }
 
