@@ -13,6 +13,7 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from './Contexts/AuthContext';
 import { ReenviarCodigo } from './Pages/Auth/ReenviarCodigo';
 import { InicioPage } from './Pages//Dashboard/InicioPage';
+import { TramitesOnlinePage } from './Pages/Dashboard/TramitesOnlinePage';
 
 function App() {
   

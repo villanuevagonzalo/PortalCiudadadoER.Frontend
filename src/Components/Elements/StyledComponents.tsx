@@ -368,6 +368,41 @@ export const ContainerItem = styled.div`
   }
 `;
 
+export const ContainerItem2 = styled.div`
+  background: white;  
+  border-radius:0.5rem;
+  border: 1px solid var(--disabled);
+  flex:1;
+  width:100%;
+  padding:1rem;
+  font-size:1em;
+  color: var(--main-color);
+  align-items: left;
+  flex-direction: column;
+  align-self: top;
+  display: flex;
+  gap:0.75rem;
+  
+  & h1{
+    display: flex;
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+  }
+
+  & div{
+    width:100%;
+  }
+  
+  & svg{
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.75rem;
+  }
+`;
+
 export const ContainerCard = styled.div`
   background: white;  
   border-radius:0.5rem;
@@ -382,6 +417,29 @@ export const ContainerCard = styled.div`
   align-self: top;
   display: flex;
   gap:0.75rem;
+  flex-direction: column;
+  
+  & svg{
+    width: 3em;
+    height: 3em;
+    margin: 0 auto 1rem;
+  }
+`;
+
+export const ContainerCard2 = styled.div`
+  background: white;  
+  border-radius:0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex:1;
+  width:100%;
+  padding:1rem;
+  text-align: left;
+  font-size:1.25rem;
+  color: var(--main-color);
+  align-items: left;
+  align-self: top;
+  display: flex;
+  gap:0rem;
   flex-direction: column;
   
   & svg{
