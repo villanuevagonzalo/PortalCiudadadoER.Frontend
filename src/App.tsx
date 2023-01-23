@@ -19,6 +19,7 @@ import { DashBoard_Aplicaciones } from './Components/DashboardCiudadano/Aplicaci
 import { DashBoard_Mensajes } from './Components/DashboardCiudadano/Mensajes';
 import { DashBoard_Tramites } from './Components/DashboardCiudadano/Tramites';
 import { InicioPage } from './Pages//Dashboard/InicioPage';
+import { TramitesOnlinePage } from './Pages/Dashboard/TramitesOnlinePage';
 
 function App() {
   
