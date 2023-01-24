@@ -12,6 +12,12 @@ import { DashboardLayout } from './Components/Layout/DashboardLayout';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './Contexts/AuthContext';
 import { ReenviarCodigo } from './Pages/Auth/ReenviarCodigo';
+import { Empty } from './Pages/Empty';
+import { DashBoard_Default } from './Components/DashboardCiudadano/Default';
+import { DashBoard_Credenciales } from './Components/DashboardCiudadano/Credenciales';
+import { DashBoard_Aplicaciones } from './Components/DashboardCiudadano/Aplicaciones';
+import { DashBoard_Mensajes } from './Components/DashboardCiudadano/Mensajes';
+import { DashBoard_Tramites } from './Components/DashboardCiudadano/Tramites';
 
 function App() {
   
@@ -42,6 +48,11 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
           </Route>
           <Route element={<DashboardLayout />}>
+            <Route path="Dashboard" element={<DashBoard_Default />} />
+            <Route path="Dashboard/Credenciales" element={<DashBoard_Credenciales />} />
+            <Route path="Dashboard/Aplicaciones" element={<DashBoard_Aplicaciones />} />
+            <Route path="Dashboard/Mensajes" element={<DashBoard_Mensajes />} />
+            <Route path="Dashboard/Tramites" element={<DashBoard_Tramites />} />
             <Route path="DashboardCiudadano" element={<DashboardCiudadanoPage />} />
           </Route>
         </Routes>

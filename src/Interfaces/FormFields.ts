@@ -151,6 +151,15 @@ export const FormFields:FieldProps = {
         validations: yup.string()
                         .required('El campo es obligatorio')
     },
+
+    Search:{
+        type: 'search',
+        defaultvalue: '',
+        placeholder: 'Ingresa tu/s nombre/s',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+                        .test('','El campo posee caracteres invalidos', (value:any)=>!/[^a-zA-Z\u00C0-\u017F ']/g.test(value))
+    },
 }
 
 // Funciones de Obtención de Información

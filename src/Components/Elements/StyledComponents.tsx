@@ -313,13 +313,13 @@ DivOutlined.defaultProps = {
 
 export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
   font-size: 0.9rem;
-  color: var(--main-background);
+  color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
   width:${props => props.fullwidth?'100%':'auto'};
   min-width:150px;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
   text-align:center;
   background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
-  border-radius: 2rem;
+  border-radius: 0.5rem;
   margin-bottom: 0.5rem;
   display:flex;
   align-items: center;
@@ -514,7 +514,7 @@ export const IconBox2 = styled.div`
   & svg{
     margin: 0.5rem auto;
   }
-
+cuit
   & h1{
     width:100%;
     align-items: center;
@@ -525,4 +525,95 @@ export const IconBox2 = styled.div`
     top: -2px;
     box-shadow: 0 4px 5px rgba(0,0,0,0.2);
   }
+`;
+
+
+
+
+
+/// LAYOUT
+
+export const LayoutSidebar = styled.div<{ width?: string }>`
+align-items: center;
+align-self: center;
+background: var(--main-background);
+display: flex;
+flex-direction: column;
+gap:1rem;
+padding:2rem;
+box-sizing: border-box;
+
+width: 350px;
+min-height: 100%;
+`;
+
+export const LayoutSidebarMenu = styled.div<{ width?: string }>`
+  display: flex;
+  flex-direction: column;
+  flex:1;
+  gap:1rem;
+  width:100%;
+`;
+
+export const LayoutSidebarMenuItem = styled.div<{ width?: string }>`
+`;
+
+export const LayoutContainer = styled.div<{ width?: string }>`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100%;
+`;
+
+export const LayoutBody = styled.div<{ width?: string }>`
+  background: var(--primary);
+  flex: 1;
+  padding: 2rem;
+`;
+
+export const LayoutHeader = styled.div<{ }>`
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+`;
+
+export const LayoutFooter = styled.div<{ }>`
+  background: var(--main-background);
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  font-size:1rem;
+  align-items: center;
+  align-self: center;
+  gap: 2rem;
+  padding: 2rem;
+  color: var(--disabled_tint);
+
+  & div{
+    border-right:2px solid var(--disabled);
+    padding-right:2rem;
+    box-sizing: content-box;
+  }
+`;
+
+
+export const Card = styled.div<{ color?: string }>`
+  background-color: var(--${props => (props.color ? props.color : 'primary')});
+  color: white;
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  min-width:150px;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display:flex;
+`;
+
+
+// Elements
+
+export const SVGPath = styled.path<{ color?: string }>`
+  fill: ${props => (props.color ? props.color : 'white')};
+  fill-rule:nonzero;
 `;
