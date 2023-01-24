@@ -50,11 +50,11 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
           </Route>
           <Route element={<DashboardLayout />}>
-            <Route path="Dashboard" element={<DashBoard_Default />} />
+            <Route path="Dashboard" element={<InicioPage />} />
             <Route path="Dashboard/Credenciales" element={<DashBoard_Credenciales />} />
             <Route path="Dashboard/Aplicaciones" element={<DashBoard_Aplicaciones />} />
             <Route path="Dashboard/Mensajes" element={<DashBoard_Mensajes />} />
-            <Route path="Dashboard/Tramites" element={<DashBoard_Tramites />} />
+            <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
             <Route path="DashboardCiudadano" element={<DashboardCiudadanoPage />} />
           </Route>
         </Routes>

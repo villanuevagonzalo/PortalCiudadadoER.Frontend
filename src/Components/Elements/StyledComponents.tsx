@@ -332,6 +332,7 @@ export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
 
   &:hover{
     background-color: var(--${props => (props.color ? props.color : 'primary')}_tint)!important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
   }
 `;
 
@@ -401,7 +402,7 @@ export const ContainerItem2 = styled.div`
   border: 1px solid var(--disabled);
   flex:1;
   width:100%;
-  padding:1rem;
+  padding:2rem;
   font-size:1em;
   color: var(--main-color);
   align-items: left;
@@ -424,8 +425,8 @@ export const ContainerItem2 = styled.div`
   }
   
   & svg{
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 3rem;
+    height: 3rem;
     margin-right: 0.75rem;
   }
 `;
@@ -624,9 +625,9 @@ export const LayoutContainer = styled.div<{ width?: string }>`
 `;
 
 export const LayoutBody = styled.div<{ width?: string }>`
-  background: var(--primary);
   flex: 1;
   padding: 2rem;
+  overflow:auto;
 `;
 
 export const LayoutHeader = styled.div<{ }>`

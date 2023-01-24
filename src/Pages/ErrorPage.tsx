@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FormikError, LabelDiv, MainContainer, NavigatorSpacer, NavigatorWrapper, Sidebar, SubtitleDiv, Title2Div, TitleDiv } from "../Components/Elements/StyledComponents";
+import { DivLabel, MainContainer, NavigatorSpacer, NavigatorWrapper, Sidebar, DivSubtitle, DivTitle2, DivTitle } from "../Components/Elements/StyledComponents";
 import { LogoCiudadanoDigital } from "../Components/Images/LogoCiudadanoDigital";
 import { Button } from "../Components/Forms/Button";
 import { AiOutlineLeft } from 'react-icons/ai'
@@ -12,10 +12,10 @@ export const ErrorPage = () => {
         <br />
         <br />
         <div className="flex gap-4 justify-center">
-        <TitleDiv>¡Error!</TitleDiv>
+        <DivTitle>¡Error!</DivTitle>
         </div>
         <div className="flex gap-4 justify-center">
-        <TitleDiv>La pagina solicitada no existe</TitleDiv>
+        <DivTitle>La pagina solicitada no existe</DivTitle>
         </div>
         <br />
         <Link to="/" className="w-full">

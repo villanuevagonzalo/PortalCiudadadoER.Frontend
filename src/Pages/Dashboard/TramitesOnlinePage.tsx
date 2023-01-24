@@ -8,7 +8,7 @@ import { DashBoard_Default } from "../../Components/DashboardCiudadano/Default";
 import { DashBoard_Mensajes } from "../../Components/DashboardCiudadano/Mensajes";
 import { DashBoard_Tramites } from "../../Components/DashboardCiudadano/Tramites";
 import { Hero } from "../../Components/Elements/Hero";
-import { Container, IconContainer, IconBox, Title, Box, NavigationBar, ContainerBody, ContainerCard, ContainerCard2, Sidebar, TitleDiv, Title2Div, MainContainer, ToDo, LabelDiv, ContainerItem, ContainerItem2 } from '../../Components/Elements/StyledComponents';
+import { Container, IconContainer, IconBox, Title, Box, NavigationBar, ContainerBody, ContainerCard, ContainerCard2, Sidebar, DivTitle, DivTitle2, MainContainer, ToDo, DivLabel, ContainerItem, ContainerItem2 } from '../../Components/Elements/StyledComponents';
 import { LogoCiudadanoDigital } from "../../Components/Images/LogoCiudadanoDigital";
 import { Descripcion } from "../../Components/Elements/Descripcion";
 
@@ -23,55 +23,48 @@ const data = [
 export const TramitesOnlinePage = () => {
 
     return(<>
-    <div>
-        <div>
-            <br/>
-            <ContainerCard2>
-                <h1 className="text-4xl lg:text-4x1 font-bold font-sans text-verde px-1" >
-                    Trámites on line
-                </h1>
-                <br/>
-                <div className="grid gap-7 grid-cols-1">
-                    {
-                        data.map((item, index) => {
-                            return(
-                                <ContainerItem2 className="text-left flex flex-wrap">
-                                    <h1>{item.title}</h1>
-                                    <p>{item.description}</p>
-                                    <div className="text-right">
-                                        <button className="bg-gris text-white active:bg-gray-500 text-xs font-bold px-10 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
-                                            +Información
-                                        </button>
-                                        <button className="bg-celeste text-white active:bg-blue-700 text-xs font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
-                                            Iniciar
-                                        </button>
-                                    </div>
-                                </ContainerItem2>
-                            )
-                        })
-                    }
-                </div>
-                
-
-                {/* <ContainerItem2 className="text-left flex flex-wrap">
-                    <h1>Solicitud Certificado de Pre-Identificación</h1>
-                    <p>El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a 
-                        derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y
-                        posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de 
-                        nacimiento. ...
-                    </p>
-                    <div className="text-right">
-                    <button className="bg-gris text-white active:bg-gray-500 text-xs font-bold px-10 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
-                        +Información
-                    </button>
-                    <button className="bg-celeste text-white active:bg-blue-700 text-xs font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
-                        Iniciar
-                    </button>
-                </div>  
-                </ContainerItem2> */}
-                
-            </ContainerCard2>
+        <h1 className="text-4xl lg:text-4x1 font-bold font-sans text-verde px-1" >
+            Trámites on line
+        </h1>
+        <br/>
+        <div className="grid gap-7 grid-cols-1">
+            {
+                data.map((item, index) => {
+                    return(
+                        <ContainerItem2 className="text-left flex flex-wrap">
+                            <h1>{item.title}</h1>
+                            <p>{item.description}</p>
+                            <div className="text-right">
+                                <button className="bg-gris text-white active:bg-gray-500 text-xs font-bold px-10 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
+                                    +Información
+                                </button>
+                                <button className="bg-celeste text-white active:bg-blue-700 text-xs font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
+                                    Iniciar
+                                </button>
+                            </div>
+                        </ContainerItem2>
+                    )
+                })
+            }
         </div>
-    </div>
+        
+
+        {/* <ContainerItem2 className="text-left flex flex-wrap">
+            <h1>Solicitud Certificado de Pre-Identificación</h1>
+            <p>El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a 
+                derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y
+                posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de 
+                nacimiento. ...
+            </p>
+            <div className="text-right">
+            <button className="bg-gris text-white active:bg-gray-500 text-xs font-bold px-10 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
+                +Información
+            </button>
+            <button className="bg-celeste text-white active:bg-blue-700 text-xs font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
+                Iniciar
+            </button>
+        </div>  
+        </ContainerItem2> */}
+                
     </>);
 }
