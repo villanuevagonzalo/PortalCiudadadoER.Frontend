@@ -24,7 +24,7 @@ export const ReenviarCodigo = () =>{
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
 
     return(<>
-        <Sidebar open={true}>
+        <Sidebar>
             <LogoCiudadanoDigital/>
             <br />
             <DivTitle>Iniciar Sesión<AiOutlineLock/></DivTitle>

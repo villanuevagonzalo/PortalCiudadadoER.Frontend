@@ -37,7 +37,7 @@ export const Spinner = styled.div<{ size?: string }>`
 `;
 
 //// NEW LAYOUT
-export const Sidebar = styled.div<{ width?: string, open?: boolean }>`
+export const Sidebar = styled.div<{ width?: string }>`
   align-items: center;
   align-self: center;
   background: var(--main-background);
@@ -51,7 +51,6 @@ export const Sidebar = styled.div<{ width?: string, open?: boolean }>`
   max-width: 450px;
   min-height: 100%;
 `;
-Sidebar.defaultProps = { open: true };
 
 export const MainContainer = styled.div`
   align-items: center;
@@ -249,13 +248,61 @@ export const SidebarBurger = styled.div<{ open?: boolean }>`
 
 export const ContainerImageWrapper = styled.div<{ open?: boolean }>`
   cursor:pointer;
-  background-size: cover;
-  background-position: center;
-  background-image: url('path/to/image.jpg');
-  overflow:auto;
+  overflow:hidden;
   user-select: none;
+  flex: 3;
+  display: flex;
   width:100%;
-  height:100%;
+
+  & img{
+    min-height:100%;
+    align-self: center;
+    flex: 1;
+  }
+`;
+
+export const ContainerTextWrapper = styled.div<{ open?: boolean }>`
+  flex: 2;
+  background: var(--mainbg_tint);
+  width:100%;
+  display:flex;
+  padding:2rem;
+  gap: 2rem;
+
+  & div{
+    flex:1;
+  }
+
+  & h1{
+    font-size: 2rem;
+    font-weight:bold;
+    color: var(--primary);
+    border-bottom: 1px solid var(--disabled_tint)
+  }
+
+  & li{
+    display:flex;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius:0.25rem;
+    gap:0.25rem;
+
+    & h2{
+      flex:1;
+      font-size: 0.9rem;
+    }
+    & span{
+      display:flex;
+      font-size: 1.5rem;
+      align-items:center;
+    }
+
+    &:hover{
+      background: var(--disabled);
+      cursor:pointer;
+    }
+
+  }
 `;
 
 
@@ -316,7 +363,7 @@ export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
   color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
   width:${props => props.fullwidth?'100%':'auto'};
   min-width:150px;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
   text-align:center;
   background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
   border-radius: 0.5rem;

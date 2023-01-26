@@ -36,9 +36,19 @@ body {
   justify-content: top;
 }
 
-@media (max-width: 600px) {
+.flexswitch{
+  flex-direction: row;
+}
+
+@media (max-width: 800px) {
   #root {
     height: auto;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 1024px) {
+  .flexswitch{
     flex-direction: column;
   }
 }

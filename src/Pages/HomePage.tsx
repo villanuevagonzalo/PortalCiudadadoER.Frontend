@@ -13,7 +13,7 @@ export const HomePage = () => {
   const { isLogged, userData, Logout } = useContext(AuthContext);
 
   return(<>
-    <Sidebar open={true}>
+    <Sidebar>
       <LogoCiudadanoDigital/>
       <br />
       {isLogged?<>

@@ -1,6 +1,5 @@
-import { Navigate, Route } from "react-router-dom";
-import { LoginPage } from "../Pages/Auth/Login";
-import { DashboardCiudadanoPage } from "../Pages/Dashboard/DashboardCiudadano";
+import { useEffect } from "react";
+import { Navigate, Route, useNavigate } from "react-router-dom";
 
 
 export const PrivateRoute = (props:{ children: any }) =>{
@@ -8,11 +7,14 @@ export const PrivateRoute = (props:{ children: any }) =>{
   return token ? props.children : <Navigate to="/Ingresar" />;
 }
 
-
-//se deberá corroboar tipo de token y a partir de allí redireccionar al dashboard dependiendo el perfil 
-
-export const HomeRoute = () =>{
+export const AuthRoute = (props:{ children: any }) =>{
+  const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
-  //return token ? <DashboardCiudadanoPage /> : <Navigate to="/Inicio" />;
-  return token ? <Navigate to="/Inicio" /> : <Navigate to="/Inicio" />;
+  useEffect(() => {
+    if(token){
+      navigate('/Dashboard')
+    }
+  }, [token])
+  
+  return token ? null : props.children;
 }
