@@ -6,21 +6,25 @@ import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigit
 import { Button } from '../../Components/Forms/Button';
 import { AiFillHome, AiOutlineLock } from 'react-icons/ai';
 import { Descripcion } from '../../Components/Elements/Descripcion';
-import { GetParams } from '../../Utils/generalFunctions';
+import { GetParams } from '../../Utils/GeneralFunctions';
 import { AuthAPI } from '../../Config/AuthAPI';
 
 const AxiosAuthAPI = new AuthAPI();
 
 export const ValidarCorreo = () =>{
 
-    const SearchParams = GetParams(["code","cuil"]);
+    const SearchParams = GetParams(["token"]);
     
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isSuccess, setIsSuccess] = useState<boolean>(true);
+    const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
     const ValidateEmail = async () => {
-        await AxiosAuthAPI.UserValidateEmail({'confirmation_code':SearchParams.values.code,'cuil':SearchParams.values.cuil}).catch((reason)=>{
-            setIsSuccess(reason.response.data.code == 0)
+        await AxiosAuthAPI.UserValidateEmail({'token':SearchParams.values.token}).then((response)=>{
+            setIsSuccess((response.statusText == "OK"))
+            console.log(response)
+        }).catch((reason)=>{
+            console.log(reason)
+            setIsSuccess(!(reason.response.data.code == 0))
         })
         setIsLoading(false)
     }
@@ -40,6 +44,10 @@ export const ValidarCorreo = () =>{
                     <DivSubtitle className='text-center'>Estamos validando tu correo. Por favor aguarde.</DivSubtitle>
                     <br />
                     <Spinner color='primary' size="3rem"/>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
                 </>:<>
                     {isSuccess?<>
                         <DivTitle2 className='text-center mb-2'>¡Validación de usuario realizada!</DivTitle2>

@@ -37,7 +37,7 @@ export const Spinner = styled.div<{ size?: string }>`
 `;
 
 //// NEW LAYOUT
-export const Sidebar = styled.div<{ width?: string, open?: boolean }>`
+export const Sidebar = styled.div<{ width?: string }>`
   align-items: center;
   align-self: center;
   background: var(--main-background);
@@ -51,7 +51,6 @@ export const Sidebar = styled.div<{ width?: string, open?: boolean }>`
   max-width: 450px;
   min-height: 100%;
 `;
-Sidebar.defaultProps = { open: true };
 
 export const MainContainer = styled.div`
   align-items: center;
@@ -249,13 +248,61 @@ export const SidebarBurger = styled.div<{ open?: boolean }>`
 
 export const ContainerImageWrapper = styled.div<{ open?: boolean }>`
   cursor:pointer;
-  background-size: cover;
-  background-position: center;
-  background-image: url('path/to/image.jpg');
-  overflow:auto;
+  overflow:hidden;
   user-select: none;
+  flex: 3;
+  display: flex;
   width:100%;
-  height:100%;
+
+  & img{
+    min-height:100%;
+    align-self: center;
+    flex: 1;
+  }
+`;
+
+export const ContainerTextWrapper = styled.div<{ open?: boolean }>`
+  flex: 2;
+  background: var(--mainbg_tint);
+  width:100%;
+  display:flex;
+  padding:2rem;
+  gap: 2rem;
+
+  & div{
+    flex:1;
+  }
+
+  & h1{
+    font-size: 2rem;
+    font-weight:bold;
+    color: var(--primary);
+    border-bottom: 1px solid var(--disabled_tint)
+  }
+
+  & li{
+    display:flex;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius:0.25rem;
+    gap:0.25rem;
+
+    & h2{
+      flex:1;
+      font-size: 0.9rem;
+    }
+    & span{
+      display:flex;
+      font-size: 1.5rem;
+      align-items:center;
+    }
+
+    &:hover{
+      background: var(--disabled);
+      cursor:pointer;
+    }
+
+  }
 `;
 
 
@@ -313,13 +360,13 @@ DivOutlined.defaultProps = {
 
 export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
   font-size: 0.9rem;
-  color: var(--main-background);
+  color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
   width:${props => props.fullwidth?'100%':'auto'};
   min-width:150px;
   padding: 0.5rem 1rem;
   text-align:center;
   background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
-  border-radius: 2rem;
+  border-radius: 0.5rem;
   margin-bottom: 0.5rem;
   display:flex;
   align-items: center;
@@ -332,6 +379,7 @@ export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
 
   &:hover{
     background-color: var(--${props => (props.color ? props.color : 'primary')}_tint)!important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
   }
 `;
 
@@ -395,6 +443,41 @@ export const ContainerItem = styled.div`
   }
 `;
 
+export const ContainerItem2 = styled.div`
+  background: white;  
+  border-radius:0.5rem;
+  border: 1px solid var(--disabled);
+  flex:1;
+  width:100%;
+  padding:2rem;
+  font-size:1em;
+  color: var(--main-color);
+  align-items: left;
+  flex-direction: column;
+  align-self: top;
+  display: flex;
+  gap:0.75rem;
+  
+  & h1{
+    display: flex;
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+  }
+
+  & div{
+    width:100%;
+  }
+  
+  & svg{
+    width: 3rem;
+    height: 3rem;
+    margin-right: 0.75rem;
+  }
+`;
+
 export const ContainerCard = styled.div`
   background: white;  
   border-radius:0.5rem;
@@ -409,6 +492,29 @@ export const ContainerCard = styled.div`
   align-self: top;
   display: flex;
   gap:0.75rem;
+  flex-direction: column;
+  
+  & svg{
+    width: 3em;
+    height: 3em;
+    margin: 0 auto 1rem;
+  }
+`;
+
+export const ContainerCard2 = styled.div`
+  background: white;  
+  border-radius:0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex:1;
+  width:100%;
+  padding:1rem;
+  text-align: left;
+  font-size:1.25rem;
+  color: var(--main-color);
+  align-items: left;
+  align-self: top;
+  display: flex;
+  gap:0rem;
   flex-direction: column;
   
   & svg{
@@ -514,7 +620,7 @@ export const IconBox2 = styled.div`
   & svg{
     margin: 0.5rem auto;
   }
-
+cuit
   & h1{
     width:100%;
     align-items: center;
@@ -525,4 +631,95 @@ export const IconBox2 = styled.div`
     top: -2px;
     box-shadow: 0 4px 5px rgba(0,0,0,0.2);
   }
+`;
+
+
+
+
+
+/// LAYOUT
+
+export const LayoutSidebar = styled.div<{ width?: string }>`
+align-items: center;
+align-self: center;
+background: var(--main-background);
+display: flex;
+flex-direction: column;
+gap:1rem;
+padding:2rem;
+box-sizing: border-box;
+
+width: 350px;
+min-height: 100%;
+`;
+
+export const LayoutSidebarMenu = styled.div<{ width?: string }>`
+  display: flex;
+  flex-direction: column;
+  flex:1;
+  gap:1rem;
+  width:100%;
+`;
+
+export const LayoutSidebarMenuItem = styled.div<{ width?: string }>`
+`;
+
+export const LayoutContainer = styled.div<{ width?: string }>`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100%;
+`;
+
+export const LayoutBody = styled.div<{ width?: string }>`
+  flex: 1;
+  padding: 2rem;
+  overflow:auto;
+`;
+
+export const LayoutHeader = styled.div<{ }>`
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  padding: 1rem;
+`;
+
+export const LayoutFooter = styled.div<{ }>`
+  background: var(--main-background);
+  width:100%;
+  display: flex;
+  flex-direction: row;
+  font-size:1rem;
+  align-items: center;
+  align-self: center;
+  gap: 2rem;
+  padding: 2rem;
+  color: var(--disabled_tint);
+
+  & div{
+    border-right:2px solid var(--disabled);
+    padding-right:2rem;
+    box-sizing: content-box;
+  }
+`;
+
+
+export const Card = styled.div<{ color?: string }>`
+  background-color: var(--${props => (props.color ? props.color : 'primary')});
+  color: white;
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  min-width:150px;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display:flex;
+`;
+
+
+// Elements
+
+export const SVGPath = styled.path<{ color?: string }>`
+  fill: ${props => (props.color ? props.color : 'white')};
+  fill-rule:nonzero;
 `;

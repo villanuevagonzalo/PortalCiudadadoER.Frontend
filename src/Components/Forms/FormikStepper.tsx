@@ -5,7 +5,7 @@ import { NavigatorSpacer, NavigatorWrapper, Spinner } from "../Elements/StyledCo
 import { Button } from "../Forms/Button";
 
 import { FormStateProps } from "../../Interfaces/FormFields";
-import { Sleep } from "../../Utils/generalFunctions";
+import { Sleep } from "../../Utils/GeneralFunctions";
 
 export interface FormikStepProps
   extends Pick<FormikConfig<FormikValues>, 'children' | 'validationSchema'> {

@@ -1,7 +1,7 @@
 import { isNumber } from 'lodash';
 import * as yup from 'yup';
 import YupPassword from 'yup-password'
-import { CheckCUIL } from '../Utils/generalFunctions';
+import { CheckCUIL } from '../Utils/GeneralFunctions';
 YupPassword(yup) // extend yup
 
 
@@ -42,7 +42,7 @@ export const FormFields:FieldProps = {
 
     CUIL:{
         type: 'number',
-        defaultvalue: '20390317213',//'27271187179',
+        defaultvalue: '', // '20390317213',//'27271187179',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -71,7 +71,7 @@ export const FormFields:FieldProps = {
 
     Email:{
         type: 'email',
-        defaultvalue: 'gonzalo_villanueva@outlook.com',
+        defaultvalue: '', // 'gonzalo_villanueva@outlook.com',
         placeholder: 'Ingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -80,7 +80,7 @@ export const FormFields:FieldProps = {
 
     Email_Validation:{
         type: 'email',
-        defaultvalue: 'gonzalo_villanueva@outlook.com',
+        defaultvalue: '', // 'gonzalo_villanueva@outlook.com',
         placeholder: 'Reingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -150,6 +150,15 @@ export const FormFields:FieldProps = {
         placeholder: 'Id Ciudadano',
         validations: yup.string()
                         .required('El campo es obligatorio')
+    },
+
+    Search:{
+        type: 'search',
+        defaultvalue: '',
+        placeholder: 'Ingresa tu/s nombre/s',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+                        .test('','El campo posee caracteres invalidos', (value:any)=>!/[^a-zA-Z\u00C0-\u017F ']/g.test(value))
     },
 }
 

@@ -3,20 +3,28 @@
     --main-color: #555555;
     --main-border: #cccccc;
 
-    --primary: #7ca157;
-    --primary_tint: #5b8532;
+    --mainbg: #ffffff;
+    --mainbg_tint: #e6e6e6;
+    --mainbg_text: #191919;
 
-    --secondary: #06b6d4;
-    --secondary_tint: #2293ad;
-    --secondary_tint2: #3b82f6;
+    --primary: #7ca157;
+    --primary_tint: #70914e;
+    --primary_text: #f2f6ee;
+
+    --secondary: #00AFF0;
+    --secondary_tint: #009ed8;
+    --secondary_text: #e6f7fe;
 
     --error: #d44006;
+    --error_tint: #bf3a05;
+    --error_text: #fbece6;
 
     --disabled: #cccccc;
     --disabled_tint: #aaaaaa;
 
     --gray: #888888;
     --gray_tint: #666666;
+    --gray_text: #f0f0f0;
 
     --white: #f0f0f0;
     --white_tint: #d0d0d0;

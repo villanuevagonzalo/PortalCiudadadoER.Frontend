@@ -1,7 +1,7 @@
 import { createContext, FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthAPI } from "../Config/AuthAPI";
-import { CapitalizeWords } from '../Utils/generalFunctions';
+import { CapitalizeWords } from '../Utils/GeneralFunctions';
 import moment from 'moment'
 import { GetMessage } from "../Interfaces/MessageHandler";
 import jwt_decode from "jwt-decode";
@@ -38,7 +38,7 @@ const TestValues:IUser = {
     name: 'Gonzalo Eduardo',
     lastname: 'Villanueva',
     email: 'gonzalo_villanueva@outlook.com',
-    roles: GetLevel(['level_3'])
+    roles: GetLevel(['level_1'])
 }
 
 const getLSData = (item:string) => {
@@ -59,7 +59,7 @@ const ContextValues = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLogged, setIsLogged] = useState<boolean>(false);
     const [authToken, setAuthToken] = useState<IAuth>(getLSData("authToken") || DefaultToken);
-    const [userData, setUserData] = useState<IUser>(DefaultValues)
+    const [userData, setUserData] = useState<IUser>(TestValues)
   
     const Signup = async (data: any, setFormState:Function) => {
         setIsLoading(true)
