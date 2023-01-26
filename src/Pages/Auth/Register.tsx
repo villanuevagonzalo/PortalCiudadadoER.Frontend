@@ -11,7 +11,7 @@ import React from 'react';
 import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper';
 import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
-import { CapitalizeWords } from '../../Utils/generalFunctions';
+import { CapitalizeWords } from '../../Utils/GeneralFunctions';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { ImagenMedalla } from '../../Components/Images/ImagenMedalla';
 import { GetMessage } from '../../Interfaces/MessageHandler';
@@ -42,7 +42,6 @@ export const RegisterPage = () =>{
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
     
-    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [InitialData, setInitialData] = useState<boolean>(false);
 
     const setError = (errormessage:string) => setFormState(prev=>({...prev, error:errormessage}))
@@ -53,10 +52,7 @@ export const RegisterPage = () =>{
     }
     
     return(<>
-        <Sidebar open={true}>
-            <SidebarBurger onClick={()=>setIsOpen(!isOpen)}>
-            {isOpen ? <CgClose color="var(--primary)"/> : <AiOutlineMenu color="var(--primary)"/>}
-            </SidebarBurger>
+        <Sidebar>
             <LogoCiudadanoDigital/>
             <br />
             {(formState.finish && !formState.error)?<>
@@ -170,7 +166,7 @@ export const RegisterPage = () =>{
                               
         </Sidebar>
         <MainContainer>
-            {isOpen?<Descripcion />:<ContainerImage />}
+            <Descripcion />
         </MainContainer>
     </>)
 }

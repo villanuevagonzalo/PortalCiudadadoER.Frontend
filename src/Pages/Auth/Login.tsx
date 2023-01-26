@@ -27,7 +27,7 @@ export const LoginPage = () =>{
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
 
     return(<>
-        <Sidebar open={true}>
+        <Sidebar>
             <LogoCiudadanoDigital/>
             <br />
             <DivTitle>Iniciar Sesión</DivTitle>

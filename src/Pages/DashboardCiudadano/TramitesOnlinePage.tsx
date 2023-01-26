@@ -1,16 +1,4 @@
-import { useState } from "react";
-import { AiOutlineAudit, AiOutlineFileProtect, AiOutlineAppstore } from "react-icons/ai";
-import { BiMessage } from "react-icons/bi";
-import { Link } from "react-router-dom";
-import { DashBoard_Aplicaciones } from "../../Components/DashboardCiudadano/Aplicaciones";
-import { DashBoard_Credenciales } from "../../Components/DashboardCiudadano/Credenciales";
-import { DashBoard_Default } from "../../Components/DashboardCiudadano/Default";
-import { DashBoard_Mensajes } from "../../Components/DashboardCiudadano/Mensajes";
-import { DashBoard_Tramites } from "../../Components/DashboardCiudadano/Tramites";
-import { Hero } from "../../Components/Elements/Hero";
-import { Container, IconContainer, IconBox, Title, Box, NavigationBar, ContainerBody, ContainerCard, ContainerCard2, Sidebar, DivTitle, DivTitle2, MainContainer, ToDo, DivLabel, ContainerItem, ContainerItem2 } from '../../Components/Elements/StyledComponents';
-import { LogoCiudadanoDigital } from "../../Components/Images/LogoCiudadanoDigital";
-import { Descripcion } from "../../Components/Elements/Descripcion";
+import { ContainerItem2 } from '../../Components/Elements/StyledComponents';
 
 const data = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},

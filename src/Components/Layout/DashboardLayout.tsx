@@ -46,12 +46,12 @@ export const DashboardLayout = () => {
         <DivTitle2 color="mainbg">{userData.name} {userData.lastname.toUpperCase()}</DivTitle2>
         <DivSubtitle color="mainbg" className="mt-1">{userData.roles[0].type}<b className="ml-2">{userData.roles[0].message}</b></DivSubtitle>
 
-        <Button color="mainbg">
+        <Link to="Dashboard/Config" className="w-full"><Button color="mainbg">
           Mi Perfil
-        </Button>
+        </Button></Link>
 
       </Card>
-      <Button color="secondary">
+      <Button color="secondary" onClick={Logout}>
           Cerrar Sesión
         </Button>
     </LayoutSidebar>

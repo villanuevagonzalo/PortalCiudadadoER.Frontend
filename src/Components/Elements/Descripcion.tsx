@@ -1,30 +1,45 @@
 import { AiOutlinePaperClip, AiOutlineSchedule } from "react-icons/ai";
-import { BiNotification, BiRightArrow, BiUserCircle } from "react-icons/bi";
+import { BiLastPage, BiNotification, BiRightArrow, BiUserCircle } from "react-icons/bi";
 import { LogoER } from "../Images/LogoEntreRios";
-import { DivSubtitle, Title, DivTitle, ToDo } from "./StyledComponents";
+import { ContainerTextWrapper, ContainerImageWrapper } from "./StyledComponents";
+
+
+import Imagen from '../../Assets/ImagenNormativas.png'
+
+const data = {
+    Instructivos: [
+        {title: 'Crear una Cuenta en Ciudadano Digital', link: '#'},
+        {title: 'Niveles de usuario en Ciudadano Digital', link: '#'},
+        {title: 'Como validar la identidad por Aplicación en Ciudadano Digital', link: '#'},
+        {title: 'Cambio de contraseña en  Ciudadano Digital', link: '#'},
+        {title: 'No pude validar mi correo electrónico', link: '#'},
+        {title: 'Como agregar una aplicación en Ciudadano Digital', link: '#'},
+    ],
+    Normativas: [
+        {title: 'Reglamentación "Ciudadano Digital" - Decreto 1000/23', link: '#'},
+    ]
+}
+
 
 export const Descripcion = (props: any) => {
 
 
-    return (<ToDo>
-        <h1 className="my-4 text-4xl lg:text-5xl font-bold leading-tight">
-        ¡Bienvenido a Ciudadano Digital!
-        </h1>
-        <p className="leading-normal text-1xl lg:text-2xl mb-8">
-        Una forma fácil y segura de acceder a los servicios digitales del Estado con una única sesión y en un sólo lugar.
-        </p>
-        <p>Podrás tener tu propio escritorio virtual con los servicios mas utilizados:</p>
-        <br />
-        <DivTitle color="white"><AiOutlineSchedule className="w-6"/>Servicios Online</DivTitle>
-        <DivSubtitle color="white">Accedé a múltiples sistemas y portales estatales.</DivSubtitle>
-        <DivTitle color="white"><AiOutlinePaperClip className="w-6"/>Mis Trámites</DivTitle>
-        <DivSubtitle color="white">Realizá el seguimiento de los trámites o iniciá nuevos de forma On Line.</DivSubtitle>
-        <DivTitle color="white"><BiNotification className="w-6"/>Alertas y Mensajes</DivTitle>
-        <DivSubtitle color="white">Recibí todas las notificaciones sobre los sistemas utilizados y trámites realizados.</DivSubtitle>
-        <DivTitle color="white"><BiUserCircle className="w-6"/>Cuentas de usuario</DivTitle>
-        <DivSubtitle color="white">Gestioná los datos y trámites realizados dentro del estado, tanto propios como de terceros.</DivSubtitle>
-
-        <br />
-        <LogoER />
-    </ToDo>);
+    return (<><ContainerImageWrapper>
+        <img src={Imagen}/>
+    </ContainerImageWrapper>
+    <ContainerTextWrapper className="flexswitch">
+        <div>
+            <h1>Instructivos</h1>
+            <ul>
+                {data.Instructivos.map((item, index) => <li key={index}><h2>{item.title}</h2><span><BiLastPage /></span></li>)}
+            </ul>
+        </div>
+        <div>
+            <h1>Normativas</h1>
+            <ul>
+                {data.Normativas.map((item, index) => <li key={index}><h2>{item.title}</h2><span><BiLastPage /></span></li>)}
+            </ul>
+        </div>
+    
+    </ContainerTextWrapper></>);
 }

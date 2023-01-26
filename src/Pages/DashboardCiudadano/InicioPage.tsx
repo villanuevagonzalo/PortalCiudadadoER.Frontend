@@ -1,17 +1,6 @@
-import { useState } from "react";
-import { AiOutlineAudit, AiOutlineFileProtect, AiOutlineAppstore } from "react-icons/ai";
-import { BiMessage } from "react-icons/bi";
-import { Link } from "react-router-dom";
-import { DashBoard_Aplicaciones } from "../../Components/DashboardCiudadano/Aplicaciones";
-import { DashBoard_Credenciales } from "../../Components/DashboardCiudadano/Credenciales";
-import { DashBoard_Default } from "../../Components/DashboardCiudadano/Default";
-import { DashBoard_Mensajes } from "../../Components/DashboardCiudadano/Mensajes";
-import { DashBoard_Tramites } from "../../Components/DashboardCiudadano/Tramites";
-import { Hero } from "../../Components/Elements/Hero";
-import { Container, IconContainer, IconBox, Title, Box, NavigationBar, ContainerBody, ContainerCard, Sidebar, DivTitle,DivTitle2, MainContainer, ToDo, DivLabel, ContainerItem2 } from "../../Components/Elements/StyledComponents";
-import { LogoCiudadanoDigital } from "../../Components/Images/LogoCiudadanoDigital";
-import { Descripcion } from "../../Components/Elements/Descripcion";
-import { CapitalizeWords } from '../../Utils/generalFunctions';
+
+import { ContainerItem2 } from "../../Components/Elements/StyledComponents";
+import { CapitalizeWords } from '../../Utils/GeneralFunctions';
 import { RiToolsFill, RiWheelchairFill, RiHome4Fill, RiSeedlingFill} from "react-icons/ri";
 
 const data = [

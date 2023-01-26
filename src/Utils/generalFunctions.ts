@@ -1,5 +1,6 @@
 // Genral Functions
 
+import _ from 'lodash';
 import { useSearchParams } from 'react-router-dom'
 
 export const CapitalizeWords = (sentence: string) =>
@@ -24,11 +25,12 @@ export const GetParams = (params: string[]) => {
   const [searchParams] = useSearchParams();
 
   for (let param in params) {
-      const paramname = params[param]
+    const paramname = params[param]
     const paramvalue = searchParams.get(params[param]) as string
     if (paramvalue) {
       try {
-        values[paramname] = atob(paramvalue);
+        //values[paramname] = atob(paramvalue);
+        values[paramname] = paramvalue;
       } catch (e) {
         values[paramname] = '';
         errors.push(`El campo ${paramname} presenta un valor invalido`);
@@ -86,3 +88,12 @@ export const CheckCUIL = (cuil:string) => {
 
   return cuil==XY2+DNI+Z2;
 }
+
+export const multiGroupBy:any = (seq:any[], keys:string[]) => {
+  if (!keys.length) return seq;
+  var first = keys[0];
+  var rest = keys.slice(1);
+  return _.mapValues(_.groupBy(seq, first), function(value) {
+    return multiGroupBy(value, rest);
+  });
+};
