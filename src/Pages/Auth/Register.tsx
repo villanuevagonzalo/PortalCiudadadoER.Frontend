@@ -90,8 +90,8 @@ export const RegisterPage = () =>{
                     validationSchema={formGetValidations(['CUIL'])}
                     afterFunction={async (values:any, ) =>{
                         await AxiosAuthAPI.GetUserData({'cuil':ref.current.values.CUIL}).then((response)=>{
-                            let userdata = response.data.user
-                            //console.log(response)
+                            let userdata = response.data
+                            console.log(response)
                             setFieldValues({...values, 
                                 Name: CapitalizeWords(userdata.Nombres), 
                                 LastName: CapitalizeWords(userdata.Apellido), 
@@ -100,7 +100,14 @@ export const RegisterPage = () =>{
                             setInitialData(false)
                             setError('')
                         }).catch((e:any)=>{
-                            setError(GetMessage(e.response.data.message))
+                            let messageerror = e.response.data.message;
+                            if(messageerror=='Bad Cuil'){
+                                
+                                setInitialData(false)
+                                setError('')
+                            } else{
+                                setError(GetMessage(messageerror))
+                            }
                         })
                     }}
                     afterHTML={<> 
