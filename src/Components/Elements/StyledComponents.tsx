@@ -1,21 +1,168 @@
 import styled from "styled-components";
 
-//// Common Elements
-export const Box = styled.div`
+
+
+/// LAYOUT
+
+export const LayoutHeader = styled.div<{ }>`
+  background: var(--mainbg);
+  border-bottom: 2px solid var(--mainbg_tint);
   display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
-  width: 100%;
+  flex-direction: row;
+  height: 64px;
+  padding: 1rem;
+  width:100%;
+  z-index:100;
+
+  & svg[stroke="currentColor"]{
+    color:var(--primary_tint);
+    height:28px;
+    width:28px;
+    cursor:pointer;
+  }
 `;
 
-export const Title = styled.div`
-  color: white;
-  font-size: 2rem;
+export const LayoutContainer = styled.div<{  }>`
   display: flex;
-  justify-content: left;
-  padding: 1rem;
-  width: 100%;
+  flex-direction: row;
+  flex: 1;
+  min-height: 100%;
 `;
+
+export const LayoutSidebar = styled.div<{ width?: string, open?: boolean }>`
+  align-items: center;
+  align-self: top;
+  background: var(--mainbg_tint);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap:1rem;
+  margin-right: ${props => props.open?'-350px':'0'};  
+  overflow:hidden;
+  padding: ${props => props.open?'2rem':'0'};  
+  transition: all .1s ease-in;
+  min-width: ${props => props.open?'350px':'0px'};
+  width: ${props => props.open?'350px':'0px'};
+  z-index:100;
+`;
+
+export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  flex-grow: ${props => props.match?'1':'0'};
+  gap:1rem;
+  width:100%;
+`;
+
+export const LayoutFooter = styled.div<{ }>`
+  align-items: center;
+  align-self: center;
+  background: var(--main-background);
+  color: var(--disabled_tint);
+  display: flex;
+  flex-direction: row;
+  font-size:1rem;
+  gap: 2rem;
+  margin:2rem 0;
+  width:100%;
+
+  & div{
+    border-right:2px solid var(--disabled);
+    box-sizing: content-box;
+    padding-right:2rem;
+  }
+`;
+
+export const LayoutBody = styled.div<{ }>`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 2rem;
+  padding: 2rem;
+`;
+
+export const LayoutOverlay = styled.div<{ visible?: boolean }>`
+  display:${props => props.visible?'block':'none'};
+  background: rgba(0,0,0,0.5);
+  position: absolute;
+  transition: all .1s ease-in;
+  top:0;
+  left:0;  
+  width:100%;
+  height:100%;
+  cursor:pointer;
+  backdrop-filter: blur(3px);
+`;
+
+export const UserNav = styled.div<{ }>`
+align-items: center;
+align-self: center;
+  border:2px solid var(--gray_tint2);
+  display:flex;
+  font-size: 1rem;
+  gap: 0.25rem;
+  padding:0.25rem 0.25rem 0.25rem 1rem;
+  border-radius:2rem;
+  font-weight:600;
+  color:var(--gray_tint);
+  margin-top:-5px;
+
+  & svg{
+    margin:0px;
+    color:var(--gray)!important;
+  }
+
+`;
+
+//// Common Elements
+
+export const LayoutGrid = styled.div<{ }>`
+  gap:2rem;
+`;
+
+export const LayoutTitle = styled.h1<{ }>`
+  font-size: 2rem;
+  line-height: 2.25rem;
+  font-weight: 700;
+  color: var(--primary);
+`;
+
+
+export const LayoutItem = styled.div`
+  background: white;  
+  border-radius:0.5rem;
+  border: 1px solid var(--disabled);
+  width:100%;
+  padding:2rem;
+  color: var(-mainbg_text);
+  align-items: left;
+  flex-direction: column;
+  align-self: top;
+  display: flex;
+  gap:0.75rem;
+  
+  & h1{
+    display: flex;
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+  }
+
+  & div{
+    width:100%;
+  }
+  
+  & svg{
+    width: 3rem;
+    height: 3rem;
+    margin-right: 0.75rem;
+  }
+`;
+
+
+//// HELPERS
 
 export const Spinner = styled.div<{ size?: string }>`
   animation: spin 1s ease infinite;
@@ -36,10 +183,49 @@ export const Spinner = styled.div<{ size?: string }>`
   }
 `;
 
+export const NavigatorSpacer = styled.div<{ open?: boolean }>`
+  flex:1;
+`;
+
+// REVIEW >>>>>>>>>>>>>>>>>>>
+
+
+
+
+
+
+
+
+
+
+
+
+//// Common Elements
+export const Box = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  width: 100%;
+`;
+
+export const Title = styled.div`
+  color: white;
+  font-size: 2rem;
+  display: flex;
+  justify-content: left;
+  padding: 1rem;
+  width: 100%;
+`;
+
+
+
+
+
+
 //// NEW LAYOUT
 export const Sidebar = styled.div<{ width?: string }>`
   align-items: center;
-  align-self: center;
+  align-self: top;
   background: var(--main-background);
   display: flex;
   flex-direction: column;
@@ -54,14 +240,12 @@ export const Sidebar = styled.div<{ width?: string }>`
 
 export const MainContainer = styled.div`
   align-items: center;
-  align-self: center;
+  align-self: top;
   background: var(--${props => (props.color ? props.color : 'main-background')});
   display: flex;
   flex-direction: column;
   gap:0;
   flex:1;
-  width:100%;
-  height: 100%;
 `;
 
 export const ToDo = styled.div`
@@ -87,9 +271,6 @@ export const NavigatorWrapper = styled.div<{ open?: boolean }>`
   flex-direction: row;
 `;
 
-export const NavigatorSpacer = styled.div<{ open?: boolean }>`
-  flex:1;
-`;
 
 
 export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean }>`
@@ -359,19 +540,19 @@ DivOutlined.defaultProps = {
 
 
 export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
-  font-size: 0.9rem;
+  ${props => props.fullwidth?'width:100%;':''}
+  align-items: center;
+  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
+  border-radius: 0.5rem;
   color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
-  width:${props => props.fullwidth?'100%':'auto'};
+  display:flex;
+  font-size: 0.9rem;
+  gap:0.5rem;
+  justify-content:center;
+  margin-bottom: 0.5rem;
   min-width:150px;
   padding: 0.5rem 1rem;
   text-align:center;
-  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
-  border-radius: 0.5rem;
-  margin-bottom: 0.5rem;
-  display:flex;
-  align-items: center;
-  justify-content:center;
-  gap:0.5rem;
 
   &:disabled{
     opacity:0.5;
@@ -406,7 +587,7 @@ export const ContainerBody = styled.div`
   padding: 1rem;
 `;
 
-export const ContainerItem = styled.div`
+export const ContainerItemOLD = styled.div`
   background: white;  
   border-radius:0.5rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -443,40 +624,6 @@ export const ContainerItem = styled.div`
   }
 `;
 
-export const ContainerItem2 = styled.div`
-  background: white;  
-  border-radius:0.5rem;
-  border: 1px solid var(--disabled);
-  flex:1;
-  width:100%;
-  padding:2rem;
-  font-size:1em;
-  color: var(--main-color);
-  align-items: left;
-  flex-direction: column;
-  align-self: top;
-  display: flex;
-  gap:0.75rem;
-  
-  & h1{
-    display: flex;
-    width:100%;
-    font-size:1.25rem;
-    flex-direction: row;
-    align-items: center;
-    font-weight:600;
-  }
-
-  & div{
-    width:100%;
-  }
-  
-  & svg{
-    width: 3rem;
-    height: 3rem;
-    margin-right: 0.75rem;
-  }
-`;
 
 export const ContainerCard = styled.div`
   background: white;  
@@ -637,70 +784,16 @@ cuit
 
 
 
-/// LAYOUT
 
-export const LayoutSidebar = styled.div<{ width?: string }>`
-align-items: center;
-align-self: center;
-background: var(--main-background);
-display: flex;
-flex-direction: column;
-gap:1rem;
-padding:2rem;
-box-sizing: border-box;
 
-width: 350px;
-min-height: 100%;
-`;
 
-export const LayoutSidebarMenu = styled.div<{ width?: string }>`
-  display: flex;
-  flex-direction: column;
-  flex:1;
-  gap:1rem;
-  width:100%;
-`;
 
-export const LayoutSidebarMenuItem = styled.div<{ width?: string }>`
-`;
 
-export const LayoutContainer = styled.div<{ width?: string }>`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 100%;
-`;
-
-export const LayoutBody = styled.div<{ width?: string }>`
-  flex: 1;
-  padding: 2rem;
-  overflow:auto;
-`;
-
-export const LayoutHeader = styled.div<{ }>`
-  width:100%;
-  display: flex;
-  flex-direction: row;
-  padding: 1rem;
-`;
-
-export const LayoutFooter = styled.div<{ }>`
-  background: var(--main-background);
-  width:100%;
-  display: flex;
-  flex-direction: row;
-  font-size:1rem;
-  align-items: center;
-  align-self: center;
-  gap: 2rem;
-  padding: 2rem;
-  color: var(--disabled_tint);
-
-  & div{
-    border-right:2px solid var(--disabled);
-    padding-right:2rem;
-    box-sizing: content-box;
-  }
+export const BOX = styled.div<{ width?: string, height?: string }>`
+  width: ${props => props.width?props.width:'100px'};
+  height: ${props => props.height?props.height:'100px'};
+  background: cyan;
+  display:block;
 `;
 
 

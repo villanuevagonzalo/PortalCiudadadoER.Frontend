@@ -17,7 +17,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   background: var(--main-background);
-  font-family: 'Open Sans', sans-serif;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 #root{
@@ -28,68 +28,29 @@ body {
   top:0;
   left:0;
   width: 100%;
-  height: 100%;
+  min-height: 100%;
+  min-width: 412px;
   justify-content: left;
-  flex-direction: row;
+  flex-direction: column;
   gap: 0;
   flex: 1;
   justify-content: top;
 }
 
+
 .flexswitch{
-  flex-direction: row;
+  flex-direction: column;
 }
 
-@media (max-width: 800px) {
-  #root {
-    height: auto;
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 1024px) {
+@media (min-width: 1024px) {
   .flexswitch{
-    flex-direction: column;
+    flex-direction: row;
   }
-}
 
-form{
-  width: 100%;
-}
-
-.App-header {
-  background-color: #61dafb;
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-.section{
-  display:flex; 
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  height:100%;
-}
-
-.navHeader{
-  display:flex; 
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  height:100%;
+  .sidebar{
+    margin-right: 0!important;
+    margin-top:-64px;
+  }
 }
 
 input:-webkit-autofill,
@@ -97,4 +58,8 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active{
   -webkit-box-shadow: 0 0 0 30px var(--main-background) inset !important;
+}
+
+form{
+  width:100%;
 }

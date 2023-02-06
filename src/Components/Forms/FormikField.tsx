@@ -1,7 +1,7 @@
 import { ErrorMessage, getIn, useField, useFormikContext } from "formik";
 import { InputWrapper, InputWrapper2 } from "../Elements/StyledComponents";
 import { FormFields } from "../../Interfaces/FormFields";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlineCheckCircle, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { MdRadioButtonUnchecked } from "react-icons/md";
 
@@ -35,11 +35,18 @@ export const FormikField = ({...props}: Props) => {
         }
     }
 
-    const handleFocus = (e:any) => {
+    const handleFocus = () => {
         setFocus(!focus)            
         setEmpty(field.value==='')
     }
     
+    useEffect(() => {
+        if(field.value!==''){
+            setFocus(true);
+        }
+    }, [field.value])
+    
+
     return (
         (fieldprops.type === 'checkbox')?
         <InputWrapper2 error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} checked={field.value}>

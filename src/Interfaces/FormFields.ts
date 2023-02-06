@@ -95,7 +95,7 @@ export const FormFields:FieldProps = {
         validations: yup.string()
                         .required('El campo es obligatorio')
                         .min(8, 'La contraseña debe ser como mínimo de 8 caracteres.')
-                        .test('', 'La contraseña posee mas de 4 caracteres iguales consecutivos.', (value:any) => !/(.)\1{3}/g.test(value))
+                        .test('', 'La contraseña posee mas de 4 caracteres iguales consecutivos.', (value:any) => value?!/(.)\1{3}/g.test(value):false)
                         .test('', 'La contraseña no puede tener mas de 4 numeros consecutivos.', (value:any) => {
                             if (!value) return true;
                             let consecutive = 0;
@@ -105,7 +105,7 @@ export const FormFields:FieldProps = {
                             }
                             return true
                         })
-                        .test('','La contraseña debe contener como mínimo 4 letras.', (value:any)=>[...value.matchAll(/[a-zA-Z]/g)].length>3)
+                        .test('','La contraseña debe contener como mínimo 4 letras.', (value:any)=>value?[...value.matchAll(/[a-zA-Z]/g)].length>3:false)
                         .minUppercase(1, 'La contraseña debe contener al menos 1 letra mayúscula.')
                         .minNumbers(2, 'La contraseña debe contener al menos 2 caracteres numéricos.')
                         .minSymbols(1, 'La contraseña debe contener como mínimo un carácter especial.')

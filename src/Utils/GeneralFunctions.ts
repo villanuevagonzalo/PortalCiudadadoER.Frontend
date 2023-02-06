@@ -50,7 +50,7 @@ export const GetParams = (params: string[]) => {
 export const CheckCUIL = (cuil:string) => {
 
   // Compramos el largo del string
-  if(cuil.length!=11) return false;
+  if(cuil?.length!=11) return false;
 
   // Definimos las partes del cuil
   const XY = cuil.substring(0,2);

@@ -1,7 +1,8 @@
 
+import { LayoutItem, LayoutTitle } from "../../Components/Elements/StyledComponents"
 import { RawLocations, GetLocations } from "../../Utils/LocationsFunctions"
 
-export const ConfigPage = () => {
+export const Dashboard_ConfigurationPage = () => {
 
 
 
@@ -11,7 +12,18 @@ export const ConfigPage = () => {
         
     })
 
-  return (
-    <div>Config</div>
-  )
+  return (<>
+    <LayoutTitle>
+      Mi Perfil
+    </LayoutTitle>
+    <LayoutItem className="flex items-center gap-1 p-10">
+        COMPLETAR
+    </LayoutItem>
+    <LayoutTitle>
+      Nivel de Usuario
+    </LayoutTitle>
+    <LayoutItem className="flex items-center gap-1 p-10">
+        COMPLETAR
+    </LayoutItem>
+  </>)
 }

@@ -1,4 +1,6 @@
-import { ContainerItem2 } from '../../Components/Elements/StyledComponents';
+import { LayoutItem, LayoutTitle, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
+import { Button } from '../../Components/Forms/Button';
+import { FormikField } from '../../Components/Forms/FormikField';
 
 const data = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -11,30 +13,19 @@ const data = [
 export const TramitesOnlinePage = () => {
 
     return(<>
-        <h1 className="text-4xl lg:text-4x1 font-bold font-sans text-verde px-1" >
+        <LayoutTitle>
             Trámites on line
-        </h1>
-        <br/>
-        <div className="grid gap-7 grid-cols-1">
-            {
-                data.map((item, index) => {
-                    return(
-                        <ContainerItem2 className="text-left flex flex-wrap">
-                            <h1>{item.title}</h1>
-                            <p>{item.description}</p>
-                            <div className="text-right">
-                                <button className="bg-gris text-white active:bg-gray-500 text-xs font-bold px-10 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
-                                    +Información
-                                </button>
-                                <button className="bg-celeste text-white active:bg-blue-700 text-xs font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none m-2" type="button" style={{ transition: "all .15s ease" }}>
-                                    Iniciar
-                                </button>
-                            </div>
-                        </ContainerItem2>
-                    )
-                })
-            }
-        </div>
+        </LayoutTitle>
+        
+        {data.map((item, index) => <LayoutItem key={index}>
+            <h1>{item.title}</h1>
+            <p>{item.description}</p>
+            <div className="text-right flex gap-4">
+            <NavigatorSpacer/> 
+                <Button color="gray" fullwidth={false}>+Información</Button>
+                <Button color="secondary" fullwidth={false}>Iniciar</Button>
+            </div>
+        </LayoutItem>)}
         
 
         {/* <ContainerItem2 className="text-left flex flex-wrap">

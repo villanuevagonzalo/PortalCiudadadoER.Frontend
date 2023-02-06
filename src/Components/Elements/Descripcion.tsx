@@ -1,8 +1,5 @@
-import { AiOutlinePaperClip, AiOutlineSchedule } from "react-icons/ai";
-import { BiLastPage, BiNotification, BiRightArrow, BiUserCircle } from "react-icons/bi";
-import { LogoER } from "../Images/LogoEntreRios";
+import { BiLastPage } from "react-icons/bi";
 import { ContainerTextWrapper, ContainerImageWrapper } from "./StyledComponents";
-
 
 import Imagen from '../../Assets/ImagenNormativas.png'
 
@@ -20,26 +17,26 @@ const data = {
     ]
 }
 
-
 export const Descripcion = (props: any) => {
 
 
-    return (<><ContainerImageWrapper>
-        <img src={Imagen}/>
-    </ContainerImageWrapper>
-    <ContainerTextWrapper className="flexswitch">
-        <div>
-            <h1>Instructivos</h1>
-            <ul>
-                {data.Instructivos.map((item, index) => <li key={index}><h2>{item.title}</h2><span><BiLastPage /></span></li>)}
-            </ul>
-        </div>
-        <div>
-            <h1>Normativas</h1>
-            <ul>
-                {data.Normativas.map((item, index) => <li key={index}><h2>{item.title}</h2><span><BiLastPage /></span></li>)}
-            </ul>
-        </div>
-    
-    </ContainerTextWrapper></>);
+    return (<>
+        <ContainerImageWrapper>
+            <img src={Imagen}/>
+        </ContainerImageWrapper>
+        <ContainerTextWrapper className="flexswitch">
+            <div>
+                <h1>Instructivos</h1>
+                <ul>
+                    {data.Instructivos.map((item, index) => <li key={index}><h2>{item.title}</h2><span><BiLastPage /></span></li>)}
+                </ul>
+            </div>
+            <div>
+                <h1>Normativas</h1>
+                <ul>
+                    {data.Normativas.map((item, index) => <li key={index}><h2>{item.title}</h2><span><BiLastPage /></span></li>)}
+                </ul>
+            </div>
+        </ContainerTextWrapper>
+    </>);
 }

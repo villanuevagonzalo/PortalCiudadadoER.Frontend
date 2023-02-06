@@ -13,11 +13,7 @@ import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { CapitalizeWords } from '../../Utils/GeneralFunctions';
 import { Descripcion } from '../../Components/Elements/Descripcion';
-import { ImagenMedalla } from '../../Components/Images/ImagenMedalla';
 import { GetMessage } from '../../Interfaces/MessageHandler';
-import { CgClose } from 'react-icons/cg';
-import { AiOutlineMenu } from 'react-icons/ai';
-import { ContainerImage } from '../../Components/Elements/ContainerImage';
     
 const FormRequiredFields = [
     'CUIL',

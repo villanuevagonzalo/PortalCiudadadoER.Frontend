@@ -1,21 +1,21 @@
 import { Route, Routes } from 'react-router-dom';
-import { DefaultLayout } from './Components/NewLayout/Default';
 import { HomePage } from './Pages/HomePage';
 import { ErrorPage } from './Pages/ErrorPage';
 import { ValidarCorreo } from './Pages/Auth/ValidarCorreo';
 import { RegisterPage } from './Pages/Auth/Register';
 import { LoginPage } from './Pages/Auth/Login';
 import { AuthRoute, PrivateRoute } from './Routes/PrivateRoute';
-import { DashboardLayout } from './Components/Layout/DashboardLayout';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './Contexts/AuthContext';
 import { ReenviarCodigo } from './Pages/Auth/ReenviarCodigo';
-import { DashBoard_Credenciales } from './Components/DashboardCiudadano/Credenciales';
-import { DashBoard_Aplicaciones } from './Components/DashboardCiudadano/Aplicaciones';
-import { DashBoard_Mensajes } from './Components/DashboardCiudadano/Mensajes';
-import { InicioPage } from './Pages/DashboardCiudadano/InicioPage';
+import { Dashboard_HomePage } from './Pages/DashboardCiudadano/InicioPage';
 import { TramitesOnlinePage } from './Pages/DashboardCiudadano/TramitesOnlinePage';
-import { ConfigPage } from './Pages/DashboardCiudadano/Config';
+import { Dashboard_ConfigurationPage } from './Pages/DashboardCiudadano/Config';
+import { DashBoard_Credenciales } from './Pages/DashboardCiudadano/Credenciales';
+import { DashBoard_Aplicaciones } from './Pages/DashboardCiudadano/Aplicaciones';
+import { DashBoard_Notificaciones } from './Pages/DashboardCiudadano/Notificaciones';
+import { DefaultLayout } from './Components/Layout/Default';
+import { DashboardLayout } from './Components/Layout/DashboardLayout';
 
 function App() {
   
@@ -40,11 +40,11 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
           </Route>
           <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
-            <Route path="Dashboard" element={<InicioPage />} />
+            <Route path="Dashboard" element={<Dashboard_HomePage />} />
             <Route path="Dashboard/Credenciales" element={<DashBoard_Credenciales />} />
-            <Route path="Dashboard/Config" element={<ConfigPage />} />
+            <Route path="Dashboard/Config" element={<Dashboard_ConfigurationPage />} />
             <Route path="Dashboard/Aplicaciones" element={<DashBoard_Aplicaciones />} />
-            <Route path="Dashboard/Mensajes" element={<DashBoard_Mensajes />} />
+            <Route path="Dashboard/Mensajes" element={<DashBoard_Notificaciones />} />
             <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
           </Route>
         </Routes>
