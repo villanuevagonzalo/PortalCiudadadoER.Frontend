@@ -95,7 +95,7 @@ export const RegisterPage = () =>{
                             setFieldValues({...values, 
                                 Name: CapitalizeWords(userdata.Nombres), 
                                 LastName: CapitalizeWords(userdata.Apellido), 
-                                prs_id: userdata.id
+                                prs_id: userdata.prs_id
                             });
                             setInitialData(false)
                             setError('')
