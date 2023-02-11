@@ -146,7 +146,7 @@ export const FormFields:FieldProps = {
 
     prs_id:{
         type: 'number',
-        defaultvalue: '',
+        defaultvalue: null,
         placeholder: 'Id Ciudadano',
         validations: yup.string()
                         .required('El campo es obligatorio')

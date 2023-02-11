@@ -70,13 +70,14 @@ export const RegisterPage = () =>{
                 innerRef={ref}
                 initialValues={FieldValues}
                 onSubmit={async (values:any) =>{
+                    console.log(values)
                     await Signup({
                         cuil: values.CUIL,
                         nombre: values.Name,
                         apellido: values.LastName,
                         email: values.Email_Validation,
                         password: values.Password_Validation,
-                        prs_id: values.prs_id
+                        prs_id: values.prs_id || "NOTFOUND"
                     }, setFormState)
                 }}
                 enableReinitialize={true}

@@ -69,6 +69,7 @@ const ContextValues = () => {
             message: '',
             response: null
         }
+        console.log(data)
         await AxiosAuthAPI.UserSignup(data).then((response)=>{
             console.log(response);
             if (response.data.success === false) {
