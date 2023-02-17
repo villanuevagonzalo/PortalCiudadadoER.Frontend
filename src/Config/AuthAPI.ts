@@ -42,11 +42,16 @@ export class AuthAPI {
     }
 
     public UserPasswordSave(params: {
-        cuil: number;
+        token: string;
         new_password: string;
-        verification_code: string;
     }){
-        return this.baseService.post('/v0/user/password/reset', { params } )
+        return this.baseService.post('/v0/user/password/reset', params )
+    }
+
+    public ResendEmailVerification(params: {
+        cuil: number;
+    }){
+        return this.baseService.get('/v0/user/resend/email/verification',  { params } )
     }
 
 }

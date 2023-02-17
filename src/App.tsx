@@ -16,6 +16,9 @@ import { DashBoard_Aplicaciones } from './Pages/DashboardCiudadano/Aplicaciones'
 import { DashBoard_Notificaciones } from './Pages/DashboardCiudadano/Notificaciones';
 import { DefaultLayout } from './Components/Layout/Default';
 import { DashboardLayout } from './Components/Layout/DashboardLayout';
+import { ResetPassword } from './Pages/Auth/ResetPassword';
+import { ResendPassword } from './Pages/Auth/ResendPassword';
+import { ErrorEmailSent } from './Pages/Auth/ErrorEmailSent';
 
 function App() {
   
@@ -33,10 +36,13 @@ function App() {
             <Route path="Inicio" element={<LoginPage />} />
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
+            <Route path="RestaurarPassword" element={<ResetPassword />} />
           </Route>
           <Route element={<DefaultLayout />}>
             <Route path="ValidarCorreo" element={<ValidarCorreo />} />
             <Route path="ReenviarCodigo" element={<ReenviarCodigo />} />
+            <Route path="ErrorEmailSent" element={<ErrorEmailSent />}/>
+            <Route path="passwordreset" element={<ResendPassword />}/>
             <Route path="*" element={<ErrorPage />} />
           </Route>
           <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
