@@ -18,9 +18,9 @@ export const ErrorEmaiVerificationSent = () => {
         <Sidebar>
             <LogoCiudadanoDigital/>
             <br />
-            <DivTitle>Restablecer Contraseña<AiOutlineLock/></DivTitle>
+            <DivTitle>Verificación de correo electrónico</DivTitle>
             <br/>
-            <DivSubtitle className='text-center'>¡Se produjo un error al enviar el Email de verifiicación!. Intente nuevamente mas tarde</DivSubtitle>
+            <DivSubtitle className='text-center'>¡Se produjo un error al enviar el Email de verifiicación!. Su Email ya fue validado</DivSubtitle>
         </Sidebar>
         <MainContainer>
             <Descripcion />

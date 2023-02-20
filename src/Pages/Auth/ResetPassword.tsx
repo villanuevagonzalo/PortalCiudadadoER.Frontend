@@ -40,7 +40,6 @@ export const ResetPassword = () => {
                 onSubmit={async(values:any) => {
                     setFormState(prev=>({...prev, loading:true}))
                     console.log(values)
-                    debugger;
                     const ResetPasswordResponse = await PasswordReset({
                         cuil: values.CUIL,
                     })

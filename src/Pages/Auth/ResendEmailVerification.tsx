@@ -40,7 +40,6 @@ export const ResendEmailVerification = () => {
                 onSubmit={async(values:any) => {
                     setFormState(prev=>({...prev, loading:true}))
                     console.log(values)
-                    debugger;
                     const ResetPasswordResponse = await ResendEmail({
                         cuil: values.CUIL,
                     })

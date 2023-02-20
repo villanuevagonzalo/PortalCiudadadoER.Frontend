@@ -12,6 +12,7 @@ import { Descripcion } from '../../Components/Elements/Descripcion';
 import { useNavigate } from 'react-router-dom';
 import { GetParams } from '../../Utils/GeneralFunctions';
 import { AuthAPI } from '../../Config/AuthAPI';
+import { CountDown } from '../../Components/Elements/Timer';
 
 export const EmaiVerificationSent = () => {
     return(<>
@@ -22,6 +23,9 @@ export const EmaiVerificationSent = () => {
             <br/>
             <DivSubtitle className='text-center'>¡Se ha enviado un Mail de conirmación a su casilla de correo!</DivSubtitle>
         </Sidebar>
+        <DivSubtitle className='text-center'>
+            <CountDown></CountDown>
+        </DivSubtitle>
         <MainContainer>
             <Descripcion />
         </MainContainer>

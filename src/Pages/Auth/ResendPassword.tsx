@@ -12,6 +12,7 @@ import { Descripcion } from '../../Components/Elements/Descripcion';
 import { useNavigate } from 'react-router-dom';
 import { GetParams } from '../../Utils/GeneralFunctions';
 import { AuthAPI } from '../../Config/AuthAPI';
+import { CountDown } from '../../Components/Elements/Timer';
 
 const AxiosAuthAPI = new AuthAPI();
 
@@ -24,34 +25,6 @@ const FormRequiredFields = [
 
 export const ResendPassword = () => {
 
-//     const endTime = new Date().getTime() + 1000 * 60 * 60 * 1000;
-
-//     // Update the countdown every second
-// const countdownInterval = setInterval(() => {
-//     // Get the current time
-//     const currentTime = new Date().getTime();
-  
-//     // Calculate the remaining time in milliseconds
-//     const remainingTime = endTime - currentTime;
-
-//       // If the countdown has ended, clear the interval and display "Countdown ended"
-//   if (remainingTime < 0) {
-//     clearInterval(countdownInterval);
-//     var elemento = document.getElementById("countdown")?.innerHTML;
-//     elemento = "Countdown ended";
-//     return;
-//   }
-
-//   // Calculate the remaining minutes and seconds
-//   const minutes = Math.floor(remainingTime / (1000 * 60));
-//   const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
-
-//   // Display the remaining minutes and seconds
-//   var ele2 = document.getElementById("countdown")?.innerHTML;
-//   ele2 = `Time remaining: ${minutes}:${seconds.toString().padStart(2, "0")}`;
-  
-//     }, 1000);
-
     const navigate = useNavigate();
 
     const SearchParams = GetParams(["token"]);
@@ -63,31 +36,6 @@ export const ResendPassword = () => {
     const { UpdatePassword } = useContext(AuthContext);
     const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
     const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
-
-    // const PasswrodSave = async () => {
-    //     debugger;
-    //     await AxiosAuthAPI.UserPasswordSave({
-    //         'token': SearchParams.values.token,
-    //         'new_password': '',
-    //     }).then((response)=>{
-    //         setIsSuccess((response.statusText == "OK"))
-    //         debugger;
-    //         console.log(response)
-    //     }).catch((reason)=>{
-    //         console.log(reason)
-    //         setIsSuccess(!(reason.response.data.code == 0))
-    //     })
-    //     setIsLoading(false)
-    // }
-
-    // useEffect(() => {
-    //      debugger;
-    //     if(SearchParams.status){
-    //         PasswrodSave() 
-    //     }
-    // }, [])
-
-
 
     return (
     <>
@@ -113,14 +61,11 @@ export const ResendPassword = () => {
                             onSubmit={async(values:any) => {
                             setFormState(prev=>({...prev, loading:true}))
                                 console.log(values)
-                                debugger;
                             const UpdatePasswordResponse = await UpdatePassword({
                                 token: SearchParams.values.token,
                                 new_password: values.Password,
                             })
-                            debugger;
                             console.log(UpdatePasswordResponse)
-                            
                             if(UpdatePasswordResponse.status){
                                 await setFormState(prev=>({...prev, error:''}))
                                 navigate("/");
@@ -149,7 +94,9 @@ export const ResendPassword = () => {
                 <DivTitle>Restablecer Contraseña<AiOutlineLock/></DivTitle>
                 <br/>
                 <DivSubtitle className='text-center'>Se ha enviado a su casilla de correo un enlace para restablecer su contraseña</DivSubtitle>
-                {/* <p id='countdown'></p> */}
+                <DivSubtitle className='text-center'>
+                    <CountDown></CountDown>
+                </DivSubtitle>
             </>
 
         }
