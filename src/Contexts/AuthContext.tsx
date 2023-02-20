@@ -202,8 +202,31 @@ const ContextValues = () => {
         return response
     }
 
+    const ResendEmail = async (data: any) => {
+        setIsLoading(true)
+        const response = {
+            status: true,
+            code: null,
+            message: '',
+            response: null
+        }
+        await AxiosAuthAPI.ResendEmailVerification(data).then((res:any) =>{
+            response.code = res.status;
+            response.message = GetMessage(res.data.message, res.status);
+            response.response = res;
+
+        }).catch ((error:any) => {
+            response.status = false;
+            response.code = error.response.status;
+            response.message = GetMessage(error.response.data.message, error.response.status);
+            response.response = error.response;
+        });
+        setIsLoading(false);
+        return response
+    }
+
     return {
-        isLoading, isLogged, authToken, userData, Signup, Login, Logout, CheckToken, PasswordReset, UpdatePassword
+        isLoading, isLogged, authToken, userData, Signup, Login, Logout, CheckToken, PasswordReset, UpdatePassword, ResendEmail
     }
 }
 

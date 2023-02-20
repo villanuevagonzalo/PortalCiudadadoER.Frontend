@@ -24,6 +24,34 @@ const FormRequiredFields = [
 
 export const ResendPassword = () => {
 
+//     const endTime = new Date().getTime() + 1000 * 60 * 60 * 1000;
+
+//     // Update the countdown every second
+// const countdownInterval = setInterval(() => {
+//     // Get the current time
+//     const currentTime = new Date().getTime();
+  
+//     // Calculate the remaining time in milliseconds
+//     const remainingTime = endTime - currentTime;
+
+//       // If the countdown has ended, clear the interval and display "Countdown ended"
+//   if (remainingTime < 0) {
+//     clearInterval(countdownInterval);
+//     var elemento = document.getElementById("countdown")?.innerHTML;
+//     elemento = "Countdown ended";
+//     return;
+//   }
+
+//   // Calculate the remaining minutes and seconds
+//   const minutes = Math.floor(remainingTime / (1000 * 60));
+//   const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+
+//   // Display the remaining minutes and seconds
+//   var ele2 = document.getElementById("countdown")?.innerHTML;
+//   ele2 = `Time remaining: ${minutes}:${seconds.toString().padStart(2, "0")}`;
+  
+//     }, 1000);
+
     const navigate = useNavigate();
 
     const SearchParams = GetParams(["token"]);
@@ -121,6 +149,7 @@ export const ResendPassword = () => {
                 <DivTitle>Restablecer Contraseña<AiOutlineLock/></DivTitle>
                 <br/>
                 <DivSubtitle className='text-center'>Se ha enviado a su casilla de correo un enlace para restablecer su contraseña</DivSubtitle>
+                {/* <p id='countdown'></p> */}
             </>
 
         }
@@ -130,4 +159,8 @@ export const ResendPassword = () => {
     </MainContainer>
     </>
     )
+}
+
+function getTime() {
+    throw new Error('Function not implemented.');
 }

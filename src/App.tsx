@@ -19,6 +19,9 @@ import { DashboardLayout } from './Components/Layout/DashboardLayout';
 import { ResetPassword } from './Pages/Auth/ResetPassword';
 import { ResendPassword } from './Pages/Auth/ResendPassword';
 import { ErrorEmailSent } from './Pages/Auth/ErrorEmailSent';
+import { ResendEmailVerification } from './Pages/Auth/ResendEmailVerification';
+import { EmaiVerificationSent } from './Pages/Auth/EmailVerificationSent';
+import { ErrorEmaiVerificationSent } from './Pages/Auth/ErrorEmailVerificationSent';
 
 function App() {
   
@@ -37,12 +40,15 @@ function App() {
             <Route path="Ingresar" element={<LoginPage />} />
             <Route path="Registro" element={<RegisterPage />} />
             <Route path="RestaurarPassword" element={<ResetPassword />} />
+            <Route path="EmailVerification" element={<ResendEmailVerification />}/>
           </Route>
           <Route element={<DefaultLayout />}>
             <Route path="ValidarCorreo" element={<ValidarCorreo />} />
             <Route path="ReenviarCodigo" element={<ReenviarCodigo />} />
             <Route path="ErrorEmailSent" element={<ErrorEmailSent />}/>
             <Route path="passwordreset" element={<ResendPassword />}/>
+            <Route path="EmailVerificationSent" element={<EmaiVerificationSent />}/>
+            <Route path="ErrorEmailVerificationSent" element={<ErrorEmaiVerificationSent />}/>
             <Route path="*" element={<ErrorPage />} />
           </Route>
           <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
