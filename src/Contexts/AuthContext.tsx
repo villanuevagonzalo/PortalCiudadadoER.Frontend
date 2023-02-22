@@ -22,6 +22,7 @@ const ContextValues = () => {
   
     const Signup = async (data: any, setFormState:Function) => {
 
+
         setIsLoading(true)
         const response:IResponse = DefaultResponse;
 
@@ -37,8 +38,6 @@ const ContextValues = () => {
 
         })
         .catch((error)=>{
-
-            console.log(error);
             setFormState((prev:any)=>({...prev, error:'El proceso de Registro fallo.'}));
 
         });
@@ -50,10 +49,12 @@ const ContextValues = () => {
 
     const Login = async (data: any) => {
 
+
         setIsLoading(true)
         const response:IResponse = DefaultResponse;
 
         await AxiosAuthAPI.UserLogin(data).then((res:any)=>{
+
 
             response.code = res.status;
             response.message = GetMessage(res.data.message, res.status);
@@ -83,24 +84,35 @@ const ContextValues = () => {
 
         }).catch((error:any)=>{
 
+
             response.status = false;
             response.code = error.response.status;
             response.message = GetMessage(error.response.data.message, error.response.status);
             response.response = error.response;
 
+
             setIsLogged(false);
+            setIsLoading(false);
+
             setIsLoading(false);
 
         });
 
+
         setIsLoading(false);
+        return response;
         return response;
     }
 
     const Logout = () => {
         setIsLogged(false);
 
+
         setAuthToken(DefaultToken);
+        setUserData(DefaultUserData);
+        setUserContact(DefaultUserContact);
+        setUserRol(DefaultUserRol);
+        
         setUserData(DefaultUserData);
         setUserContact(DefaultUserContact);
         setUserRol(DefaultUserRol);
@@ -125,6 +137,10 @@ const ContextValues = () => {
             let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
             if( remainingTime > 0 ){
                 setIsLogged(true);
+                setAuthToken(CurrentToken);
+                setUserData(CurrentUserData);
+                setUserContact(CurrentUserContact);
+                setUserRol(CurrentUserRol);
                 setAuthToken(CurrentToken);
                 setUserData(CurrentUserData);
                 setUserContact(CurrentUserContact);
@@ -221,6 +237,12 @@ const AuthContextProvider: FC<{}> = (props) => {
             {props.children}
         </AuthContext.Provider>
     );
+    return (
+        <AuthContext.Provider value={ContextValues()}>
+            {props.children}
+        </AuthContext.Provider>
+    );
 }
+
 
 export default AuthContextProvider;
