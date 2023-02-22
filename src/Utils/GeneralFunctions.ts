@@ -7,14 +7,12 @@ export const CapitalizeWords = (sentence: string) =>
   sentence
     .split(' ')
     .map(
-      (word: string) => word[0].toUpperCase() + word.substring(1).toLowerCase(),
+      (word: string) => word.length>0?word[0].toUpperCase() + word.substring(1).toLowerCase():""
     )
     .join(' ')
 
 export const Sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
-
-
 
 export const GetParams = (params: string[]) => {
 
@@ -46,7 +44,6 @@ export const GetParams = (params: string[]) => {
   return { status, params, values, errors }
 }
   
-
 export const CheckCUIL = (cuil:string) => {
 
   // Compramos el largo del string
@@ -97,3 +94,13 @@ export const multiGroupBy:any = (seq:any[], keys:string[]) => {
     return multiGroupBy(value, rest);
   });
 };
+
+export const getLSData = (item:string) => {
+  const data:any = localStorage.getItem(item);
+  return JSON.parse(data);
+}
+
+export const setLSData = (item:string, data:any) => {
+  localStorage.setItem(item, JSON.stringify(data));
+  return data;
+}

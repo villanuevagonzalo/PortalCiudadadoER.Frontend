@@ -1,13 +1,15 @@
 import axios from 'axios';
-import { number } from 'yup';
+import { getLSData } from '../Utils/GeneralFunctions';
 
 const REACTENV = process.env
 
 const axiosBase = axios.create({
     baseURL: REACTENV.REACT_APP_PROJECT_API,
-    responseType: 'json'
+    responseType: 'json',
+    headers: {
+        Authorization: 'Bearer '+getLSData('authToken')?.token
+    }
 })
-
 
 export class GeneralAPI {
 

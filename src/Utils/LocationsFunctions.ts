@@ -1,5 +1,6 @@
+import moment from "moment";
 import { GeneralAPI } from "../Config/GeneralAPI";
-import { multiGroupBy } from "./GeneralFunctions";
+import { CapitalizeWords, getLSData, multiGroupBy, setLSData } from "./GeneralFunctions";
 
 
 interface ILocations {
@@ -11533,8 +11534,28 @@ interface IPais {
 
 
 
+
+
 const AxiosAPI = new GeneralAPI();
 
-export const RawLocations = async () => AxiosAPI.Locations()
+export const LocationFullPath = (location:ILocations) => CapitalizeWords(location.NOMBRE+', '+location.DEPARTAMENTO)
+export const LocationByID = (locations:ILocations[], localityID:number) => locations?.filter((location:ILocations)=>location.ID==localityID)[0]
 
-export const GetLocations = (locations:any) => multiGroupBy(locations, ["PAIS", "PROVINCIA", "DEPARTAMENTO", "NOMBRE"]);
+
+export const RawLocations = async () => {
+    const CurrentLocations:{ Locations: ILocations[]; expiration: Date; } = getLSData('Locations');
+    if(CurrentLocations){
+        let remainingTime = (Date.parse(moment(CurrentLocations.expiration).toString())- Date.now())/(1000*60*60*24)
+        if( remainingTime > 0 ){
+            return CurrentLocations.Locations;
+        }
+    }
+    const NewLocations = await AxiosAPI.Locations();
+    setLSData('Locations',{Locations: NewLocations.data, expiration: moment(Date.now()).add(1, 'days').toDate()})
+
+    return NewLocations.data;
+}
+
+export const LocationsFullPath = (locations:ILocations[]) => locations.map((item:ILocations)=>LocationFullPath(item))
+
+export const GroupLocations = (locations:ILocations[]) => multiGroupBy(locations, ["PAIS", "PROVINCIA", "DEPARTAMENTO", "NOMBRE"]);

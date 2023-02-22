@@ -7,7 +7,8 @@ export const Messages: {[key: string]:string} = {
     'Invalid Credentials': 'Los datos ingresados no son validos.',
     'Undefined array key 0': 'Error interno del servidor.',
     'User already registered': 'El CUIL ingresado ya se encuentra registrado.',
-    'Bad Cuil': 'El CUIL ingresado no se encuenta en la base de datos.'
+    'Bad Cuil': 'El CUIL ingresado no se encuenta en la base de datos.',
+    'email validation still pending': 'Debes verificar tu email antes de poder iniciar sesión.'
 
 }
 

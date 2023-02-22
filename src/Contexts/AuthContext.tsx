@@ -1,75 +1,31 @@
 import { createContext, FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthAPI } from "../Config/AuthAPI";
-import { CapitalizeWords } from '../Utils/GeneralFunctions';
+import { CapitalizeWords, getLSData, setLSData } from '../Utils/GeneralFunctions';
 import moment from 'moment'
 import { GetMessage } from "../Interfaces/MessageHandler";
 import jwt_decode from "jwt-decode";
 import { GetLevel } from "../Interfaces/UserLevels";
-
-interface IAuth{
-    token: string;
-    expiration: Date | null;
-}
-
-interface IUser{
-    cuil: number;
-    name: string;
-    lastname: string;
-    email: string;
-    roles: { type: string; level:number; message: string }[]
-}
-
-const DefaultToken:IAuth = {
-    token: '',
-    expiration: null
-}
-
-const DefaultValues:IUser = {
-    cuil: 0,
-    name: '',
-    lastname: '',
-    email: '',
-    roles: GetLevel(['level_1'])
-}
-
-const TestValues:IUser = {
-    cuil: 20390317213,
-    name: 'Gonzalo Eduardo',
-    lastname: 'Villanueva',
-    email: 'gonzalo_villanueva@outlook.com',
-    roles: GetLevel(['level_1'])
-}
-
-const getLSData = (item:string) => {
-    const data:any = localStorage.getItem(item);
-    return JSON.parse(data);
-}
-
-const setLSData = (item:string, data:any) => {
-    localStorage.setItem(item, JSON.stringify(data));
-    return data;
-}
+import { DefaultResponse, DefaultToken, DefaultUserContact, DefaultUserData, DefaultUserRol, IResponse, IToken, IUserContact, IUserData, IUserRol } from "../Interfaces/Data";
 
 const ContextValues = () => {
 
     const AxiosAuthAPI = new AuthAPI();
-    const navigate = useNavigate();
     
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isLogged, setIsLogged] = useState<boolean>(false);
-    const [authToken, setAuthToken] = useState<IAuth>(getLSData("authToken") || DefaultToken);
-    const [userData, setUserData] = useState<IUser>(TestValues)
+    const [authToken, setAuthToken] = useState<IToken>(getLSData("authToken") || DefaultToken);
+    
+    const [userData, setUserData] = useState<IUserData>(DefaultUserData)
+    const [userContact, setUserContact] = useState<IUserContact | null>(null)
+    const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol)
   
     const Signup = async (data: any, setFormState:Function) => {
+
+
         setIsLoading(true)
-        const response = {
-            status: true,
-            code: null,
-            message: '',
-            response: null
-        }
-        console.log(data)
+        const response:IResponse = DefaultResponse;
+
         await AxiosAuthAPI.UserSignup(data).then((response)=>{
             console.log(response);
             if (response.data.success === false) {
@@ -82,71 +38,113 @@ const ContextValues = () => {
 
         })
         .catch((error)=>{
-            console.log(error);
-            setFormState((prev:any)=>({...prev, error:'El proceso de Registro fallo.'}))
+            setFormState((prev:any)=>({...prev, error:'El proceso de Registro fallo.'}));
+
         });
-        setIsLoading(false)
+
+        setIsLoading(false);
+
+        return response;
     }
 
     const Login = async (data: any) => {
+
+
         setIsLoading(true)
-        const response = {
-            status: true,
-            code: null,
-            message: '',
-            response: null
-        }
+        const response:IResponse = DefaultResponse;
+
         await AxiosAuthAPI.UserLogin(data).then((res:any)=>{
+
+
             response.code = res.status;
             response.message = GetMessage(res.data.message, res.status);
             response.response = res;
-            const newuserdata = res.data.user_data;
-            const newtoken:IAuth = {
+
+            const NewToken:IToken = {
                 token: res.data.access_token,
                 expiration: moment(res.data.expires_at,"MMM DD, YYYY LT").toDate()
             };
-            const decodetoken:any = jwt_decode(newtoken.token)
-            const newdata = {
-                cuil: newuserdata.user.cuil,
-                name: CapitalizeWords(newuserdata.user.name),
-                lastname: CapitalizeWords(newuserdata.user.last_name),
-                email: newuserdata.user.email,
-                roles: GetLevel(decodetoken.scopes)
-            }
+            const DecodeToken:any = jwt_decode(NewToken.token);
+
+            const NewUserData = res.data.user_data.user;
+            const NewUserContact = res.data.user_data.user_contact;
+            const NewUserRol = GetLevel(DecodeToken.scopes);
+
             setIsLogged(true);
-            setAuthToken(newtoken);
-            setUserData(newdata)
-            setLSData("authToken", newtoken);
-            setLSData("userData", newdata);
+
+            setAuthToken(NewToken);
+            setUserData(NewUserData);
+            setUserContact(NewUserContact || DefaultUserContact);
+            setUserRol(NewUserRol);
+
+            setLSData("authToken", NewToken);
+            setLSData("UserData", NewUserData);
+            setLSData("UserContact", NewUserContact || DefaultUserContact);
+            setLSData("UserRol", NewUserRol);
+
         }).catch((error:any)=>{
+
+
             response.status = false;
             response.code = error.response.status;
             response.message = GetMessage(error.response.data.message, error.response.status);
             response.response = error.response;
-            setIsLogged(false);
-        });
-        setIsLoading(false);
-        return response
-    }
 
+
+            setIsLogged(false);
+            setIsLoading(false);
+
+            setIsLoading(false);
+
+        });
+
+
+        setIsLoading(false);
+        return response;
+        return response;
+    }
 
     const Logout = () => {
         setIsLogged(false);
+
+
         setAuthToken(DefaultToken);
-        setUserData(DefaultValues);
+        setUserData(DefaultUserData);
+        setUserContact(DefaultUserContact);
+        setUserRol(DefaultUserRol);
+        
+        setUserData(DefaultUserData);
+        setUserContact(DefaultUserContact);
+        setUserRol(DefaultUserRol);
+        
         localStorage.removeItem("authToken");
-        localStorage.removeItem("userData");
+        localStorage.removeItem("UserData");
+        localStorage.removeItem("UserContact");
+        localStorage.removeItem("UserRol");
+    }
+
+    const SaveData = () => {
+        //setIsLoading(false);
+        setIsLoading(!isLoading);
     }
 
     const CheckToken = () => {
-        const currentToken:IAuth = getLSData('authToken');
-        if(currentToken?.token){
-            let remainingTime = (Date.parse(moment(currentToken.expiration).toString())- Date.now())/(1000*60*60*24)
+        const CurrentToken:IToken = getLSData('authToken');
+        const CurrentUserData:IUserData = getLSData('UserData');
+        const CurrentUserContact:IUserContact = getLSData('UserContact');
+        const CurrentUserRol:IUserRol[] = getLSData('UserRol');
+        if(CurrentToken?.token){
+            let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
             if( remainingTime > 0 ){
-                const currentData:IUser= getLSData('userData');
                 setIsLogged(true);
-                setAuthToken(currentToken);
-                setUserData(currentData);
+                setAuthToken(CurrentToken);
+                setUserData(CurrentUserData);
+                setUserContact(CurrentUserContact);
+                setUserRol(CurrentUserRol);
+                setAuthToken(CurrentToken);
+                setUserData(CurrentUserData);
+                setUserContact(CurrentUserContact);
+                setUserRol(CurrentUserRol);
             } else{
                 Logout()
             }
@@ -226,18 +224,25 @@ const ContextValues = () => {
     }
 
     return {
-        isLoading, isLogged, authToken, userData, Signup, Login, Logout, CheckToken, PasswordReset, UpdatePassword, ResendEmail
+        isLoading, isLogged, authToken, userData, userContact, userRol, 
+        Signup, Login, Logout, CheckToken, SaveData, PasswordReset, UpdatePassword, ResendEmail
     }
 }
-
 
 export const AuthContext = createContext({} as ReturnType<typeof ContextValues>);
 
 const AuthContextProvider: FC<{}> = (props) => {
-    return (<AuthContext.Provider value={ContextValues()}>
-        {props.children}
-    </AuthContext.Provider>);
+    return (
+        <AuthContext.Provider value={ContextValues()}>
+            {props.children}
+        </AuthContext.Provider>
+    );
+    return (
+        <AuthContext.Provider value={ContextValues()}>
+            {props.children}
+        </AuthContext.Provider>
+    );
 }
 
- 
+
 export default AuthContextProvider;
