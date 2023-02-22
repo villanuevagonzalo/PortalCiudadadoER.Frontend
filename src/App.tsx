@@ -22,6 +22,13 @@ import { ErrorEmailSent } from './Pages/Auth/ErrorEmailSent';
 import { ResendEmailVerification } from './Pages/Auth/ResendEmailVerification';
 import { EmaiVerificationSent } from './Pages/Auth/EmailVerificationSent';
 import { ErrorEmaiVerificationSent } from './Pages/Auth/ErrorEmailVerificationSent';
+import { DashboardActorLayout } from './Components/Layout/DashboardActorLayout';
+import { DashBoardActor_Aplicaciones } from './Pages/DashboardActor/Aplicaciones';
+import { DashboardActor_HomePage } from './Pages/DashboardActor/InicioPage';
+import { TramitesActorOnlinePage } from './Pages/DashboardActor/TramitesOnlinePage';
+import { DashBoardActor_Credenciales } from './Pages/DashboardActor/Credenciales';
+import { DashboardActor_ConfigurationPage } from './Pages/DashboardActor/Config';
+import { DashBoardActor_Notificaciones } from './Pages/DashboardActor/Notificaciones';
 
 function App() {
   
@@ -58,6 +65,14 @@ function App() {
             <Route path="Dashboard/Aplicaciones" element={<DashBoard_Aplicaciones />} />
             <Route path="Dashboard/Mensajes" element={<DashBoard_Notificaciones />} />
             <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
+          </Route>
+          <Route element={<PrivateRoute><DashboardActorLayout /></PrivateRoute>}>
+            <Route path="DashboardActor" element={<DashboardActor_HomePage />} />
+            <Route path="DashboardActor/Credenciales" element={<DashBoardActor_Credenciales />} />
+            <Route path="DashboardActor/Config" element={<DashboardActor_ConfigurationPage />} />
+            <Route path="DashboardActor/Aplicaciones" element={<DashBoardActor_Aplicaciones />} />
+            <Route path="DashboardActor/Mensajes" element={<DashBoardActor_Notificaciones />} />
+            <Route path="DashboardActor/Tramites" element={<TramitesActorOnlinePage />} />
           </Route>
         </Routes>
   );
