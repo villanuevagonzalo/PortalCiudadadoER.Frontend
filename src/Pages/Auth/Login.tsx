@@ -73,9 +73,11 @@ export const LoginPage = () =>{
               No recuerdo mi contraseña
               <AiOutlineLock/>                        
           </Button></Link>
+          <Link to="/EmailVerification" className="w-full">
           <Button disabled={formState.loading} color="gray" className="w-full">
               No pude validar mi correo electrónico                            
           </Button>  
+          </Link>
       </Sidebar>
       <MainContainer>
           <Descripcion />

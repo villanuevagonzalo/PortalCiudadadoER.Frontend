@@ -54,9 +54,11 @@ export const HomePage = () => {
         <Link to="/RestaurarPassword" className="w-full"><Button color="gray">
             No recuerdo mi contraseña                              
         </Button></Link>
+        <Link to="/EmailVerification" className="w-full">
         <Button color="gray" className="w-full">
             No pude validar mi correo electrónico                            
         </Button>
+        </Link>
       </>}
     </Sidebar>
     <MainContainer>
