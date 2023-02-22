@@ -1,4 +1,4 @@
-import { LayoutItem, LayoutTitle, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
+import { LayoutSection, LayoutTitle, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { FormikField } from '../../Components/Forms/FormikField';
 
@@ -17,7 +17,7 @@ export const TramitesOnlinePage = () => {
             Trámites on line
         </LayoutTitle>
         
-        {data.map((item, index) => <LayoutItem key={index}>
+        {data.map((item, index) => <LayoutSection key={index}>
             <h1>{item.title}</h1>
             <p>{item.description}</p>
             <div className="text-right flex gap-4">
@@ -25,7 +25,7 @@ export const TramitesOnlinePage = () => {
                 <Button color="gray" fullwidth={false}>+Información</Button>
                 <Button color="secondary" fullwidth={false}>Iniciar</Button>
             </div>
-        </LayoutItem>)}
+        </LayoutSection>)}
         
 
         {/* <ContainerItem2 className="text-left flex flex-wrap">

@@ -1,11 +1,8 @@
 :root {
-    --main-background: #F3F4F6;
-    --main-color: #555555;
-    --main-border: #cccccc;
 
-    --mainbg: #ffffff;
-    --mainbg_tint: #e6e6e6;
-    --mainbg_text: #191919;
+    --maincolor: #FFFFFF;
+    --maincolor_tint: #e6e6e6;
+    --maincolor_text: #555555;
 
     --primary: #7ca157;
     --primary_tint: #70914e;
@@ -14,6 +11,14 @@
     --secondary: #00AFF0;
     --secondary_tint: #009ed8;
     --secondary_text: #e6f7fe;
+
+    --tertiary: #eb4034;
+    --tertiary_tint: #bc332a;
+    --tertiary_text: #fdeceb;
+
+
+
+    
 
     --error: #d44006;
     --error_tint: #bf3a05;
