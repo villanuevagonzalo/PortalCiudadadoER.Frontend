@@ -1,14 +1,9 @@
-import { useContext } from "react";
 import { Outlet } from "react-router-dom"
-import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutContainer } from "../Elements/StyledComponents";
+import { LayoutContainer } from "./StyledComponents"
 
 export const DefaultLayout = () =>{
-
-  const { Logout, userData, isLogged } = useContext(AuthContext);
-
   return (
-    <LayoutContainer className='flexswitch'>
+    <LayoutContainer className='FlexSwitchMobile'>
       <Outlet></Outlet>
     </LayoutContainer>
   )

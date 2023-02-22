@@ -1,6 +1,7 @@
-import { LayoutItem, LayoutTitle, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
+import { NavigatorSpacer } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { FormikField } from '../../Components/Forms/FormikField';
+import { LayoutSection, LayoutTitle } from '../../Components/Layout/StyledComponents';
 
 const data = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -17,7 +18,7 @@ export const TramitesActorOnlinePage = () => {
             Trámites on line
         </LayoutTitle>
         
-        {data.map((item, index) => <LayoutItem key={index}>
+        {data.map((item, index) => <LayoutSection key={index}>
             <h1>{item.title}</h1>
             <p>{item.description}</p>
             <div className="text-right flex gap-4">
@@ -25,7 +26,7 @@ export const TramitesActorOnlinePage = () => {
                 <Button color="gray" fullwidth={false}>+Información</Button>
                 <Button color="secondary" fullwidth={false}>Iniciar</Button>
             </div>
-        </LayoutItem>)}
+        </LayoutSection>)}
         
 
         {/* <ContainerItem2 className="text-left flex flex-wrap">

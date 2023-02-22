@@ -1,7 +1,8 @@
 
-import { LayoutGrid, LayoutGridItem, LayoutSection, LayoutTitle } from "../../Components/Elements/StyledComponents";
-import { CapitalizeWords } from '../../Utils/GeneralFunctions';
+import { LayoutGrid, LayoutGridItem, LayoutTitle, LayoutSection, LayoutColumns } from "../../Components/Layout/StyledComponents";
+import { CapitalizeWords } from '../../Utils/General';
 import { RiToolsFill, RiWheelchairFill, RiHome4Fill, RiSeedlingFill} from "react-icons/ri";
+import { NuevosTramites } from "../../Components/Elements/NuevosTramites";
 
 const data = [
     {title: 'Discapacidad', icon: RiWheelchairFill, href: '', description: 'Certificado único de discapacidad CUD'},
@@ -24,16 +25,6 @@ export const Dashboard_HomePage = () => {
     <LayoutTitle>
       Nuevos Trámites
     </LayoutTitle>
-    <LayoutGrid>
-      {data.map((item, index) => <LayoutGridItem key={index}>
-        <div className="text-6xl text-verde">
-          <item.icon />
-        </div>
-        <div>
-          <h1>{CapitalizeWords(item.title)}</h1>
-          <h2>{item.description}</h2>
-        </div>
-      </LayoutGridItem>)}
-    </LayoutGrid>
+    <LayoutGrid><NuevosTramites /></LayoutGrid>
   </>);
 }

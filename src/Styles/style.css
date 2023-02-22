@@ -12,56 +12,6 @@
   box-sizing: border-box;
 }
 
-
-body {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  background: var(--maincolor_tint);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-}
-
-#root{
-  align-items: top;
-  align-self: top;
-  display: flex;
-  position: absolute;
-  top:0;
-  left:0;
-  width: 100%;
-  min-height: 100%;
-  min-width: 412px;
-  justify-content: left;
-  flex-direction: column;
-  gap: 0;
-  flex: 1;
-  justify-content: top;
-}
-
-
-.flexswitch{
-  flex-direction: column;
-}
-
-.flexinput{
-  flex-direction: column;
-}
-
-@media (min-width: 1024px) {
-  .flexswitch{
-    flex-direction: row;
-  }
-
-  .flexinput{
-    flex-direction: row;
-    gap:1rem;
-  }
-
-  .sidebar{
-    margin-right: 0!important;
-    margin-top:-64px;
-  }
-}
-
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
@@ -69,6 +19,53 @@ input:-webkit-autofill:active{
   -webkit-box-shadow: 0 0 0 30px var(--maincolor) inset !important;
 }
 
-form{
-  width:100%;
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  background: var(--maincolor_tint);
+  overflow: auto;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
+
+#root{
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0;
+  justify-content: top;
+  left:0;
+  min-height: 100%;
+  min-width: 412px;
+  position: absolute;
+  top:0;
+  width: 100%;
+}
+
+.FlexSwitchTablet,.FlexSwitchMobile,.FlexSwitchForms{
+  flex-direction: column;
+}
+
+.FlexSwitchMobileInv{
+  flex-direction: column-reverse;
+}
+
+@media (min-width: 1024px) {
+  .FlexSwitchTablet{
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 720px) {
+  .FlexSwitchMobile, .FlexSwitchMobileInv{
+    flex-direction: row;
+  }
+
+  .FlexSwitchForms{
+    flex-direction: row;
+    gap:1rem;
+  }
+}
+
+.flex-1{ flex:1 !important; }
+.flex-2{ flex:2 !important; }
+.flex-3{ flex:3 !important; }

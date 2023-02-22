@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getLSData } from '../Utils/GeneralFunctions';
+import { getLSData } from '../Utils/General';
 
 const REACTENV = process.env
 

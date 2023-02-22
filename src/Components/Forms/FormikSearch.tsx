@@ -4,7 +4,7 @@ import { FormFields } from "../../Interfaces/FormFields";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdRadioButtonUnchecked } from "react-icons/md";
-import { CapitalizeWords } from "../../Utils/GeneralFunctions";
+import { CapitalizeWords } from "../../Utils/General";
 
 interface Props{
     name: string;

@@ -9,5 +9,5 @@ export const PrivateRoute = (props:{ children: any }) =>{
 
 export const PublicRoute = (props:{ children: any }) =>{
   const token = localStorage.getItem("authToken");
-  return token ? <Navigate to="/Dashboard" /> : props.children;
+  return token ? <Navigate to="/Dashboard/" /> : props.children;
 }

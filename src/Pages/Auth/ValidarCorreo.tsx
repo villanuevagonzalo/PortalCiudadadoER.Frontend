@@ -6,7 +6,7 @@ import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigit
 import { Button } from '../../Components/Forms/Button';
 import { AiFillHome, AiOutlineLock } from 'react-icons/ai';
 import { Descripcion } from '../../Components/Elements/Descripcion';
-import { GetParams } from '../../Utils/GeneralFunctions';
+import { GetParams } from '../../Utils/General';
 import { AuthAPI } from '../../Config/AuthAPI';
 
 const AxiosAuthAPI = new AuthAPI();

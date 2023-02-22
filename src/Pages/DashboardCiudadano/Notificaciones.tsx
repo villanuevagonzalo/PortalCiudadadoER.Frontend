@@ -1,6 +1,6 @@
 
 import { BiMessage } from "react-icons/bi";
-import { LayoutSection } from "../../Components/Elements/StyledComponents";
+import { LayoutSection } from "../../Components/Layout/StyledComponents";
 
 export const DashBoard_Notificaciones = () =>(<>
     

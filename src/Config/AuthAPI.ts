@@ -1,11 +1,15 @@
 import axios from 'axios';
 import { number } from 'yup';
+import { getLSData } from '../Utils/General';
 
 const REACTENV = process.env
 
 const axiosBase = axios.create({
     baseURL: REACTENV.REACT_APP_PROJECT_API,
-    responseType: 'json'
+    responseType: 'json',
+    headers: {
+        Authorization: 'Bearer '+getLSData('authToken')?.token
+    }
 })
 
 
@@ -38,6 +42,19 @@ export class AuthAPI {
         cuil: number;
     }){
         return this.baseService.get('/v0/user/check/cuil', { params: params })
+    }
+
+    public UserSaveData(params: {
+        cuil: number;
+        birthday: Date;
+        cellphone_number: string;
+        department_id: number;
+        locality_id: number;
+        address_street: string;
+        address_number: string;
+        apartment: string;
+    }){
+        return this.baseService.post('/v0/user/personal/data', params )
     }
 
     public UserValidateEmail(params: {

@@ -12,6 +12,7 @@ interface Props{
     disabled?: boolean;
     component?: React.Component;
     label?: string;
+    className?: string;
 }
 
 export const FormikField = ({...props}: Props) => {
@@ -44,9 +45,9 @@ export const FormikField = ({...props}: Props) => {
     
 
     return (
-        <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} >
+        <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} className={props.className} >
             <input type={fieldprops.type === 'password'?(passwordType?'password':'text'):fieldprops.type} autoFocus={props.autoFocus} {...field} {...props} onFocus={handleFocus} onBlur={handleFocus}/>
-            <label>{props.label?props.label:fieldprops.placeholder}</label>
+            <label htmlFor={props.name}>{props.label?props.label:fieldprops.placeholder}</label>
             <ErrorMessage name={props.name} component="span"/>
             {fieldprops.type === 'password'?<div onClick={handleClick}>{passwordType?<AiOutlineEye />:<AiOutlineEyeInvisible />}</div>:<></>}
         </FormWrapperInput>

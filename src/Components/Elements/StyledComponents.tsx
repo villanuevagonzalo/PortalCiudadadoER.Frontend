@@ -1,247 +1,25 @@
 import styled from "styled-components";
 
-/// LAYOUT
-
-export const LayoutHeader = styled.div<{ }>`
-  background: var(--maincolor_tint);
-  border-bottom: 2px solid var(--maincolor_tint);
-  display: flex;
-  flex-direction: row;
-  height: 64px;
-  padding: 1rem;
-  width:100%;
-  z-index:100;
-
-  & svg[stroke="currentColor"]{
-    color:var(--primary_tint);
-    height:28px;
-    width:28px;
-    cursor:pointer;
-  }
-`;
-
-export const LayoutContainer = styled.div<{  }>`
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  min-height: 100%;
-`;
-
-export const LayoutSidebar = styled.div<{ width?: string, open?: boolean }>`
-  align-items: center;
-  align-self: top;
-  background: var(--maincolor);
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap:1rem;
-  margin-right: ${props => props.open?'-400px':'0'};  
-  min-width: ${props => props.open?'400px':'0px'};
-  overflow:hidden;
-  padding: ${props => props.open?'3rem':'0'};  
-  transition: all .1s ease-in;
-  width: ${props => props.open?'400px':'0px'};
-  z-index:100;
-`;
-
-export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  flex-grow: ${props => props.match?'1':'0'};
-  gap:1rem;
-  width:100%;
-`;
-
-export const LayoutFooter = styled.div<{ }>`
-  align-items: center;
-  align-self: center;
-  background: var(--maincolor_tint);
-  color: var(--maincolor_text);
-  display: flex;
-  flex-direction: row;
-  font-size:1rem;
-  gap: 2rem;
-  margin:2rem 0;
-  width:100%;
-
-  & div{
-    border-right:2px solid var(--disabled);
-    box-sizing: content-box;
-    padding-right:2rem;
-  }
-`;
-
-export const LayoutBody = styled.div<{ }>`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 2rem;
-  padding: 2rem;
-`;
-
-export const LayoutOverlay = styled.div<{ visible?: boolean }>`
-  display:${props => props.visible?'block':'none'};
-  background: rgba(0,0,0,0.5);
-  position: absolute;
-  transition: all .1s ease-in;
-  top:0;
-  left:0;  
-  width:100%;
-  height:100%;
-  cursor:pointer;
-  //backdrop-filter: blur(3px);
-`;
-
-export const UserNav = styled.div<{ }>`
-  align-items: center;
-  align-self: center;
-  border:2px solid var(--gray_tint2);
-  display:flex;
-  font-size: 1rem;
-  gap: 0.25rem;
-  padding:0.25rem 0.25rem 0.25rem 1rem;
-  border-radius:2rem;
-  font-weight:600;
-  color:var(--gray_tint);
-  margin-top:-5px;
-
-  & svg{
-    margin:0px;
-    color:var(--gray)!important;
-  }
-
-`;
-
 //// Common Elements
-
-export const LayoutGrid = styled.div<{ }>`
-
-
-display:flex;
-flex-wrap: wrap;
-gap:2rem;
-justify-items: center;
-align-items: center;
-`;
-
-export const LayoutGridItem = styled.div<{ }>`
-display:flex;
-flex-direction:row;
-background: var(--maincolor);  
-border-radius:0.5rem;
-padding:2rem;
-  border: 1px solid var(--disabled);
-  min-width:30rem;
-  justify-items: center;
-  align-items: center;
-  gap:1rem;
-
-  
-  
-  & h1{
-    display: flex;
-    width:100%;
-    font-size:1.25rem;
-    flex-direction: row;
-    align-items: center;
-    font-weight:600;
-    margin-bottom:0.5rem;
-  }
-  
-  & h2{
-    display: flex;
-    width:100%;
-    font-size:1rem;
-    flex-direction: row;
-    align-items: center;
-  }
-`;
-
-
-
-export const LayoutTitle = styled.h1<{ }>`
-  font-size: 2rem;
-  line-height: 2.25rem;
-  font-weight: 700;
-  color: var(--primary);
-`;
-
-
-export const LayoutSection = styled.div`
-  background: var(--maincolor);  
-  border-radius:0.5rem;
-  border: 1px solid var(--disabled);
-  width:100%;
-  padding:2rem;
-  color: var(--maincolor_text);
-  align-items: left;
-  flex-direction: column;
-  align-self: top;
-  display: flex;
-  gap:0.75rem;
-  
-  & h1{
-    display: flex;
-    width:100%;
-    font-size:1.25rem;
-    flex-direction: row;
-    align-items: center;
-    font-weight:600;
-    margin-bottom:0.5rem;
-  }
-  
-  & h2{
-    display: flex;
-    width:100%;
-    font-size:1rem;
-    flex-direction: row;
-    align-items: center;
-    font-weight:600;
-    margin-bottom:1rem;
-    color:var(--primary_tint);
-  }
-
-  
-  & h1 svg{
-    width: 2rem;
-    height: 2rem;
-    margin-right: 0.75rem;
-  }
-
-  & button{
-    flex:0.1;
-  }
-`;
-
-
-export const LayoutColumns = styled.div<{ }>`
-  display: flex;
-  width:100%;
-`;
-
-export const FieldGrid = styled.div<{ }>`
-  display: flex;
-  width:100%;
-`;
 
 
 
 
 //// FORMS
 
-export const FormWrapperButton = styled.button<{ fullwidth?: boolean }>`
+export const FormWrapperButton = styled.button<{ fullwidth?: boolean, size?:number }>`
   ${props => props.fullwidth?'width:100%;':''}
   align-items: center;
   background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
   border-radius: 0.5rem;
   color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
   display:flex;
-  font-size: 0.9rem;
+  font-size: ${props => (props.size ? props.size*0.9 : '0.9')}rem;
   gap:0.5rem;
   justify-content:center;
   margin-bottom: 0;
   min-width:125px;
-  padding: 0.5rem 1rem;
+  padding: ${props => (props.size ? props.size*1 : '0.5')}rem 1rem;
   text-align:center;
 
   &:disabled{
@@ -666,7 +444,7 @@ export const ContainerImageWrapper = styled.div<{ open?: boolean }>`
   cursor:pointer;
   overflow:hidden;
   user-select: none;
-  flex: 3;
+  min-height:100px;
   display: flex;
   width:100%;
 
@@ -678,7 +456,7 @@ export const ContainerImageWrapper = styled.div<{ open?: boolean }>`
 `;
 
 export const ContainerTextWrapper = styled.div<{ open?: boolean }>`
-  flex: 2;
+  flex: 1;
   background: var(--maincolor_tint);
   width:100%;
   display:flex;
@@ -727,6 +505,7 @@ export const DivTitle = styled.div<{ open?: boolean }>`
   color: var(--${props => (props.color ? props.color : 'maincolor_text')});
   width:100%;
   display:flex;
+  text-align:center;
   justify-content:center;
   align-items:center;
   font-weight:bold;

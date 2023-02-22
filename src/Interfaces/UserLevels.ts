@@ -11,18 +11,32 @@ export const Levels: {[key: string]:{ type: string; level:number; message: strin
     
     'level_2': {
         type: 'Ciudadano',
+        level: 2,
+        message: 'Nivel 2'
+    },
+    
+    'level_3': {
+        type: 'Ciudadano',
+        level: 3,
+        message: 'Nivel 3'
+    },
+    
+    'level_4': {
+        type: 'Actor',
         level: 1,
+        message: 'Nivel 1'
+    },
+    
+    'level_5': {
+        type: 'Actor',
+        level: 2,
         message: 'Nivel 2'
     }
-
-
-
 }
-
 
 // Funciones de Obtención de Información
 
-export const GetLevel = (inputmessages:string[]) => {
+export const GetLevels = (inputmessages:string[]) => {
     
     let templevels = [];
     for( let level of inputmessages){
@@ -30,5 +44,4 @@ export const GetLevel = (inputmessages:string[]) => {
     }
     
     return templevels
-
 }

@@ -3,7 +3,7 @@ import { formGetValidations, formGetInitialValues, FormStateDefault, FormStatePr
 import { Link } from 'react-router-dom';
 import { AuthAPI } from '../../Config/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { DivOutlined, DivLabel, MainContainer, Sidebar, SidebarBurger, DivSubtitle, DivTitle2, DivTitle, ToDo, LayoutColumns } from '../../Components/Elements/StyledComponents';
+import { DivOutlined, DivLabel, MainContainer, Sidebar, SidebarBurger, DivSubtitle, DivTitle2, DivTitle, ToDo } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 
@@ -11,11 +11,12 @@ import React from 'react';
 import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper';
 import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
-import { CapitalizeWords } from '../../Utils/GeneralFunctions';
+import { CapitalizeWords } from '../../Utils/General';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetMessage } from '../../Interfaces/MessageHandler';
 import { LogoER } from '../../Components/Images/LogoEntreRios';
 import { FormikCheckbox } from '../../Components/Forms/FormikCheckbox';
+import { LayoutCenterBox, LayoutColumns, LayoutSidebar } from '../../Components/Layout/StyledComponents';
     
 const FormRequiredFields = [
   'CUIL',
@@ -49,11 +50,14 @@ export const RegisterPage = () =>{
   }
     
   return(<>
-    <Sidebar>
+    <LayoutSidebar>
       <LayoutColumns className="mb-8">
         <LogoER width="150px" />
       </LayoutColumns>
-      <LogoCiudadanoDigital/>
+      
+      <LayoutCenterBox maxwidth="400px">
+        <LogoCiudadanoDigital/>
+      </LayoutCenterBox>
         {(formState.finish && !formState.error)?<>
             <DivTitle className="mt-5 mb-2">¡Bien Hecho!</DivTitle>
             <DivSubtitle className='text-center'>Revisa tu correo electronico para validar tu cuenta y terminar tu proceso de registro.</DivSubtitle>
@@ -170,7 +174,7 @@ export const RegisterPage = () =>{
         </>}
         <br />
                           
-    </Sidebar>
+    </LayoutSidebar>
     <MainContainer>
         <Descripcion />
     </MainContainer>

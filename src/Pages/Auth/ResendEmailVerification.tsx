@@ -10,8 +10,10 @@ import { FormikField } from '../../Components/Forms/FormikField';
 import { AiOutlineLock } from 'react-icons/ai';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { useNavigate } from 'react-router-dom';
-import { GetParams } from '../../Utils/GeneralFunctions';
+import { GetParams } from '../../Utils/General';
 import { AuthAPI } from '../../Config/AuthAPI';
+import { LogoER } from '../../Components/Images/LogoEntreRios';
+import { LayoutColumns } from '../../Components/Layout/StyledComponents';
 
 const FormRequiredFields = [
     'CUIL'
@@ -29,10 +31,14 @@ export const ResendEmailVerification = () => {
     return (
         <>
         <Sidebar>
-            <LogoCiudadanoDigital />
-            <br />
-            <DivTitle>Verificación de correo electrónico</DivTitle>
-            <DivSubtitle>Ingresa tu cuil para reenviar el correo de verificación</DivSubtitle>
+        <LayoutColumns className="mb-8">
+          <LogoER width="150px" />
+        </LayoutColumns>
+        <LogoCiudadanoDigital/>
+        <DivTitle className="mt-5">Verificación de correo electrónico</DivTitle>
+        <DivSubtitle className="text-center pb-4">
+        Ingresa tu cuil para reenviar el correo de verificación.
+        </DivSubtitle>
             <Formik
                 innerRef={ref}
                 initialValues= {FieldValues}
@@ -57,11 +63,21 @@ export const ResendEmailVerification = () => {
                 validateOnChange={false}
                 validateOnBlur={false}
             ><Form autoComplete="off">
-                <FormikField name="CUIL" disabled={formState.loading}/>
+                <FormikField name="CUIL" disabled={formState.loading} autoFocus/>
                 <Button disabled={formState.loading} type="submit">
                     {formState.loading ? <Spinner/> : 'Reenviar Email'}                                
                 </Button>
             </Form></Formik>
+        <br/>
+      <DivLabel color="gray_tint">
+        ¿Ya validaste tu correo electrónico?
+      </DivLabel>
+            
+            <Link to="/Ingresar" className="w-full">
+        <Button disabled={formState.loading} color="gray" className="w-full">
+          Iniciar Sesión
+        </Button>
+      </Link>
         </Sidebar>
         <MainContainer>
             <Descripcion />

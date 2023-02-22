@@ -1,29 +1,20 @@
+import { LayoutSection, LayoutTitle } from "../../Components/Layout/StyledComponents"
 
-import { LayoutItem, LayoutTitle } from "../../Components/Elements/StyledComponents"
-import { RawLocations, GetLocations } from "../../Utils/LocationsFunctions"
 
 export const DashboardActor_ConfigurationPage = () => {
-
-
-
-    RawLocations().then((response)=>{
-        console.log(GetLocations(response.data))
-    }).catch((e:any)=>{
-        
-    })
 
   return (<>
     <LayoutTitle>
       Mi Perfil
     </LayoutTitle>
-    <LayoutItem className="flex items-center gap-1 p-10">
+    <LayoutSection className="flex items-center gap-1 p-10">
         COMPLETAR
-    </LayoutItem>
+    </LayoutSection>
     <LayoutTitle>
       Nivel de Usuario
     </LayoutTitle>
-    <LayoutItem className="flex items-center gap-1 p-10">
+    <LayoutSection className="flex items-center gap-1 p-10">
         COMPLETAR
-    </LayoutItem>
+    </LayoutSection>
   </>)
 }

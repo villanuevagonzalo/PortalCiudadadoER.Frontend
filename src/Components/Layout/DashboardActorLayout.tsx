@@ -4,12 +4,14 @@ import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icon
 import { BsLayoutWtf } from "react-icons/bs";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import {  Card, DivSubtitle, DivTitle2,  LayoutBody,  LayoutContainer,  LayoutFooter,  LayoutHeader, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, NavigatorSpacer, UserNav } from "../Elements/StyledComponents";
+import { LayoutBody, LayoutContainer, LayoutFooter, LayoutColumns,  LayoutHeader, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, UserNav } from "./StyledComponents";
+import {  Card, DivSubtitle, DivTitle, DivTitle2,  NavigatorSpacer } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
 import { LogoER } from "../Images/LogoEntreRios";
 
-import useMediaQuery from "../../Utils/hooks";
+import { MdNotificationsNone } from "react-icons/md";
+import useMediaQuery from "../../Utils/Hooks";
 
 const navigation = [
   { name: 'Inicio', icon: BsLayoutWtf, href: 'Dashboard/', current: true },
@@ -21,7 +23,7 @@ export const DashboardActorLayout = () => {
 
   const matches = useMediaQuery('(min-width: 1024px)');
   const [ IsOpen, setIsOpen ] = useState<boolean>(matches);
-  const { isLogged, userData, Logout } = useContext(AuthContext);
+  const { isLogged, userData, userRol, Logout } = useContext(AuthContext);
   
   useEffect(() => {
     if(matches){
@@ -36,157 +38,64 @@ export const DashboardActorLayout = () => {
     <LayoutHeader>{matches?<>
       <NavigatorSpacer /> 
       <Link to="Dashboard/Config" onClick={switchmenu}><UserNav>
-        <span>{userData.name} {userData.lastname.toUpperCase()}</span>
+        <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </UserNav></Link>
       
         
     </>:<>
+    <>
       {IsOpen?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}
       <NavigatorSpacer /> 
       <LogoCiudadanoDigital width="250px" mobile={true} />
       <NavigatorSpacer className="ml-1"/> 
+      <MdNotificationsNone className="mr-2"/>
       <BiUserCircle />
+    </>
     </>}</LayoutHeader>
     <LayoutContainer>
       <LayoutOverlay visible={IsOpen && !matches} onClick={switchmenu}/>
       <LayoutSidebar open={IsOpen} className="sidebar">
-      {matches?<LogoCiudadanoDigital width="300px" className="m-8"/>:''}
-      <LayoutSidebarMenu match={false}>
-      {navigation.map((item) => (
-        <NavLink
-          onClick={switchmenu}
-          key={item.name}
-          to={item.href}
-          className={({isActive}) => (isActive ? 'bg-celeste text-white' : 'text-gray-700 hover:bg-gray-600 hover:text-white')+' px-3 py-2 rounded-md text-sm font-medium flex'}
-          aria-current={item.current ? 'page' : undefined}
-        >
-          {<item.icon  className="h-4 w-4 mr-2 mt-0.5" />}
-          {item.name}
-        </NavLink>
-      ))}
+        {matches?<>
+          <LayoutColumns className="mb-8">
+            <LogoER width="150px" />
+          </LayoutColumns>
+          <LogoCiudadanoDigital width="300px"/>
+        </>:''}
+        <LayoutSidebarMenu match={false}>
+        {navigation.map((item) => (
+          <NavLink
+            onClick={switchmenu}
+            key={item.name}
+            to={item.href}
+            className={({isActive}) => (isActive ? 'bg-celeste text-white' : 'text-gray-700 hover:bg-gray-600 hover:text-white')+' px-3 py-2 rounded-md text-sm font-medium flex'}
+            aria-current={item.current ? 'page' : undefined}
+          >
+            {<item.icon  className="h-4 w-4 mr-2 mt-0.5" />}
+            {item.name}
+          </NavLink>
+        ))}
 
-      </LayoutSidebarMenu>
-      <Card>
-        <DivTitle2 color="mainbg">{userData.name} {userData.lastname.toUpperCase()}</DivTitle2>
-        <DivSubtitle color="mainbg" className="mt-1">{userData.roles[0].type}<b className="ml-2">{userData.roles[0].message}</b></DivSubtitle>
+        </LayoutSidebarMenu>
+        <Card>
+          <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
+          <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
 
-        <Link to="Dashboard/Config" className="w-full" onClick={switchmenu}><Button color="mainbg">
-          Mi Perfil
-        </Button></Link>
+          <Link to="Dashboard/Config" className="w-full" onClick={switchmenu}><Button color="maincolor">
+            Mi Perfil
+          </Button></Link>
 
-      </Card>
-      <Button color="secondary" onClick={Logout}>
-          Cerrar Sesión
+        </Card>
+        <Button color="secondary" onClick={Logout}>
+            Cerrar Sesión
         </Button>
       </LayoutSidebar>
       <LayoutBody>
         <Outlet></Outlet>
         <LayoutFooter>
-          <LogoER width="150px" color='var(--gray)' /> Secretaría de Modernización
+          <LogoER width="150px" color='var(--gray_tint)' /> Secretaría de Modernización
         </LayoutFooter>
       </LayoutBody>
     </LayoutContainer>
-
-
-
   </>);
 };
-
-/*
-
-    <LayoutSidebar open={IsOpen} className="sidebar">
-      <LayoutHeader>
-        <MdClose onClick={switchmenu} className="mr-2"/>
-        <LogoCiudadanoDigital width="250px" mobile={true} /></LayoutHeader>
-      <BOX height="30px">d</BOX>
-    </LayoutSidebar>
-    <LayoutContainer>
-      <LayoutHeader>{matches?<>
-        
-      </>:<>
-        <BiMenu onClick={switchmenu} className="mr-2"/>
-        <LogoCiudadanoDigital width="250px" mobile={true} />
-      </>}</LayoutHeader>
-      <LayoutBody>
-      <Outlet></Outlet>
-      </LayoutBody>
-      <LayoutFooter>
-        <LogoER width="150px" color='var(--gray)' /> Secretaría de Modernización
-      </LayoutFooter>
-    </LayoutContainer>
-
-*/
-
-
-
-
-/**    <>
-      <HeaderComponet />
-      <Outlet></Outlet>
-      <div>
-        <FooterComponet />
-      </div>
-    </> */
-
-
-    /**
-     * 
-    <Button color="primary" onClick={switchmenu}>
-          menu
-        </Button>
-      {`The view port is ${matches ? 'at least' : 'less than'} 768 pixels wide`}
-     * 
-     * <LayoutSidebar open={IsOpen} className="sidebar">
-      <LogoCiudadanoDigital width="200px" />
-      <LayoutSidebarMenu>
-      {navigation.map((item) => (
-                      <NavLink
-                        key={item.name}
-                        to={item.href}
-                        className={({isActive}) => (isActive ? 'bg-celeste text-white' : 'text-gray-700 hover:bg-gray-600 hover:text-white')+' px-3 py-2 rounded-md text-sm font-medium flex'}
-                        aria-current={item.current ? 'page' : undefined}
-                      >
-                        {<item.icon  className="h-4 w-4 mr-2 mt-0.5" />}
-                        {item.name}
-                      </NavLink>
-                    ))}
-
-      </LayoutSidebarMenu>
-      <Card>
-        <DivTitle2 color="mainbg">{userData.name} {userData.lastname.toUpperCase()}</DivTitle2>
-        <DivSubtitle color="mainbg" className="mt-1">{userData.roles[0].type}<b className="ml-2">{userData.roles[0].message}</b></DivSubtitle>
-
-        <Link to="Dashboard/Config" className="w-full"><Button color="mainbg">
-          Mi Perfil
-        </Button></Link>
-
-      </Card>
-      <Button color="secondary" onClick={Logout}>
-          Cerrar Sesión
-        </Button>
-    </LayoutSidebar>
-    <LayoutContainer>
-      <LayoutHeader>
-        <NavigatorSpacer /> <Button color="primary" onClick={switchmenu}>
-          menu
-        </Button>
-        <Link to="/Dashboard/Tramites"><Button color="secondary">
-          Ver todos los trámites online
-        </Button></Link>
-        
-        
-        <button type="button" className="p-2 text-gray-500 hover:text-gray-700">
-                  <span className="sr-only">Ver Notificaciones</span>
-                  <FaSearch aria-hidden="true" className="h-6 w-6"  />
-                </button>
-      </LayoutHeader>
-      <LayoutBody>
-      <Outlet></Outlet>
-      </LayoutBody>
-      <LayoutFooter>
-        <LogoER width="150px" color='var(--gray)' /> Secretaría de Modernización
-      </LayoutFooter>
-    </LayoutContainer>
-     * 
-     */

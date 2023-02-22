@@ -24,7 +24,7 @@ export const Descripcion = (props: any) => {
         <ContainerImageWrapper>
             <img src={Imagen}/>
         </ContainerImageWrapper>
-        <ContainerTextWrapper className="flexswitch">
+        <ContainerTextWrapper className="FlexSwitchTablet">
             <div>
                 <h1>Instructivos</h1>
                 <ul>

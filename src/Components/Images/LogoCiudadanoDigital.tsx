@@ -6,7 +6,7 @@ interface WrapperProps extends React.HTMLAttributes<HTMLDivElement> {
 	mobile?:boolean
 }
 
-export const LogoCiudadanoDigital: React.FC<WrapperProps> = ({color='var(--primary)', width='300px', mobile=false}) => {
+export const LogoCiudadanoDigital: React.FC<WrapperProps> = ({color='var(--primary)', width='100%', mobile=false}) => {
   
   return (<div style={{height:'auto', width}}><svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox={mobile?"0 -3 330 47":"0 0 200 80"}>
     {mobile?<SVGPath color={color} d="M10.8,28.7c-2.1-1.2-3.7-2.8-4.9-4.9c-1.2-2.1-1.8-4.5-1.8-7.1c0-2.7,0.6-5,1.8-7.1s2.8-3.7,4.9-4.9

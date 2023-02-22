@@ -14,8 +14,8 @@ import { DashBoard_Credenciales } from './Pages/DashboardCiudadano/Credenciales'
 import { DashBoard_Aplicaciones } from './Pages/DashboardCiudadano/Aplicaciones';
 import { DashBoard_Notificaciones } from './Pages/DashboardCiudadano/Notificaciones';
 import { DefaultLayout } from './Components/Layout/Default';
-import { DashboardLayout } from './Components/Layout/DashboardLayout';
-import { ResetPassword } from './Pages/Auth/ResetPassword';
+import { DashboardCiudadanoLayout } from './Components/Layout/DashboardCiudadanoLayout';
+import { RestaurarPassword } from './Pages/Auth/RestaurarPassword';
 import { ResendPassword } from './Pages/Auth/ResendPassword';
 import { ErrorEmailSent } from './Pages/Auth/ErrorEmailSent';
 import { ResendEmailVerification } from './Pages/Auth/ResendEmailVerification';
@@ -28,60 +28,54 @@ import { TramitesActorOnlinePage } from './Pages/DashboardActor/TramitesOnlinePa
 import { DashBoardActor_Credenciales } from './Pages/DashboardActor/Credenciales';
 import { DashboardActor_ConfigurationPage } from './Pages/DashboardActor/Config';
 import { DashBoardActor_Notificaciones } from './Pages/DashboardActor/Notificaciones';
+import { MisTramites } from './Pages/DashboardCiudadano/MisTramites';
 
 function App() {
   
   const { CheckToken } = useContext(AuthContext);
 
   useEffect(()=>{
-      CheckToken()
+    CheckToken()
   },[])
-
   
   return (
-        <Routes>
-          <Route element={<PublicRoute><DefaultLayout /></PublicRoute>}>
-            <Route index element={<LoginPage />} />
-            <Route path="Inicio" element={<LoginPage />} />
-            <Route path="Ingresar" element={<LoginPage />} />
-            <Route path="Registro" element={<RegisterPage />} />
-            <Route path="RestaurarPassword" element={<ResetPassword />} />
-            <Route path="EmailVerification" element={<ResendEmailVerification />}/>
-          </Route>
-          <Route element={<DefaultLayout />}>
-            <Route path="ValidarCorreo" element={<ValidarCorreo />} />
-            <Route path="ReenviarCodigo" element={<ReenviarCodigo />} />
-            <Route path="ErrorEmailSent" element={<ErrorEmailSent />}/>
-            <Route path="passwordreset" element={<ResendPassword />}/>
-            <Route path="EmailVerificationSent" element={<EmaiVerificationSent />}/>
-            <Route path="ErrorEmailVerificationSent" element={<ErrorEmaiVerificationSent />}/>
-            <Route path="*" element={<ErrorPage />} />
-          </Route>
-          <Route element={<PrivateRoute><DashboardLayout /></PrivateRoute>}>
-            <Route path="Dashboard" element={<Dashboard_HomePage />} />
-            <Route path="Dashboard/Credenciales" element={<DashBoard_Credenciales />} />
-            <Route path="Dashboard/Config" element={<Dashboard_ConfigurationPage />} />
-            <Route path="Dashboard/Aplicaciones" element={<DashBoard_Aplicaciones />} />
-            <Route path="Dashboard/Mensajes" element={<DashBoard_Notificaciones />} />
-            <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
-          </Route>
-          <Route element={<PrivateRoute><DashboardActorLayout /></PrivateRoute>}>
-            <Route path="DashboardActor" element={<DashboardActor_HomePage />} />
-            <Route path="DashboardActor/Credenciales" element={<DashBoardActor_Credenciales />} />
-            <Route path="DashboardActor/Config" element={<DashboardActor_ConfigurationPage />} />
-            <Route path="DashboardActor/Aplicaciones" element={<DashBoardActor_Aplicaciones />} />
-            <Route path="DashboardActor/Mensajes" element={<DashBoardActor_Notificaciones />} />
-            <Route path="DashboardActor/Tramites" element={<TramitesActorOnlinePage />} />
-          </Route>
-        </Routes>
+    <Routes>
+      <Route element={<PublicRoute><DefaultLayout /></PublicRoute>}>
+        <Route index element={<LoginPage />} />
+        <Route path="Inicio" element={<LoginPage />} />
+        <Route path="Ingresar" element={<LoginPage />} />
+        <Route path="Registro" element={<RegisterPage />} />
+        <Route path="EmailVerification" element={<ResendEmailVerification />}/>
+      </Route>
+      <Route element={<DefaultLayout />}>
+        <Route path="RestaurarPassword" element={<RestaurarPassword />} />
+        <Route path="ValidarCorreo" element={<ValidarCorreo />} />
+        <Route path="ReenviarCodigo" element={<ReenviarCodigo />} />
+        <Route path="ErrorEmailSent" element={<ErrorEmailSent />}/>
+        <Route path="passwordreset" element={<ResendPassword />}/>
+        <Route path="EmailVerificationSent" element={<EmaiVerificationSent />}/>
+        <Route path="ErrorEmailVerificationSent" element={<ErrorEmaiVerificationSent />}/>
+        <Route path="*" element={<ErrorPage />} />
+      </Route>
+      <Route element={<PrivateRoute><DashboardCiudadanoLayout /></PrivateRoute>}>
+        <Route path="Dashboard" element={<Dashboard_HomePage />} />
+        <Route path="Dashboard/Credenciales" element={<DashBoard_Credenciales />} />
+        <Route path="Dashboard/Config" element={<Dashboard_ConfigurationPage />} />
+        <Route path="Dashboard/Aplicaciones" element={<DashBoard_Aplicaciones />} />
+        <Route path="Dashboard/Notificaciones" element={<DashBoard_Notificaciones />} />
+        <Route path="Dashboard/MisTramites" element={<MisTramites />} />
+        <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
+      </Route>
+      <Route element={<PrivateRoute><DashboardActorLayout /></PrivateRoute>}>
+        <Route path="DashboardActor" element={<DashboardActor_HomePage />} />
+        <Route path="DashboardActor/Credenciales" element={<DashBoardActor_Credenciales />} />
+        <Route path="DashboardActor/Config" element={<DashboardActor_ConfigurationPage />} />
+        <Route path="DashboardActor/Aplicaciones" element={<DashBoardActor_Aplicaciones />} />
+        <Route path="DashboardActor/Notificaciones" element={<DashBoardActor_Notificaciones />} />
+        <Route path="DashboardActor/Tramites" element={<TramitesActorOnlinePage />} />
+      </Route>
+    </Routes>
   );
 }
 
 export default App;
-
-
-/*
-
-            <Route path="registro" element={<Registro />} />
-            <Route path="ingresar" element={<Ingresar />} />
-            <Route path="RestaurarPassword" element={<Ingresar />} />*/

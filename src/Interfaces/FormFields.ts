@@ -1,7 +1,7 @@
 import { isNumber } from 'lodash';
 import * as yup from 'yup';
 import YupPassword from 'yup-password'
-import { CheckCUIL } from '../Utils/GeneralFunctions';
+import { CheckCUIL } from '../Utils/General';
 YupPassword(yup) // extend yup
 
 
@@ -158,15 +158,6 @@ export const FormFields:FieldProps = {
                         .required('El campo es obligatorio')
     },
 
-    Search:{
-        type: 'search',
-        defaultvalue: '',
-        placeholder: 'Ingresa tu/s nombre/s',
-        validations: yup.string()
-                        .required('El campo es obligatorio')
-                        .test('','El campo posee caracteres invalidos', (value:any)=>!/[^a-zA-Z\u00C0-\u017F ']/g.test(value))
-    },
-
     Cellphone:{
         type: 'tel',
         defaultvalue: '',
@@ -213,6 +204,13 @@ export const FormFields:FieldProps = {
         placeholder: 'Departamento',
         validations: yup.string()
                         .required('El campo es obligatorio')
+    },
+
+    Tramites:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Filtra los tramites',
+        validations: yup.string()
     },
 }
 
