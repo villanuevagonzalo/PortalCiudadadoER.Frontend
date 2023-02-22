@@ -4,7 +4,7 @@ import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icon
 import { BsLayoutWtf } from "react-icons/bs";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import {  Card, DivSubtitle, DivTitle, DivTitle2,  LayoutBody,  LayoutColumns,  LayoutContainer,  LayoutFooter,  LayoutHeader, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, NavigatorSpacer, UserNav } from "../Elements/StyledComponents";
+import {  Card, DivSubtitle, DivTitle2,  LayoutBody,  LayoutContainer,  LayoutFooter,  LayoutHeader, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, NavigatorSpacer, UserNav } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
 import { LogoER } from "../Images/LogoEntreRios";
@@ -55,38 +55,33 @@ export const DashboardLayout = () => {
     <LayoutContainer>
       <LayoutOverlay visible={IsOpen && !matches} onClick={switchmenu}/>
       <LayoutSidebar open={IsOpen} className="sidebar">
-        {matches?<>
-          <LayoutColumns className="mb-8">
-            <LogoER width="150px" />
-          </LayoutColumns>
-          <LogoCiudadanoDigital width="300px"/>
-        </>:''}
-        <LayoutSidebarMenu match={false}>
-        {navigation.map((item) => (
-          <NavLink
-            onClick={switchmenu}
-            key={item.name}
-            to={item.href}
-            className={({isActive}) => (isActive ? 'bg-celeste text-white' : 'text-gray-700 hover:bg-gray-600 hover:text-white')+' px-3 py-2 rounded-md text-sm font-medium flex'}
-            aria-current={item.current ? 'page' : undefined}
-          >
-            {<item.icon  className="h-4 w-4 mr-2 mt-0.5" />}
-            {item.name}
-          </NavLink>
-        ))}
+      {matches?<LogoCiudadanoDigital width="300px" className="m-8"/>:''}
+      <LayoutSidebarMenu match={false}>
+      {navigation.map((item) => (
+        <NavLink
+          onClick={switchmenu}
+          key={item.name}
+          to={item.href}
+          className={({isActive}) => (isActive ? 'bg-celeste text-white' : 'text-gray-700 hover:bg-gray-600 hover:text-white')+' px-3 py-2 rounded-md text-sm font-medium flex'}
+          aria-current={item.current ? 'page' : undefined}
+        >
+          {<item.icon  className="h-4 w-4 mr-2 mt-0.5" />}
+          {item.name}
+        </NavLink>
+      ))}
 
-        </LayoutSidebarMenu>
-        <Card>
-          <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
-          <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
+      </LayoutSidebarMenu>
+      <Card>
+        <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
+        <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
 
-          <Link to="Dashboard/Config" className="w-full" onClick={switchmenu}><Button color="maincolor">
-            Mi Perfil
-          </Button></Link>
+        <Link to="Dashboard/Config" className="w-full" onClick={switchmenu}><Button color="maincolor">
+          Mi Perfil
+        </Button></Link>
 
-        </Card>
-        <Button color="secondary" onClick={Logout}>
-            Cerrar Sesión
+      </Card>
+      <Button color="secondary" onClick={Logout}>
+          Cerrar Sesión
         </Button>
       </LayoutSidebar>
       <LayoutBody>

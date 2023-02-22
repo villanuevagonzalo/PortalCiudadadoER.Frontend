@@ -16,7 +16,14 @@ export class AuthAPI {
         this.baseService = axiosBase;
     }
 
-    public UserSignup(params: any){
+    public UserSignup(params: {
+        cuil: number;
+        nombre: string;
+        apellido: string;
+        email: string;
+        password: string;
+        prs_id: number | null;
+    }){
         return this.baseService.post('/v0/user/signup', null, { params })
     }
 
@@ -27,11 +34,15 @@ export class AuthAPI {
         return this.baseService.post('/v0/user/login', params )
     }
 
-    public GetUserData(params: any){
+    public UserGetData(params: {
+        cuil: number;
+    }){
         return this.baseService.get('/v0/user/check/cuil', { params: params })
     }
 
-    public UserValidateEmail(params: any){
+    public UserValidateEmail(params: {
+        token: string;
+    }){
         return this.baseService.post('/v0/user/validate/email', params )
     }
 
@@ -42,9 +53,8 @@ export class AuthAPI {
     }
 
     public UserPasswordSave(params: {
-        cuil: number;
+        token: string;
         new_password: string;
-        verification_code: string;
     }){
         return this.baseService.post('/v0/user/password/reset', { params } )
     }

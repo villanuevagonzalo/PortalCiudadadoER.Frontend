@@ -7,14 +7,7 @@ export const PrivateRoute = (props:{ children: any }) =>{
   return token ? props.children : <Navigate to="/Ingresar" />;
 }
 
-export const AuthRoute = (props:{ children: any }) =>{
-  const navigate = useNavigate();
+export const PublicRoute = (props:{ children: any }) =>{
   const token = localStorage.getItem("authToken");
-  useEffect(() => {
-    if(token){
-      navigate('/Dashboard')
-    }
-  }, [token])
-  
-  return token ? null : props.children;
+  return token ? <Navigate to="/Dashboard" /> : props.children;
 }

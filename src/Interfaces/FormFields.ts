@@ -27,6 +27,7 @@ interface FieldProps {
     [key: string]: {
         type: string;
         defaultvalue?: any;
+        label?: string;
         placeholder: string;
         validations: any;
     }
@@ -36,6 +37,7 @@ export const FormFields:FieldProps = {
     Default:{
         type: 'string',
         defaultvalue: '',
+        label:'Invalido',
         placeholder: 'Input no encontrado - Revisar atributo Name',
         validations: yup.string()
     },
@@ -43,17 +45,19 @@ export const FormFields:FieldProps = {
     CUIL:{
         type: 'number',
         defaultvalue: '', // '20390317213',//'27271187179',
+        label: 'N° de CUIL',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
                         .required('El campo es obligatorio')
                         .min(11, 'El CUIL debe tener 11 digitos')
                         .max(11, 'El CUIL debe tener 11 digitos')
-                        .test('','CUIL invalido', (value:any)=>CheckCUIL(value))    
+                        .test('','El CUIL es invalido', (value:any)=>CheckCUIL(value))    
     },
 
     Name:{
         type: 'string',
         defaultvalue: '',
+        label: 'Nombre/s',
         placeholder: 'Ingresa tu/s nombre/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -63,6 +67,7 @@ export const FormFields:FieldProps = {
     LastName:{
         type: 'string',
         defaultvalue: '',
+        label: 'Apellido/s',
         placeholder: 'Ingresa tu/s apellido/s',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -72,6 +77,7 @@ export const FormFields:FieldProps = {
     Email:{
         type: 'email',
         defaultvalue: '', // 'gonzalo_villanueva@outlook.com',
+        label: 'Email',
         placeholder: 'Ingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -159,6 +165,54 @@ export const FormFields:FieldProps = {
         validations: yup.string()
                         .required('El campo es obligatorio')
                         .test('','El campo posee caracteres invalidos', (value:any)=>!/[^a-zA-Z\u00C0-\u017F ']/g.test(value))
+    },
+
+    Cellphone:{
+        type: 'tel',
+        defaultvalue: '',
+        placeholder: 'Ingresa tu numero de telefono',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Birthdate:{
+        type: 'date',
+        defaultvalue: '',
+        placeholder: 'Ingresa tu fecha de nacimiento',
+        validations: yup.date()
+                        .required('El campo es obligatorio')
+    },
+
+    Locality:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Busca tu localidad',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    AddressStreet:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Calle',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    AddressNumber:{
+        type: 'number',
+        defaultvalue: '',
+        placeholder: 'Numero',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Apartment:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Departamento',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
     },
 }
 

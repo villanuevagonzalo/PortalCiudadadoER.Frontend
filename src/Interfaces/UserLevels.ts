@@ -7,6 +7,12 @@ export const Levels: {[key: string]:{ type: string; level:number; message: strin
         type: 'Ciudadano',
         level: 1,
         message: 'Nivel 1'
+    },
+    
+    'level_2': {
+        type: 'Ciudadano',
+        level: 1,
+        message: 'Nivel 2'
     }
 
 

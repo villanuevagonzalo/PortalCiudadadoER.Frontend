@@ -1,12 +1,10 @@
 import styled from "styled-components";
 
-
-
 /// LAYOUT
 
 export const LayoutHeader = styled.div<{ }>`
-  background: var(--mainbg);
-  border-bottom: 2px solid var(--mainbg_tint);
+  background: var(--maincolor_tint);
+  border-bottom: 2px solid var(--maincolor_tint);
   display: flex;
   flex-direction: row;
   height: 64px;
@@ -32,17 +30,17 @@ export const LayoutContainer = styled.div<{  }>`
 export const LayoutSidebar = styled.div<{ width?: string, open?: boolean }>`
   align-items: center;
   align-self: top;
-  background: var(--mainbg_tint);
+  background: var(--maincolor);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap:1rem;
-  margin-right: ${props => props.open?'-350px':'0'};  
+  margin-right: ${props => props.open?'-400px':'0'};  
+  min-width: ${props => props.open?'400px':'0px'};
   overflow:hidden;
-  padding: ${props => props.open?'2rem':'0'};  
+  padding: ${props => props.open?'3rem':'0'};  
   transition: all .1s ease-in;
-  min-width: ${props => props.open?'350px':'0px'};
-  width: ${props => props.open?'350px':'0px'};
+  width: ${props => props.open?'400px':'0px'};
   z-index:100;
 `;
 
@@ -57,8 +55,8 @@ export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
 export const LayoutFooter = styled.div<{ }>`
   align-items: center;
   align-self: center;
-  background: var(--main-background);
-  color: var(--disabled_tint);
+  background: var(--maincolor_tint);
+  color: var(--maincolor_text);
   display: flex;
   flex-direction: row;
   font-size:1rem;
@@ -91,12 +89,12 @@ export const LayoutOverlay = styled.div<{ visible?: boolean }>`
   width:100%;
   height:100%;
   cursor:pointer;
-  backdrop-filter: blur(3px);
+  //backdrop-filter: blur(3px);
 `;
 
 export const UserNav = styled.div<{ }>`
-align-items: center;
-align-self: center;
+  align-items: center;
+  align-self: center;
   border:2px solid var(--gray_tint2);
   display:flex;
   font-size: 1rem;
@@ -117,8 +115,49 @@ align-self: center;
 //// Common Elements
 
 export const LayoutGrid = styled.div<{ }>`
-  gap:2rem;
+
+
+display:flex;
+flex-wrap: wrap;
+gap:2rem;
+justify-items: center;
+align-items: center;
 `;
+
+export const LayoutGridItem = styled.div<{ }>`
+display:flex;
+flex-direction:row;
+background: var(--maincolor);  
+border-radius:0.5rem;
+padding:2rem;
+  border: 1px solid var(--disabled);
+  min-width:30rem;
+  justify-items: center;
+  align-items: center;
+  gap:1rem;
+
+  
+  
+  & h1{
+    display: flex;
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+    margin-bottom:0.5rem;
+  }
+  
+  & h2{
+    display: flex;
+    width:100%;
+    font-size:1rem;
+    flex-direction: row;
+    align-items: center;
+  }
+`;
+
+
 
 export const LayoutTitle = styled.h1<{ }>`
   font-size: 2rem;
@@ -128,13 +167,13 @@ export const LayoutTitle = styled.h1<{ }>`
 `;
 
 
-export const LayoutItem = styled.div`
-  background: white;  
+export const LayoutSection = styled.div`
+  background: var(--maincolor);  
   border-radius:0.5rem;
   border: 1px solid var(--disabled);
   width:100%;
   padding:2rem;
-  color: var(-mainbg_text);
+  color: var(--maincolor_text);
   align-items: left;
   flex-direction: column;
   align-self: top;
@@ -148,16 +187,212 @@ export const LayoutItem = styled.div`
     flex-direction: row;
     align-items: center;
     font-weight:600;
-  }
-
-  & div{
-    width:100%;
+    margin-bottom:0.5rem;
   }
   
-  & svg{
-    width: 3rem;
-    height: 3rem;
+  & h2{
+    display: flex;
+    width:100%;
+    font-size:1rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+    margin-bottom:1rem;
+    color:var(--primary_tint);
+  }
+
+  
+  & h1 svg{
+    width: 2rem;
+    height: 2rem;
     margin-right: 0.75rem;
+  }
+
+  & button{
+    flex:0.1;
+  }
+`;
+
+
+export const LayoutColumns = styled.div<{ }>`
+  display: flex;
+  width:100%;
+`;
+
+export const FieldGrid = styled.div<{ }>`
+  display: flex;
+  width:100%;
+`;
+
+
+
+
+//// FORMS
+
+export const FormWrapperButton = styled.button<{ fullwidth?: boolean }>`
+  ${props => props.fullwidth?'width:100%;':''}
+  align-items: center;
+  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
+  border-radius: 0.5rem;
+  color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
+  display:flex;
+  font-size: 0.9rem;
+  gap:0.5rem;
+  justify-content:center;
+  margin-bottom: 0;
+  min-width:125px;
+  padding: 0.5rem 1rem;
+  text-align:center;
+
+  &:disabled{
+    opacity:0.5;
+  }
+
+  &:hover{
+    background-color: var(--${props => (props.color ? props.color : 'primary')}_tint)!important;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+  }
+`;
+
+export const FormWrapperInput = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, dummy?: boolean }>`
+  background-color: var(--${props => props.dummy?'maincolor':'maincolor'});
+  min-width:150px;
+  margin-bottom: ${props => props.error?'2rem':(props.dummy?'0rem':'1rem')};
+  border: 2px solid var(--${props => props.dummy?'maincolor':(props.error?'error':'disabled')});
+  position: relative;
+  display:flex;
+  opacity: ${props => props.disabled?'0.5':'1'};
+  border-radius: 0.5rem;
+  flex:1;
+  max-height:2.75rem;
+
+  & input{
+    position: relative;
+    padding: ${props => props.dummy?'0.6rem 0rem 0rem':'0.6rem 0.75rem 0.5rem'};
+    background: transparent;
+    outline:none;
+    width: 100%;
+    z-index: 1;
+    font-size: 0.9rem;
+    color: var(--maincolor_text);
+  }
+  
+  & div{
+    outline:none;
+    padding 0.5rem;
+    font-size: 1.5rem;
+    color: var(${props => props.error?'--error':'--maincolor_text'});
+    cursor: pointer;
+    z-index: 1;
+  }
+
+
+  & span, label{
+    background: var(--maincolor);
+    border-radius:0.25rem;
+    position: absolute;
+    transition 0.1s;
+    z-index: 2;
+    pointer-events: none;
+
+  }
+
+  & label{
+    top: ${props => props.focus?'-0.65rem':'0.45rem'};
+    color:var(--${props => props.dummy?'primary':(props.error?'error':'maincolor_text')});
+    left: ${props => props.dummy?'-0.25rem':'0.5rem'};
+    padding: 0 0.25rem;
+    font-size: ${props => props.focus?'0.75rem':'0.90rem'};
+  }
+
+  & span{
+    top: 2.75rem;
+    color:var(--error);
+    right: 0;
+    font-size: 0.75rem;
+  }
+`;
+
+export const FormWrapperUL = styled.div<{ }>`
+  width:100%;
+  background: var(--maincolor);
+  position: relative;
+  z-index: 3;
+  top: -1.5rem;
+  border: 2px solid var(--disabled);
+  border-top: 0;
+  padding:0.5rem 0;
+  font-size: 0.75rem;
+  border-radius:0 0 0.5rem 0.5rem;
+  list-style: none;
+  
+  & div{
+    max-height:10rem;
+    overflow:auto;
+  }
+
+  & li{
+    line-height:1.5rem;
+    padding:0.25rem 0.75rem;
+    border-top: 1px solid var(--disabled);
+
+    &.active{
+      background: var(--primary_text);
+
+    }
+    
+    &:hover{
+      background: var(--maincolor_tint);
+      cursor:pointer;
+    }
+  }
+
+`
+
+export const FormWrapperCheckbox = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, checked?: boolean }>`
+
+  width:100%;
+  margin:-0.25rem 0 1rem 0;
+  position: relative;
+  display:flex;
+  flex-direction: column;
+  opacity: ${props => props.disabled?'0.5':'1'};
+  transition: all .1s ease-in;
+  font-size: 0.9rem;
+  
+  
+  & div.CheckboxText{
+    display:flex;
+    transition: all .1s ease-in;
+    color: var(--${props => props.error?'error':(props.checked?'primary_tint':'gray')});
+    z-index: 1;
+    justify-content:top;
+    line-height: 1.25rem;
+    align-items:top;
+    width:100%;
+    justify-content:left;
+    align-items:center;
+    cursor:pointer;
+
+    & div{
+      font-size:1rem;
+      padding:0.125rem 0.5rem 0rem 0;
+
+    }
+
+    & *{
+      cursor: pointer;
+    }
+  }
+
+  & span{
+    transition 0.1s;
+    z-index: 2;
+    pointer-events: none;
+    margin-top:0.5rem;
+    text-align:right;
+    color:var(--error);
+    font-size: 0.75rem;
   }
 `;
 
@@ -170,7 +405,7 @@ export const Spinner = styled.div<{ size?: string }>`
   border: 4px solid transparent;
   border-left-color: var(--${props => (props.color ? props.color : 'primary-gradient-color')});
   height:${props => props.size?props.size:'1.25rem'};
-  width:${props => props.size?props.size:'1.25rem'};
+  width:${props => props.size?props.size:'1.25rem'}!important;
   margin: 0 auto;
 
   @keyframes spin {
@@ -226,22 +461,22 @@ export const Title = styled.div`
 export const Sidebar = styled.div<{ width?: string }>`
   align-items: center;
   align-self: top;
-  background: var(--main-background);
+  background: var(--maincolor);
   display: flex;
   flex-direction: column;
   gap:0;
-  padding:2rem;
+  padding:3rem;
   box-sizing: border-box;
   width:100%;
-  min-width: 350px;
-  max-width: 450px;
+  min-width: 400px;
+  max-width: 400px;
   min-height: 100%;
 `;
 
 export const MainContainer = styled.div`
   align-items: center;
   align-self: top;
-  background: var(--${props => (props.color ? props.color : 'main-background')});
+  background: var(--${props => (props.color ? props.color : 'maincolor')});
   display: flex;
   flex-direction: column;
   gap:0;
@@ -266,7 +501,7 @@ export const NavigatorWrapper = styled.div<{ open?: boolean }>`
   padding-top: 1rem;
   display: flex;
   width:100%;
-  gap: 2;
+  gap: 4;
   margin-top: 1rem;
   flex-direction: row;
 `;
@@ -274,7 +509,7 @@ export const NavigatorWrapper = styled.div<{ open?: boolean }>`
 
 
 export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean }>`
-  background-color: var(--main-background);
+  background-color: var(--maincolor);
   width:${props => props.fullwidth?'100%':'auto'};
   min-width:150px;
   margin-bottom: 2rem;
@@ -307,14 +542,14 @@ export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fu
   & span, label{
     position: absolute;
     transition 0.1s;
-    background: var(--main-background);
+    background: var(--maincolor);
     z-index: 2;
     pointer-events: none;
   }
 
   & label{
     top: ${props => props.focus?'-0.65rem':'0.45rem'};
-    color:var(${props => props.error?'--error':(props.focus?'--main-color':'--disabled')});
+    color:var(${props => props.error?'--error':(props.focus?'--maincolor_text':'--disabled')});
     left: 0.5rem;
     padding: 0 0.25rem;
     font-size: ${props => props.focus?'0.75rem':'0.90rem'};
@@ -332,7 +567,7 @@ export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fu
 `;
 
 export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, checked?: boolean }>`
-  background-color: var(--main-background);
+  background-color: var(--maincolor);
   width:${props => props.fullwidth?'100%':'auto'};
   min-width:150px;
   margin-bottom: 1.5rem;
@@ -386,7 +621,7 @@ export const InputWrapper2 = styled.div<{ error?: boolean, disabled?: boolean, f
 
 export const CaptchaWrapper = styled.div<{ open?: boolean }>`
   font-size: 1.5rem;
-  color: var(--main-color);
+  color: var(--maincolor_text);
   width:100%;
   display:flex;
   justify-content:center;
@@ -401,7 +636,7 @@ export const CaptchaWrapper = styled.div<{ open?: boolean }>`
 export const SidebarHideableWrapper = styled.div<{ width?: string, open: boolean }>`
   align-items: center;
   align-self: center;
-  background: var(--main-background);
+  background: var(--maincolor);
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -444,7 +679,7 @@ export const ContainerImageWrapper = styled.div<{ open?: boolean }>`
 
 export const ContainerTextWrapper = styled.div<{ open?: boolean }>`
   flex: 2;
-  background: var(--mainbg_tint);
+  background: var(--maincolor_tint);
   width:100%;
   display:flex;
   padding:2rem;
@@ -489,11 +724,12 @@ export const ContainerTextWrapper = styled.div<{ open?: boolean }>`
 
 export const DivTitle = styled.div<{ open?: boolean }>`
   font-size: 1.5rem;
-  color: var(--${props => (props.color ? props.color : 'main-color')});
+  color: var(--${props => (props.color ? props.color : 'maincolor_text')});
   width:100%;
   display:flex;
-  justify-content:start;
+  justify-content:center;
   align-items:center;
+  font-weight:bold;
   gap:0.5rem;
 `;
 
@@ -506,7 +742,7 @@ export const DivTitle2 = styled.div<{ open?: boolean }>`
 
 export const DivSubtitle = styled.div<{ open?: boolean }>`
   font-size:0.8rem;
-  color: var(--${props => (props.color ? props.color : 'main-color')});
+  color: var(--${props => (props.color ? props.color : 'maincolor_text')});
   width:100%;
   margin-bottom:1rem;
 `;
@@ -522,7 +758,7 @@ export const DivLabel = styled.div<{ open?: boolean }>`
 
 export const DivOutlined = styled.div<{ open?: boolean }>`
   align-items:center;
-  border-radius:0.25rem;
+  border-radius:0.5rem;
   border: 2px solid  var(--${props => (props.color ? props.color : 'error')});
   color: var(--${props => (props.color ? props.color : 'error')});
   cursor:pointer;
@@ -539,36 +775,10 @@ DivOutlined.defaultProps = {
 };
 
 
-export const ButtonWrapper = styled.button<{ fullwidth?: boolean }>`
-  ${props => props.fullwidth?'width:100%;':''}
-  align-items: center;
-  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
-  border-radius: 0.5rem;
-  color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
-  display:flex;
-  font-size: 0.9rem;
-  gap:0.5rem;
-  justify-content:center;
-  margin-bottom: 0.5rem;
-  min-width:150px;
-  padding: 0.5rem 1rem;
-  text-align:center;
-
-  &:disabled{
-    opacity:0.5;
-  }
-
-  &:hover{
-    background-color: var(--${props => (props.color ? props.color : 'primary')}_tint)!important;
-    box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
-  }
-`;
-
-
 export const Container = styled.div`
   align-items: center;
   align-self: center;
-  background: var(--${props => (props.color ? props.color+'-gradient-background' : 'main-background')});
+  background: var(--${props => (props.color ? props.color+'-gradient-background' : 'maincolor')});
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -595,7 +805,7 @@ export const ContainerItemOLD = styled.div`
   width:100%;
   padding:1rem;
   font-size:1em;
-  color: var(--main-color);
+  color: var(--maincolor_text);
   align-items: center;
   flex-direction: column;
   align-self: top;
@@ -634,7 +844,7 @@ export const ContainerCard = styled.div`
   padding:1rem;
   text-align: center;
   font-size:1.25rem;
-  color: var(--main-color);
+  color: var(--maincolor_text);
   align-items: center;
   align-self: top;
   display: flex;
@@ -657,7 +867,7 @@ export const ContainerCard2 = styled.div`
   padding:1rem;
   text-align: left;
   font-size:1.25rem;
-  color: var(--main-color);
+  color: var(--maincolor_text);
   align-items: left;
   align-self: top;
   display: flex;
@@ -674,7 +884,7 @@ export const ContainerCard2 = styled.div`
 
 
 export const NavigationBar = styled.div`
-  background: var(--${props => (props.color ? props.color+'-gradient-background' : 'main-background')});
+  background: var(--${props => (props.color ? props.color+'-gradient-background' : 'maincolor')});
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(8em, 1fr));
   grid-gap: 1rem;

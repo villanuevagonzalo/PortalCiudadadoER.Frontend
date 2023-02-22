@@ -1,10 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import { HomePage } from './Pages/HomePage';
 import { ErrorPage } from './Pages/ErrorPage';
 import { ValidarCorreo } from './Pages/Auth/ValidarCorreo';
 import { RegisterPage } from './Pages/Auth/Register';
 import { LoginPage } from './Pages/Auth/Login';
-import { AuthRoute, PrivateRoute } from './Routes/PrivateRoute';
+import { PublicRoute, PrivateRoute } from './Routes/PrivateRoute';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from './Contexts/AuthContext';
 import { ReenviarCodigo } from './Pages/Auth/ReenviarCodigo';
@@ -28,7 +27,7 @@ function App() {
   
   return (
         <Routes>
-          <Route element={<AuthRoute><DefaultLayout /></AuthRoute>}>
+          <Route element={<PublicRoute><DefaultLayout /></PublicRoute>}>
             <Route index element={<LoginPage />} />
             <Route path="Inicio" element={<LoginPage />} />
             <Route path="Ingresar" element={<LoginPage />} />
