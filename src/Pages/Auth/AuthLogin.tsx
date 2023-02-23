@@ -1,27 +1,23 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { DivOutlined, DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle } from "../../Components/Elements/StyledComponents";
 import { Button } from "../../Components/Forms/Button";
 import { Formik, Form } from "formik";
 import { FormikField } from "../../Components/Forms/FormikField";
-import { AiOutlineLock } from "react-icons/ai";
 import { Descripcion } from "../../Components/Elements/Descripcion";
-import { FormikCheckbox } from "../../Components/Forms/FormikCheckbox";
 import { LayoutSidebar } from "../../Components/Layout/StyledComponents";
 import { LayoutSidebarLogos } from "../../Components/Layout/LayoutSidebarLogos";
+import { AiOutlineLock } from "react-icons/ai";
 
 const FormRequiredFields = ["CUIL", "Password"];
 
 export const LoginPage = () => {
-  const navigate = useNavigate();
 
-  const ref: any = useRef(null);
-  const { Login } = useContext(AuthContext);
-  const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
-
-  const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
+  const { isLoading, Login } = useContext(AuthContext);
+  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   return (<>
     <LayoutSidebar>
@@ -31,60 +27,45 @@ export const LoginPage = () => {
         Ingresá tus datos para iniciar sesión en la plataforma
       </DivSubtitle>
       <Formik
-        enableReinitialize={true}
-        validateOnChange={false}
         validateOnBlur={false}
+        validateOnChange={false}
+        enableReinitialize={true}
         initialValues={FieldValues}
         validationSchema={formGetValidations(FormRequiredFields)}
-        onSubmit={async (values: any) => {
-          setFormState((prev) => ({ ...prev, loading: true }));
-          const LoginResponse = await Login({
+        onSubmit={(values: any) => {
+          Login({
             cuil: values.CUIL,
             password: values.Password,
-          });
-          if (LoginResponse.status) {
-            await setFormState((prev) => ({ ...prev, error: "" }));
-            navigate("/");
-          } else {
-            setFormState((prev) => ({ ...prev, error: LoginResponse.message }));
-          }
-          setFormState((prev) => ({ ...prev, loading: false }));
+          }, setFormState);
         }}
       >
         <Form autoComplete="off">
-          <FormikField name="CUIL" autoFocus disabled={formState.loading} />
-          <FormikField name="Password" disabled={formState.loading} />
-          <FormikCheckbox name="RememberMe"/>
-          <Button disabled={formState.loading} type="submit">
-            {formState.loading ? <Spinner /> : "Iniciar Sesión"}
+          <FormikField name="CUIL" autoFocus disabled={isLoading} />
+          <FormikField name="Password" disabled={isLoading} />
+          {/*<FormikCheckbox name="RememberMe"/>*/}
+          <Button disabled={isLoading} type="submit">
+            {isLoading ? <Spinner /> : "Iniciar Sesión"}
           </Button>
         </Form>
       </Formik>
       <form>
-      <DivOutlined open={formState.error ? true : false}>
-        {formState.error}
-      </DivOutlined>
-      <br />
-      <DivLabel color="secondary">¿Sos nuevo en Ciudadano Digital?</DivLabel>
-      <Link to="/Registro" className="w-full mb-3">
-        <Button disabled={formState.loading} color="secondary">
-          Crear una cuenta
-        </Button>
-      </Link>
-      <DivLabel color="gray_tint">
-        ¿Tuviste algun problema al registrarte?
-      </DivLabel>
-      <Link to="/RestaurarPassword" className="w-full">
-        <Button disabled={formState.loading} color="gray">
-          No recuerdo mi contraseña
-          <AiOutlineLock />
-        </Button>
-      </Link>
-      <Link to="/EmailVerification" className="w-full">
-        <Button disabled={formState.loading} color="gray" className="w-full">
-          No pude validar mi correo electrónico
-        </Button>
-      </Link>
+        <DivOutlined open={FormState.error ? true : false}>
+          {FormState.error}
+        </DivOutlined>
+        <br />
+        <DivLabel color="secondary">¿Sos nuevo en Ciudadano Digital?</DivLabel>
+        <Link to="/Registro" className="mb-3"><Button disabled={isLoading} color="secondary">
+            Crear una cuenta
+        </Button></Link>
+        <DivLabel color="gray_tint">
+          ¿Tuviste algun problema al registrarte?
+        </DivLabel>
+        <Link to="/RestaurarPassword"><Button disabled={isLoading} color="gray">
+            No recuerdo mi contraseña <AiOutlineLock />
+        </Button></Link>
+        <Link to="/EmailVerification"><Button disabled={isLoading} color="gray">
+            No pude validar mi correo electrónico
+        </Button></Link>
       </form>
     </LayoutSidebar>
     <MainContainer>

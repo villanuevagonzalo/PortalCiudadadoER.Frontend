@@ -14,10 +14,10 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
   display: flex;
   flex-direction: row;
   height: 64px;
-  padding: 1rem ${props => props.mobile?'2rem':'1rem'};
+  padding: 1rem ${props => props.mobile?'1rem':'1rem'};
   width:100%;
   z-index:100;
-  gap:${props => props.mobile?'1rem':'0'};
+  gap:${props => props.mobile?'0.5rem':'1rem'};
 
   & svg[stroke="currentColor"]{
     color:var(--primary_tint);
@@ -26,7 +26,7 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
     cursor:pointer;
   }
 
-  ${props => props.mobile?`
+  ${props => props.mobile?'':`
     & .button{
       margin-top:2px;
       height:36px;
@@ -39,7 +39,7 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
       &:hover{ background:var(--maincolor); }
     }
   
-  `:''};
+  `};
 `;
 
 export const LayoutHeaderSpacer = styled.div<{  }>`
@@ -275,6 +275,11 @@ export const LayoutSection = styled.div<{ }>`
     width: 2rem;
     height: 2rem;
     margin-right: 0.75rem;
+    &.small{
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.75rem;
+    }
   }
 
   & button{

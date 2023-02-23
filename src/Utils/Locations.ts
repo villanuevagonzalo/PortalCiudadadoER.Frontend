@@ -1,6 +1,6 @@
 import moment from "moment";
-import { GeneralAPI } from "../Config/GeneralAPI";
 import { ILocations } from "../Interfaces/Data";
+import { GeneralAPI } from "../Services/GeneralAPI";
 import { CapitalizeWords, getLSData, setLSData } from "./General";
 
 const AxiosAPI = new GeneralAPI();
@@ -8,7 +8,6 @@ const AxiosAPI = new GeneralAPI();
 export const RawLocations = async () => {
   const CurrentLocations:{ Locations: ILocations[]; expiration: Date; } = getLSData('Locations');
   if(CurrentLocations){
-    //setLSData('Locations',{Locations: CurrentLocations.Locations, expiration: moment(Date.now()).add(7, 'days').toDate()})
     let remainingTime = (Date.parse(moment(CurrentLocations.expiration).toString())- Date.now())/(1000*60*60*24)
     if( remainingTime > 0 ){
         return CurrentLocations.Locations;

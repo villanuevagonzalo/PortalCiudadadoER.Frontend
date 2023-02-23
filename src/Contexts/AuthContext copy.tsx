@@ -10,101 +10,94 @@ import { DefaultResponse, DefaultToken, DefaultUserContact, DefaultUserData, Def
 
 const ContextValues = () => {
 
-  const AxiosAuthAPI = new AuthAPI();
+    const AxiosAuthAPI = new AuthAPI();
+    
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLogged, setIsLogged] = useState<boolean>(false);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLogged, setIsLogged] = useState<boolean>(false);
+    const [authToken, setAuthToken] = useState<IToken>(DefaultToken);    
+    const [userData, setUserData] = useState<IUserData>(DefaultUserData);
+    const [userContact, setUserContact] = useState<IUserContact>(DefaultUserContact);
+    const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
 
-  const [authToken, setAuthToken] = useState<IToken>(DefaultToken);    
-  const [userData, setUserData] = useState<IUserData>(DefaultUserData);
-  const [userContact, setUserContact] = useState<IUserContact>(DefaultUserContact);
-  const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
+    const SaveToken = (token:string) => {
 
-  const SaveToken = (token:string) => {
+        const DecodeToken:any = jwt_decode(token);
 
-    const DecodeToken:any = jwt_decode(token);
+        const NewToken:IToken = {
+            token: token,
+            expiration: new Date(DecodeToken.exp*1000)
+        };
+        const NewUserRol = GetLevels(DecodeToken.scopes);
 
-    const NewToken:IToken = {
-      token: token,
-      expiration: new Date(DecodeToken.exp*1000)
-    };
-    const NewUserRol = GetLevels(DecodeToken.scopes);
+        setAuthToken(NewToken);
+        setUserRol(NewUserRol);
 
-    setAuthToken(NewToken);
-    setUserRol(NewUserRol);
-
-    setLSData("authToken", NewToken);
-    setLSData("UserRol", NewUserRol);
-  }
+        setLSData("authToken", NewToken);
+        setLSData("UserRol", NewUserRol);
+    }
   
-  const Signup = async (data:any, setFormState:Function) => {
+    const Signup = async (data: any, setFormState:Function) => {
 
-    setIsLoading(true)
-    const response:IResponse = DefaultResponse;
+        setIsLoading(true)
+        const response:IResponse = DefaultResponse;
 
-    await AxiosAuthAPI.UserSignup(data).then((res)=>{
+        await AxiosAuthAPI.UserSignup(data).then((response)=>{
+            if (response.data.success === false) {
+                setFormState((prev:any)=>({...prev, error:''}))
+            } else {
+                //navigate("/Ingresar");
+            }
 
-      response.code = res.status;
-      response.message = GetMessage(res.data.message, res.status);
-      response.response = res;
+        })
+        .catch((error)=>{
+            setFormState((prev:any)=>({...prev, error:'El proceso de Registro fallo.'}));
 
-      setFormState((prev:any) => ({ ...prev, error: "" }));
+        });
 
-    }).catch((error)=>{
+        setIsLoading(false);
+        return response;
+    }
 
-      response.status = false;
-      response.code = error.response.status;
-      response.message = GetMessage(error.response.data.message, error.response.status);
-      response.response = error.response;
+    const Login = async (data: any) => {
 
-    });
+        setIsLoading(true);
+        const response:IResponse = DefaultResponse;
 
-    setIsLoading(false);
-    return response;
-  }
+        await AxiosAuthAPI.UserLogin(data).then((res:any)=>{
 
-  const Login = async (data: any, setFormState:Function) => {
+            response.code = res.status;
+            response.message = GetMessage(res.data.message, res.status);
+            response.response = res;
 
-    setIsLoading(true);
-    const response:IResponse = DefaultResponse;
+            const NewUserData = res.data.user_data.user;
+            const NewUserContact = res.data.user_data.user_contact;
 
-    await AxiosAuthAPI.UserLogin(data).then((res:any)=>{
+            setIsLogged(true);
 
-      response.code = res.status;
-      response.message = GetMessage(res.data.message, res.status);
-      response.response = res;
+            SaveToken(res.data.access_token);
 
-      const NewUserData = res.data.user_data.user;
-      const NewUserContact = res.data.user_data.user_contact;
+            setUserData(NewUserData);
+            setUserContact(NewUserContact || DefaultUserContact);
 
-      setIsLogged(true);
+            setLSData("UserData", NewUserData);
+            setLSData("UserContact", NewUserContact || DefaultUserContact);
 
-      SaveToken(res.data.access_token);
+        }).catch((error:any)=>{
 
-      setUserData(NewUserData);
-      setUserContact(NewUserContact || DefaultUserContact);
+            response.status = false;
+            response.code = error.response.status;
+            response.message = GetMessage(error.response.data.message, error.response.status);
+            response.response = error.response;
 
-      setLSData("UserData", NewUserData);
-      setLSData("UserContact", NewUserContact || DefaultUserContact);
+            setIsLogged(false);
+            setIsLoading(false);
+        });
 
-      setFormState((prev:any) => ({ ...prev, error: "" }));
 
-    }).catch((error:any)=>{
-
-      response.status = false;
-      response.code = error.response.status;
-      response.message = GetMessage(error.response.data.message, error.response.status);
-      response.response = error.response;
-
-      setIsLogged(false);
-      setIsLoading(false);
-
-      setFormState((prev:any) => ({ ...prev, error: response.message }));
-    });
-
-    setIsLoading(false);
-    return response;
-  }
+        setIsLoading(false);
+        return response;
+    }
 
     const Logout = () => {
         setIsLoading(false);
@@ -223,54 +216,27 @@ const ContextValues = () => {
 
     const EmailResend = async (data: any) => {
 
-      setIsLoading(true);
-      const response:IResponse = DefaultResponse;
+        setIsLoading(true);
+        const response:IResponse = DefaultResponse;
 
-      await AxiosAuthAPI.EmailResendVerification(data).then((res:any) =>{
-          response.code = res.status;
-          response.message = GetMessage(res.data.message, res.status);
-          response.response = res;
+        await AxiosAuthAPI.EmailResendVerification(data).then((res:any) =>{
+            response.code = res.status;
+            response.message = GetMessage(res.data.message, res.status);
+            response.response = res;
 
-      }).catch ((error:any) => {
-          response.status = false;
-          response.code = error.response.status;
-          response.message = GetMessage2(error.response.data.message);
-          response.response = error.response;
-      });
-      setIsLoading(false);
-      return response
-  }
-
-  const EmailChange = async (data: any, setFormState:Function) => {
-
-      setIsLoading(true);
-      const response:IResponse = DefaultResponse;
-
-      await AxiosAuthAPI.EmailChange(data).then((res:any) =>{
-          response.code = res.status;
-          response.message = GetMessage(res.data.message, res.status);
-          response.response = res;
-          
-          setFormState((prev:any) => ({ ...prev, error: "" }));
-
-      }).catch ((error:any) => {
-          response.status = false;
-          response.code = error.response.status;
-          response.message = GetMessage(error.response.data.message);
-          response.response = error.response;
-            
-          setFormState((prev:any) => ({ ...prev, error: response.message }));
-      });
-      setIsLoading(false);
-      return response
-  }
+        }).catch ((error:any) => {
+            response.status = false;
+            response.code = error.response.status;
+            response.message = GetMessage2(error.response.data.message);
+            response.response = error.response;
+        });
+        setIsLoading(false);
+        return response
+    }
 
     return {
         isLoading, isLogged, authToken, userData, userContact, userRol, 
-        Signup, Login, Logout, CheckToken, 
-        SaveData,
-        PasswordReset, PasswordUpdate,
-        EmailResend, EmailChange
+        Signup, Login, Logout, CheckToken, SaveData, PasswordReset, PasswordUpdate, EmailResend
     }
 }
 

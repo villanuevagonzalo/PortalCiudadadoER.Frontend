@@ -22,13 +22,13 @@ export const PasswordUpdate = () => {
   const SearchParams = GetParams(["token"]);
 
   const { userData, PasswordUpdate } = useContext(AuthContext);
-  const [ formState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   return (<>
   <LayoutSidebar>
     <LayoutSidebarLogos/>
-    {formState.finish ? <>
+    {FormState.finish ? <>
       <DivTitle className="mt-5">Restablecer Contraseña</DivTitle>
       <DivOutlined className="mt-4 flex-col" color="primary">
         <b className='mb-2'>Contraseña Actualizada</b>
@@ -38,11 +38,11 @@ export const PasswordUpdate = () => {
       <DivLabel color="primary">
         Inicia Sesión con tu nueva contraseña
       </DivLabel>
-      <Link to="/Ingresar"><Button disabled={formState.loading}>
+      <Link to="/Ingresar"><Button disabled={FormState.loading}>
         Iniciar Sesión
       </Button></Link>
     </> : <>
-      {(SearchParams.status && formState.error==='') ? <>
+      {(SearchParams.status && FormState.error==='') ? <>
         <DivTitle className="mt-5">Restablecer Contraseña</DivTitle>
         <DivSubtitle className="text-center pb-4">
           Ingresá tu nueva contraseña.
@@ -72,19 +72,19 @@ export const PasswordUpdate = () => {
           }}
         >
           <Form autoComplete="off">
-            <FormikField name="Password" disabled={formState.loading}/>
-            <FormikField name="Password_Validation" disabled={formState.loading}/>
-            <Button disabled={formState.loading} type="submit">
-              {formState.loading ? <Spinner/> : 'Cambiar contraseña'}                                
+            <FormikField name="Password" disabled={FormState.loading}/>
+            <FormikField name="Password_Validation" disabled={FormState.loading}/>
+            <Button disabled={FormState.loading} type="submit">
+              {FormState.loading ? <Spinner/> : 'Cambiar contraseña'}                                
             </Button>
           </Form>
         </Formik>
       </> : <>
         <DivTitle className='mt-5' color="error">Restablecer Contraseña</DivTitle>
-        {formState.error?<>
+        {FormState.error?<>
           <DivSubtitle className='text-center'>Se produjo un error</DivSubtitle>
-          <DivOutlined open={formState.error?true:false} className="mt-4 flex-col">
-            {formState.error}
+          <DivOutlined open={FormState.error?true:false} className="mt-4 flex-col">
+            {FormState.error}
           </DivOutlined>
         </>:<>
           <DivSubtitle className='text-center'>Los siguientes campos presentan un error:</DivSubtitle>
@@ -101,9 +101,9 @@ export const PasswordUpdate = () => {
       <DivLabel color="gray_tint">
         ¿No quieres cambiar tu contraseña?
       </DivLabel>
-      {userData.cuil!==''?<Link to="/Dashboard/Config"><Button disabled={formState.loading} color="gray">
+      {userData.cuil!==''?<Link to="/Dashboard/Config"><Button disabled={FormState.loading} color="gray">
         Volver al Dashboard
-      </Button></Link>:<Link to="/Ingresar"><Button disabled={formState.loading} color="gray">
+      </Button></Link>:<Link to="/Ingresar"><Button disabled={FormState.loading} color="gray">
         Iniciar Sesión
       </Button></Link>}
     </>}

@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import moment from "moment";
 import { useContext, useEffect, useState } from "react";
-import { AiOutlineMail } from "react-icons/ai";
+import { AiOutlineArrowRight, AiOutlineMail } from "react-icons/ai";
 import { BiData, BiUserCircle } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { DivLabel, NavigatorSpacer, Spinner } from "../../Components/Elements/StyledComponents"
@@ -27,7 +27,7 @@ const FormRequiredFields = [
 
 export const Dashboard_ConfigurationPage = () => {
 
-  const { isLoading, userData, userContact, userRol, SaveData } = useContext(AuthContext);
+  const { isLoading, userData, userContact, userRol, SaveData, CheckToken } = useContext(AuthContext);
   const [ LocationsValues, setLocationsValues ] = useState< ILocations[]>([]);
   const [ FieldValues, setFieldValues ] = useState<any>(null);
 
@@ -40,6 +40,7 @@ export const Dashboard_ConfigurationPage = () => {
 
 
   useEffect(() => {
+    
     RawLocations().then((response)=>{
       setLocationsValues(response)
     }).catch((e:any)=>{
@@ -77,7 +78,7 @@ export const Dashboard_ConfigurationPage = () => {
       <h2>Información de Contacto</h2>
       <FieldGrid className="FlexSwitchForms gap-4 -mt-2 mb-2">
       <FormikFieldDummy name="Email" value={userData.email}/>
-      <Link to="/Ingresar"><Button>Solicitar cambio de Email »</Button></Link>
+      <Link to="EmailChange"><Button>Solicitar cambio de Email <AiOutlineArrowRight/></Button></Link>
       </FieldGrid>
       {(FieldValues)?<Formik
         initialValues={FieldValues}

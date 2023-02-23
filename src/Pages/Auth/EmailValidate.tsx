@@ -7,24 +7,24 @@ import { Button } from '../../Components/Forms/Button';
 import { AiFillHome, AiOutlineLock } from 'react-icons/ai';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetParams } from '../../Utils/General';
-import { AuthAPI } from '../../Config/AuthAPI';
+import { AuthAPI } from '../../Services/AuthAPI';
 import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
 import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
 import { FormStateDefault, FormStateProps } from '../../Interfaces/FormFields';
 
 const AxiosAuthAPI = new AuthAPI();
 
-export const ValidarCorreo = () =>{
+export const EmailValidate = () =>{
 
     const SearchParams = GetParams(["token"]);
     
-    const [ formState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+    const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
     
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
     const ValidateEmail = async () => {
-        await AxiosAuthAPI.UserValidateEmail({'token':SearchParams.values.token}).then((response)=>{
+        await AxiosAuthAPI.EmailValidate({'token':SearchParams.values.token}).then((response)=>{
             setIsSuccess((response.statusText == "OK"))
             console.log(response)
         }).catch((reason)=>{

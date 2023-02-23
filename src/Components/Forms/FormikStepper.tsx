@@ -19,14 +19,14 @@ export function FormikStep({ children }: FormikStepProps) {
 }
 
 export interface FormikStepperProps extends FormikConfig<FormikValues>{
-  formState2: [FormStateProps, React.Dispatch<React.SetStateAction<FormStateProps>>];
+  FormState2: [FormStateProps, React.Dispatch<React.SetStateAction<FormStateProps>>];
   extraHTML?: any;
 }
 
-export function FormikStepper({ children, formState2, extraHTML, ...props }:FormikStepperProps) {
+export function FormikStepper({ children, FormState2, extraHTML, ...props }:FormikStepperProps) {
 
   const [step, setStep] = useState(0);
-  let [formState, setFormState] = formState2
+  let [FormState, setFormState] = FormState2
 
   const childrenArray = React.Children.toArray(children).filter((e:any)=>e.type===FormikStep) as React.ReactElement<FormikStepProps>[];
   const currentChild = childrenArray[step];
@@ -34,13 +34,13 @@ export function FormikStepper({ children, formState2, extraHTML, ...props }:Form
   const isLastStep = () => step === childrenArray.length - 1;
 
   useEffect(() => {
-    if(formState.changing){
-      if(!isLastStep() && !formState.error){
+    if(FormState.changing){
+      if(!isLastStep() && !FormState.error){
         setStep((s) => s + 1);
       }
       setFormState(prev=>({...prev, changing:false}))
     }
-  }, [formState.changing])
+  }, [FormState.changing])
 
 
   return (
@@ -66,16 +66,16 @@ export function FormikStepper({ children, formState2, extraHTML, ...props }:Form
             {currentChild}
             {extraHTML?extraHTML:<></>}
             <NavigatorWrapper>
-                {step>0?<Button color="secondary" type="button" onClick={() => setStep((s) => s - 1)} fullwidth={false} disabled={formState.loading}>
+                {step>0?<Button color="secondary" type="button" onClick={() => setStep((s) => s - 1)} fullwidth={false} disabled={FormState.loading}>
                     « Anterior
                 </Button>:<></>}
                 <NavigatorSpacer />
                 {isLastStep()?
-                <Button color="secondary" type="submit" fullwidth={false} disabled={formState.loading}>
-                  {formState.loading ? <Spinner/> : 'Finalizar'}
+                <Button color="secondary" type="submit" fullwidth={false} disabled={FormState.loading}>
+                  {FormState.loading ? <Spinner/> : 'Finalizar'}
                 </Button>:
-                <Button color="secondary" type="submit" fullwidth={false} disabled={formState.loading}>
-                  {formState.loading ? <Spinner/> : 'Siguiente »'} 
+                <Button color="secondary" type="submit" fullwidth={false} disabled={FormState.loading}>
+                  {FormState.loading ? <Spinner/> : 'Siguiente »'} 
                 </Button>}
             </NavigatorWrapper>
             {currentChild.props.afterHTML?currentChild.props.afterHTML:<></>}

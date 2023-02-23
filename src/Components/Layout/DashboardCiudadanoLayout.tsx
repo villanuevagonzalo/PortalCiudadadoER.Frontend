@@ -41,7 +41,7 @@ export const DashboardCiudadanoLayout = () => {
   const closemenu = () => setIsOpen(false);
 
   return (<>
-    <LayoutHeader mobile={matches}>{matches?<>
+    <LayoutHeader mobile={!matches}>{matches?<>
 
       <LayoutHeaderSpacer/>
       <Link to="Dashboard/Tramites"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
@@ -53,11 +53,9 @@ export const DashboardCiudadanoLayout = () => {
       
     </>:<>
     
-      {IsOpen?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}
-      <NavigatorSpacer className="ml-1"/> 
-      <Link to="Dashboard/" onClick={closemenu}><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
-      <NavigatorSpacer className="ml-1"/> 
-      <Link to="Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-2"/></Link>
+      <div>{IsOpen?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}</div>
+      <Link to="Dashboard/" onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
+      <Link to="Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link>
       <Link to="Dashboard/Config" onClick={closemenu}><BiUserCircle /></Link>
 
     </>}</LayoutHeader>
@@ -105,7 +103,7 @@ export const DashboardCiudadanoLayout = () => {
         :<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===2?
           <Link to="Dashboard/Config">
-            <LayoutAlert>Vincula tu cuentas de Mi Argentina en la sección de <b>Mi Perfil</b> para alcanzar el nivel 3 de validación.</LayoutAlert>
+            <LayoutAlert>Vincula alguna Aplicación en la sección de <b>Mi Perfil</b> para alcanzar el nivel 3 de validación.</LayoutAlert>
           </Link>
         :<></>}
         <Outlet></Outlet>

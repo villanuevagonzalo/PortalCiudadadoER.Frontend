@@ -1,17 +1,7 @@
-import axios from "axios";
-import { getLSData } from "../Utils/General";
-
-const REACTENV = process.env;
-
-const axiosBase = axios.create({
-  baseURL: REACTENV.REACT_APP_PROJECT_API,
-  responseType: "json",
-  headers: {
-    Authorization: "Bearer " + getLSData("authToken")?.token,
-  },
-});
+import { axiosBase } from "../Config/Axios";
 
 export class AuthAPI {
+
   private baseService;
   constructor() {
     this.baseService = axiosBase;
@@ -54,12 +44,6 @@ export class AuthAPI {
     return this.baseService.post("/v0/user/personal/data", params);
   }
 
-  public UserValidateEmail(params: {
-    token: string;
-  }) {
-    return this.baseService.post("/v0/user/validate/email", params);
-  }
-
   public UserPasswordReset(params: {
     cuil: number;
   }) {
@@ -73,9 +57,28 @@ export class AuthAPI {
     return this.baseService.post("/v0/user/password/reset", params);
   }
 
-  public ResendEmailVerification(params: { 
+  public EmailValidate(params: {
+    token: string;
+  }) {
+    return this.baseService.post("/v0/user/validate/email", params);
+  }
+
+  public EmailResendVerification(params: { 
     cuil: number;
   }) {
     return this.baseService.get("/v0/user/resend/email/verification", { params });
+  }
+
+  public EmailChange(params: { 
+    cuil: number;
+    new_email: string;
+  }) {
+    return this.baseService.post("/v0/user/change/email/", params);
+  }
+
+  public EmailChangeVerification(params: { 
+    token: string;
+  }) {
+    return this.baseService.get("/v0/user/change/email/verification", {params} );
   }
 }

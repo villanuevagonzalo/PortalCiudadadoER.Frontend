@@ -18,7 +18,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const BuscarTramites = (props: any) => {
 
-  const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
+  const [FormState, setFormState] = useState<FormStateProps>(FormStateDefault);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
 
     return(<Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}

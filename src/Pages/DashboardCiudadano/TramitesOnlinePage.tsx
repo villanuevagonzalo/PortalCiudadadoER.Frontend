@@ -25,7 +25,7 @@ const FormRequiredFields = ["Tramites"];
 export const TramitesOnlinePage = () => {
 
   const { Login } = useContext(AuthContext);
-  const [formState, setFormState] = useState<FormStateProps>(FormStateDefault);
+  const [FormState, setFormState] = useState<FormStateProps>(FormStateDefault);
 
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
 
@@ -44,8 +44,8 @@ export const TramitesOnlinePage = () => {
           >
               <Form autoComplete="off">
                   <FormikSearch name="Tramites" data={DataName} autoFocus/>
-                  <Button disabled={formState.loading} type="submit">
-                      {formState.loading ? <Spinner /> : "Ir al Trámite"}
+                  <Button disabled={FormState.loading} type="submit">
+                      {FormState.loading ? <Spinner /> : "Ir al Trámite"}
                   </Button>
               </Form>
           </Formik>

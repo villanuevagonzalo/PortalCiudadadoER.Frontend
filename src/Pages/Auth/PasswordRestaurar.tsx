@@ -19,22 +19,22 @@ const FormRequiredFields = [
 export const PasswordRestaurar = () => {
 
   const { userData, PasswordReset } = useContext(AuthContext);
-  const [ formState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
 
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   useEffect(() => { if(userData.cuil!==''){ setFieldValues({...FieldValues, CUIL: userData.cuil }) } }, [])
 
-  let errors = formState.error.split(' | ')
+  let errors = FormState.error.split(' | ')
 
   return (<>
     <LayoutSidebar>
       <LayoutSidebarLogos/>
       <DivTitle className="mt-5">Restablecer Contraseña</DivTitle>
-      {formState.finish?<>
+      {FormState.finish?<>
         <DivOutlined className="mt-4 flex-col" color="secondary">
-          <b className='mb-2'>Por favor aguarda <CountDown time={300} onFinish={()=>setFormState(prev=>({...prev, finish:false}))}/> minutos</b>
-          Se ha enviado un correo para reestablecer tu contraseña
+          <b className='mb-2'>Se ha enviado un correo para reestablecer tu contraseña</b>
+          <span className='text-sm'>Por favor aguarda <CountDown time={300} onFinish={()=>setFormState(prev=>({...prev, finish:false}))}/> minutos antes de solicitar un nuevo email</span>
         </DivOutlined>
       </>:<>
         <DivSubtitle className="text-center pb-4">
@@ -59,15 +59,17 @@ export const PasswordRestaurar = () => {
             setFormState(prev=>({...prev, loading:false}))
           }}
         ><Form autoComplete="off">
-          <FormikField name="CUIL" disabled={formState.loading || formState.error?true:false} autoFocus/>
-          <Button disabled={formState.loading || formState.error?true:false} type="submit">
-              {formState.loading ? <Spinner/> : 'Restablecer contraseña'}                                
+          <FormikField name="CUIL" disabled={FormState.loading || errors.length>1} autoFocus/>
+          <Button disabled={FormState.loading || errors.length>1} type="submit">
+              {FormState.loading ? <Spinner/> : 'Restablecer contraseña'}                                
           </Button>
         </Form></Formik>
-        {formState.error?<><DivOutlined open={formState.error?true:false} className="mt-4 flex-col">
-          <b className='mb-2'>{errors[1]} <CountDown time={moment.duration('00:'+errors[2]).asSeconds()} onFinish={()=>setFormState(prev=>({...prev, error:''}))}/> minutos</b>
-          {errors[0]}
-        </DivOutlined></>:<></>}
+        <DivOutlined open={FormState.error?true:false} className="mt-4 flex-col">
+        {errors.length>1?<>
+          <b className='mb-2'>{errors[0]}</b>
+          <span className='text-sm'>Por favor aguarda <CountDown time={moment.duration('00:'+errors[2]).asSeconds()} onFinish={()=>setFormState(prev=>({...prev, error:''}))}/> minutos antes de solicitar un nuevo correo</span>
+        </>:FormState.error}
+        </DivOutlined>
       </>}
       <br/>
       <DivLabel color="gray_tint">
@@ -75,11 +77,11 @@ export const PasswordRestaurar = () => {
       </DivLabel>
       {userData.cuil!==''?
         <Link to="/Dashboard/Config" className="w-full">
-          <Button disabled={formState.loading} color="gray" className="w-full">
+          <Button disabled={FormState.loading} color="gray" className="w-full">
             Volver al Dashboard
           </Button>
         </Link>:<Link to="/Ingresar" className="w-full">
-          <Button disabled={formState.loading} color="gray" className="w-full">
+          <Button disabled={FormState.loading} color="gray" className="w-full">
             Iniciar Sesión
           </Button>
         </Link>
