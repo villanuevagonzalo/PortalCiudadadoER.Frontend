@@ -8,12 +8,17 @@ import { AiFillHome, AiOutlineLock } from 'react-icons/ai';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetParams } from '../../Utils/General';
 import { AuthAPI } from '../../Config/AuthAPI';
+import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
+import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
+import { FormStateDefault, FormStateProps } from '../../Interfaces/FormFields';
 
 const AxiosAuthAPI = new AuthAPI();
 
 export const ValidarCorreo = () =>{
 
     const SearchParams = GetParams(["token"]);
+    
+    const [ formState, setFormState ] = useState<FormStateProps>(FormStateDefault);
     
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
@@ -32,68 +37,65 @@ export const ValidarCorreo = () =>{
     useEffect(() => {if(SearchParams.status){ ValidateEmail() }}, [])
 
     return(<>
-        <Sidebar>
-            <LogoCiudadanoDigital/>
-            <br />
-            <br />
-            <br />
-            <br />
-            {SearchParams.status?<>
-                {isLoading?<>
-                    <DivTitle2 className='text-center mb-2'>Validación de Correo</DivTitle2>
-                    <DivSubtitle className='text-center'>Estamos validando tu correo. Por favor aguarde.</DivSubtitle>
-                    <br />
-                    <Spinner color='primary' size="3rem"/>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                </>:<>
-                    {isSuccess?<>
-                        <DivTitle2 className='text-center mb-2'>¡Validación de usuario realizada!</DivTitle2>
-                        <DivSubtitle className='text-center'>Alcanzaste el <strong>NIVEL 1</strong> de autenticación.</DivSubtitle>
-                        <br />
-                        <br />
-                        <br />
-                        <DivLabel>Inicia Sesión para empezar a utilizar a Ciudadano Digital</DivLabel>
-                        <Link to="/Ingresar" className="w-full"><Button>
-                        Iniciar Sesión
-                        </Button></Link>
-                    </>:<>
-                        <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
-                        <DivOutlined color="error">Se produjo un error en la validación</DivOutlined>
-                        <br />
-                        <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</DivSubtitle>
-                        <br />
-                        <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
-                            Solicitar Nuevo Codigo
-                            <AiOutlineLock/>                        
-                        </Button></Link>
-                        <Link to="/" className="w-full"><Button>
-                            <AiFillHome />
-                            Volver al Inicio
-                        </Button></Link>
-                    </>}
-                </>}
+      <LayoutSidebar>
+        <LayoutSidebarLogos/>
+        <br/><br/>
+        {SearchParams.status?<>
+            {isLoading?<>
+                <DivTitle2 className='text-center mb-2'>Validación de Correo</DivTitle2>
+                <DivSubtitle className='text-center'>Estamos validando tu correo. Por favor aguarde.</DivSubtitle>
+                <br />
+                <Spinner color='primary' size="3rem"/>
+                <br />
+                <br />
+                <br />
+                <br />
             </>:<>
-                <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
-                <DivSubtitle className='text-center'>Los siguientes campos presentan un error:</DivSubtitle>
-                <DivOutlined color="error">{SearchParams.errors.map(e=><div>{e}</div>)}</DivOutlined>
-                <br />
-                <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</DivSubtitle>
-                <br />
-                <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
-                    Solicitar Nuevo Codigo
-                    <AiOutlineLock/>                        
-                </Button></Link>
-                <Link to="/" className="w-full"><Button>
-                    <AiFillHome />
-                    Volver al Inicio
-                </Button></Link>
+                {isSuccess?<>
+                    <DivTitle2 className='text-center mb-2'>¡Validación de usuario realizada!</DivTitle2>
+                    <DivSubtitle className='text-center'>Alcanzaste el <strong>NIVEL 1</strong> de autenticación.</DivSubtitle>
+                    <br />
+                    <br />
+                    <br />
+                    <DivLabel>Inicia Sesión para empezar a utilizar a Ciudadano Digital</DivLabel>
+                    <Link to="/Ingresar" className="w-full"><Button>
+                    Iniciar Sesión
+                    </Button></Link>
+                </>:<>
+                    <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
+                    <DivOutlined color="error">Se produjo un error en la validación</DivOutlined>
+                    <br />
+                    <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</DivSubtitle>
+                    <br />
+                    <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
+                        Solicitar Nuevo Codigo
+                        <AiOutlineLock/>                        
+                    </Button></Link>
+                    <Link to="/" className="w-full"><Button>
+                        <AiFillHome />
+                        Volver al Inicio
+                    </Button></Link>
+                </>}
             </>}
-        </Sidebar>
-        <MainContainer>
-            <Descripcion />
-        </MainContainer>
+        </>:<>
+            <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
+            <DivSubtitle className='text-center'>Los siguientes campos presentan un error:</DivSubtitle>
+            <DivOutlined color="error">{SearchParams.errors.map(e=><div>{e}</div>)}</DivOutlined>
+            <br />
+            <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</DivSubtitle>
+            <br />
+            <form><Link to="/ReenviarCodigo" className="w-full mb-3"><Button color="secondary">
+              Solicitar Nuevo Codigo
+              <AiOutlineLock/>                        
+          </Button></Link>
+          <Link to="/" className="w-full"><Button>
+              <AiFillHome />
+              Volver al Inicio
+          </Button></Link></form>
+      </>}
+      </LayoutSidebar>
+      <MainContainer>
+        <Descripcion />
+      </MainContainer>
     </>)
 }

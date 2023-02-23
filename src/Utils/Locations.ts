@@ -6,17 +6,18 @@ import { CapitalizeWords, getLSData, setLSData } from "./General";
 const AxiosAPI = new GeneralAPI();
 
 export const RawLocations = async () => {
-    const CurrentLocations:{ Locations: ILocations[]; expiration: Date; } = getLSData('Locations');
-    if(CurrentLocations){
-        let remainingTime = (Date.parse(moment(CurrentLocations.expiration).toString())- Date.now())/(1000*60*60*24)
-        if( remainingTime > 0 ){
-            return CurrentLocations.Locations;
-        }
+  const CurrentLocations:{ Locations: ILocations[]; expiration: Date; } = getLSData('Locations');
+  if(CurrentLocations){
+    //setLSData('Locations',{Locations: CurrentLocations.Locations, expiration: moment(Date.now()).add(7, 'days').toDate()})
+    let remainingTime = (Date.parse(moment(CurrentLocations.expiration).toString())- Date.now())/(1000*60*60*24)
+    if( remainingTime > 0 ){
+        return CurrentLocations.Locations;
     }
-    const NewLocations = await AxiosAPI.Locations();
-    setLSData('Locations',{Locations: NewLocations.data, expiration: moment(Date.now()).add(1, 'days').toDate()})
+  }
+  const NewLocations = await AxiosAPI.Locations();
+  setLSData('Locations',{Locations: NewLocations.data, expiration: moment(Date.now()).add(7, 'days').toDate()})
 
-    return NewLocations.data;
+  return NewLocations.data;
 }
 
 export const LocationByID = (locations:ILocations[], localityID:number) => locations.filter((location:ILocations)=>location.ID==localityID)[0]

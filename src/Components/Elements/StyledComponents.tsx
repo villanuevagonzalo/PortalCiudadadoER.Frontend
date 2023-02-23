@@ -32,10 +32,10 @@ export const FormWrapperButton = styled.button<{ fullwidth?: boolean, size?:numb
   }
 `;
 
-export const FormWrapperInput = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, dummy?: boolean }>`
+export const FormWrapperInput = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean, focus?: boolean, dummy?: boolean, largeerror?:boolean }>`
   background-color: var(--${props => props.dummy?'maincolor':'maincolor'});
   min-width:150px;
-  margin-bottom: ${props => props.error?'2rem':(props.dummy?'0rem':'1rem')};
+  margin-bottom: ${props => props.error?(props.largeerror?'3rem':'2rem'):(props.dummy?'0rem':'1rem')};
   border: 2px solid var(--${props => props.dummy?'maincolor':(props.error?'error':'disabled')});
   position: relative;
   display:flex;
@@ -84,6 +84,7 @@ export const FormWrapperInput = styled.div<{ error?: boolean, disabled?: boolean
   }
 
   & span{
+    text-align: justify;
     top: 2.75rem;
     color:var(--error);
     right: 0;

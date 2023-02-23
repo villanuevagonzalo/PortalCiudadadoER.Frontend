@@ -4,18 +4,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { Button } from '../../Components/Forms/Button';
 
-export const CountDown = () => {
+export const CountDown = (props: any) => {
 
-    const navigate = useNavigate();
-    const [countdown, setCountdown] = useState(300);
+    const [countdown, setCountdown] = useState(props.time?props.time:5);
 
     useEffect(() => {
       const intervalId = setInterval(() => {
         if (countdown > 0) {
-          setCountdown((prevCountdown) => prevCountdown - 1);
+          setCountdown((prevCountdown:any) => prevCountdown - 1);
         } else {
           clearInterval(intervalId);
-          navigate("/");
+          if(props.onFinish){
+            props.onFinish()
+          }
         }
       }, 1000);
   

@@ -2,17 +2,15 @@ import { useContext, useRef, useState } from "react";
 import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-
-import { DivOutlined, DivLabel, MainContainer, Sidebar, Spinner, DivSubtitle, DivTitle } from "../../Components/Elements/StyledComponents";
-import { LogoCiudadanoDigital } from "../../Components/Images/LogoCiudadanoDigital";
+import { DivOutlined, DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle } from "../../Components/Elements/StyledComponents";
 import { Button } from "../../Components/Forms/Button";
 import { Formik, Form } from "formik";
 import { FormikField } from "../../Components/Forms/FormikField";
 import { AiOutlineLock } from "react-icons/ai";
 import { Descripcion } from "../../Components/Elements/Descripcion";
-import { LogoER } from "../../Components/Images/LogoEntreRios";
 import { FormikCheckbox } from "../../Components/Forms/FormikCheckbox";
-import { LayoutCenterBox, LayoutColumns, LayoutSidebar } from "../../Components/Layout/StyledComponents";
+import { LayoutSidebar } from "../../Components/Layout/StyledComponents";
+import { LayoutSidebarLogos } from "../../Components/Layout/LayoutSidebarLogos";
 
 const FormRequiredFields = ["CUIL", "Password"];
 
@@ -27,18 +25,15 @@ export const LoginPage = () => {
 
   return (<>
     <LayoutSidebar>
-      <LayoutColumns className="mb-8">
-        <LogoER width="150px" />
-      </LayoutColumns>
-      <LayoutCenterBox maxwidth="400px">
-        <LogoCiudadanoDigital/>
-      </LayoutCenterBox>
+      <LayoutSidebarLogos/>
       <DivTitle className="mt-5">Iniciar Sesión</DivTitle>
       <DivSubtitle className="text-center pb-4">
         Ingresá tus datos para iniciar sesión en la plataforma
       </DivSubtitle>
       <Formik
-        innerRef={ref}
+        enableReinitialize={true}
+        validateOnChange={false}
+        validateOnBlur={false}
         initialValues={FieldValues}
         validationSchema={formGetValidations(FormRequiredFields)}
         onSubmit={async (values: any) => {
@@ -55,9 +50,6 @@ export const LoginPage = () => {
           }
           setFormState((prev) => ({ ...prev, loading: false }));
         }}
-        enableReinitialize={true}
-        validateOnChange={false}
-        validateOnBlur={false}
       >
         <Form autoComplete="off">
           <FormikField name="CUIL" autoFocus disabled={formState.loading} />

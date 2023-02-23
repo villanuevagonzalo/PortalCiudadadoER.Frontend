@@ -2,7 +2,7 @@ import { createContext, FC, useState } from "react";
 import { AuthAPI } from "../Config/AuthAPI";
 import { getLSData, setLSData } from '../Utils/General';
 import moment from 'moment'
-import { GetMessage } from "../Interfaces/MessageHandler";
+import { GetMessage, GetMessage2 } from "../Interfaces/MessageHandler";
 import jwt_decode from "jwt-decode";
 import { GetLevels } from "../Interfaces/UserLevels";
 import { IResponse, IToken, IUserContact, IUserData, IUserRol } from "../Interfaces/Data";
@@ -186,14 +186,15 @@ const ContextValues = () => {
         }).catch ((error:any) => {
             response.status = false;
             response.code = error.response.status;
-            response.message = GetMessage(error.response.data.message, error.response.status);
+            response.message = GetMessage2(error.response.data.message);
             response.response = error.response;
         });
+        
         setIsLoading(false);
         return response
     }
 
-    const UpdatePassword = async (data: any) => {
+    const PasswordUpdate = async (data: any) => {
 
         setIsLoading(true);
         const response:IResponse = DefaultResponse;
@@ -202,7 +203,6 @@ const ContextValues = () => {
             response.code = res.status;
             response.message = GetMessage(res.data.message, res.status);
             response.response = res;
-            debugger;
 
         }).catch ((error:any) => {
             response.status = false;
@@ -227,7 +227,7 @@ const ContextValues = () => {
         }).catch ((error:any) => {
             response.status = false;
             response.code = error.response.status;
-            response.message = GetMessage(error.response.data.message, error.response.status);
+            response.message = GetMessage2(error.response.data.message);
             response.response = error.response;
         });
         setIsLoading(false);
@@ -236,7 +236,7 @@ const ContextValues = () => {
 
     return {
         isLoading, isLogged, authToken, userData, userContact, userRol, 
-        Signup, Login, Logout, CheckToken, SaveData, PasswordReset, UpdatePassword, ResendEmail
+        Signup, Login, Logout, CheckToken, SaveData, PasswordReset, PasswordUpdate, ResendEmail
     }
 }
 

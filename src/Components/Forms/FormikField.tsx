@@ -45,7 +45,7 @@ export const FormikField = ({...props}: Props) => {
     
 
     return (
-        <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} className={props.className} >
+        <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} className={props.className} largeerror={thiserror?.length>51?true:false}>
             <input type={fieldprops.type === 'password'?(passwordType?'password':'text'):fieldprops.type} autoFocus={props.autoFocus} {...field} {...props} onFocus={handleFocus} onBlur={handleFocus}/>
             <label htmlFor={props.name}>{props.label?props.label:fieldprops.placeholder}</label>
             <ErrorMessage name={props.name} component="span"/>
