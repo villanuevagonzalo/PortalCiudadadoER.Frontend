@@ -1,11 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { AiOutlineSchedule } from "react-icons/ai";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
-import { BsLayoutWtf } from "react-icons/bs";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, UserNav } from "./StyledComponents";
-import {  Card, DivSubtitle, DivTitle, DivTitle2, NavigatorSpacer } from "../Elements/StyledComponents";
+import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
 import { LogoER } from "../Images/LogoEntreRios";
@@ -15,7 +13,6 @@ import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
-import { BuscarTramites } from "../Elements/BuscarTramites";
 
 const navigation = [
   { name: 'Inicio', icon: RiLayout4Fill, href: 'Dashboard/', current: true },
@@ -36,7 +33,6 @@ export const DashboardCiudadanoLayout = () => {
     }
   }, [matches])
   
-
   const switchmenu = () => setIsOpen(matches || !IsOpen);
   const closemenu = () => setIsOpen(false);
 
@@ -55,7 +51,7 @@ export const DashboardCiudadanoLayout = () => {
     
       <div>{IsOpen?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}</div>
       <Link to="Dashboard/" onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
-      <Link to="Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link>
+      {/*<Link to="Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link> */}
       <Link to="Dashboard/Config" onClick={closemenu}><BiUserCircle /></Link>
 
     </>}</LayoutHeader>
@@ -83,7 +79,6 @@ export const DashboardCiudadanoLayout = () => {
             {item.name}
           </NavLink>
         ))}
-
         </LayoutSidebarMenu>
         <Card>
           <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
@@ -93,9 +88,10 @@ export const DashboardCiudadanoLayout = () => {
           </Button>
         </Card>
       </LayoutSidebar>
-      <LayoutBody>
+      <LayoutBody mobile={!matches}>
         {matches?<></>:
-      <Link to="Dashboard/Tramites" className="-mt-7"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>}
+      <Link to="Dashboard/Tramites" className="-mt-7"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
+        }
         {userRol[0].type==='Ciudadano'&&userRol[0].level===1?
           <Link to="Dashboard/Config">
             <LayoutAlert>Completa tus datos en la sección de <b>Mi Perfil</b> para alcanzar el nivel 2 de validación.</LayoutAlert>
@@ -107,8 +103,9 @@ export const DashboardCiudadanoLayout = () => {
           </Link>
         :<></>}
         <Outlet></Outlet>
-        <LayoutFooter>
-          <LogoER width="150px" color='var(--gray_tint)' /> Secretaría de Modernización
+        <LayoutFooter className="FlexSwitchTablet">
+          <LogoER width="150px" color='var(--gray_tint)' />
+          <div>Secretaría de Modernización</div> 
         </LayoutFooter>
       </LayoutBody>
     </LayoutContainer>

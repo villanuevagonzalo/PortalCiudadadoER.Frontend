@@ -83,7 +83,7 @@ export const LayoutSidebar = styled.div<{ open?: boolean }>`
     margin-right: ${props.open?'-360px':'0'};  
     min-width: ${props.open?'360px':'0px'};
     overflow:hidden;
-    padding: ${props.open?'2rem':'0'};  
+    padding: ${props.open?'1rem':'0'};  
     transition: all .1s ease-in;
     width: ${props.open?'360px':'0px'};
     z-index:100;
@@ -94,6 +94,7 @@ export const LayoutSidebar = styled.div<{ open?: boolean }>`
   &.active{
     margin-right: 0!important;
     margin-top:-64px;
+    //padding:2rem!important;
   }
   
   & form{
@@ -162,25 +163,18 @@ export const LayoutFooter = styled.div<{ }>`
   background: var(--maincolor_tint);
   color: var(--maincolor_text);
   display: flex;
-  flex-direction: row;
   font-size:1rem;
-  gap: 2rem;
+  gap: 1rem;
   margin:2rem 0;
   width:100%;
-
-  & div{
-    border-right:2px solid var(--disabled);
-    box-sizing: content-box;
-    padding-right:2rem;
-  }
 `;
 
-export const LayoutBody = styled.div<{ }>`
+export const LayoutBody = styled.div<{ mobile?: boolean }>`
   display: flex;
   flex-direction: column;
   flex: 1;
   gap: 2rem;
-  padding: 2rem;
+  padding:2rem ${props => props.mobile?'1rem':'2rem'};
 `;
 
 export const LayoutAlert = styled.div<{ }>`
