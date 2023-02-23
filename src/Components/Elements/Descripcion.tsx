@@ -19,10 +19,24 @@ const data = {
 
 export const Descripcion = (props: any) => {
 
+    const bannerStyle  = {
+        backgroundImage: `url(${Imagen})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '300px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontSize: '2rem',
+        fontWeight: 'bold',
+        textShadow: '1px 1px 2px black',
+    };
+
 
     return (<>
-        <ContainerImageWrapper>
-            <img src={Imagen}/>
+        <ContainerImageWrapper style={bannerStyle}>                 
+            {/* <img src={Imagen}/> */}
         </ContainerImageWrapper>
         <ContainerTextWrapper className="FlexSwitchTablet">
             <div>
