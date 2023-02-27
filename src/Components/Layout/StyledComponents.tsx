@@ -88,7 +88,7 @@ export const LayoutSidebar = styled.div<{ open?: boolean }>`
     width: ${props.open?'360px':'0px'};
     z-index:100;
   `:`
-    width: 360px;
+    witdh:auto;
   `};
 
   &.active{
