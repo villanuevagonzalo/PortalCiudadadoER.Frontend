@@ -13,10 +13,10 @@ export const RawLocations = async () => {
         return CurrentLocations.Locations;
     }
   }
-  const NewLocations = await AxiosAPI.Locations();
-  setLSData('Locations',{Locations: NewLocations.data, expiration: moment(Date.now()).add(7, 'days').toDate()})
+  const NewLocations:any = await AxiosAPI.Locations();
+  setLSData('Locations',{Locations: NewLocations.response.data, expiration: moment(Date.now()).add(7, 'days').toDate()})
 
-  return NewLocations.data;
+  return NewLocations.response.data;
 }
 
 export const LocationByID = (locations:ILocations[], localityID:number) => locations.filter((location:ILocations)=>location.ID==localityID)[0]

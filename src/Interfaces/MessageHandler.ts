@@ -14,11 +14,15 @@ export const Messages: {[key: string]:string} = {
   'Email sent': 'Mail Enviado | Por favor aguarda | ',
   'Email already sent': 'Ya se te ha enviado un correo para reestablecer tu contraseña | Por favor aguarda | ',
   'Bad validation code': 'El Token suministrado es invalido.',
+  'Bad confirmation code': 'El Token suministrado es invalido.',
+  'Invalid token': 'El Token suministrado es invalido.',
   'Password changed': 'Contraseña Actualizada',
   'The payload is invalid.': 'Petición invalida.',
   
   'Email alredy verified': 'El CUIL ingresado ya presenta un correo verificado.',
   'Invalid Cuil': 'El CUIL ingresado no se encuentra registrado',
+  'Network Error': 'Error Interno en el Servidor',
+  'Email changed': 'Mail actualizado correctamente.',
 
 }
 
@@ -32,11 +36,16 @@ export const StatusCodes: {[key: number]:string} = {
 // Funciones de Obtención de Información
 
 export const GetMessage = (inputmessage:string, code?:number) => {
-  const msgpartial = inputmessage.split('. Wait ');
-  const msgerror = Messages[msgpartial[0]]
-  const msgadd = msgpartial[1]?msgpartial[1]:'';
-  const msgcode = StatusCodes[code || 0];
-  return (msgerror || msgcode || "Error interno. Contactese con Soporte.")+ msgadd;
+  console.log(inputmessage, code)
+  if(inputmessage){
+    const msgpartial = inputmessage.split('. Wait ');
+    const msgerror = Messages[msgpartial[0]]
+    const msgadd = msgpartial[1]?msgpartial[1]:'';
+    const msgcode = StatusCodes[code || 0];
+    return (msgerror || msgcode || "Error interno. Contactese con Soporte.")+ msgadd;
+  } else {
+    return ''
+  }
 }
 
 export const GetMessage2 = (inputmessage:string) => {

@@ -1,47 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link} from 'react-router-dom';
 
-import { DivOutlined, DivLabel, MainContainer, Sidebar, Spinner, DivSubtitle, DivTitle2 } from '../../Components/Elements/StyledComponents';
-import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
+import { DivOutlined, DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle2 } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { AiFillHome, AiOutlineLock } from 'react-icons/ai';
 import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetParams } from '../../Utils/General';
-import { AuthAPI } from '../../Services/AuthAPI';
 import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
 import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
 import { FormStateDefault, FormStateProps } from '../../Interfaces/FormFields';
-
-const AxiosAuthAPI = new AuthAPI();
+import { AuthContext } from '../../Contexts/AuthContext';
 
 export const EmailValidate = () =>{
 
     const SearchParams = GetParams(["token"]);
-    
+
+    const { EmailValidate } = useContext(AuthContext);
     const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
     
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [isSuccess, setIsSuccess] = useState<boolean>(false);
+    useEffect(() => {if(SearchParams.status){ 
+      const response = EmailValidate({
+        'token':SearchParams.values.token
+      }, setFormState);
 
-    const ValidateEmail = async () => {
-        await AxiosAuthAPI.EmailValidate({'token':SearchParams.values.token}).then((response)=>{
-            setIsSuccess((response.statusText == "OK"))
-            console.log(response)
-        }).catch((reason)=>{
-            console.log(reason)
-            setIsSuccess(!(reason.response.data.code == 0))
-        })
-        setIsLoading(false)
-    }
-
-    useEffect(() => {if(SearchParams.status){ ValidateEmail() }}, [])
+    }}, [])
 
     return(<>
       <LayoutSidebar>
         <LayoutSidebarLogos/>
         <br/><br/>
         {SearchParams.status?<>
-            {isLoading?<>
+            {FormState.loading?<>
                 <DivTitle2 className='text-center mb-2'>Validación de Correo</DivTitle2>
                 <DivSubtitle className='text-center'>Estamos validando tu correo. Por favor aguarde.</DivSubtitle>
                 <br />
@@ -51,22 +40,22 @@ export const EmailValidate = () =>{
                 <br />
                 <br />
             </>:<>
-                {isSuccess?<>
-                    <DivTitle2 className='text-center mb-2'>¡Validación de usuario realizada!</DivTitle2>
+                {FormState.finish?<>
+                    <DivTitle2 className='text-center mb-2'>¡Validación realizada!</DivTitle2>
                     <DivSubtitle className='text-center'>Alcanzaste el <strong>NIVEL 1</strong> de autenticación.</DivSubtitle>
                     <br />
+                    <DivLabel>Inicia Sesión para utilizar Ciudadano Digital</DivLabel>
                     <br />
-                    <br />
-                    <DivLabel>Inicia Sesión para empezar a utilizar a Ciudadano Digital</DivLabel>
                     <Link to="/Ingresar" className="w-full"><Button>
                     Iniciar Sesión
                     </Button></Link>
                 </>:<>
                     <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
-                    <DivOutlined color="error">Se produjo un error en la validación</DivOutlined>
+                    <DivOutlined color="error">{FormState.error}</DivOutlined>
                     <br />
                     <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</DivSubtitle>
                     <br />
+                    <form>
                     <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
                         Solicitar Nuevo Codigo
                         <AiOutlineLock/>                        
@@ -74,7 +63,7 @@ export const EmailValidate = () =>{
                     <Link to="/" className="w-full"><Button>
                         <AiFillHome />
                         Volver al Inicio
-                    </Button></Link>
+                    </Button></Link></form>
                 </>}
             </>}
         </>:<>

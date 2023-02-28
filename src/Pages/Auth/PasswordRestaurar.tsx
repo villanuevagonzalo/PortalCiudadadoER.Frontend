@@ -47,16 +47,9 @@ export const PasswordRestaurar = () => {
           initialValues={FieldValues}
           validationSchema={formGetValidations(FormRequiredFields)}
           onSubmit={async(values:any) => {
-            setFormState(prev=>({...prev, loading:true}))
-            const ResetPasswordResponse = await PasswordReset({
+            const response = await PasswordReset({
               cuil: values.CUIL,
-            })
-            if(ResetPasswordResponse.status){
-              setFormState(prev=>({...prev, error:'', finish: true}))
-            } else{
-              setFormState(prev=>({...prev, error:ResetPasswordResponse.message}))
-            }
-            setFormState(prev=>({...prev, loading:false}))
+            }, setFormState)
           }}
         ><Form autoComplete="off">
           <FormikField name="CUIL" disabled={FormState.loading || errors.length>1} autoFocus/>

@@ -8,17 +8,17 @@ YupPassword(yup) // extend yup
 // Estado General de un Formulario
 
 export interface FormStateProps {
-    loading: boolean;
-    error: string;
-    finish: boolean;
-    changing: boolean;
+  loading: boolean;
+  error: string;
+  finish: boolean;
+  changing: boolean;
 }
 
 export const FormStateDefault:FormStateProps = {
-    loading: false,
-    error: '',
-    finish: false,
-    changing: false,
+  loading: false,
+  error: '',
+  finish: false,
+  changing: false,
 }
 
 // Campos de formularios
@@ -96,7 +96,7 @@ export const FormFields:FieldProps = {
 
     Password:{
         type: 'password',
-        defaultvalue: '',
+        defaultvalue: 'Test123.',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -119,7 +119,7 @@ export const FormFields:FieldProps = {
 
     Password_Validation:{
         type: 'password',
-        defaultvalue: '',
+        defaultvalue: 'Test123.',
         placeholder: 'Reingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -203,7 +203,6 @@ export const FormFields:FieldProps = {
         defaultvalue: '',
         placeholder: 'Departamento',
         validations: yup.string()
-                        .required('El campo es obligatorio')
     },
 
     Tramites:{

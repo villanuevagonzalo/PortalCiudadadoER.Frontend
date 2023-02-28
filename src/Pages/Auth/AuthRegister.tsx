@@ -35,7 +35,7 @@ const AxiosAuthAPI = new AuthAPI();
 export const RegisterPage = () =>{
 
   const ref:any = useRef(null);
-  const { Signup } = useContext(AuthContext);
+  const { UserGetData, Signup } = useContext(AuthContext);
 
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
   const [FormState, setFormState] = useState<FormStateProps>(FormStateDefault);
@@ -90,6 +90,26 @@ export const RegisterPage = () =>{
             label="CUIL"
             validationSchema={formGetValidations(['CUIL'])}
             afterFunction={async (values:any, ) =>{
+
+              const response = await UserGetData({'cuil':ref.current.values.CUIL}, setFormState);
+
+              if(response.status){
+                console.log(response)
+                let userdata = response.response.data;
+                
+                setFieldValues({...values, 
+                  Name: CapitalizeWords(userdata.Nombres), 
+                  LastName: CapitalizeWords(userdata.Apellido), 
+                  prs_id: userdata.prs_id
+                });
+                setInitialData(true)
+
+              } else if(response.message==GetMessage('Bad Cuil')){
+                setInitialData(false)
+                setFormState((prev:any) => ({ ...prev, error: '' }));
+              }
+
+/*
               await AxiosAuthAPI.UserGetData({'cuil':ref.current.values.CUIL}).then((response)=>{
                 let userdata = response.data
                 console.log(response)
@@ -108,7 +128,7 @@ export const RegisterPage = () =>{
                 } else{
                   setError(GetMessage(messageerror))
                 }
-              })
+              })*/
             }}
             afterHTML={<> 
               <br />
@@ -131,9 +151,9 @@ export const RegisterPage = () =>{
             <DivTitle2>Paso 2</DivTitle2>
             <DivSubtitle>Datos Personales</DivSubtitle>
             <FormikField name="CUIL" disabled={true} label="CUIL"/>
-            <FormikField name="Name" autoFocus disabled={InitialData || FormState.loading} label={InitialData?"Nombre/s":undefined}/>
-            <FormikField name="LastName" disabled={InitialData || FormState.loading} label={InitialData?"Apellido/s":undefined}/>
-            {InitialData?<DivLabel>¿Tus datos estan mal?</DivLabel>:<></>}
+            {InitialData?<DivLabel className='-mt-2 mb-4'>¿Tus datos estan mal? ¡Corrígelos!</DivLabel>:<></>}
+            <FormikField name="Name" autoFocus disabled={FormState.loading} label={InitialData?"Nombre/s":undefined}/>
+            <FormikField name="LastName" disabled={FormState.loading} label={InitialData?"Apellido/s":undefined}/>
           </FormikStep>
           <FormikStep
             label="Email"

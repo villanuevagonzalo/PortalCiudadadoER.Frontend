@@ -12,7 +12,7 @@ import { FormikSearch } from "../../Components/Forms/FormikSearch";
 import { FieldGrid, LayoutColumns, LayoutTitle, LayoutSection } from "../../Components/Layout/StyledComponents";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { ILocations } from "../../Interfaces/Data";
-import { formGetInitialValues, formGetValidations } from "../../Interfaces/FormFields";
+import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
 import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath } from "../../Utils/Locations"
 
 
@@ -27,15 +27,17 @@ const FormRequiredFields = [
 
 export const Dashboard_ConfigurationPage = () => {
 
-  const { isLoading, userData, userContact, userRol, SaveData, CheckToken } = useContext(AuthContext);
+  const { userData, userContact, userRol, SaveData, CheckToken } = useContext(AuthContext);
+  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
   const [ LocationsValues, setLocationsValues ] = useState< ILocations[]>([]);
   const [ FieldValues, setFieldValues ] = useState<any>(null);
 
   useEffect(() => {
     if(userContact){
       if(userContact.LOCALITY_ID!==0 && LocationsValues.length>0){
-      setFieldValues({...FieldValues, Locality: LocationFullPath(LocationByID(LocationsValues,userContact.LOCALITY_ID))})
-    }}
+        setFieldValues({...FieldValues, Locality: LocationFullPath(LocationByID(LocationsValues,userContact.LOCALITY_ID))})
+      }
+    }
   },[LocationsValues])
 
 
@@ -44,7 +46,7 @@ export const Dashboard_ConfigurationPage = () => {
     RawLocations().then((response)=>{
       setLocationsValues(response)
     }).catch((e:any)=>{
-      
+      console.log(e)
     })
 
     if(userContact){   
@@ -97,22 +99,22 @@ export const Dashboard_ConfigurationPage = () => {
             address_street: values.AddressStreet,
             address_number: values.AddressNumber,
             apartment: values.Apartment
-          });
+          }, setFormState);
         }}
       ><Form autoComplete="off">
-        <FormikField name="Cellphone" disabled={isLoading}/>
+        <FormikField name="Cellphone" disabled={FormState.loading}/>
         <h2 className="mt-4">Datos de Ubicación</h2>
-        <FormikSearch name="Locality" disabled={isLoading || LocationsValues.length==0} data={LocationsFullPath(LocationsValues)}/>
+        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length==0} data={LocationsFullPath(LocationsValues)}/>
         <FieldGrid className="FlexSwitchForms">
-          <FormikField name="AddressStreet" disabled={isLoading} className="flex-3"/>
-          <FormikField name="AddressNumber" disabled={isLoading}/>
-          <FormikField name="Apartment" disabled={isLoading}/>
+          <FormikField name="AddressStreet" disabled={FormState.loading} className="flex-3"/>
+          <FormikField name="AddressNumber" disabled={FormState.loading}/>
+          <FormikField name="Apartment" disabled={FormState.loading}/>
         </FieldGrid>
         <h2 className="">Otros Datos Personales</h2>
-        <FormikField name="Birthdate" disabled={isLoading}/>
+        <FormikField name="Birthdate" disabled={FormState.loading}/>
         <FieldGrid className="FlexSwitchForms">
           <NavigatorSpacer/>
-          <div><Button disabled={false} type="submit">{isLoading ? <Spinner /> : "Guardar Cambios"}</Button></div>
+          <div><Button disabled={false} type="submit">{FormState.loading ? <Spinner /> : "Guardar Cambios"}</Button></div>
         </FieldGrid>
       </Form></Formik>:<Spinner color="primary"/>}
     </LayoutSection>
@@ -146,13 +148,13 @@ export const Dashboard_ConfigurationPage = () => {
       >
         <Form autoComplete="off">
           <FieldGrid className="FlexSwitchForms">
-            <FormikField name="Cellphone" disabled={isLoading}/>
-            <FormikField name="Birthdate" disabled={isLoading}/>
+            <FormikField name="Cellphone" disabled={FormState.loading}/>
+            <FormikField name="Birthdate" disabled={FormState.loading}/>
           </FieldGrid>
           <FormikField name="DepartmentID"/>
           <LayoutColumns className="gap-4">
             <NavigatorSpacer/><NavigatorSpacer/>
-            <Button  disabled={isLoading}>Guardar Cambios</Button>
+            <Button  disabled={FormState.loading}>Guardar Cambios</Button>
           </LayoutColumns>
         </Form>
       </Formik>

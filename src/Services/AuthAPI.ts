@@ -73,12 +73,12 @@ export class AuthAPI {
     cuil: number;
     new_email: string;
   }) {
-    return this.baseService.post("/v0/user/change/email/", params);
+    return this.baseService.get("/v0/user/change/email/validation", { params });
   }
 
-  public EmailChangeVerification(params: { 
+  public EmailChangeValidate(params: { 
     token: string;
   }) {
-    return this.baseService.get("/v0/user/change/email/verification", {params} );
+    return this.baseService.post("/v0/user/change/email/", params );
   }
 }

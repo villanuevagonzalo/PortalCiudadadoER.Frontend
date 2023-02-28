@@ -54,21 +54,18 @@ export const PasswordUpdate = () => {
           initialValues={FieldValues}
           validationSchema={formGetValidations(FormRequiredFields)}
           onSubmit={async(values:any) => {
-            setFormState(prev=>({...prev, loading:true}))
-            const PasswordUpdateResponse = await PasswordUpdate({
+            console.log(values)
+            const response = await PasswordUpdate({
               token: SearchParams.values.token,
               new_password: values.Password,
-            })
-            if(PasswordUpdateResponse.status){
-              if(PasswordUpdateResponse.message==="Contraseña Actualizada"){
+            }, setFormState)
+            if(response.status){
+              if(response.message==="Contraseña Actualizada"){
                 setFormState(prev=>({...prev, error:'', finish:true }))
               } else{
-                setFormState(prev=>({...prev, error:PasswordUpdateResponse.message, finish:false}))
+                setFormState(prev=>({...prev, error:response.message, finish:false}))
               }
-            } else{
-              setFormState(prev=>({...prev, error:PasswordUpdateResponse.message}))
             }
-            setFormState(prev=>({...prev, loading:false}))
           }}
         >
           <Form autoComplete="off">

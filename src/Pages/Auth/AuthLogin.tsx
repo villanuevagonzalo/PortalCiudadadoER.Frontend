@@ -15,7 +15,7 @@ const FormRequiredFields = ["CUIL", "Password"];
 
 export const LoginPage = () => {
 
-  const { isLoading, Login } = useContext(AuthContext);
+  const { Login } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
@@ -40,11 +40,11 @@ export const LoginPage = () => {
         }}
       >
         <Form autoComplete="off">
-          <FormikField name="CUIL" autoFocus disabled={isLoading} />
-          <FormikField name="Password" disabled={isLoading} />
+          <FormikField name="CUIL" autoFocus disabled={FormState.loading} />
+          <FormikField name="Password" disabled={FormState.loading} />
           {/*<FormikCheckbox name="RememberMe"/>*/}
-          <Button disabled={isLoading} type="submit">
-            {isLoading ? <Spinner /> : "Iniciar Sesión"}
+          <Button disabled={FormState.loading} type="submit">
+            {FormState.loading ? <Spinner /> : "Iniciar Sesión"}
           </Button>
         </Form>
       </Formik>
@@ -54,16 +54,16 @@ export const LoginPage = () => {
         </DivOutlined>
         <br />
         <DivLabel color="secondary">¿Sos nuevo en Ciudadano Digital?</DivLabel>
-        <Link to="/Registro" className="mb-3"><Button disabled={isLoading} color="secondary">
+        <Link to="/Registro" className="mb-3"><Button disabled={FormState.loading} color="secondary">
             Crear una cuenta
         </Button></Link>
         <DivLabel color="gray_tint">
           ¿Tuviste algun problema al registrarte?
         </DivLabel>
-        <Link to="/RestaurarPassword"><Button disabled={isLoading} color="gray">
+        <Link to="/RestaurarPassword"><Button disabled={FormState.loading} color="gray">
             No recuerdo mi contraseña <AiOutlineLock />
         </Button></Link>
-        <Link to="/EmailVerification"><Button disabled={isLoading} color="gray">
+        <Link to="/EmailVerification"><Button disabled={FormState.loading} color="gray">
             No pude validar mi correo electrónico
         </Button></Link>
       </form>

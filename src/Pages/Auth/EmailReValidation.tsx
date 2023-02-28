@@ -1,19 +1,13 @@
-import { useContext, useRef, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { DivLabel, MainContainer, Sidebar, Spinner, DivSubtitle, DivTitle, ToDo, DivOutlined } from '../../Components/Elements/StyledComponents';
-import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
+import { DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle, DivOutlined } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
 import { FormikField } from '../../Components/Forms/FormikField';
-import { AiOutlineLock } from 'react-icons/ai';
 import { Descripcion } from '../../Components/Elements/Descripcion';
-import { useNavigate } from 'react-router-dom';
-import { GetParams } from '../../Utils/General';
-import { AuthAPI } from '../../Services/AuthAPI';
-import { LogoER } from '../../Components/Images/LogoEntreRios';
-import { LayoutColumns, LayoutSidebar } from '../../Components/Layout/StyledComponents';
+import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
 import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
 import { CountDown } from '../../Components/Elements/CountDown';
 import moment from 'moment';
@@ -24,9 +18,9 @@ const FormRequiredFields = [
 
 export const EmailReValidation = () => {
 
-  const { EmailResend } = useContext(AuthContext);
-  const [FormState, setFormState] = useState<FormStateProps>(FormStateDefault);
-  const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
+  const { EmailResendVerification } = useContext(AuthContext);
+  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   let errors = FormState.error.split(' | ');
 
@@ -50,16 +44,9 @@ export const EmailReValidation = () => {
           initialValues={FieldValues}
           validationSchema={formGetValidations(FormRequiredFields)}
           onSubmit={async(values:any) => {
-            setFormState(prev=>({...prev, loading:true}))
-            const ResetPasswordResponse = await EmailResend({
+            const response = await EmailResendVerification({
               cuil: values.CUIL,
-            })
-            if(ResetPasswordResponse.status){
-              setFormState(prev=>({...prev, error:'', finish: true}))
-            } else{
-              setFormState(prev=>({...prev, error:ResetPasswordResponse.message}))
-            }
-            setFormState(prev=>({...prev, loading:false}))
+            }, setFormState);
           }}
         ><Form autoComplete="off">
           <FormikField name="CUIL" disabled={FormState.loading || errors.length>1} autoFocus/>
@@ -70,7 +57,8 @@ export const EmailReValidation = () => {
         {FormState.error?<><DivOutlined open={FormState.error?true:false} className="mt-4 flex-col">
           {errors.length>1?<>
         <b className='mb-2'>{errors[1]} <CountDown time={moment.duration('00:'+errors[2]).asSeconds()} onFinish={()=>setFormState(prev=>({...prev, error:''}))}/> minutos</b>
-        {errors[0]}</>:FormState.error}
+        Ya se te ha enviado un mail para validar tu correo electrónico
+        </>:FormState.error}
         </DivOutlined></>:<></>}
       </>}
       <br/>

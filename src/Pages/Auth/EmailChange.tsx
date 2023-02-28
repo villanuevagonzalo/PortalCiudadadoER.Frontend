@@ -18,7 +18,7 @@ const FormRequiredFields = [
 
 export const EmailChange = () => {
 
-  const { EmailChange, userData, isLoading } = useContext(AuthContext);
+  const { EmailChange, userData } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
@@ -46,16 +46,16 @@ export const EmailChange = () => {
           onSubmit={(values:any) => {
             EmailChange({
               cuil: userData.cuil,
-              new_email: values.Email,
+              new_email: values.Email
             }, setFormState)
           }}
         ><Form autoComplete="off">
-          <FormikField name="Email" disabled={isLoading || errors.length>1} autoFocus label='Ingresa tu nuevo email'/>
-          <FormikField name="Email_Validation" disabled={isLoading || errors.length>1} label='Reingresa tu nuevo email'/>
+          <FormikField name="Email" disabled={FormState.loading || errors.length>1} autoFocus label='Ingresa tu nuevo email'/>
+          <FormikField name="Email_Validation" disabled={FormState.loading || errors.length>1} label='Reingresa tu nuevo email'/>
           <FieldGrid className="FlexSwitchForms">
             <NavigatorSpacer/>
-            <div><Button disabled={isLoading || errors.length>1} type="submit">
-              {isLoading ? <Spinner/> : <>Cambiar Email</>}
+            <div><Button disabled={FormState.loading || errors.length>1} type="submit">
+              {FormState.loading ? <Spinner/> : <>Cambiar Email</>}
             </Button></div>
           </FieldGrid>
         <DivOutlined open={FormState.error?true:false} className="mt-4 flex-col">
@@ -69,7 +69,7 @@ export const EmailChange = () => {
       </>}
       <hr className=''/>
       <FieldGrid className="FlexSwitchForms">
-        <Link to="../Dashboard/Config"><Button disabled={isLoading || errors.length>1} color="gray">
+        <Link to="../Dashboard/Config"><Button disabled={FormState.loading || errors.length>1} color="gray">
               <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Mi Perfil</b>                                
           </Button></Link>
         <NavigatorSpacer/>

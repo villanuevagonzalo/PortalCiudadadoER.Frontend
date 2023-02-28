@@ -1,5 +1,26 @@
 import styled from "styled-components";
 
+const size = {
+  mobileS: '320px',
+  mobileM: '375px',
+  mobileL: '425px',
+  tablet: '768px',
+  laptop: '1024px',
+  laptopL: '1440px',
+  desktop: '2560px'
+}
+
+export const device = {
+  mobileS: `(min-width: ${size.mobileS})`,
+  mobileM: `(min-width: ${size.mobileM})`,
+  mobileL: `(min-width: ${size.mobileL})`,
+  tablet: `(min-width: ${size.tablet})`,
+  laptop: `(min-width: ${size.laptop})`,
+  laptopL: `(min-width: ${size.laptopL})`,
+  desktop: `(min-width: ${size.desktop})`,
+  desktopL: `(min-width: ${size.desktop})`
+};
+
 /// MAIN LAYOUT COMPONENTS
 
 export const LayoutContainer = styled.div<{  }>`
@@ -79,6 +100,7 @@ export const LayoutSidebar = styled.div<{ open?: boolean }>`
   align-self: top;
   padding:2rem;
   background: var(--maincolor);
+  box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
   ${props => props.hasOwnProperty('open')?` // Collapsable Sidebar
     margin-right: ${props.open?'-360px':'0'};  
     min-width: ${props.open?'360px':'0px'};
@@ -88,8 +110,12 @@ export const LayoutSidebar = styled.div<{ open?: boolean }>`
     width: ${props.open?'360px':'0px'};
     z-index:100;
   `:`
-    witdh:auto;
   `};
+
+  
+  @media (min-width: 720px) { 
+    width:360px;
+  }
 
   &.active{
     margin-right: 0!important;
@@ -105,7 +131,6 @@ export const LayoutSidebar = styled.div<{ open?: boolean }>`
       margin-bottom:0.75rem!important;
     }
   }
-      box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
 `
 
 export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
