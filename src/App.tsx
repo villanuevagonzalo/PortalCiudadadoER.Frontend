@@ -25,6 +25,7 @@ import { PasswordUpdate } from './Pages/Auth/PasswordUpdate';
 import { EmailReValidation } from './Pages/Auth/EmailReValidation';
 import { EmailChange } from './Pages/Auth/EmailChange';
 import { EmailChangeValidate } from './Pages/Auth/EmailChangeValidate';
+import { AutenticarToken } from './Pages/DashboardCiudadano/AutenticarToken';
 
 export const App = () => {
   
@@ -46,12 +47,11 @@ export const App = () => {
         <Route path="ValidarCorreo" element={<EmailValidate />} />
         <Route path="RestaurarPassword" element={<PasswordRestaurar />} />
         <Route path="PasswordReset" element={<PasswordUpdate />} />
+        <Route path="AutenticarToken" element={<AutenticarToken />} />
       </Route>
       <Route element={<PrivateRoute><DashboardCiudadanoLayout /></PrivateRoute>}>
         <Route path="Dashboard/Config/EmailChange" element={<EmailChange />} />
         <Route path="ChangeNewEmail" element={<EmailChangeValidate />} />
-        
-
         <Route path="Dashboard" element={<Dashboard_HomePage />} />
         <Route path="Dashboard/Config" element={<Dashboard_ConfigurationPage />} />
         <Route path="Dashboard/Notificaciones" element={<DashBoard_Notificaciones />} />

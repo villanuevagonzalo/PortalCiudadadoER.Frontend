@@ -257,12 +257,29 @@ const ContextValues = () => {
     return response;
   }
 
+
+  const AutenticarSaveCode = async (data: any, setFormState:Function) => {
+
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosAuthAPI.AutenticarSaveCode(data);
+
+    if(response.status){
+      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
+    } else{
+      setFormState((prev:any) => ({ ...prev, error: response.message }));
+    }
+
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
+
   return {
     isLoading, isLogged, authToken, userData, userContact, userRol, 
     Signup, Login, Logout, CheckToken, 
     UserGetData, SaveData,
     PasswordReset, PasswordUpdate,
-    EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate
+    EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
+    AutenticarSaveCode
   }
 }
 

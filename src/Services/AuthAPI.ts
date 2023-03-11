@@ -81,4 +81,12 @@ export class AuthAPI {
   }) {
     return this.baseService.post("/v0/user/change/email/", params );
   }
+
+  
+  public AutenticarSaveCode(params: {
+    cuil: string;
+    code: string;
+  }) {
+    return this.baseService.post("/v0/getTokenAfip/", params);
+  }
 }
