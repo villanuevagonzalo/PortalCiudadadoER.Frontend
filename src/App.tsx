@@ -26,6 +26,7 @@ import { EmailReValidation } from './Pages/Auth/EmailReValidation';
 import { EmailChange } from './Pages/Auth/EmailChange';
 import { EmailChangeValidate } from './Pages/Auth/EmailChangeValidate';
 import { AutenticarToken } from './Pages/DashboardCiudadano/AutenticarToken';
+import { NameChange } from './Pages/DashboardCiudadano/NameChange';
 
 export const App = () => {
   
@@ -52,6 +53,7 @@ export const App = () => {
       <Route element={<PrivateRoute><DashboardCiudadanoLayout /></PrivateRoute>}>
         <Route path="Dashboard/Config/EmailChange" element={<EmailChange />} />
         <Route path="ChangeNewEmail" element={<EmailChangeValidate />} />
+        <Route path="NameChange" element={<NameChange />} />
         <Route path="Dashboard" element={<Dashboard_HomePage />} />
         <Route path="Dashboard/Config" element={<Dashboard_ConfigurationPage />} />
         <Route path="Dashboard/Notificaciones" element={<DashBoard_Notificaciones />} />

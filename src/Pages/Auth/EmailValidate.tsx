@@ -56,7 +56,7 @@ export const EmailValidate = () =>{
                     <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</DivSubtitle>
                     <br />
                     <form>
-                    <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
+                    <Link to="/EmailVerification" className="w-full"><Button color="secondary">
                         Solicitar Nuevo Codigo
                         <AiOutlineLock/>                        
                     </Button></Link>
@@ -73,7 +73,7 @@ export const EmailValidate = () =>{
             <br />
             <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</DivSubtitle>
             <br />
-            <form><Link to="/ReenviarCodigo" className="w-full mb-3"><Button color="secondary">
+            <form><Link to="/EmailVerification" className="w-full mb-3"><Button color="secondary">
               Solicitar Nuevo Codigo
               <AiOutlineLock/>                        
           </Button></Link>

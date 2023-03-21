@@ -132,6 +132,21 @@ const ContextValues = () => {
     return response;
   }
 
+  const UserNameChange = async (data:any, setFormState:Function) => {
+
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosAuthAPI.UserNameChange(data);
+
+    if(response.status){
+      setFormState((prev:any) => ({ ...prev, error: "" }));
+    } else{
+      setFormState((prev:any) => ({ ...prev, error: response.message }));
+    }
+
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
+
 
 
 
@@ -276,7 +291,7 @@ const ContextValues = () => {
   return {
     isLoading, isLogged, authToken, userData, userContact, userRol, 
     Signup, Login, Logout, CheckToken, 
-    UserGetData, SaveData,
+    UserGetData, SaveData, UserNameChange,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
     AutenticarSaveCode

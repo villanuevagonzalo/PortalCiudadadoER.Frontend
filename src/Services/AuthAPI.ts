@@ -41,7 +41,15 @@ export class AuthAPI {
     address_number: string;
     apartment: string;
   }) {
-    return this.baseService.post("/v0/user/personal/data", params);
+    return this.baseService.post("/v0/user/personal/contact/data", params);
+  }
+
+  public UserNameChange(params: {
+    cuil: number;
+    nombre: string;
+    apellido: string;
+  }) {
+    return this.baseService.post("/v0/user/personal/names", params);
   }
 
   public UserPasswordReset(params: {

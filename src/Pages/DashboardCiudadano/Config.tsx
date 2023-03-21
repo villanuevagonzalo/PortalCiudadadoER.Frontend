@@ -74,7 +74,12 @@ export const Dashboard_ConfigurationPage = () => {
         <FormikFieldDummy name="LastName" value={userData.last_name}/>
       </FieldGrid>
       <hr/>
+      <FieldGrid className="FlexSwitchForms gap-4">
+      <Link to="/NameChange"><h2>Cambiar Nombre</h2></Link>
+      
+      <NavigatorSpacer/>
       <Link to="/RestaurarPassword"><h3>Cambiar Contraseña »</h3></Link>
+      </FieldGrid>
 
       <h1 className="mt-4"><BiData/>Información Adicional</h1>
       <h2>Información de Contacto</h2>
