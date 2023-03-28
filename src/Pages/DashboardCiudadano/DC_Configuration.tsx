@@ -1,19 +1,23 @@
 import { Form, Formik } from "formik";
 import moment from "moment";
+import * as yup from 'yup';
 import { useContext, useEffect, useState } from "react";
-import { AiOutlineArrowRight, AiOutlineMail } from "react-icons/ai";
+import { AiOutlineArrowRight, AiOutlineCheckCircle } from "react-icons/ai";
 import { BiData, BiUserCircle } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { DivLabel, NavigatorSpacer, Spinner } from "../../Components/Elements/StyledComponents"
+import {  NavigatorSpacer, Spinner } from "../../Components/Elements/StyledComponents"
 import { Button } from "../../Components/Forms/Button";
 import { FormikField } from "../../Components/Forms/FormikField";
 import { FormikFieldDummy } from "../../Components/Forms/FormikFieldDummy";
 import { FormikSearch } from "../../Components/Forms/FormikSearch";
-import { FieldGrid, LayoutColumns, LayoutTitle, LayoutSection } from "../../Components/Layout/StyledComponents";
+import { FieldGrid, LayoutTitle, LayoutSection, LayoutGridItem, LayoutListItem } from "../../Components/Layout/StyledComponents";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { ILocations } from "../../Interfaces/Data";
-import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { ILocation } from "../../Interfaces/Data";
+import { formGetValidations } from "../../Interfaces/FormFields";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
 import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath } from "../../Utils/Locations"
+import { BsBookmark, BsBookmarkCheck, BsBookmarkPlus, BsBookmarkStar, BsBookmarkX } from "react-icons/bs";
 
 
 const FormRequiredFields = [
@@ -25,12 +29,27 @@ const FormRequiredFields = [
   'Apartment'
 ];
 
-export const Dashboard_ConfigurationPage = () => {
+export const DC_Configuration = () => {
 
-  const { userData, userContact, userRol, SaveData, CheckToken } = useContext(AuthContext);
-  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
-  const [ LocationsValues, setLocationsValues ] = useState< ILocations[]>([]);
+  const { userData, userContact, userRol, SaveData, AFIP_getURL } = useContext(AuthContext);
+  const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
+  const [ ValidationFormState, setValidationFormState ] = useState<IFormState>(DefaultFormState);
+  const [ LocationsValues, setLocationsValues ] = useState< ILocation[]>([]);
   const [ FieldValues, setFieldValues ] = useState<any>(null);
+
+  const handleValidation2 = async () => {
+    
+  }
+  
+  const handleValidation3 = async () => {
+    const Response = await AFIP_getURL({
+      cuil: userData.cuil
+    }, setValidationFormState);
+
+    if(Response.status){
+      window.location = Response.response.data;
+    }
+  }
 
   useEffect(() => {
     if(userContact){
@@ -74,11 +93,10 @@ export const Dashboard_ConfigurationPage = () => {
         <FormikFieldDummy name="LastName" value={userData.last_name}/>
       </FieldGrid>
       <hr/>
-      <FieldGrid className="FlexSwitchForms gap-4">
-      <Link to="/NameChange"><h2>Cambiar Nombre</h2></Link>
-      
+      <FieldGrid className="FlexSwitchMobile gap-4">
       <NavigatorSpacer/>
-      <Link to="/RestaurarPassword"><h3>Cambiar Contraseña »</h3></Link>
+      {userRol[0].level==3?<></>:<Link to="/NameChange"><Button color="gray">Cambiar Nombre</Button></Link>}
+      <Link to="/RestaurarPassword"><Button>Solicitar cambio de Contraseña <AiOutlineArrowRight/></Button></Link>
       </FieldGrid>
 
       <h1 className="mt-4"><BiData/>Información Adicional</h1>
@@ -92,15 +110,17 @@ export const Dashboard_ConfigurationPage = () => {
         enableReinitialize={true}
         validateOnChange={false}
         validateOnBlur={false}
-        validationSchema={formGetValidations(FormRequiredFields)}
+        validationSchema={formGetValidations(FormRequiredFields).concat(yup.object({
+          'Locality': yup.string().oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
+        }))}
         onSubmit={async (values: any) => {
           const LocationData = GetLocationByPath(LocationsValues, values.Locality);
           const SaveDataResponse = await SaveData({
             cuil: userData.cuil,
             birthday: moment(values.Birthdate).format('DD/MM/YYYY').toString(),
             cellphone_number: values.Cellphone,
-            department_id: LocationData.DEP_ID,
-            locality_id: LocationData.ID,
+            department_id: LocationData?.DEP_ID,
+            locality_id: LocationData?.ID,
             address_street: values.AddressStreet,
             address_number: values.AddressNumber,
             apartment: values.Apartment
@@ -124,15 +144,56 @@ export const Dashboard_ConfigurationPage = () => {
       </Form></Formik>:<Spinner color="primary"/>}
     </LayoutSection>
     <LayoutTitle>
-      Nivel de Usuario
+      Niveles de Usuario
     </LayoutTitle>
-    <LayoutSection className="flex items-center gap-1 p-10">
-      <h1><BiUserCircle />Básico</h1>
-      <h2 className="-mt-3 ml-20 pl-1">Usted ha validado su cuenta por medio de su correo electrónico.</h2>
-      <h1><BiUserCircle />Por Aplicación</h1>
-      <h3 className="-mt-3 ml-20 pl-1">Usted ha validado su cuenta por medio de alguna de las aplicaciones que validan identidad.</h3>
-      <h1><BiUserCircle />Presencial</h1>
-      <h2 className="-mt-3 ml-20 pl-1">Usted ha validado su cuenta presencialmente.</h2>
+    <LayoutSection>
+      <LayoutListItem color="gray" className="FlexSwitchMobile">
+        <div className="ListItemIcon"><BsBookmarkCheck/></div>
+        <div className="flex-1">
+          <h1><b className="mr-2 ">Nivel 1 </b> Básico</h1>
+          <h2>Usted ha validado su cuenta por medio de su correo electrónico.</h2>
+        </div>
+      </LayoutListItem>
+      {userRol[0].level>1?<LayoutListItem color="primary" className="FlexSwitchMobile">
+        <div className="ListItemIcon"><BsBookmarkPlus/></div>
+        <div className="flex-1">
+          <h1><b className="mr-2">Nivel 2</b> Intermedio</h1>
+          <h2>Usted ha completado su información adicional.</h2>
+        </div>
+      </LayoutListItem>:<LayoutListItem color="error" className="FlexSwitchMobile">
+        <div className="ListItemIcon"><BsBookmarkX/></div>
+        <div className="flex-1">
+          <h1><b className="mr-2">Nivel 2</b> Datos Personales</h1>
+          <h2>Usted no ha completado su información adicional.</h2>
+        </div>
+        <div>
+          <Button color="error" onClick={handleValidation2}>Completar<br/>Información</Button>
+        </div>
+      </LayoutListItem>}
+      {userRol[0].level>2?
+      <LayoutListItem color="secondary" className="FlexSwitchMobile">
+        <div className="ListItemIcon"><BsBookmarkStar/></div>
+        <div className="flex-1">
+          <h1><b className="mr-2">Nivel 3</b> Por Aplicación</h1>
+          <h2>Usted ha terminado de validar su indentidad.</h2>
+        </div>
+      </LayoutListItem>:(userRol[0].level>1? <LayoutListItem color="error" className="FlexSwitchMobile">
+        <div className="ListItemIcon"><BsBookmarkX/></div>
+        <div className="flex-1">
+          <h1><b className="mr-2">Nivel 3</b> Por Aplicación</h1>
+          <h2>Usted no ha terminado de validar su indentidad.</h2>
+        </div>
+
+        <div>
+          <Button color="error" onClick={handleValidation3} disabled={ValidationFormState.loading}>{ValidationFormState.loading ? <Spinner /> : "Validar"}</Button>
+        </div>
+      </LayoutListItem>:<LayoutListItem color="disabled">
+        <div className="ListItemIcon"><BsBookmark/></div>
+        <div className="flex-1">
+          <h1><b className="mr-2">Nivel 3</b>. Por Aplicación</h1>
+          <h2>Usted no ha completado su información adicional.</h2>
+        </div>
+      </LayoutListItem>)}
     </LayoutSection>
   </>)
 }

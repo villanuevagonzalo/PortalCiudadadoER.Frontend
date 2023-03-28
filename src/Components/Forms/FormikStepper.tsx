@@ -3,9 +3,8 @@ import React, { useCallback, useEffect } from "react";
 import { useState } from "react";
 import { NavigatorSpacer, NavigatorWrapper, Spinner } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
-
-import { FormStateProps } from "../../Interfaces/FormFields";
 import { Sleep } from "../../Utils/General";
+import { IFormState } from "../../Interfaces/Data";
 
 export interface FormikStepProps
   extends Pick<FormikConfig<FormikValues>, 'children' | 'validationSchema'> {
@@ -19,7 +18,7 @@ export function FormikStep({ children }: FormikStepProps) {
 }
 
 export interface FormikStepperProps extends FormikConfig<FormikValues>{
-  FormState2: [FormStateProps, React.Dispatch<React.SetStateAction<FormStateProps>>];
+  FormState2: [IFormState, React.Dispatch<React.SetStateAction<IFormState>>];
   extraHTML?: any;
 }
 

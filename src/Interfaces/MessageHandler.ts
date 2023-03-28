@@ -23,6 +23,7 @@ export const Messages: {[key: string]:string} = {
   'Invalid Cuil': 'El CUIL ingresado no se encuentra registrado',
   'Network Error': 'Error Interno en el Servidor',
   'Email changed': 'Mail actualizado correctamente.',
+  'Data changed': 'Data changed',
 
 }
 
@@ -36,7 +37,7 @@ export const StatusCodes: {[key: number]:string} = {
 // Funciones de Obtención de Información
 
 export const GetMessage = (inputmessage:string, code?:number) => {
-  console.log(inputmessage, code)
+  //console.log(inputmessage, code)
   if(inputmessage){
     const msgpartial = inputmessage.split('. Wait ');
     const msgerror = Messages[msgpartial[0]]

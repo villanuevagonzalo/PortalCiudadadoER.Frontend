@@ -1,25 +1,7 @@
-import { isNumber } from 'lodash';
 import * as yup from 'yup';
 import YupPassword from 'yup-password'
 import { CheckCUIL } from '../Utils/General';
 YupPassword(yup) // extend yup
-
-
-// Estado General de un Formulario
-
-export interface FormStateProps {
-  loading: boolean;
-  error: string;
-  finish: boolean;
-  changing: boolean;
-}
-
-export const FormStateDefault:FormStateProps = {
-  loading: false,
-  error: '',
-  finish: false,
-  changing: false,
-}
 
 // Campos de formularios
 

@@ -1,33 +1,6 @@
 import styled from "styled-components";
 
-const size = {
-  mobileS: '320px',
-  mobileM: '375px',
-  mobileL: '425px',
-  tablet: '768px',
-  laptop: '1024px',
-  laptopL: '1440px',
-  desktop: '2560px'
-}
-
-export const device = {
-  mobileS: `(min-width: ${size.mobileS})`,
-  mobileM: `(min-width: ${size.mobileM})`,
-  mobileL: `(min-width: ${size.mobileL})`,
-  tablet: `(min-width: ${size.tablet})`,
-  laptop: `(min-width: ${size.laptop})`,
-  laptopL: `(min-width: ${size.laptopL})`,
-  desktop: `(min-width: ${size.desktop})`,
-  desktopL: `(min-width: ${size.desktop})`
-};
-
 /// MAIN LAYOUT COMPONENTS
-
-export const LayoutContainer = styled.div<{  }>`
-  display: flex;
-  flex: 1;
-  min-height: 100%;
-`;
 
 export const LayoutHeader = styled.div<{ mobile?:boolean }>`
   background: var(--maincolor_tint);
@@ -35,7 +8,7 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
   display: flex;
   flex-direction: row;
   height: 64px;
-  padding: 1rem ${props => props.mobile?'1rem':'1rem'};
+  padding: 1rem;
   width:100%;
   z-index:100;
   gap:${props => props.mobile?'0.5rem':'1rem'};
@@ -70,59 +43,32 @@ export const LayoutHeaderSpacer = styled.div<{  }>`
   height:10px;
 `;
 
-
-export const UserNav = styled.div<{ }>`
-  align-items: center;
-  align-self: center;
-  border:2px solid var(--gray_tint2);
-  display:flex;
-  font-size: 1rem;
-  gap: 0.25rem;
-  padding:0.25rem 0.25rem 0.25rem 1rem;
-  border-radius:2rem;
-  font-weight:600;
-  color:var(--gray_tint);
-  margin-right:-0.25rem;
-
-  & svg{
-    margin:0px;
-    color:var(--gray)!important;
-  }
-
-  &:hover{
-    background:var(--maincolor);
-  }
-
+export const LayoutContainer = styled.div<{  }>`
+  display: flex;
+  flex: 1;
+  min-height: 100%;
 `;
 
-export const LayoutSidebar = styled.div<{ open?: boolean }>`
+export const LayoutSidebar = styled.div<{ open?: boolean, mobile?:boolean }>`
   align-items: center;
   align-self: top;
   padding:2rem;
   background: var(--maincolor);
   box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
-  ${props => props.hasOwnProperty('open')?` // Collapsable Sidebar
-    margin-right: ${props.open?'-360px':'0'};  
+  z-index:100;
+  transition: all .1s ease-in;
+  overflow:hidden;
+
+  ${props => props.mobile?`
+    margin-right: ${props.open?'-360px':'0'}!important;
+    width: ${props.open?'360px':'0px'}!important;
     min-width: ${props.open?'360px':'0px'};
-    overflow:hidden;
     padding: ${props.open?'1rem':'0'};  
-    transition: all .1s ease-in;
-    width: ${props.open?'360px':'0px'};
-    z-index:100;
   `:`
-  `};
+    margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
+    min-width: 360px;
+  `}
 
-  
-  @media (min-width: 720px) { 
-    width:360px;
-  }
-
-  &.active{
-    margin-right: 0!important;
-    margin-top:-64px;
-    //padding:2rem!important;
-  }
-  
   & form{
     max-width:400px;
     margin:0 auto;
@@ -231,7 +177,6 @@ export const LayoutOverlay = styled.div<{ visible?: boolean }>`
   //backdrop-filter: blur(3px);
 `;
 
-
 // COMMON ELEMENTS
 
 export const LayoutCenterBox = styled.div<{ maxwidth?: string }>`
@@ -246,7 +191,12 @@ export const LayoutColumn = styled.div<{ }>`
   min-width:300px;
 `;
 
-
+export const LayoutRow = styled.div<{ }>`
+  display:flex;
+  gap:1rem;
+  flex-direction:row;
+  min-width:300px;
+`;
 
 export const LayoutSection = styled.div<{ }>`
   background: var(--maincolor);  
@@ -306,7 +256,6 @@ export const LayoutSection = styled.div<{ }>`
   }
 `;
 
-
 export const LayoutGrid = styled.div<{ }>`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -344,8 +293,53 @@ export const LayoutGridItem = styled.div<{ }>`
     align-items: center;
   }
 `;
+export const LayoutListItem = styled.div<{ color?:string, disabled?:boolean }>`
+  display:flex;
+  width:100%;
+  background: var(--maincolor);  
+  border-radius:0.5rem;
+  padding:1.5rem;
+  border: 1px solid var(--disabled);
+  justify-items: center;
+  align-items: top;
+  gap:1.5rem;
+  cursor:${props => (props.color=='disabled' ? 'default' : 'pointer')};
 
+  & .ListItemIcon{
+    color: var(--${props => (props.color ? props.color : 'primary')});
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    padding-top: 0.5rem;
+  }
 
+  & h1{
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+    margin-bottom:0.25rem!important;
+
+   
+      
+    color: var(--${props => (props.color ? props.color : 'primary')});
+   
+  }
+  
+  & h2{
+    color: var(--${props => (props.color ? props.color : 'primary')});
+    display: flex;
+    width:100%;
+    font-size:1rem;
+    flex-direction: row;
+    align-items: center;
+    margin:0!important;
+  }
+
+  &:hover{
+    background:var(--${props => (props.color ? props.color : 'primary')}_text);
+  }
+`;
 
 export const LayoutTitle = styled.h1<{ }>`
   font-size: 2rem;
@@ -353,8 +347,6 @@ export const LayoutTitle = styled.h1<{ }>`
   font-weight: 700;
   color: var(--primary);
 `;
-
-
 
 export const LayoutColumns = styled.div<{ }>`
   display: flex;
@@ -364,4 +356,27 @@ export const LayoutColumns = styled.div<{ }>`
 export const FieldGrid = styled.div<{ }>`
   display: flex;
   width:100%;
+`;
+
+export const RoundedButton = styled.div<{ }>`
+  align-items: center;
+  align-self: center;
+  border:2px solid var(--gray_tint2);
+  display:flex;
+  font-size: 1rem;
+  gap: 0.25rem;
+  padding:0.25rem 0.25rem 0.25rem 1rem;
+  border-radius:2rem;
+  font-weight:600;
+  color:var(--gray_tint);
+  margin-right:-0.25rem;
+
+  & svg{
+    margin:0px;
+    color:var(--gray)!important;
+  }
+
+  &:hover{
+    background:var(--maincolor);
+  }
 `;

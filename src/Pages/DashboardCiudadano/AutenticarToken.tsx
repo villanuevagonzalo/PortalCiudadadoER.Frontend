@@ -8,25 +8,26 @@ import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetParams } from '../../Utils/General';
 import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
 import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
-import { FormStateDefault, FormStateProps } from '../../Interfaces/FormFields';
 import { AuthContext } from '../../Contexts/AuthContext';
+import { IFormState } from '../../Interfaces/Data';
+import { DefaultFormState } from '../../Data/DefaultValues';
 
 export const AutenticarToken = () =>{
 
     const SearchParams = GetParams(["code"]);
 
-    const { AutenticarSaveCode } = useContext(AuthContext);
-    const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+    const { userData, AFIP_getToken } = useContext(AuthContext);
+    const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
     
     useEffect(() => {if(SearchParams.status){ 
-      const response = AutenticarSaveCode({
-        'cuil':'27049902072',
+      const response = AFIP_getToken({
+        'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
 
       console.log(response)
 
-    }}, [])
+    }}, [userData])
 
     return(<>
       <LayoutSidebar>

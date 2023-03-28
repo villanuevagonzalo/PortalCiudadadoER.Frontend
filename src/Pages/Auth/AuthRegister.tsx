@@ -1,5 +1,7 @@
 import { useContext, useRef, useState } from 'react';
-import { formGetValidations, formGetInitialValues, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { formGetValidations, formGetInitialValues } from "../../Interfaces/FormFields";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthAPI } from '../../Services/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
@@ -38,7 +40,7 @@ export const RegisterPage = () =>{
   const { UserGetData, Signup } = useContext(AuthContext);
 
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
-  const [FormState, setFormState] = useState<FormStateProps>(FormStateDefault);
+  const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   
   const [InitialData, setInitialData] = useState<boolean>(false);
 
@@ -76,8 +78,8 @@ export const RegisterPage = () =>{
           onSubmit={async (values:any) =>{
             await Signup({
               cuil: values.CUIL,
-              nombre: values.Name,
-              apellido: values.LastName,
+              nombre: CapitalizeWords(values.Name),
+              apellido: CapitalizeWords(values.LastName),
               email: values.Email_Validation,
               password: values.Password_Validation,
               prs_id: values.prs_id || "NOTFOUND"

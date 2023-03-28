@@ -1,5 +1,7 @@
 import { useContext, useState } from 'react';
-import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { formGetValidations, formGetInitialValues } from "../../Interfaces/FormFields";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { Spinner, DivOutlined, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
@@ -16,10 +18,10 @@ const FormRequiredFields = [
   'Email_Validation'
 ]
 
-export const EmailChange = () => {
+export const DC_EmailChange = () => {
 
   const { EmailChange, userData } = useContext(AuthContext);
-  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   let errors = FormState.error.split(' | ');

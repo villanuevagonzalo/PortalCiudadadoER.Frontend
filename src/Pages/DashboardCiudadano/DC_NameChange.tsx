@@ -1,26 +1,29 @@
 import { useContext, useState } from 'react';
-import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { formGetValidations, formGetInitialValues } from "../../Interfaces/FormFields";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { Spinner, DivOutlined, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
 import { FormikField } from '../../Components/Forms/FormikField';
-import { AiOutlineArrowLeft, AiOutlineMail } from 'react-icons/ai';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { FieldGrid, LayoutSection, LayoutTitle } from '../../Components/Layout/StyledComponents';
 import { CountDown } from '../../Components/Elements/CountDown';
 import moment from 'moment';
 import { BiUserCircle } from 'react-icons/bi';
+import { CapitalizeWords } from '../../Utils/General';
 
 const FormRequiredFields = [
   'Name',
   'LastName'
 ]
 
-export const NameChange = () => {
+export const DC_NameChange = () => {
 
-  const { UserNameChange, userData } = useContext(AuthContext);
-  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const { UserNameChange, userData, userRol } = useContext(AuthContext);
+  const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   let errors = FormState.error.split(' | ');
@@ -31,7 +34,15 @@ export const NameChange = () => {
     </LayoutTitle>
     <LayoutSection>
     <h1><BiUserCircle className='small'/>Cambiar Datos Personales</h1>
-      {FormState.finish?<>
+    {userRol[0].level==3?<>
+    
+      <DivOutlined className="flex-col">
+      <b className='mb-2'>Tu identidad ya ha sido validada.</b>
+      Para cambiar tus datos personales por favor contactese con soporte.
+      </DivOutlined>
+    
+    </>:
+      FormState.finish?<>
         <DivOutlined className="mt-0 flex-col" color="secondary">
           <b className='mb-2'>¡Se han actualizado tus Datos Personales!</b>
           <span className='text-sm'>Por favor aguarda <CountDown time={300} onFinish={()=>setFormState(prev=>({...prev, finish:false}))}/> minutos antes de solicitar un nuevo cambio de nombre.</span>
@@ -47,8 +58,8 @@ export const NameChange = () => {
           onSubmit={(values:any) => {
             UserNameChange({
               cuil: userData.cuil,
-              nombre: values.Name,
-              apellido: values.LastName
+              name: CapitalizeWords(values.Name),
+              last_name: CapitalizeWords(values.LastName)
             }, setFormState)
           }}
         ><Form autoComplete="off">          

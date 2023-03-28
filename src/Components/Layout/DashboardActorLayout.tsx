@@ -4,7 +4,7 @@ import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icon
 import { BsLayoutWtf } from "react-icons/bs";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutBody, LayoutContainer, LayoutFooter, LayoutColumns,  LayoutHeader, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, UserNav } from "./StyledComponents";
+import { LayoutBody, LayoutContainer, LayoutFooter, LayoutColumns,  LayoutHeader, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, RoundedButton } from "./StyledComponents";
 import {  Card, DivSubtitle, DivTitle, DivTitle2,  NavigatorSpacer } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -37,10 +37,10 @@ export const DashboardActorLayout = () => {
   return (<>
     <LayoutHeader>{matches?<>
       <NavigatorSpacer /> 
-      <Link to="Dashboard/Config" onClick={switchmenu}><UserNav>
+      <Link to="Dashboard/Config" onClick={switchmenu}><RoundedButton>
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
-      </UserNav></Link>
+      </RoundedButton></Link>
       
         
     </>:<>

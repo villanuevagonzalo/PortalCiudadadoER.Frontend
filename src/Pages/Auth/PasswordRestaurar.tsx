@@ -1,5 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
-import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { formGetValidations, formGetInitialValues } from "../../Interfaces/FormFields";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle, DivOutlined } from '../../Components/Elements/StyledComponents';
@@ -19,7 +21,7 @@ const FormRequiredFields = [
 export const PasswordRestaurar = () => {
 
   const { userData, PasswordReset } = useContext(AuthContext);
-  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
 
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 

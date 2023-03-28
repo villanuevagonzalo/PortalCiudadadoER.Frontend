@@ -1,6 +1,8 @@
 import { Form, Formik } from "formik";
 import { useState } from "react";
-import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { formGetValidations, formGetInitialValues } from "../../Interfaces/FormFields";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
 import { Button } from "../Forms/Button";
 import { FormikSearch } from "../Forms/FormikSearch";
 import { Spinner } from "./StyledComponents";
@@ -18,7 +20,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const BuscarTramites = (props: any) => {
 
-  const [FormState, setFormState] = useState<FormStateProps>(FormStateDefault);
+  const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
 
     return(<Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}

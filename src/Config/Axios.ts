@@ -22,7 +22,7 @@ axiosBase.interceptors.request.use(
 axiosBase.interceptors.response.use(
   (response:any) => {     
     return {
-    status: response.data?.status,
+    status: response.data?.status || true,
     code: response.status,
     message: GetMessage(response.data.message, response.status),
     response: response

@@ -46,8 +46,8 @@ export class AuthAPI {
 
   public UserNameChange(params: {
     cuil: number;
-    nombre: string;
-    apellido: string;
+    name: string;
+    last_name: string;
   }) {
     return this.baseService.post("/v0/user/personal/names", params);
   }
@@ -91,10 +91,16 @@ export class AuthAPI {
   }
 
   
-  public AutenticarSaveCode(params: {
+  public Autenticar_AFIP_getURL(params: {
+    cuil: string;
+  }) {
+    return this.baseService.get("/v0/authentication/afip/getUrl", { params });
+  }
+  
+  public Autenticar_AFIP_getToken(params: {
     cuil: string;
     code: string;
   }) {
-    return this.baseService.post("/v0/getTokenAfip/", params);
+    return this.baseService.get("/v0/authentication/afip/getToken", { params });
   }
 }

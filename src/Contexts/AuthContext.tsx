@@ -1,12 +1,13 @@
-import { createContext, FC, useState } from "react";
-import { AuthAPI } from "../Services/AuthAPI";
-import { getLSData, setLSData } from '../Utils/General';
 import moment from 'moment'
-import { GetMessage, GetMessage2 } from "../Interfaces/MessageHandler";
 import jwt_decode from "jwt-decode";
+import { createContext, FC, useState } from "react";
+
+import { getLSData, setLSData } from '../Utils/General';
 import { GetLevels } from "../Interfaces/UserLevels";
+import { AuthAPI } from "../Services/AuthAPI";
+
 import { IResponse, IToken, IUserContact, IUserData, IUserRol } from "../Interfaces/Data";
-import { DefaultResponse, DefaultToken, DefaultUserContact, DefaultUserData, DefaultUserRol  } from "../Data/DefaultValues";
+import { DefaultToken, DefaultUserContact, DefaultUserData, DefaultUserRol  } from "../Data/DefaultValues";
 
 const ContextValues = () => {
 
@@ -20,7 +21,10 @@ const ContextValues = () => {
   const [userContact, setUserContact] = useState<IUserContact>(DefaultUserContact);
   const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
 
-
+  const UpdateField = (list:any) => {
+    
+    setUserData(prevState => ({...prevState, }))
+  }
 
   const SaveToken = (token:string) => {
 
@@ -140,47 +144,47 @@ const ContextValues = () => {
     if(response.status){
       setFormState((prev:any) => ({ ...prev, error: "" }));
     } else{
-      setFormState((prev:any) => ({ ...prev, error: response.message }));
+      if(response.message=="Data changed"){
+        setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
+        setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
+      } else{
+        setFormState((prev:any) => ({ ...prev, error: response.message }));
+      }
     }
 
     setFormState((prev:any) => ({ ...prev, loading: false }));
     return response;
   }
 
+  const SaveData = async (data: any, setFormState:Function) => {
 
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosAuthAPI.UserSaveData(data);
 
+    if(response.status){
+      
 
-    const SaveData = async (data: any, setFormState:Function) => {
-
-      setFormState((prev:any) => ({ ...prev, loading: true }));
-      const response:IResponse | any = await AxiosAuthAPI.UserSaveData(data);
-  
-      if(response.status){
-        
-
-        let NewUserContact = {...userContact,
-          BIRTHDAY: moment(data.birthday,"DD/MM/YYYY").toDate(),
-          CELLPHONE_NUMBER: data.cellphone_number,
-          DEPARTMENT_ID: data.department_id,
-          LOCALITY_ID: data.locality_id,
-          ADDRESS_STREET: data.address_street,
-          ADDRESS_NUMBER: data.address_number,
-          APARTMENT: data.apartment
-      }
-
-      setUserContact(NewUserContact);
-      setLSData("UserContact", NewUserContact);
-
-      if(response.response.data.token){
-          SaveToken(response.response.data.token)
-      }
-      }
-  
-      setFormState((prev:any) => ({ ...prev, loading: false }));
-      return response;
+      let NewUserContact = {...userContact,
+        BIRTHDAY: moment(data.birthday,"DD/MM/YYYY").toDate(),
+        CELLPHONE_NUMBER: data.cellphone_number,
+        DEPARTMENT_ID: data.department_id,
+        LOCALITY_ID: data.locality_id,
+        ADDRESS_STREET: data.address_street,
+        ADDRESS_NUMBER: data.address_number,
+        APARTMENT: data.apartment
     }
 
+    setUserContact(NewUserContact);
+    setLSData("UserContact", NewUserContact);
 
+    if(response.response.data.token){
+        SaveToken(response.response.data.token)
+    }
+    }
+
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
 
   const PasswordReset = async (data: any, setFormState:Function) => {
 
@@ -272,11 +276,25 @@ const ContextValues = () => {
     return response;
   }
 
-
-  const AutenticarSaveCode = async (data: any, setFormState:Function) => {
+  const AFIP_getURL = async (data: any, setFormState:Function) => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:IResponse | any = await AxiosAuthAPI.AutenticarSaveCode(data);
+    const response:IResponse | any = await AxiosAuthAPI.Autenticar_AFIP_getURL(data);
+
+    if(response.status){
+      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
+    } else{
+      setFormState((prev:any) => ({ ...prev, error: response.message }));
+    }
+
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
+
+  const AFIP_getToken = async (data: any, setFormState:Function) => {
+
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosAuthAPI.Autenticar_AFIP_getToken(data);
 
     if(response.status){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
@@ -294,7 +312,7 @@ const ContextValues = () => {
     UserGetData, SaveData, UserNameChange,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
-    AutenticarSaveCode
+    AFIP_getURL,AFIP_getToken
   }
 }
 
@@ -307,6 +325,5 @@ const AuthContextProvider: FC<{}> = (props) => {
     </AuthContext.Provider>
   );
 }
-
 
 export default AuthContextProvider;

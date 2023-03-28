@@ -8,11 +8,11 @@ import './Styles/style.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthContextProvider>
+    <AuthContextProvider>
+      <BrowserRouter>
         <App />
-      </AuthContextProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

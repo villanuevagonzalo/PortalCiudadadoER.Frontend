@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, UserNav } from "./StyledComponents";
+import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, RoundedButton } from "./StyledComponents";
 import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -15,57 +15,54 @@ import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 
 const navigation = [
-  { name: 'Inicio', icon: RiLayout4Fill, href: 'Dashboard/', current: true },
-  { name: 'Mis Trámites', icon: FaClipboardList, href: 'Dashboard/MisTramites', current: false },
-  { name: 'Notificaciones', icon: BiNotification, href: 'Dashboard/Notificaciones', current: false },
-  { name: 'Mi Perfil', icon: IoIosSettings, href: 'Dashboard/Config', current: false }
+  { name: 'Inicio', icon: RiLayout4Fill, href: 'Dashboard/' },
+  { name: 'Mis Trámites', icon: FaClipboardList, href: 'Dashboard/MisTramites' },
+  { name: 'Notificaciones', icon: BiNotification, href: 'Dashboard/Notificaciones' },
+  { name: 'Mi Perfil', icon: IoIosSettings, href: 'Dashboard/Config' }
 ]
 
 export const DashboardCiudadanoLayout = () => {
 
-  const matches = useMediaQuery('(min-width: 1024px)');
-  const [ IsOpen, setIsOpen ] = useState<boolean>(matches);
-  const { isLogged, userData, userRol, Logout } = useContext(AuthContext);
+  const isSmallResolution = useMediaQuery('(max-width: 1024px)');
+  const [ mobile, setMobile ] = useState<boolean>(isSmallResolution);
+  const [ open, setOpen ] = useState<boolean>(isSmallResolution);
+  const { userData, userRol, Logout } = useContext(AuthContext);
   
   useEffect(() => {
-    if(matches){
-      setIsOpen(true)
-    }
-  }, [matches])
+    setMobile(isSmallResolution)
+    setOpen(!isSmallResolution)
+  }, [isSmallResolution])
   
-  const switchmenu = () => setIsOpen(matches || !IsOpen);
-  const closemenu = () => setIsOpen(false);
+  const switchmenu = () => setOpen(!isSmallResolution || !open);
+  const closemenu = () => setOpen(false);
 
   return (<>
-    <LayoutHeader mobile={!matches}>{matches?<>
-
-      <LayoutHeaderSpacer/>
-      <Link to="Dashboard/Tramites"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
-      <Link to="Dashboard/Config"><UserNav>
-        <span>{userData.name} {userData.last_name.toUpperCase()}</span>
-        <BiUserCircle />
-      </UserNav></Link>
-      <Link to="Dashboard/Notificaciones" className="button"><MdNotificationsNone/></Link>
-      
-    </>:<>
-    
-      <div>{IsOpen?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}</div>
+    <LayoutHeader mobile={mobile}>{mobile?<>
+      <div>{open?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}</div>
       <Link to="Dashboard/" onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
       {/*<Link to="Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link> */}
       <Link to="Dashboard/Config" onClick={closemenu}><BiUserCircle /></Link>
-
+    </>:<>
+      <LayoutHeaderSpacer/>
+      <Link to="Dashboard/Tramites"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
+      <Link to="Dashboard/Config"><RoundedButton>
+        <span>{userData.name} {userData.last_name.toUpperCase()}</span>
+        <BiUserCircle />
+      </RoundedButton></Link>
+      <Link to="Dashboard/Notificaciones" className="button"><MdNotificationsNone/></Link>
     </>}</LayoutHeader>
+
     <LayoutContainer>
-      <LayoutOverlay visible={IsOpen && !matches} onClick={switchmenu}/>
-      <LayoutSidebar open={IsOpen} className={matches?'active':''}>
-        {matches?<>
+      <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
+      <LayoutSidebar mobile={mobile} open={open}>
+        {mobile?<></>:<>
           <LayoutColumns className="mb-8">
             <LogoER width="150px" />
           </LayoutColumns>
           <LayoutCenterBox maxwidth="400px" className="pb-6">
             <LogoCiudadanoDigital/>
           </LayoutCenterBox>
-        </>:''}
+        </>}
         <LayoutSidebarMenu>
         {navigation.map((item) => (
           <NavLink
@@ -73,7 +70,6 @@ export const DashboardCiudadanoLayout = () => {
             key={item.name}
             to={item.href}
             className={({isActive}) => (isActive ? 'active':'')}
-            aria-current={item.current ? 'page' : undefined}
           >
             <span><item.icon/></span>
             {item.name}
@@ -88,10 +84,11 @@ export const DashboardCiudadanoLayout = () => {
           </Button>
         </Card>
       </LayoutSidebar>
-      <LayoutBody mobile={!matches}>
-        {matches?<></>:
-      <Link to="Dashboard/Tramites" className="-mt-7"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
-        }
+      <LayoutBody mobile={mobile}>
+        {mobile?<LayoutRow>
+          <Link to="Dashboard/Tramites" className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
+          {/*<Link to="Dashboard/Notificaciones"><Button color="secondary"><MdNotificationsNone className="mr-1"/></Button></Link>*/}
+        </LayoutRow>:<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===1?
           <Link to="Dashboard/Config">
             <LayoutAlert>Completa tus datos en la sección de <b>Mi Perfil</b> para alcanzar el nivel 2 de validación.</LayoutAlert>

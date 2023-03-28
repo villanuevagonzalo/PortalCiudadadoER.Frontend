@@ -1,5 +1,7 @@
 import { useContext, useState } from "react";
-import { formGetInitialValues, formGetValidations, FormStateDefault, FormStateProps } from "../../Interfaces/FormFields";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
+import { formGetInitialValues, formGetValidations } from "../../Interfaces/FormFields";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { DivOutlined, DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle } from "../../Components/Elements/StyledComponents";
@@ -16,7 +18,7 @@ const FormRequiredFields = ["CUIL", "Password"];
 export const LoginPage = () => {
 
   const { Login } = useContext(AuthContext);
-  const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+  const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   return (<>

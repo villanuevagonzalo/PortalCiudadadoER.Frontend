@@ -8,15 +8,16 @@ import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetParams } from '../../Utils/General';
 import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
 import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
-import { FormStateDefault, FormStateProps } from '../../Interfaces/FormFields';
 import { AuthContext } from '../../Contexts/AuthContext';
+import { IFormState } from '../../Interfaces/Data';
+import { DefaultFormState } from '../../Data/DefaultValues';
 
 export const EmailValidate = () =>{
 
     const SearchParams = GetParams(["token"]);
 
     const { EmailValidate } = useContext(AuthContext);
-    const [ FormState, setFormState ] = useState<FormStateProps>(FormStateDefault);
+    const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
     
     useEffect(() => {if(SearchParams.status){ 
       const response = EmailValidate({
