@@ -13,12 +13,15 @@ import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
+import { BsBookmarkCheck } from "react-icons/bs";
+
 
 const navigation = [
   { name: 'Inicio', icon: RiLayout4Fill, href: 'Dashboard/' },
   { name: 'Mis Trámites', icon: FaClipboardList, href: 'Dashboard/MisTramites' },
   { name: 'Notificaciones', icon: BiNotification, href: 'Dashboard/Notificaciones' },
-  { name: 'Mi Perfil', icon: IoIosSettings, href: 'Dashboard/Config' }
+  { name: 'Mi Perfil', icon: IoIosSettings, href: 'Dashboard/Config' },
+  { name: 'Validaciones', icon: BsBookmarkCheck, href: 'Dashboard/Validations' }
 ]
 
 export const DashboardCiudadanoLayout = () => {

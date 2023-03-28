@@ -29,7 +29,7 @@ const FormRequiredFields = [
   'Apartment'
 ];
 
-export const DC_Configuration = () => {
+export const DC_Validation = () => {
 
   const { userData, userContact, userRol, SaveData, AFIP_getURL } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
@@ -82,67 +82,6 @@ export const DC_Configuration = () => {
   },[userContact])
 
   return (<>
-    <LayoutTitle>
-      Mi Perfil
-    </LayoutTitle>
-    <LayoutSection className="">
-      <h1><BiUserCircle />Datos Personales</h1>
-      <FieldGrid className="FlexSwitchForms gap-4">
-        <FormikFieldDummy name="CUIL" value={userData.cuil}/>
-        <FormikFieldDummy name="Name" value={userData.name}/>
-        <FormikFieldDummy name="LastName" value={userData.last_name}/>
-      </FieldGrid>
-      <hr/>
-      <FieldGrid className="FlexSwitchMobile gap-4">
-      <NavigatorSpacer/>
-      {userRol[0].level==3?<></>:<Link to="NameChange"><Button color="gray">Cambiar Nombre</Button></Link>}
-      <Link to="/RestaurarPassword"><Button>Solicitar cambio de Contraseña <AiOutlineArrowRight/></Button></Link>
-      </FieldGrid>
-
-      <h1 className="mt-4"><BiData/>Información Adicional</h1>
-      <h2>Información de Contacto</h2>
-      <FieldGrid className="FlexSwitchForms gap-4 -mt-2 mb-2">
-      <FormikFieldDummy name="Email" value={userData.email}/>
-      <Link to="EmailChange"><Button>Solicitar cambio de Email <AiOutlineArrowRight/></Button></Link>
-      </FieldGrid>
-      {(FieldValues)?<Formik
-        initialValues={FieldValues}
-        enableReinitialize={true}
-        validateOnChange={false}
-        validateOnBlur={false}
-        validationSchema={formGetValidations(FormRequiredFields).concat(yup.object({
-          'Locality': yup.string().oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
-        }))}
-        onSubmit={async (values: any) => {
-          const LocationData = GetLocationByPath(LocationsValues, values.Locality);
-          const SaveDataResponse = await SaveData({
-            cuil: userData.cuil,
-            birthday: moment(values.Birthdate).format('DD/MM/YYYY').toString(),
-            cellphone_number: values.Cellphone,
-            department_id: LocationData?.DEP_ID,
-            locality_id: LocationData?.ID,
-            address_street: values.AddressStreet,
-            address_number: values.AddressNumber,
-            apartment: values.Apartment
-          }, setFormState);
-        }}
-      ><Form autoComplete="off">
-        <FormikField name="Cellphone" disabled={FormState.loading}/>
-        <h2 className="mt-4">Datos de Ubicación</h2>
-        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length==0} data={LocationsFullPath(LocationsValues)}/>
-        <FieldGrid className="FlexSwitchForms">
-          <FormikField name="AddressStreet" disabled={FormState.loading} className="flex-3"/>
-          <FormikField name="AddressNumber" disabled={FormState.loading}/>
-          <FormikField name="Apartment" disabled={FormState.loading}/>
-        </FieldGrid>
-        <h2 className="">Otros Datos Personales</h2>
-        <FormikField name="Birthdate" disabled={FormState.loading}/>
-        <FieldGrid className="FlexSwitchForms">
-          <NavigatorSpacer/>
-          <div><Button disabled={false} type="submit">{FormState.loading ? <Spinner /> : "Guardar Cambios"}</Button></div>
-        </FieldGrid>
-      </Form></Formik>:<Spinner color="primary"/>}
-    </LayoutSection>
     <LayoutTitle>
       Niveles de Usuario
     </LayoutTitle>
