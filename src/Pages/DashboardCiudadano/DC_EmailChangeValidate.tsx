@@ -55,11 +55,11 @@ export const DC_EmailChangeValidate = () => {
     </>}
     <hr className=''/>
     <FieldGrid className="FlexSwitchForms">
-      <Link to="../Dashboard/Config"><Button disabled={FormState.loading} color="gray">
+      <Link to="/../Dashboard/Config"><Button disabled={FormState.loading} color="gray">
             <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Mi Perfil</b>                                
         </Button></Link>
       <NavigatorSpacer/>
-      {(FormState.error || !SearchParams.status)?<Link to="../Dashboard/Config/EmailChange"><Button color="secondary" disabled={FormState.loading}>
+      {(FormState.error || !SearchParams.status)?<Link to="/../Dashboard/Config/EmailChange"><Button color="secondary" disabled={FormState.loading}>
             Solicitar Nuevo Codigo
             <AiOutlineLock/>                        
         </Button></Link>:<></>}

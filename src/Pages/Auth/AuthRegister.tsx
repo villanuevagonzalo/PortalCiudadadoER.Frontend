@@ -106,7 +106,7 @@ export const RegisterPage = () =>{
                 });
                 setInitialData(true)
 
-              } else if(response.message==GetMessage('Bad Cuil')){
+              } else if(response.message==GetMessage('Bad Cuil') || response.message==GetMessage('Cuil not existing in DB')){
                 setInitialData(false)
                 setFormState((prev:any) => ({ ...prev, error: '' }));
               }

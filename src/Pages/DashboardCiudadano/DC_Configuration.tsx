@@ -95,7 +95,7 @@ export const DC_Configuration = () => {
       <hr/>
       <FieldGrid className="FlexSwitchMobile gap-4">
       <NavigatorSpacer/>
-      {userRol[0].level==3?<></>:<Link to="/NameChange"><Button color="gray">Cambiar Nombre</Button></Link>}
+      {userRol[0].level==3?<></>:<Link to="NameChange"><Button color="gray">Cambiar Nombre</Button></Link>}
       <Link to="/RestaurarPassword"><Button>Solicitar cambio de Contraseña <AiOutlineArrowRight/></Button></Link>
       </FieldGrid>
 

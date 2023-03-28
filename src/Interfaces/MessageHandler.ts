@@ -11,6 +11,7 @@ export const Messages: {[key: string]:string} = {
   'email validation still pending': 'Debes verificar tu email antes de poder iniciar sesión.',
 
   'User not found': 'El CUIL ingresado no pertecene a ningun usuario registrado.',
+  'Cuil not existing in DB': 'El CUIL ingresado no pertecene a ningun usuario registrado.',
   'Email sent': 'Mail Enviado | Por favor aguarda | ',
   'Email already sent': 'Ya se te ha enviado un correo para reestablecer tu contraseña | Por favor aguarda | ',
   'Bad validation code': 'El Token suministrado es invalido.',

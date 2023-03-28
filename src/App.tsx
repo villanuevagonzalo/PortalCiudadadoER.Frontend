@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Router, Routes } from 'react-router-dom';
 import { ErrorPage } from './Pages/ErrorPage';
 import { LoginPage } from './Pages/Auth/AuthLogin';
 import { PublicRoute, PrivateRoute } from './Routes/PrivateRoute';
@@ -23,43 +23,37 @@ import { DC_NameChange } from './Pages/DashboardCiudadano/DC_NameChange';
 import { RegisterPage } from './Pages/Auth/AuthRegister';
 import { EmailValidate } from './Pages/Auth/EmailValidate';
 
-const REACTENV = process.env
-
 export const App = () => {
   
   const { CheckToken } = useContext(AuthContext);
 
   useEffect(CheckToken,[])
   
-  return (//PUBLIC_URL
+  return (
     <Routes>
-      <Route path={REACTENV.PUBLIC_URL+"/"}>
-        <Route element={<PublicRoute><DefaultLayout /></PublicRoute>}>
-          <Route index element={<LoginPage />} />
-          <Route path="Inicio" element={<LoginPage />} />
-          <Route path="Ingresar" element={<LoginPage />} />
-          <Route path="Registro" element={<RegisterPage />} />
-          <Route path="EmailVerification" element={<EmailReValidation />}/>
-        </Route>
-        <Route element={<DefaultLayout />}>
-          <Route path="*" element={<ErrorPage />}/>
-          <Route path="ValidarCorreo" element={<EmailValidate />} />
-          <Route path="RestaurarPassword" element={<PasswordRestaurar />} />
-          <Route path="PasswordReset" element={<PasswordUpdate />} />
-          <Route path="AutenticarToken" element={<AutenticarToken />} />
-        </Route>
-        <Route element={<PrivateRoute><DashboardCiudadanoLayout /></PrivateRoute>}>
-          <Route path="Dashboard" element={<DC_Home />} />
-          <Route path="Dashboard/Config" element={<DC_Configuration />} />
-          <Route path="Dashboard/Config/EmailChange" element={<DC_EmailChange />} />
-          <Route path="ChangeNewEmail" element={<DC_EmailChangeValidate />} />
-          <Route path="NameChange" element={<DC_NameChange />} />
-          <Route path="Dashboard/Notificaciones" element={<DashBoard_Notificaciones />} />
-          <Route path="Dashboard/MisTramites" element={<MisTramites />} />
-          <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
-        </Route>
-        <Route element={<PrivateRoute><DashboardActorLayout /></PrivateRoute>}>
-        </Route>
+      <Route element={<PublicRoute><DefaultLayout /></PublicRoute>}>
+        <Route index element={<LoginPage />} />
+        <Route path="Inicio" element={<LoginPage />} />
+        <Route path="Ingresar" element={<LoginPage />} />
+        <Route path="Registro" element={<RegisterPage />} />
+        <Route path="EmailVerification" element={<EmailReValidation />}/>
+      </Route>
+      <Route element={<DefaultLayout />}>
+        <Route path="*" element={<ErrorPage />}/>
+        <Route path="ValidarCorreo" element={<EmailValidate />} />
+        <Route path="RestaurarPassword" element={<PasswordRestaurar />} />
+        <Route path="PasswordReset" element={<PasswordUpdate />} />
+        <Route path="AutenticarToken" element={<AutenticarToken />} />
+      </Route>
+      <Route element={<PrivateRoute><DashboardCiudadanoLayout /></PrivateRoute>}>
+        <Route path="Dashboard" element={<DC_Home />} />
+        <Route path="Dashboard/Config" element={<DC_Configuration />} />
+        <Route path="Dashboard/Config/EmailChange" element={<DC_EmailChange />} />
+        <Route path="ChangeNewEmail" element={<DC_EmailChangeValidate />} />
+        <Route path="Dashboard/Config/NameChange" element={<DC_NameChange />} />
+        <Route path="Dashboard/Notificaciones" element={<DashBoard_Notificaciones />} />
+        <Route path="Dashboard/MisTramites" element={<MisTramites />} />
+        <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
       </Route>
     </Routes>
   );

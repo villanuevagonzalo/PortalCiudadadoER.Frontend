@@ -6,10 +6,12 @@ import AuthContextProvider from './Contexts/AuthContext';
 import reportWebVitals from './reportWebVitals';
 import './Styles/style.css';
 
+const REACTENV = process.env
+
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <BrowserRouter>
+      <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
         <App />
       </BrowserRouter>
     </AuthContextProvider>

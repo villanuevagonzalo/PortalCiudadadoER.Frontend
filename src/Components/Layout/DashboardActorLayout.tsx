@@ -37,7 +37,7 @@ export const DashboardActorLayout = () => {
   return (<>
     <LayoutHeader>{matches?<>
       <NavigatorSpacer /> 
-      <Link to="Dashboard/Config" onClick={switchmenu}><RoundedButton>
+      <Link to="/Dashboard/Config" onClick={switchmenu}><RoundedButton>
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
@@ -81,7 +81,7 @@ export const DashboardActorLayout = () => {
           <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
           <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
 
-          <Link to="Dashboard/Config" className="w-full" onClick={switchmenu}><Button color="maincolor">
+          <Link to="/Dashboard/Config" className="w-full" onClick={switchmenu}><Button color="maincolor">
             Mi Perfil
           </Button></Link>
 

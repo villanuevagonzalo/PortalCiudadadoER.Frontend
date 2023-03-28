@@ -39,17 +39,17 @@ export const DashboardCiudadanoLayout = () => {
   return (<>
     <LayoutHeader mobile={mobile}>{mobile?<>
       <div>{open?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}</div>
-      <Link to="Dashboard/" onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
-      {/*<Link to="Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link> */}
-      <Link to="Dashboard/Config" onClick={closemenu}><BiUserCircle /></Link>
+      <Link to="/Dashboard/" onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
+      {/*<Link to="/Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link> */}
+      <Link to="/Dashboard/Config" onClick={closemenu}><BiUserCircle /></Link>
     </>:<>
       <LayoutHeaderSpacer/>
-      <Link to="Dashboard/Tramites"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
-      <Link to="Dashboard/Config"><RoundedButton>
+      <Link to="/Dashboard/Tramites"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
+      <Link to="/Dashboard/Config"><RoundedButton>
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
-      <Link to="Dashboard/Notificaciones" className="button"><MdNotificationsNone/></Link>
+      <Link to="/Dashboard/Notificaciones" className="button"><MdNotificationsNone/></Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>
@@ -86,16 +86,16 @@ export const DashboardCiudadanoLayout = () => {
       </LayoutSidebar>
       <LayoutBody mobile={mobile}>
         {mobile?<LayoutRow>
-          <Link to="Dashboard/Tramites" className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
-          {/*<Link to="Dashboard/Notificaciones"><Button color="secondary"><MdNotificationsNone className="mr-1"/></Button></Link>*/}
+          <Link to="/Dashboard/Tramites" className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
+          {/*<Link to="/Dashboard/Notificaciones"><Button color="secondary"><MdNotificationsNone className="mr-1"/></Button></Link>*/}
         </LayoutRow>:<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===1?
-          <Link to="Dashboard/Config">
+          <Link to="/Dashboard/Config">
             <LayoutAlert>Completa tus datos en la sección de <b>Mi Perfil</b> para alcanzar el nivel 2 de validación.</LayoutAlert>
           </Link>
         :<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===2?
-          <Link to="Dashboard/Config">
+          <Link to="/Dashboard/Config">
             <LayoutAlert>Vincula alguna Aplicación en la sección de <b>Mi Perfil</b> para alcanzar el nivel 3 de validación.</LayoutAlert>
           </Link>
         :<></>}
