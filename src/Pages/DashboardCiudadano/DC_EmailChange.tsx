@@ -71,7 +71,7 @@ export const DC_EmailChange = () => {
       </>}
       <hr className=''/>
       <FieldGrid className="FlexSwitchForms">
-        <Link to="/../Dashboard/Config"><Button disabled={FormState.loading || errors.length>1} color="gray">
+        <Link to="/Dashboard/Config"><Button disabled={FormState.loading || errors.length>1} color="gray">
               <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Mi Perfil</b>                                
           </Button></Link>
         <NavigatorSpacer/>
