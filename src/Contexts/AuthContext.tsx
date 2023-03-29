@@ -140,16 +140,11 @@ const ContextValues = () => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:IResponse | any = await AxiosAuthAPI.UserNameChange(data);
-
     if(response.status){
-      setFormState((prev:any) => ({ ...prev, error: "" }));
+      setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
+      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
-      if(response.message=="Data changed"){
-        setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
-        setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-      } else{
-        setFormState((prev:any) => ({ ...prev, error: response.message }));
-      }
+      setFormState((prev:any) => ({ ...prev, error: response.message }));
     }
 
     setFormState((prev:any) => ({ ...prev, loading: false }));

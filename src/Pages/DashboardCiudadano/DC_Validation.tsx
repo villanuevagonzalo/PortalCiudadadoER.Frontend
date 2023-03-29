@@ -106,7 +106,7 @@ export const DC_Validation = () => {
           <h2>Usted no ha completado su información adicional.</h2>
         </div>
         <div>
-          <Button color="error" onClick={handleValidation2}>Completar<br/>Información</Button>
+        <Link to="/Dashboard/Config"><Button color="error">Completar<br/>Información</Button></Link>
         </div>
       </LayoutListItem>}
       {userRol[0].level>2?
