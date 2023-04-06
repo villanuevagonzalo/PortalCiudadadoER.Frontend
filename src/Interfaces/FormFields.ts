@@ -72,13 +72,12 @@ export const FormFields:FieldProps = {
         placeholder: 'Reingresa tu email',
         validations: yup.string()
                         .required('El campo es obligatorio')
-                        .email('Debe ser un email válido')
                         .oneOf([yup.ref('Email')],'Los emails no coinciden')
     },
 
     Password:{
         type: 'password',
-        defaultvalue: 'Test123.',
+        defaultvalue: '', // 'Test123.',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -101,7 +100,7 @@ export const FormFields:FieldProps = {
 
     Password_Validation:{
         type: 'password',
-        defaultvalue: 'Test123.',
+        defaultvalue: '', // 'Test123.',
         placeholder: 'Reingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')
@@ -150,10 +149,14 @@ export const FormFields:FieldProps = {
 
     Birthdate:{
         type: 'date',
-        defaultvalue: '',
+        defaultvalue: null,
         placeholder: 'Ingresa tu fecha de nacimiento',
         validations: yup.date()
                         .required('El campo es obligatorio')
+                        .min(new Date(new Date().getFullYear() - 120, new Date().getMonth(), new Date().getDate()), 
+                            'La fecha de nacimiento no puede tener mas de 120 años')
+                        .max(new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()),
+                            'La fecha de nacimiento debe tener por lo menos 1 año.')
     },
 
     Locality:{

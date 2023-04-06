@@ -21,8 +21,6 @@
     "jsx": "preserve"
   },
   "include": [
-    "src",
-    "../old/Home/Home.test.tsx",
-    "../old/Home"
+    "src"
   ]
 }

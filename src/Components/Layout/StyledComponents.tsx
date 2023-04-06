@@ -37,7 +37,6 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
 `;
 
 export const LayoutHeaderSpacer = styled.div<{  }>`
-
   min-width: 376px;
   flex:1;
   height:10px;
@@ -178,6 +177,25 @@ export const LayoutOverlay = styled.div<{ visible?: boolean }>`
 `;
 
 // COMMON ELEMENTS
+
+export const LayoutStackedPanel = styled.div<{ vertical?:true }>`
+  display:flex;
+  gap:1rem;
+  width:100%;
+  flex-direction: ${props => props.hasOwnProperty('vertical')?'column':'row'};
+  @media (max-width: 720px) {
+    flex-direction: column;
+    gap:0;
+  }
+`;
+
+export const LayoutSpacer = styled.div`
+  flex:1;
+  @media (max-width: 720px) {
+    display:none;
+  }
+`;
+
 
 export const LayoutCenterBox = styled.div<{ maxwidth?: string }>`
   margin:0 auto;

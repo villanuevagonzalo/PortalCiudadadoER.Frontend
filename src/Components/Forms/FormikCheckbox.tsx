@@ -1,8 +1,7 @@
 import { ErrorMessage, getIn, useField, useFormikContext } from "formik";
-import { InputWrapper, FormWrapperCheckbox } from "../Elements/StyledComponents";
+import { FormWrapperCheckbox } from "./StyledComponents";
 import { FormFields } from "../../Interfaces/FormFields";
-import { useEffect, useState } from "react";
-import { AiOutlineCheckCircle, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 import { MdRadioButtonUnchecked } from "react-icons/md";
 
 interface Props{

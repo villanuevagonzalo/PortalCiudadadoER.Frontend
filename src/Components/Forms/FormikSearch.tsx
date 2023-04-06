@@ -1,9 +1,10 @@
 import { ErrorMessage, getIn, useField, useFormikContext,  } from "formik";
-import { FormError, FormWrapperInput, FormWrapperSearch, Spinner } from "../Elements/StyledComponents";
+import { Spinner } from "../Elements/StyledComponents";
 import { FormFields } from "../../Interfaces/FormFields";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { CapitalizeWords } from "../../Utils/General";
+import { FormError, FormWrapper, FormWrapperInput } from "./StyledComponents";
 
 interface Props{
   name: string;
@@ -78,11 +79,11 @@ export const FormikSearch = ({...props}: Props) => {
   }, [field.value])
   
 
-  return (<>
-    <FormWrapperSearch error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} >
+  return (<FormWrapper {...props}>
+    <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} >
       <div>
-        <input type={fieldprops.type} autoFocus={props.autoFocus} {...field} {...props} onFocus={handleFocus} onBlurCapture={handleBlur} onChangeCapture={handleChange} onKeyDown={handleKeys}/>
         <label>{props.label?props.label:fieldprops.placeholder}</label>
+        <input type={fieldprops.type} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlurCapture={handleBlur} onChangeCapture={handleChange} onKeyDown={handleKeys}/>
         <div className="FormIcon">{props.disabled?<Spinner color="gray" />:<FaSearch className="w-4 mr-1"/>}</div>
       </div>
       {(ListData.length>0)?<div className="FormDropdown">
@@ -90,7 +91,7 @@ export const FormikSearch = ({...props}: Props) => {
           <div dangerouslySetInnerHTML={{__html:parseItem(item, field.value)}} onMouseDown={()=>handleClick(item)} key={index} className={ListDataIndex==index?'active':''}/>
         ))}
       </div>:<></>}
-    </FormWrapperSearch>
+    </FormWrapperInput>
     <ErrorMessage name={props.name} component={FormError}/>
-  </>)
+  </FormWrapper>)
 }

@@ -41,7 +41,6 @@ export function FormikStepper({ children, FormState2, extraHTML, ...props }:Form
     }
   }, [FormState.changing])
 
-
   return (
     <Formik
       {...props}
@@ -82,4 +81,4 @@ export function FormikStepper({ children, FormState2, extraHTML, ...props }:Form
       )}
     </Formik>
   );
-                }
+}

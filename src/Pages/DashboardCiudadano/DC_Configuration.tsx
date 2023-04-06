@@ -2,23 +2,23 @@ import { Form, Formik } from "formik";
 import moment from "moment";
 import * as yup from 'yup';
 import { useContext, useEffect, useState } from "react";
-import { AiOutlineArrowRight, AiOutlineCheckCircle } from "react-icons/ai";
+import { AiOutlineArrowRight } from "react-icons/ai";
 import { BiData, BiUserCircle } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import {  NavigatorSpacer, Spinner } from "../../Components/Elements/StyledComponents"
-import { Button } from "../../Components/Forms/Button";
+import { Spinner } from "../../Components/Elements/StyledComponents"
 import { FormikField } from "../../Components/Forms/FormikField";
 import { FormikFieldDummy } from "../../Components/Forms/FormikFieldDummy";
 import { FormikSearch } from "../../Components/Forms/FormikSearch";
-import { FieldGrid, LayoutTitle, LayoutSection, LayoutGridItem, LayoutListItem } from "../../Components/Layout/StyledComponents";
+import { LayoutTitle, LayoutSection, LayoutStackedPanel, LayoutSpacer } from "../../Components/Layout/StyledComponents";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { ILocation } from "../../Interfaces/Data";
 import { formGetValidations } from "../../Interfaces/FormFields";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath } from "../../Utils/Locations"
-import { BsBookmark, BsBookmarkCheck, BsBookmarkPlus, BsBookmarkStar, BsBookmarkX } from "react-icons/bs";
-
+import { FormikButton } from "../../Components/Forms/FormikButton";
+import { Button } from "../../Components/Forms/Button";
+import { DC_Validation } from "./DC_Validation";
 
 const FormRequiredFields = [
   'Cellphone',
@@ -33,24 +33,8 @@ export const DC_Configuration = () => {
 
   const { userData, userContact, userRol, SaveData, AFIP_getURL } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
-  const [ ValidationFormState, setValidationFormState ] = useState<IFormState>(DefaultFormState);
   const [ LocationsValues, setLocationsValues ] = useState< ILocation[]>([]);
   const [ FieldValues, setFieldValues ] = useState<any>(null);
-
-  const handleValidation2 = async () => {
-    
-  }
-  
-  const handleValidation3 = async () => {
-    const Response = await AFIP_getURL({
-      cuil: userData.cuil
-    }, setValidationFormState);
-
-    if(Response.status){
-      window.open(Response.response.data, '_blank');
-      //window.location = Response.response.data;
-    }
-  }
 
   useEffect(() => {
     if(userContact){
@@ -68,10 +52,11 @@ export const DC_Configuration = () => {
       console.log(e)
     })
 
-    if(userContact){   
+    if(userContact){
+      let ConvertedBirthdate = moment(userContact.BIRTHDAY).format("YYYY-MM-DD")
       setFieldValues({
         "Cellphone": userContact.CELLPHONE_NUMBER,
-        "Birthdate": moment(userContact.BIRTHDAY).format("YYYY-MM-DD"),
+        "Birthdate": ConvertedBirthdate=='Invalid date'?'':ConvertedBirthdate,
         "Locality": "",
         "AddressStreet": userContact.ADDRESS_STREET,
         "AddressNumber": userContact.ADDRESS_NUMBER,
@@ -85,26 +70,26 @@ export const DC_Configuration = () => {
     <LayoutTitle>
       Mi Perfil
     </LayoutTitle>
-    <LayoutSection className="">
+    <LayoutSection>
       <h1><BiUserCircle />Datos Personales</h1>
-      <FieldGrid className="FlexSwitchForms gap-4">
+      <LayoutStackedPanel>
         <FormikFieldDummy name="CUIL" value={userData.cuil}/>
         <FormikFieldDummy name="Name" value={userData.name}/>
         <FormikFieldDummy name="LastName" value={userData.last_name}/>
-      </FieldGrid>
-      <hr/>
-      <FieldGrid className="FlexSwitchMobile gap-4">
-      <NavigatorSpacer/>
-      {userRol[0].level==3?<></>:<Link to="NameChange"><Button color="gray">Cambiar Nombre</Button></Link>}
-      <Link to="/RestaurarPassword"><Button>Solicitar cambio de Contraseña <AiOutlineArrowRight/></Button></Link>
-      </FieldGrid>
+      </LayoutStackedPanel>
+      <hr className="-mt-4 mb-2"/>
+      <LayoutStackedPanel>
+        <LayoutSpacer/>
+        {userRol[0].level==3?<></>:<Link to="NameChange"><FormikButton color="gray">Cambiar Nombre</FormikButton></Link>}
+        <Link to="/RestaurarPassword"><FormikButton>Solicitar cambio de Contraseña <AiOutlineArrowRight/></FormikButton></Link>
+      </LayoutStackedPanel>
 
       <h1 className="mt-4"><BiData/>Información Adicional</h1>
       <h2>Información de Contacto</h2>
-      <FieldGrid className="FlexSwitchForms gap-4 -mt-2 mb-2">
-      <FormikFieldDummy name="Email" value={userData.email}/>
-      <Link to="EmailChange"><Button>Solicitar cambio de Email <AiOutlineArrowRight/></Button></Link>
-      </FieldGrid>
+      <LayoutStackedPanel className="-mt-2">
+        <FormikFieldDummy name="Email" value={userData.email} className="flex-1"/>
+        <Link to="EmailChange"><Button>Solicitar cambio de Email <AiOutlineArrowRight/></Button></Link>
+      </LayoutStackedPanel>
       {(FieldValues)?<Formik
         initialValues={FieldValues}
         enableReinitialize={true}
@@ -130,99 +115,19 @@ export const DC_Configuration = () => {
         <FormikField name="Cellphone" disabled={FormState.loading}/>
         <h2 className="mt-4">Datos de Ubicación</h2>
         <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length==0} data={LocationsFullPath(LocationsValues)}/>
-        <FieldGrid className="FlexSwitchForms">
+        <LayoutStackedPanel>
           <FormikField name="AddressStreet" disabled={FormState.loading} className="flex-3"/>
           <FormikField name="AddressNumber" disabled={FormState.loading}/>
           <FormikField name="Apartment" disabled={FormState.loading}/>
-        </FieldGrid>
+        </LayoutStackedPanel>
         <h2 className="">Otros Datos Personales</h2>
         <FormikField name="Birthdate" disabled={FormState.loading}/>
-        <FieldGrid className="FlexSwitchForms">
-          <NavigatorSpacer/>
-          <div><Button disabled={false} type="submit">{FormState.loading ? <Spinner /> : "Guardar Cambios"}</Button></div>
-        </FieldGrid>
+        <LayoutStackedPanel>
+          <LayoutSpacer/>
+          <div><FormikButton disabled={false} type="submit">{FormState.loading ? <Spinner /> : "Guardar Cambios"}</FormikButton></div>
+        </LayoutStackedPanel>
       </Form></Formik>:<Spinner color="primary"/>}
     </LayoutSection>
-    <LayoutTitle>
-      Niveles de Usuario
-    </LayoutTitle>
-    <LayoutSection>
-      <LayoutListItem color="gray" className="FlexSwitchMobile">
-        <div className="ListItemIcon"><BsBookmarkCheck/></div>
-        <div className="flex-1">
-          <h1><b className="mr-2 ">Nivel 1 </b> Básico</h1>
-          <h2>Usted ha validado su cuenta por medio de su correo electrónico.</h2>
-        </div>
-      </LayoutListItem>
-      {userRol[0].level>1?<LayoutListItem color="primary" className="FlexSwitchMobile">
-        <div className="ListItemIcon"><BsBookmarkPlus/></div>
-        <div className="flex-1">
-          <h1><b className="mr-2">Nivel 2</b> Intermedio</h1>
-          <h2>Usted ha completado su información adicional.</h2>
-        </div>
-      </LayoutListItem>:<LayoutListItem color="error" className="FlexSwitchMobile">
-        <div className="ListItemIcon"><BsBookmarkX/></div>
-        <div className="flex-1">
-          <h1><b className="mr-2">Nivel 2</b> Datos Personales</h1>
-          <h2>Usted no ha completado su información adicional.</h2>
-        </div>
-        <div>
-          <Button color="error" onClick={handleValidation2}>Completar<br/>Información</Button>
-        </div>
-      </LayoutListItem>}
-      {userRol[0].level>2?
-      <LayoutListItem color="secondary" className="FlexSwitchMobile">
-        <div className="ListItemIcon"><BsBookmarkStar/></div>
-        <div className="flex-1">
-          <h1><b className="mr-2">Nivel 3</b> Por Aplicación</h1>
-          <h2>Usted ha terminado de validar su indentidad.</h2>
-        </div>
-      </LayoutListItem>:(userRol[0].level>1? <LayoutListItem color="error" className="FlexSwitchMobile">
-        <div className="ListItemIcon"><BsBookmarkX/></div>
-        <div className="flex-1">
-          <h1><b className="mr-2">Nivel 3</b> Por Aplicación</h1>
-          <h2>Usted no ha terminado de validar su indentidad.</h2>
-        </div>
-
-        <div>
-          <Button color="error" onClick={handleValidation3} disabled={ValidationFormState.loading}>{ValidationFormState.loading ? <Spinner /> : "Validar por AFIP"}</Button>
-        </div>
-      </LayoutListItem>:<LayoutListItem color="disabled">
-        <div className="ListItemIcon"><BsBookmark/></div>
-        <div className="flex-1">
-          <h1><b className="mr-2">Nivel 3</b>. Por Aplicación</h1>
-          <h2>Usted no ha completado su información adicional.</h2>
-        </div>
-      </LayoutListItem>)}
-    </LayoutSection>
-  </>)
+    <DC_Validation />
+  </>);
 }
-
-
-/*
-
-
-<Formik
-        initialValues={FieldValues}
-        enableReinitialize={true}
-        validateOnChange={false}
-        validateOnBlur={false}
-        validationSchema={formGetValidations(FormRequiredFields)}
-        onSubmit={async (values: any) => {
-          
-        }}
-      >
-        <Form autoComplete="off">
-          <FieldGrid className="FlexSwitchForms">
-            <FormikField name="Cellphone" disabled={FormState.loading}/>
-            <FormikField name="Birthdate" disabled={FormState.loading}/>
-          </FieldGrid>
-          <FormikField name="DepartmentID"/>
-          <LayoutColumns className="gap-4">
-            <NavigatorSpacer/><NavigatorSpacer/>
-            <Button  disabled={FormState.loading}>Guardar Cambios</Button>
-          </LayoutColumns>
-        </Form>
-      </Formik>
-
-*/

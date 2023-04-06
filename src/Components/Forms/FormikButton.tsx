@@ -1,11 +1,12 @@
-import { FormWrapperButton } from "./StyledComponents"
+import { FormWrapper, FormWrapperButton } from "./StyledComponents"
 
-export const Button = (props: any) => {
+export const FormikButton = (props: any) => {
 
-    return (<>
+    return (
+      <FormWrapper className={props.className}>
         <FormWrapperButton size={props.size} color={props.color} fullwidth={props.fullwidth?props.fullwidth:true} {...props} >
             {props.children}
         </FormWrapperButton>
-    </>
+    </FormWrapper>
     )
 }

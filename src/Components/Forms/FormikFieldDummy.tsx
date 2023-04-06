@@ -1,13 +1,10 @@
-import { ErrorMessage, getIn, useField, useFormikContext } from "formik";
-import { FormWrapperInput, InputWrapper, InputWrapper2 } from "../Elements/StyledComponents";
+import { FormWrapper, FormWrapperInput } from "./StyledComponents";
 import { FormFields } from "../../Interfaces/FormFields";
-import { useEffect, useState } from "react";
-import { AiOutlineCheckCircle, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import { MdRadioButtonUnchecked } from "react-icons/md";
 
 interface Props{
     name: string;
     value?: any;
+    className?: string;
 }
 
 export const FormikFieldDummy = ({...props}: Props) => {
@@ -15,9 +12,11 @@ export const FormikFieldDummy = ({...props}: Props) => {
     const fieldprops = FormFields[props.name] ?? FormFields.Default
  
     return (
+      <FormWrapper className={props.className} dummy={true}>
         <FormWrapperInput focus={true} dummy={true}>
             <input type={fieldprops.type} {...props} disabled/>
             <label>{fieldprops.label}</label>
         </FormWrapperInput>
+      </FormWrapper>
     )
 }

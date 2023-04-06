@@ -1,6 +1,6 @@
 import { useField, useFormikContext } from "formik";
 import ReCAPTCHA from "react-google-recaptcha";
-import { CaptchaWrapper } from "../Elements/StyledComponents";
+import { CaptchaWrapper } from "./StyledComponents";
 
 interface Props{
   name: string;
