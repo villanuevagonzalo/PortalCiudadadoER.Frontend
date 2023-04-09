@@ -26,6 +26,9 @@ yarn-error.log*
 cert.pem
 key.pem
 
+package-lock.json
+pnpm-lock.yaml
+
 # firebase.json
 # .firebaserc
 # .firebase

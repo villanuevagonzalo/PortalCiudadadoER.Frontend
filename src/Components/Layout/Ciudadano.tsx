@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, RoundedButton } from "./StyledComponents";
+import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton } from "./StyledComponents";
 import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -13,18 +13,15 @@ import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
-import { BsBookmarkCheck } from "react-icons/bs";
 
 
 const navigation = [
   { name: 'Inicio', icon: RiLayout4Fill, href: 'Dashboard/' },
   { name: 'Mis Trámites', icon: FaClipboardList, href: 'Dashboard/MisTramites' },
-  { name: 'Notificaciones', icon: BiNotification, href: 'Dashboard/Notificaciones' },
-  { name: 'Mi Perfil', icon: IoIosSettings, href: 'Dashboard/Config' },
-  { name: 'Validaciones', icon: BsBookmarkCheck, href: 'Dashboard/Validations' }
+  { name: 'Notificaciones', icon: BiNotification, href: 'Dashboard/Notificaciones' }
 ]
 
-export const DashboardCiudadanoLayout = () => {
+export const LayoutCiudadano = () => {
 
   const isSmallResolution = useMediaQuery('(max-width: 1024px)');
   const [ mobile, setMobile ] = useState<boolean>(isSmallResolution);
@@ -57,11 +54,8 @@ export const DashboardCiudadanoLayout = () => {
 
     <LayoutContainer>
       <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
-      <LayoutSidebar mobile={mobile} open={open}>
+      <LayoutSidebar collapsable mobile={mobile} open={open}>
         {mobile?<></>:<>
-          <LayoutColumns className="mb-8">
-            <LogoER width="150px" />
-          </LayoutColumns>
           <LayoutCenterBox maxwidth="400px" className="pb-6">
             <LogoCiudadanoDigital/>
           </LayoutCenterBox>
@@ -82,15 +76,17 @@ export const DashboardCiudadanoLayout = () => {
         <Card>
           <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
           <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
-          <Button color="maincolor" onClick={Logout}>
+          <Link to="/Dashboard/Config"><Button color="maincolor">
+          <IoIosSettings/>Mi perfil<LayoutSpacer/>
+          </Button></Link>
+        </Card>
+        <Button color="primary" onClick={Logout} className="mt-4">
               Cerrar Sesión
           </Button>
-        </Card>
       </LayoutSidebar>
       <LayoutBody mobile={mobile}>
         {mobile?<LayoutRow>
           <Link to="/Dashboard/Tramites" className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
-          {/*<Link to="/Dashboard/Notificaciones"><Button color="secondary"><MdNotificationsNone className="mr-1"/></Button></Link>*/}
         </LayoutRow>:<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===1?
           <Link to="/Dashboard/Config">

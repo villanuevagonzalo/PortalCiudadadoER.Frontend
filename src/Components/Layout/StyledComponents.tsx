@@ -48,7 +48,48 @@ export const LayoutContainer = styled.div<{  }>`
   min-height: 100%;
 `;
 
-export const LayoutSidebar = styled.div<{ open?: boolean, mobile?:boolean }>`
+
+export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean, mobile?:boolean }>`
+  align-items: center;
+  align-self: top;
+  padding:2rem;
+  background: var(--maincolor);
+  box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
+  z-index:100;
+  transition: all .1s ease-in;
+  overflow:hidden;
+  min-width:360px;
+
+  @media (min-width: 720px) {
+    max-width:400px;
+  }
+
+  & form{
+    max-width:400px;
+    margin:0 auto;
+
+    & button{
+      margin-bottom:0.75rem!important;
+    }
+  }
+
+  ${props => props.mobile?`
+    margin-right: ${props.open?'-360px':'0'}!important;
+    width: ${props.open?'360px':'0px'}!important;
+    min-width: ${props.open?'360px':'0px'};
+    padding: ${props.open?'1rem':'0'};
+
+    & form{
+      max-width:296px;
+    }
+  `:`
+    margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
+    min-width: 360px;
+  `}
+`
+
+
+export const LayoutSidebar2 = styled.div<{ open?: boolean, mobile?:boolean }>`
   align-items: center;
   align-self: top;
   padding:2rem;
@@ -62,7 +103,11 @@ export const LayoutSidebar = styled.div<{ open?: boolean, mobile?:boolean }>`
     margin-right: ${props.open?'-360px':'0'}!important;
     width: ${props.open?'360px':'0px'}!important;
     min-width: ${props.open?'360px':'0px'};
-    padding: ${props.open?'1rem':'0'};  
+    padding: ${props.open?'1rem':'0'};
+
+    & form{
+      max-width:296px;
+    }
   `:`
     margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
     min-width: 360px;
@@ -311,6 +356,7 @@ export const LayoutGridItem = styled.div<{ }>`
     align-items: center;
   }
 `;
+
 export const LayoutListItem = styled.div<{ color?:string, disabled?:boolean }>`
   display:flex;
   width:100%;
@@ -381,10 +427,10 @@ export const RoundedButton = styled.div<{ }>`
   align-self: center;
   border:2px solid var(--gray_tint2);
   display:flex;
-  font-size: 1rem;
+  font-size: 0.9rem;
   gap: 0.25rem;
-  padding:0.25rem 0.25rem 0.25rem 1rem;
-  border-radius:2rem;
+  padding:0.25rem 0.25rem 0.25rem 0.75rem;
+  border-radius:0.5rem;
   font-weight:600;
   color:var(--gray_tint);
   margin-right:-0.25rem;

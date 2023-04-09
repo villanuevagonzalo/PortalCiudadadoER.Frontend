@@ -30,8 +30,6 @@ export const PasswordRestaurar = () => {
   let errors = FormState.error.split(' | ')
 
   return (<>
-    <LayoutSidebar>
-      <LayoutSidebarLogos/>
       <DivTitle className="mt-5">Restablecer Contraseña</DivTitle>
       {FormState.finish?<>
         <DivOutlined className="mt-4 flex-col" color="secondary">
@@ -81,9 +79,5 @@ export const PasswordRestaurar = () => {
           </Button>
         </Link>
       }
-    </LayoutSidebar>
-    <MainContainer>
-        <Descripcion />
-    </MainContainer>
   </>);
 };

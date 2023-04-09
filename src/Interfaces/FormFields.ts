@@ -144,6 +144,7 @@ export const FormFields:FieldProps = {
         defaultvalue: '',
         placeholder: 'Ingresa tu numero de telefono',
         validations: yup.string()
+                        .test('numbers', 'El campo debe tener un numero valido', value => !value || /^[0-9]+$/.test(value))
                         .required('El campo es obligatorio')
     },
 
@@ -180,6 +181,7 @@ export const FormFields:FieldProps = {
         defaultvalue: '',
         placeholder: 'Numero',
         validations: yup.string()
+                        .test('lessThanTen', 'El campo debe tener un numero valido', value => !value || Number(value) > 0)
                         .required('El campo es obligatorio')
     },
 

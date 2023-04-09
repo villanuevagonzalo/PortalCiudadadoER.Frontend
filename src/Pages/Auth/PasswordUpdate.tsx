@@ -28,8 +28,6 @@ export const PasswordUpdate = () => {
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
 
   return (<>
-  <LayoutSidebar>
-    <LayoutSidebarLogos/>
     {FormState.finish ? <>
       <DivTitle className="mt-5">Restablecer Contraseña</DivTitle>
       <DivOutlined className="mt-4 flex-col" color="primary">
@@ -106,9 +104,5 @@ export const PasswordUpdate = () => {
         Iniciar Sesión
       </Button></Link>}
     </>}
-  </LayoutSidebar>
-  <MainContainer>
-      <Descripcion />
-  </MainContainer>
   </>)
 }

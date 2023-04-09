@@ -27,8 +27,6 @@ export const EmailReValidation = () => {
   let errors = FormState.error.split(' | ');
 
   return (<>
-    <LayoutSidebar>
-      <LayoutSidebarLogos/>
       <DivTitle className="mt-5">Validación de Correo</DivTitle>
       {FormState.finish?<>
         <DivOutlined className="mt-4 flex-col" color="secondary">
@@ -72,9 +70,5 @@ export const EmailReValidation = () => {
           Iniciar Sesión
         </Button>
       </Link>
-    </LayoutSidebar>
-    <MainContainer>
-        <Descripcion />
-    </MainContainer>
   </>);
 }

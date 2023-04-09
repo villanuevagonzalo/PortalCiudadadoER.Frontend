@@ -2,6 +2,7 @@
 
 import _ from 'lodash';
 import { useSearchParams } from 'react-router-dom'
+import CryptoJS from 'crypto-js'
 
 export const CapitalizeWords = (sentence: string) =>
   sentence
@@ -95,12 +96,34 @@ export const multiGroupBy:any = (seq:any[], keys:string[]) => {
   });
 };
 
+var key  = CryptoJS.enc.Hex.parse("27c69b41b5fe49aaa984e472d4aeaa5b");
+var iv   = CryptoJS.enc.Hex.parse("17c69b41b5fe49aaa984e472d4aeaa5a");
+
+const Encrypt = (str: string) => CryptoJS.AES.encrypt(str, key, {iv}).toString();
+const Decrypt = (str: string) => CryptoJS.AES.decrypt(str, key, {iv}).toString(CryptoJS.enc.Utf8);
+
 export const getLSData = (item:string) => {
-  const data:any = localStorage.getItem(item);
+  const data:any = Decrypt(localStorage.getItem(Encrypt(item)) || "") || null;
+  console.log(item, JSON.parse(data))
   return JSON.parse(data);
 }
 
 export const setLSData = (item:string, data:any) => {
+  localStorage.setItem(Encrypt(item), Encrypt(JSON.stringify(data)));
+  return data;
+}
+
+export const delLSData = (item:string) => {
+  localStorage.removeItem(Encrypt(item));
+}
+
+export const getLSData2 = (item:string) => {
+  const data:any = localStorage.getItem(item);
+  return JSON.parse(data);
+}
+
+export const setLSData2 = (item:string, data:any) => {
   localStorage.setItem(item, JSON.stringify(data));
   return data;
 }
+

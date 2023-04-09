@@ -1,10 +1,19 @@
 import { Outlet } from "react-router-dom"
-import { LayoutContainer } from "./StyledComponents"
+import { LayoutContainer, LayoutSidebar } from "./StyledComponents"
+import { MainContainer } from "../Elements/StyledComponents"
+import { LayoutSidebarLogos } from "./LayoutSidebarLogos"
+import { Descripcion } from "../Elements/Descripcion"
 
-export const DefaultLayout = () =>{
+export const LayoutDefault = () =>{
   return (
     <LayoutContainer className='FlexSwitchMobile'>
-      <Outlet></Outlet>
+      <LayoutSidebar>
+        <LayoutSidebarLogos/>
+        <Outlet></Outlet>
+      </LayoutSidebar>
+      <MainContainer>
+        <Descripcion />
+      </MainContainer>
     </LayoutContainer>
   )
 }

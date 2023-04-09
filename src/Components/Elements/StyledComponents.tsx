@@ -232,6 +232,17 @@ export const DivSubtitle = styled.div<{ open?: boolean }>`
   color: var(--${props => (props.color ? props.color : 'maincolor_text')});
   width:100%;
   margin-bottom:1rem;
+
+  & li{
+    
+    list-style: circle outside;
+    padding-left: 0.25rem;
+
+    & span{
+      margin-left:-0.25rem;
+    }
+    
+  }
 `;
 
 export const DivLabel = styled.div<{ open?: boolean }>`

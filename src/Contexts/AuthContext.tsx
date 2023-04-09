@@ -2,7 +2,7 @@ import moment from 'moment'
 import jwt_decode from "jwt-decode";
 import { createContext, FC, useState } from "react";
 
-import { getLSData, setLSData } from '../Utils/General';
+import { delLSData, getLSData, setLSData } from '../Utils/General';
 import { GetLevels } from "../Interfaces/UserLevels";
 import { AuthAPI } from "../Services/AuthAPI";
 
@@ -48,17 +48,18 @@ const ContextValues = () => {
     const CurrentUserData:IUserData = getLSData('UserData');
     const CurrentUserContact:IUserContact = getLSData('UserContact');
     const CurrentUserRol:IUserRol[] = getLSData('UserRol');
+    console.log('CHECKTOKEN ',CurrentToken)
     if(CurrentToken?.token){
-    let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
-    if( remainingTime > 0 ){
-      setIsLogged(true);
-      setAuthToken(CurrentToken);
-      setUserData(CurrentUserData);
-      setUserContact(CurrentUserContact);
-      setUserRol(CurrentUserRol);
-    } else{
-      Logout();
-    }
+      let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
+      if( remainingTime > 0 ){
+        setIsLogged(true);
+        setAuthToken(CurrentToken);
+        setUserData(CurrentUserData);
+        setUserContact(CurrentUserContact);
+        setUserRol(CurrentUserRol);
+      } else{
+        Logout();
+      }
     }
   }
   
@@ -70,10 +71,10 @@ const ContextValues = () => {
     setUserContact(DefaultUserContact);
     setUserRol(DefaultUserRol);
     
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("UserData");
-    localStorage.removeItem("UserContact");
-    localStorage.removeItem("UserRol");
+    delLSData("authToken");
+    delLSData("UserData");
+    delLSData("UserContact");
+    delLSData("UserRol");
   }
 
   const Signup = async (data:any, setFormState:Function) => {

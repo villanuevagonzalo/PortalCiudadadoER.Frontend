@@ -27,8 +27,6 @@ export const EmailValidate = () =>{
     }}, [])
 
     return(<>
-      <LayoutSidebar>
-        <LayoutSidebarLogos/>
         <br/><br/>
         {SearchParams.status?<>
             {FormState.loading?<>
@@ -83,9 +81,5 @@ export const EmailValidate = () =>{
               Volver al Inicio
           </Button></Link></form>
       </>}
-      </LayoutSidebar>
-      <MainContainer>
-        <Descripcion />
-      </MainContainer>
     </>)
 }

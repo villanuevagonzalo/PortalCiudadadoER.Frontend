@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import { formGetValidations, formGetInitialValues } from "../../Interfaces/FormFields";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
@@ -36,7 +36,6 @@ const AxiosAuthAPI = new AuthAPI();
 
 export const RegisterPage = () =>{
 
-  const ref:any = useRef(null);
   const { UserGetData, Signup } = useContext(AuthContext);
 
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -44,33 +43,21 @@ export const RegisterPage = () =>{
   
   const [InitialData, setInitialData] = useState<boolean>(false);
 
-  const setError = (errormessage:string) => setFormState(prev=>({...prev, error:errormessage}))
-
   return(<>
-    <LayoutSidebar>
-      <LayoutSidebarLogos/>
       {(FormState.finish && !FormState.error)?<>
         <DivTitle className="mt-5 mb-2">¡Bien Hecho!</DivTitle>
         <DivSubtitle className='text-center'>Revisa tu correo electronico para validar tu cuenta y terminar tu proceso de registro.</DivSubtitle>
         <br/>
         <form>
-        <DivLabel>¿Ya validaste tu correo electrónico?</DivLabel>
-        <Link to="/Ingresar" className="w-full"><Button disabled={FormState.loading}>
-            Iniciar Sesión
-        </Button></Link>
         <DivLabel color="gray_tint">¿Tuviste algun problema?</DivLabel>
         <Link to="/EmailVerification"><Button disabled={FormState.loading} color="gray">
             No me llego ningun correo de validación                            
-        </Button></Link>  
-        <Link to="/RestaurarPassword"><Button disabled={FormState.loading} color="gray">
-            No recuerdo mi contraseña                
         </Button></Link>
         </form>
       </>:<>
         <DivTitle className="mt-5">Crear una Cuenta</DivTitle>
         <DivSubtitle className="text-center pb-2">Ingresá tus datos para registrarte en la plataforma</DivSubtitle>
         <FormikStepper
-          innerRef={ref}
           validateOnBlur={false}
           validateOnChange={false}
           enableReinitialize={true}
@@ -92,8 +79,9 @@ export const RegisterPage = () =>{
             label="CUIL"
             validationSchema={formGetValidations(['CUIL'])}
             afterFunction={async (values:any, ) =>{
+              console.log(values)
 
-              const response = await UserGetData({'cuil':ref.current.values.CUIL}, setFormState);
+              const response = await UserGetData({'cuil':values.CUIL}, setFormState);
 
               if(response.status){
                 console.log(response)
@@ -110,27 +98,6 @@ export const RegisterPage = () =>{
                 setInitialData(false)
                 setFormState((prev:any) => ({ ...prev, error: '' }));
               }
-
-/*
-              await AxiosAuthAPI.UserGetData({'cuil':ref.current.values.CUIL}).then((response)=>{
-                let userdata = response.data
-                console.log(response)
-                setFieldValues({...values, 
-                  Name: CapitalizeWords(userdata.Nombres), 
-                  LastName: CapitalizeWords(userdata.Apellido), 
-                  prs_id: userdata.prs_id
-                });
-                setInitialData(false)
-                setError('')
-              }).catch((e:any)=>{
-                let messageerror = e.response.data.message;
-                if(messageerror=='Bad Cuil'){
-                  setInitialData(false)
-                  setError('')
-                } else{
-                  setError(GetMessage(messageerror))
-                }
-              })*/
             }}
             afterHTML={<> 
               <br />
@@ -153,7 +120,7 @@ export const RegisterPage = () =>{
             <DivTitle2>Paso 2</DivTitle2>
             <DivSubtitle>Datos Personales</DivSubtitle>
             <FormikField name="CUIL" disabled={true} label="CUIL"/>
-            {InitialData?<DivLabel className='-mt-2 mb-4'>¿Tus datos estan mal? ¡Corrígelos!</DivLabel>:<></>}
+            {InitialData?<DivLabel className='-mt-2 mb-4'>Si tus datos no son correctos, podes modificarlos.</DivLabel>:<></>}
             <FormikField name="Name" autoFocus disabled={FormState.loading} label={InitialData?"Nombre/s":undefined}/>
             <FormikField name="LastName" disabled={FormState.loading} label={InitialData?"Apellido/s":undefined}/>
           </FormikStep>
@@ -174,6 +141,14 @@ export const RegisterPage = () =>{
             <DivSubtitle>Contraseña</DivSubtitle>
             <FormikField name="Password" autoFocus disabled={FormState.loading}/>
             <FormikField name="Password_Validation" disabled={FormState.loading}/>
+            <DivSubtitle><b>La contraseña debe contener:</b></DivSubtitle>
+            <DivSubtitle className='-mt-3'>
+              <li><span>8 Caracteres o más</span></li>
+              <li><span>1 Letra Mayúscula</span></li>
+              <li><span>1 Letra Minúscula</span></li>
+              <li><span>1 Número</span></li>
+              <li><span>1 Caracter Especial</span></li>
+            </DivSubtitle>
           </FormikStep>
           <FormikStep
             label="Final"
@@ -186,10 +161,6 @@ export const RegisterPage = () =>{
             <FormikCheckbox name="Captcha" hidden/>
           </FormikStep>
         </FormikStepper>
-      </>}                          
-    </LayoutSidebar>
-    <MainContainer>
-      <Descripcion />
-    </MainContainer>
+      </>}
   </>)
 }
