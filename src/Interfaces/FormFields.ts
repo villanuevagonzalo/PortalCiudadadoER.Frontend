@@ -108,11 +108,11 @@ export const FormFields:FieldProps = {
     },
 
     Captcha:{
-        type: 'checkbox',
-        defaultvalue: false,
+        type: 'string',
+        defaultvalue: '',
         placeholder: '',
-        validations: yup.boolean()
-                        .oneOf([true], "Debes Verificar el Captcha")
+        validations: yup.string()
+                        .required('Debes Verificar el Captcha')
     },
 
     AcceptTerms:{

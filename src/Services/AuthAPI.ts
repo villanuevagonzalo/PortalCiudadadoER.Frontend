@@ -14,6 +14,7 @@ export class AuthAPI {
     email: string;
     password: string;
     prs_id: number | null;
+    captcha: string;
   }) {
     return this.baseService.post("/v0/user/signup", params);
   }
@@ -21,6 +22,7 @@ export class AuthAPI {
   public UserLogin(params: {
     cuil: number;
     password: string;
+    captcha: string;
   }) {
     return this.baseService.post("/v0/user/login", params);
   }
@@ -54,6 +56,7 @@ export class AuthAPI {
 
   public UserPasswordReset(params: {
     cuil: number;
+    captcha: string;
   }) {
     return this.baseService.get("/v0/user/password/reset/validation", { params });
   }
@@ -73,6 +76,7 @@ export class AuthAPI {
 
   public EmailResendVerification(params: { 
     cuil: number;
+    captcha: string;
   }) {
     return this.baseService.get("/v0/user/resend/email/verification", { params });
   }

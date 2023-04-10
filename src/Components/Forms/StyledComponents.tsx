@@ -111,68 +111,6 @@ export const FormWrapperButton = styled.button<{ fullwidth?: boolean, size?:numb
   }
 `;
 
-export const FormWrapperInpu2t = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean, focus?: boolean, dummy?: boolean, largeerror?:boolean }>`
-  background-color: var(--${props => props.dummy?'maincolor':'maincolor'});
-  min-width:150px;
-  margin-bottom: ${props => props.error?(props.largeerror?'3rem':'2rem'):(props.dummy?'0rem':'1rem')};
-  border: 2px solid var(--${props => props.dummy?'maincolor':(props.error?'error':'disabled')});
-  position: relative;
-  display:flex;
-  opacity: ${props => props.disabled?'0.5':'1'};
-  border-radius: 0.5rem;
-  flex:1;
-  max-height:2.75rem;
-
-  & input{
-    position: relative;
-    padding: ${props => props.dummy?'0.6rem 0rem 0rem':'0.6rem 0.75rem 0.5rem'};
-    background: transparent;
-    outline:none;
-    width: 100%;
-    z-index: 1;
-    font-size: 0.9rem;
-    color: var(--maincolor_text);
-  }
-  
-  & div{
-    outline:none;
-    padding 0.5rem;
-    font-size: 1.5rem;
-    color: var(${props => props.error?'--error':'--maincolor_text'});
-    cursor: pointer;
-    z-index: 1;
-  }
-
-
-  & span, label{
-    background: var(--maincolor);
-    border-radius:0.25rem;
-    position: absolute;
-    transition 0.1s;
-    z-index: 2;
-    pointer-events: none;
-
-  }
-
-  & label{
-    top: ${props => props.focus?'-0.65rem':'0.45rem'};
-    color:var(--${props => props.dummy?'primary':(props.error?'error':'maincolor_text')});
-    left: ${props => props.dummy?'-0.25rem':'0.5rem'};
-    padding: 0 0.25rem;
-    font-size: ${props => props.focus?'0.75rem':'0.90rem'};
-  }
-
-  & span{
-    text-align: justify;
-    top: 2.75rem;
-    color:var(--error);
-    right: 0;
-    font-size: 0.75rem;
-  }
-`;
-
-
-
 
 export const FormWrapperCheckbox = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, checked?: boolean }>`
 
@@ -223,11 +161,15 @@ export const FormWrapperCheckbox = styled.div<{ error?: boolean, disabled?: bool
 
 
 export const CaptchaWrapper = styled.div<{ open?: boolean }>`
-  font-size: 1.5rem;
-  color: var(--maincolor_text);
-  width:100%;
+    margin-bottom: 1rem;
   display:flex;
-  justify-content:center;
-  text-align:center;
-  align-items:center;
+  flex-direction:column;
+
+  & > div > div > div{ 
+    width:100%!important;
+    display:flex;
+    text-align:center;
+    justify-content:center;
+    align-items:center;
+  }
 `;

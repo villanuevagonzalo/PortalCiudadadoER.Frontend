@@ -13,9 +13,11 @@ import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
 import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
 import { CountDown } from '../../Components/Elements/CountDown';
 import moment from 'moment';
+import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 
 const FormRequiredFields = [
-    'CUIL'
+    'CUIL',
+    'Captcha'
 ]
 
 export const EmailReValidation = () => {
@@ -44,12 +46,15 @@ export const EmailReValidation = () => {
           initialValues={FieldValues}
           validationSchema={formGetValidations(FormRequiredFields)}
           onSubmit={async(values:any) => {
+            console.log(values)
             const response = await EmailResendVerification({
               cuil: values.CUIL,
+              captcha: values.Captcha,
             }, setFormState);
           }}
         ><Form autoComplete="off">
           <FormikField name="CUIL" disabled={FormState.loading || errors.length>1} autoFocus/>
+          <FormikCaptcha name="Captcha"/>
           <Button disabled={FormState.loading || errors.length>1} type="submit">
               {FormState.loading ? <Spinner/> : 'Reenviar Email'}                                
           </Button>

@@ -1,6 +1,6 @@
-import { useField, useFormikContext } from "formik";
+import { ErrorMessage, useField, useFormikContext } from "formik";
 import ReCAPTCHA from "react-google-recaptcha";
-import { CaptchaWrapper } from "./StyledComponents";
+import { CaptchaWrapper, FormError } from "./StyledComponents";
 
 interface Props{
   name: string;
@@ -13,16 +13,15 @@ interface Props{
 
 export const FormikCaptcha = ({...props}: Props) => {
 
-
   const [ field ] = useField(props.name)
   
   const { setFieldValue } = useFormikContext();
 
   function onChange(value:any) {
     if(value){
-      setFieldValue(field.name,true)
+      setFieldValue(field.name,value)
     } else{
-      setFieldValue(field.name,false)
+      setFieldValue(field.name,'')
     }
     console.log("Captcha value:", value);
   }
@@ -32,5 +31,6 @@ export const FormikCaptcha = ({...props}: Props) => {
       sitekey="6LdH_s8jAAAAAPEKd0RT6f9Mz3KBau0h0Rg7Ky1p"
       onChange={onChange}
     />
+    <ErrorMessage name={props.name} component={FormError}/>
   </CaptchaWrapper>)
 }

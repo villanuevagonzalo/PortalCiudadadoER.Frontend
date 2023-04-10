@@ -9,8 +9,9 @@ import { Button } from "../../Components/Forms/Button";
 import { Formik, Form } from "formik";
 import { FormikField } from "../../Components/Forms/FormikField";
 import { AiOutlineLock } from "react-icons/ai";
+import { FormikCaptcha } from "../../Components/Forms/FormikCaptcha";
 
-const FormRequiredFields = ["CUIL", "Password"];
+const FormRequiredFields = ["CUIL", "Password","Captcha"];
 
 export const LoginPage = () => {
 
@@ -30,16 +31,22 @@ export const LoginPage = () => {
       initialValues={FieldValues}
       validationSchema={formGetValidations(FormRequiredFields)}
       onSubmit={(values: any) => {
+        console.log({
+          cuil: values.CUIL,
+          password: values.Password,
+          captcha: values.Captcha,
+        })
         Login({
           cuil: values.CUIL,
           password: values.Password,
+          captcha: values.Captcha,
         }, setFormState);
       }}
     >
       <Form autoComplete="off">
         <FormikField name="CUIL" autoFocus disabled={FormState.loading} />
         <FormikField name="Password" disabled={FormState.loading} />
-        {/*<FormikCheckbox name="RememberMe"/>*/}
+        <FormikCaptcha name="Captcha"/>
         <Button disabled={FormState.loading} type="submit">
           {FormState.loading ? <Spinner /> : "Iniciar Sesión"}
         </Button>

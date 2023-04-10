@@ -29,7 +29,8 @@ const FormRequiredFields = [
   'Email_Validation',
   'Captcha',
   'AcceptTerms',
-  'prs_id'
+  'prs_id',
+  'Captcha'
 ]
 
 const AxiosAuthAPI = new AuthAPI();
@@ -69,7 +70,8 @@ export const RegisterPage = () =>{
               apellido: CapitalizeWords(values.LastName),
               email: values.Email_Validation,
               password: values.Password_Validation,
-              prs_id: values.prs_id || "NOTFOUND"
+              prs_id: values.prs_id || "NOTFOUND",
+              captcha: values.Captcha,
             }, setFormState)
           }}
           FormState2={[FormState, setFormState]}
@@ -158,7 +160,6 @@ export const RegisterPage = () =>{
             <DivSubtitle>Confirmación Final</DivSubtitle>
             <FormikCheckbox name="AcceptTerms"/>
             <FormikCaptcha name="Captcha"/>
-            <FormikCheckbox name="Captcha" hidden/>
           </FormikStep>
         </FormikStepper>
       </>}

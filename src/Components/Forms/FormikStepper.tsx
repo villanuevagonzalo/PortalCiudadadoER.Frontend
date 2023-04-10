@@ -78,19 +78,6 @@ export function FormikStepper({ children, FormState2, extraHTML, ...props }:Form
             </NavigatorWrapper>
             {currentChild.props.afterHTML?currentChild.props.afterHTML:<></>}
         </Form>
-            <NavigatorWrapper>
-                {step>0?<Button color="secondary" type="button" onClick={() => setStep((s) => s - 1)} fullwidth={false} disabled={FormState.loading}>
-                    « Anterior
-                </Button>:<></>}
-                <NavigatorSpacer />
-                {isLastStep()?
-                <Button color="secondary" type="button" onClick={() => setFormState(prev=>({...prev, finish:true}))} disabled={FormState.loading}>
-                  {FormState.loading ? <Spinner/> : 'Finalizar'}
-                </Button>:
-                <Button color="secondary" type="button" onClick={() => setStep((s) => s + 1)} disabled={FormState.loading}>
-                  {FormState.loading ? <Spinner/> : 'Siguiente »'} 
-                </Button>}
-            </NavigatorWrapper>
             </>
       )}
     </Formik>
