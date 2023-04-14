@@ -8,8 +8,10 @@ export const LayoutDefault = () =>{
   return (
     <LayoutContainer className='FlexSwitchMobile'>
       <LayoutSidebar>
-        <LayoutSidebarLogos/>
-        <Outlet></Outlet>
+        <div className="Content">
+          <LayoutSidebarLogos/>
+          <Outlet></Outlet>
+        </div>
       </LayoutSidebar>
       <MainContainer>
         <Descripcion />

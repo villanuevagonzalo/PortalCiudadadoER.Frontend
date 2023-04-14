@@ -55,34 +55,32 @@ export const LayoutCiudadano = () => {
     <LayoutContainer>
       <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
       <LayoutSidebar collapsable mobile={mobile} open={open}>
-        {mobile?<></>:<>
-          <LayoutCenterBox maxwidth="400px" className="pb-6">
+        <div className="Content">
+          {mobile?<></>:<>
             <LogoCiudadanoDigital/>
-          </LayoutCenterBox>
-        </>}
-        <LayoutSidebarMenu>
-        {navigation.map((item) => (
-          <NavLink
-            onClick={switchmenu}
-            key={item.name}
-            to={item.href}
-            className={({isActive}) => (isActive ? 'active':'')}
-          >
-            <span><item.icon/></span>
-            {item.name}
-          </NavLink>
-        ))}
-        </LayoutSidebarMenu>
-        <Card>
-          <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
-          <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
-          <Link to="/Dashboard/Config"><Button color="maincolor">
-          <IoIosSettings/>Mi perfil<LayoutSpacer/>
-          </Button></Link>
-        </Card>
-        <Button color="primary" onClick={Logout} className="mt-4">
-              Cerrar Sesión
+          </>}
+          <LayoutSidebarMenu>{navigation.map((item) => (
+            <NavLink
+              onClick={switchmenu}
+              key={item.name}
+              to={item.href}
+              className={({isActive}) => (isActive ? 'active':'')}
+            >
+              <span><item.icon/></span>
+              {item.name}
+            </NavLink>
+          ))}</LayoutSidebarMenu>
+          <Card>
+            <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
+            <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
+            <Link to="/Dashboard/Config"><Button color="maincolor">
+            <IoIosSettings/>Mi perfil<LayoutSpacer/>
+            </Button></Link>
+          </Card>
+          <Button color="primary" onClick={Logout} className="mt-4">
+            Cerrar Sesión
           </Button>
+        </div>
       </LayoutSidebar>
       <LayoutBody mobile={mobile}>
         {mobile?<LayoutRow>

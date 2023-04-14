@@ -52,13 +52,19 @@ export const LayoutContainer = styled.div<{  }>`
 export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean, mobile?:boolean }>`
   align-items: center;
   align-self: top;
-  padding:2rem;
   background: var(--maincolor);
   box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
   z-index:100;
   transition: all .1s ease-in;
   overflow:hidden;
   min-width:360px;
+
+  & .Content{
+    max-width:360px;
+    margin:0 auto;
+    padding:1.75rem;
+
+  }
 
   @media (min-width: 720px) {
     max-width:400px;
