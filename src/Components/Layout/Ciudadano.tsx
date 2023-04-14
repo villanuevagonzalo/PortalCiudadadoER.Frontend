@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton } from "./StyledComponents";
+import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
 import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -73,9 +73,14 @@ export const LayoutCiudadano = () => {
           <Card>
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
             <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
-            <Link to="/Dashboard/Config"><Button color="maincolor">
-            <IoIosSettings/>Mi perfil<LayoutSpacer/>
-            </Button></Link>
+            <LayoutStackedPanel>
+              <Link to="/Dashboard/Config" className="f-width"><Button color="maincolor">
+              <IoIosSettings/>Mi perfil<LayoutSpacer/>
+              </Button></Link>
+              <Link to="/Actor/" className="f-width"><Button color="maincolor">
+              <IoIosSettings/>Actor<LayoutSpacer/>
+              </Button></Link>
+            </LayoutStackedPanel>
           </Card>
           <Button color="primary" onClick={Logout} className="mt-4">
             Cerrar Sesión
