@@ -11,7 +11,7 @@ import { DC_Configuration } from './Pages/DashboardCiudadano/DC_Configuration';
 import { DashBoard_Notificaciones } from './Pages/DashboardCiudadano/Notificaciones';
 import { LayoutDefault } from './Components/Layout/Default';
 import { LayoutCiudadano } from './Components/Layout/Ciudadano';
-import { DashboardActorLayout } from './Components/Layout/Actor';
+import { LayoutActor } from './Components/Layout/Actor';
 import { MisTramites } from './Pages/DashboardCiudadano/MisTramites';
 import { PasswordRestaurar } from './Pages/Auth/PasswordRestaurar';
 import { PasswordUpdate } from './Pages/Auth/PasswordUpdate';
@@ -59,6 +59,9 @@ export const App = () => {
         <Route path="Dashboard/Notificaciones" element={<DashBoard_Notificaciones />} />
         <Route path="Dashboard/MisTramites" element={<MisTramites />} />
         <Route path="Dashboard/Tramites" element={<TramitesOnlinePage />} />
+      </Route>
+      <Route element={<PrivateRoute><LayoutActor /></PrivateRoute>}>
+        <Route path="Actor" element={<DC_Home />} />
       </Route>
     </Routes>
   );
