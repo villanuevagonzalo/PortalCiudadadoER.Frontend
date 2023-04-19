@@ -1,4 +1,4 @@
-import { LayoutSection, LayoutTitle } from "../../Components/Layout/StyledComponents"
+import { LayoutSection, LayoutTitle } from "../../../Components/Layout/StyledComponents"
 
 export const MisTramites = () => {
   return (<>

@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 export const LayoutHeader = styled.div<{ mobile?:boolean }>`
   background: var(--maincolor_tint);
-  border-bottom: 2px solid var(--maincolor_tint);
   display: flex;
   flex-direction: row;
   height: 64px;
@@ -20,7 +19,11 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
     cursor:pointer;
   }
 
-  ${props => props.mobile?'':`
+  ${props => props.mobile?`
+  
+  border-bottom: 1px solid var(--disabled);
+  
+  `:`
     & .button{
       margin-top:2px;
       height:36px;
@@ -62,31 +65,20 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
   & .Content{
     max-width:360px;
     margin:0 auto;
-    padding:1.75rem;
-
+    padding:30px;
   }
 
   @media (min-width: 720px) {
     max-width:400px;
   }
 
-  & form{
-    max-width:400px;
-    margin:0 auto;
-
-    & button{
-      margin-bottom:0.75rem!important;
-    }
-  }
-
-  ${props => props.mobile?`
+  ${props => props.collapsable?`
     margin-right: ${props.open?'-360px':'0'}!important;
     width: ${props.open?'360px':'0px'}!important;
     min-width: ${props.open?'360px':'0px'};
-    padding: ${props.open?'1rem':'0'};
 
-    & form{
-      max-width:296px;
+    & .Content{
+      padding:20px;
     }
   `:`
     margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
@@ -94,40 +86,6 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
   `}
 `
 
-
-export const LayoutSidebar2 = styled.div<{ open?: boolean, mobile?:boolean }>`
-  align-items: center;
-  align-self: top;
-  padding:2rem;
-  background: var(--maincolor);
-  box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
-  z-index:100;
-  transition: all .1s ease-in;
-  overflow:hidden;
-
-  ${props => props.mobile?`
-    margin-right: ${props.open?'-360px':'0'}!important;
-    width: ${props.open?'360px':'0px'}!important;
-    min-width: ${props.open?'360px':'0px'};
-    padding: ${props.open?'1rem':'0'};
-
-    & form{
-      max-width:296px;
-    }
-  `:`
-    margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
-    min-width: 360px;
-  `}
-
-  & form{
-    max-width:400px;
-    margin:0 auto;
-
-    & button{
-      margin-bottom:0.75rem!important;
-    }
-  }
-`
 
 export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
   display: flex;
@@ -186,7 +144,6 @@ export const LayoutFooter = styled.div<{ }>`
   display: flex;
   font-size:1rem;
   gap: 1rem;
-  margin:2rem 0;
   width:100%;
 `;
 
@@ -195,7 +152,7 @@ export const LayoutBody = styled.div<{ mobile?: boolean }>`
   flex-direction: column;
   flex: 1;
   gap: 2rem;
-  padding:2rem ${props => props.mobile?'1rem':'2rem'};
+  padding:${props => props.mobile?'1rem':'2rem'};
 `;
 
 export const LayoutAlert = styled.div<{ }>`

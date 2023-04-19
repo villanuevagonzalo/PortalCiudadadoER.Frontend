@@ -20,7 +20,7 @@ const FormRequiredFields = [
   'Captcha'
 ]  
 
-export const PasswordRestaurar = () => {
+export const Auth_PasswordReset = () => {
 
   const { userData, PasswordReset } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);

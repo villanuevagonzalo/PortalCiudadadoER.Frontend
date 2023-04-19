@@ -1,18 +1,15 @@
 import { useContext, useEffect, useState } from 'react';
 import { Link} from 'react-router-dom';
 
-import { DivOutlined, DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle2 } from '../../Components/Elements/StyledComponents';
+import { DivOutlined, DivLabel, Spinner, DivSubtitle, DivTitle2 } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { AiFillHome, AiOutlineLock } from 'react-icons/ai';
-import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetParams } from '../../Utils/General';
-import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
-import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { IFormState } from '../../Interfaces/Data';
 import { DefaultFormState } from '../../Data/DefaultValues';
 
-export const EmailValidate = () =>{
+export const Auth_EmailValidate = () =>{
 
     const SearchParams = GetParams(["token"]);
 

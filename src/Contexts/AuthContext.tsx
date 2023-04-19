@@ -21,10 +21,6 @@ const ContextValues = () => {
   const [userContact, setUserContact] = useState<IUserContact>(DefaultUserContact);
   const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
 
-  const UpdateField = (list:any) => {
-    
-    setUserData(prevState => ({...prevState, }))
-  }
 
   const SaveToken = (token:string) => {
 

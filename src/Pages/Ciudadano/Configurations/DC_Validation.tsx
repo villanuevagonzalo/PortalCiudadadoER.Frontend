@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
-import { Spinner } from "../../Components/Elements/StyledComponents"
-import { Button } from "../../Components/Forms/Button";
-import { LayoutTitle, LayoutSection,  LayoutListItem } from "../../Components/Layout/StyledComponents";
-import { AuthContext } from "../../Contexts/AuthContext";
-import { IFormState } from "../../Interfaces/Data";
-import { DefaultFormState } from "../../Data/DefaultValues";
+import { Spinner } from "../../../Components/Elements/StyledComponents"
+import { Button } from "../../../Components/Forms/Button";
+import { LayoutTitle, LayoutSection,  LayoutListItem } from "../../../Components/Layout/StyledComponents";
+import { AuthContext } from "../../../Contexts/AuthContext";
+import { IFormState } from "../../../Interfaces/Data";
+import { DefaultFormState } from "../../../Data/DefaultValues";
 import { BsBookmark, BsBookmarkCheck, BsBookmarkPlus, BsBookmarkStar, BsBookmarkX } from "react-icons/bs";
 
 export const DC_Validation = () => {

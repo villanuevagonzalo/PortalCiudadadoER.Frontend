@@ -5,7 +5,7 @@ import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthAPI } from '../../Services/AuthAPI';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { DivOutlined, DivLabel, MainContainer, DivSubtitle, DivTitle2, DivTitle } from '../../Components/Elements/StyledComponents';
+import { DivOutlined, DivLabel, DivSubtitle, DivTitle2, DivTitle } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 
 import React from 'react';
@@ -13,11 +13,8 @@ import { FormikStep, FormikStepper } from '../../Components/Forms/FormikStepper'
 import { FormikField } from '../../Components/Forms/FormikField';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { CapitalizeWords } from '../../Utils/General';
-import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetMessage } from '../../Interfaces/MessageHandler';
 import { FormikCheckbox } from '../../Components/Forms/FormikCheckbox';
-import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
-import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
     
 const FormRequiredFields = [
   'CUIL',
@@ -35,7 +32,7 @@ const FormRequiredFields = [
 
 const AxiosAuthAPI = new AuthAPI();
 
-export const RegisterPage = () =>{
+export const Auth_Signup = () =>{
 
   const { UserGetData, Signup } = useContext(AuthContext);
 

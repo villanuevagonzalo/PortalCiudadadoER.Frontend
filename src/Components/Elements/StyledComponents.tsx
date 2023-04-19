@@ -29,6 +29,21 @@ export const NavigatorSpacer = styled.div<{ open?: boolean }>`
   flex:1;
 `;
 
+export const ColoredLabel = styled.button<{ fullwidth?: boolean, size?:number }>`
+  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
+  border-radius: 0.375rem;
+  color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
+  display:flex;
+  font-size: 0.7rem;
+  justify-content:center;
+  min-width:65px;
+  margin: -1rem 1rem -0.4rem auto;
+  height:1.4rem;
+  padding: 0.25rem 0.25rem;
+  text-align:center;
+  font-weight:bold;
+`;
+
 // REVIEW >>>>>>>>>>>>>>>>>>>
 
 

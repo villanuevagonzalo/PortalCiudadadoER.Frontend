@@ -19,7 +19,7 @@ const FormRequiredFields = [
     'Password_Validation',
 ];
 
-export const PasswordUpdate = () => {
+export const Auth_PasswordUpdate = () => {
 
   const SearchParams = GetParams(["token"]);
 

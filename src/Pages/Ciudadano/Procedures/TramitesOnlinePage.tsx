@@ -1,14 +1,14 @@
 import { Form, Formik } from 'formik';
 import { useContext, useState } from 'react';
-import { NuevosTramites } from '../../Components/Elements/NuevosTramites';
-import { NavigatorSpacer, Spinner } from '../../Components/Elements/StyledComponents';
-import { Button } from '../../Components/Forms/Button';
-import { FormikSearch } from '../../Components/Forms/FormikSearch';
-import { LayoutColumns, LayoutSection, LayoutTitle, LayoutColumn } from '../../Components/Layout/StyledComponents';
-import { AuthContext } from '../../Contexts/AuthContext';
-import { DefaultFormState } from '../../Data/DefaultValues';
-import { IFormState } from '../../Interfaces/Data';
-import { formGetInitialValues, formGetValidations } from '../../Interfaces/FormFields';
+import { NuevosTramites } from '../../../Components/Elements/NuevosTramites';
+import { NavigatorSpacer, Spinner } from '../../../Components/Elements/StyledComponents';
+import { Button } from '../../../Components/Forms/Button';
+import { FormikSearch } from '../../../Components/Forms/FormikSearch';
+import { LayoutColumns, LayoutSection, LayoutTitle, LayoutColumn } from '../../../Components/Layout/StyledComponents';
+import { AuthContext } from '../../../Contexts/AuthContext';
+import { DefaultFormState } from '../../../Data/DefaultValues';
+import { IFormState } from '../../../Interfaces/Data';
+import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';
 
 const data = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},

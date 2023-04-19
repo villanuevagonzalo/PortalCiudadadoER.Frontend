@@ -20,7 +20,7 @@ const FormRequiredFields = [
     'Captcha'
 ]
 
-export const EmailReValidation = () => {
+export const Auth_EmailResendValidation = () => {
 
   const { EmailResendVerification } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);

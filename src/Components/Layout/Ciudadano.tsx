@@ -13,6 +13,7 @@ import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 
 const navigation = [
@@ -54,7 +55,7 @@ export const LayoutCiudadano = () => {
 
     <LayoutContainer>
       <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
-      <LayoutSidebar collapsable mobile={mobile} open={open}>
+      <LayoutSidebar collapsable={mobile} open={open}>
         <div className="Content">
           {mobile?<></>:<>
             <LogoCiudadanoDigital/>
@@ -73,22 +74,21 @@ export const LayoutCiudadano = () => {
           <Card>
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
             <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
-            <LayoutStackedPanel>
-              <Link to="/Dashboard/Config" className="f-width"><Button color="maincolor">
+            <Link to="/Dashboard/Config" className="f-width"><Button color="maincolor">
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
-              </Button></Link>
-              <Link to="/Actor/" className="f-width"><Button color="maincolor">
-              <IoIosSettings/>Actor<LayoutSpacer/>
-              </Button></Link>
-            </LayoutStackedPanel>
+            </Button></Link>
           </Card>
+          
+          <Link to="/Actor/"><Button color="secondary" className="mt-4">
+          Ir al Panel de Actor<LayoutSpacer/><AiOutlineArrowRight/>
+              </Button></Link>
           <Button color="primary" onClick={Logout} className="mt-4">
             Cerrar Sesión
           </Button>
         </div>
       </LayoutSidebar>
       <LayoutBody mobile={mobile}>
-        {mobile?<LayoutRow>
+        {mobile?<LayoutRow className="mt-7">
           <Link to="/Dashboard/Tramites" className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
         </LayoutRow>:<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===1?

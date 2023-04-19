@@ -13,7 +13,7 @@ import { FormikCaptcha } from "../../Components/Forms/FormikCaptcha";
 
 const FormRequiredFields = ["CUIL", "Password","Captcha"];
 
-export const LoginPage = () => {
+export const Auth_Login = () => {
 
   const { Login } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);

@@ -1,7 +1,5 @@
-import { useEffect } from "react";
-import { Navigate, Route, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { getLSData } from "../Utils/General";
-
 
 export const PrivateRoute = (props:{ children: any }) =>{
   const token = getLSData("authToken");

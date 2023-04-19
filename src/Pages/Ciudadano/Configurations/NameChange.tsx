@@ -1,26 +1,26 @@
 import { useContext, useState } from 'react';
-import { formGetValidations, formGetInitialValues } from "../../Interfaces/FormFields";
-import { IFormState } from "../../Interfaces/Data";
-import { DefaultFormState } from "../../Data/DefaultValues";
+import { formGetValidations, formGetInitialValues } from "../../../Interfaces/FormFields";
+import { IFormState } from "../../../Interfaces/Data";
+import { DefaultFormState } from "../../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../../Contexts/AuthContext';
-import { Spinner, DivOutlined, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
-import { Button } from '../../Components/Forms/Button';
+import { AuthContext } from '../../../Contexts/AuthContext';
+import { Spinner, DivOutlined, NavigatorSpacer } from '../../../Components/Elements/StyledComponents';
+import { Button } from '../../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
-import { FormikField } from '../../Components/Forms/FormikField';
+import { FormikField } from '../../../Components/Forms/FormikField';
 import { AiOutlineArrowLeft } from 'react-icons/ai';
-import { FieldGrid, LayoutSection, LayoutTitle } from '../../Components/Layout/StyledComponents';
-import { CountDown } from '../../Components/Elements/CountDown';
+import { FieldGrid, LayoutSection, LayoutTitle } from '../../../Components/Layout/StyledComponents';
+import { CountDown } from '../../../Components/Elements/CountDown';
 import moment from 'moment';
 import { BiUserCircle } from 'react-icons/bi';
-import { CapitalizeWords } from '../../Utils/General';
+import { CapitalizeWords } from '../../../Utils/General';
 
 const FormRequiredFields = [
   'Name',
   'LastName'
 ]
 
-export const DC_NameChange = () => {
+export const DC_Configurations_NameChange = () => {
 
   const { UserNameChange, userData, userRol } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);

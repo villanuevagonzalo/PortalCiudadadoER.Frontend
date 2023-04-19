@@ -5,19 +5,19 @@ import { useContext, useEffect, useState } from "react";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { BiData, BiUserCircle } from "react-icons/bi";
 import { Link } from "react-router-dom";
-import { Spinner } from "../../Components/Elements/StyledComponents"
-import { FormikField } from "../../Components/Forms/FormikField";
-import { FormikFieldDummy } from "../../Components/Forms/FormikFieldDummy";
-import { FormikSearch } from "../../Components/Forms/FormikSearch";
-import { LayoutTitle, LayoutSection, LayoutStackedPanel, LayoutSpacer } from "../../Components/Layout/StyledComponents";
-import { AuthContext } from "../../Contexts/AuthContext";
-import { ILocation } from "../../Interfaces/Data";
-import { formGetValidations } from "../../Interfaces/FormFields";
-import { IFormState } from "../../Interfaces/Data";
-import { DefaultFormState } from "../../Data/DefaultValues";
-import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath } from "../../Utils/Locations"
-import { FormikButton } from "../../Components/Forms/FormikButton";
-import { Button } from "../../Components/Forms/Button";
+import { Spinner } from "../../../Components/Elements/StyledComponents"
+import { FormikField } from "../../../Components/Forms/FormikField";
+import { FormikFieldDummy } from "../../../Components/Forms/FormikFieldDummy";
+import { FormikSearch } from "../../../Components/Forms/FormikSearch";
+import { LayoutTitle, LayoutSection, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
+import { AuthContext } from "../../../Contexts/AuthContext";
+import { ILocation } from "../../../Interfaces/Data";
+import { formGetValidations } from "../../../Interfaces/FormFields";
+import { IFormState } from "../../../Interfaces/Data";
+import { DefaultFormState } from "../../../Data/DefaultValues";
+import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath } from "../../../Utils/Locations"
+import { FormikButton } from "../../../Components/Forms/FormikButton";
+import { Button } from "../../../Components/Forms/Button";
 import { DC_Validation } from "./DC_Validation";
 
 const FormRequiredFields = [
@@ -29,7 +29,7 @@ const FormRequiredFields = [
   'Apartment'
 ];
 
-export const DC_Configuration = () => {
+export const DC_Configurations = () => {
 
   const { userData, userContact, userRol, SaveData, AFIP_getURL } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);

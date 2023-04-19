@@ -1,16 +1,16 @@
 import { useContext, useEffect, useState } from 'react';
 import { Link} from 'react-router-dom';
 
-import { DivOutlined, Spinner, NavigatorSpacer, DivTitle } from '../../Components/Elements/StyledComponents';
-import { Button } from '../../Components/Forms/Button';
+import { DivOutlined, Spinner, NavigatorSpacer, DivTitle } from '../../../Components/Elements/StyledComponents';
+import { Button } from '../../../Components/Forms/Button';
 import { AiOutlineArrowLeft, AiOutlineLock, AiOutlineMail } from 'react-icons/ai';
-import { GetParams } from '../../Utils/General';
-import { FieldGrid, LayoutSection, LayoutTitle } from '../../Components/Layout/StyledComponents';
-import { AuthContext } from '../../Contexts/AuthContext';
-import { IFormState } from '../../Interfaces/Data';
-import { DefaultFormState } from '../../Data/DefaultValues';
+import { GetParams } from '../../../Utils/General';
+import { FieldGrid, LayoutSection, LayoutTitle } from '../../../Components/Layout/StyledComponents';
+import { AuthContext } from '../../../Contexts/AuthContext';
+import { IFormState } from '../../../Interfaces/Data';
+import { DefaultFormState } from '../../../Data/DefaultValues';
 
-export const DC_EmailChangeValidate = () => {
+export const DC_Configurations_EmailChangeValidate = () => {
 
   const SearchParams = GetParams(["token"]);
 
