@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
+import { LayoutAlert, LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
 import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -14,12 +14,18 @@ import { RiLayout4Fill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { Pages } from "../../Routes/Pages";
+import { INavigation } from "../../Interfaces/Data";
+import { LayoutBreadcrump } from "./Breadcrump";
 
 
-const navigation = [
-  { name: 'Inicio', icon: RiLayout4Fill, href: 'Dashboard/' },
-  { name: 'Mis Trámites', icon: FaClipboardList, href: 'Dashboard/MisTramites' },
-  { name: 'Notificaciones', icon: BiNotification, href: 'Dashboard/Notificaciones' }
+
+const navigation:INavigation[] = [
+  { name: 'Inicio', icon: RiLayout4Fill, href: Pages.DC },
+  { name: 'Trámites', icon: FaClipboardList, href: Pages.DC_PROCEDURES, children:[
+    { name: 'Mis Trámites', href: Pages.DC_PROCEDURES_STARTED },
+  ] },
+  { name: 'Notificaciones', icon: BiNotification, href: Pages.DC_NOTIFICATIONS }
 ]
 
 export const LayoutCiudadano = () => {
@@ -40,17 +46,17 @@ export const LayoutCiudadano = () => {
   return (<>
     <LayoutHeader mobile={mobile}>{mobile?<>
       <div>{open?<BiChevronsLeft onClick={switchmenu}/>:<BiMenu onClick={switchmenu}/>}</div>
-      <Link to="/Dashboard/" onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
-      {/*<Link to="/Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link> */}
-      <Link to="/Dashboard/Config" onClick={closemenu}><BiUserCircle /></Link>
+      <Link to={Pages.DC} onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} /></Link>
+      {/*<Link to={Pages.Dashboard/Notificaciones" onClick={closemenu}><MdNotificationsNone className="mr-1"/></Link> */}
+      <Link to={Pages.DC_CONFIGURATIONS} onClick={closemenu}><BiUserCircle /></Link>
     </>:<>
       <LayoutHeaderSpacer/>
-      <Link to="/Dashboard/Tramites"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
-      <Link to="/Dashboard/Config"><RoundedButton>
+      <Link to={Pages.DC_PROCEDURES}><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
+      <Link to={Pages.DC_CONFIGURATIONS}><RoundedButton>
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
-      <Link to="/Dashboard/Notificaciones" className="button"><MdNotificationsNone/></Link>
+      <Link to={Pages.DC_NOTIFICATIONS} className="button"><MdNotificationsNone/></Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>
@@ -61,25 +67,31 @@ export const LayoutCiudadano = () => {
             <LogoCiudadanoDigital/>
           </>}
           <LayoutSidebarMenu>{navigation.map((item) => (
-            <NavLink
-              onClick={switchmenu}
-              key={item.name}
-              to={item.href}
-              className={({isActive}) => (isActive ? 'active':'')}
-            >
+            <div key={item.name} className={item.href === window.location?.pathname ? 'active' : ''}>
               <span><item.icon/></span>
-              {item.name}
-            </NavLink>
+              <ul>
+                <li className={item.children?'title haschildren':'title'}>{item.href?<NavLink
+                  onClick={switchmenu}
+                  to={item.href}
+                  children={item.name}
+                />:<p>{item.name}</p>}</li>
+                {item.children?item.children.map(child=><li className="children"><NavLink
+                  onClick={switchmenu}
+                  key={child.name}
+                  to={child.href}
+                >{child.name}</NavLink></li>):<></>}
+              </ul>
+            </div>
           ))}</LayoutSidebarMenu>
           <Card>
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
             <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
-            <Link to="/Dashboard/Config" className="f-width"><Button color="maincolor">
+            <Link to={Pages.DC_CONFIGURATIONS} className="f-width"><Button color="maincolor">
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
             </Button></Link>
           </Card>
           
-          <Link to="/Actor/"><Button color="secondary" className="mt-4">
+          <Link to={Pages.DA}><Button color="secondary" className="mt-4">
           Ir al Panel de Actor<LayoutSpacer/><AiOutlineArrowRight/>
               </Button></Link>
           <Button color="primary" onClick={Logout} className="mt-4">
@@ -89,18 +101,19 @@ export const LayoutCiudadano = () => {
       </LayoutSidebar>
       <LayoutBody mobile={mobile}>
         {mobile?<LayoutRow className="mt-7">
-          <Link to="/Dashboard/Tramites" className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
+          <Link to={Pages.DC_PROCEDURES} className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
         </LayoutRow>:<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===1?
-          <Link to="/Dashboard/Config">
+          <Link to={Pages.DC_CONFIGURATIONS}>
             <LayoutAlert>Completa tus datos en la sección de <b>Mi Perfil</b> para alcanzar el nivel 2 de validación.</LayoutAlert>
           </Link>
         :<></>}
         {userRol[0].type==='Ciudadano'&&userRol[0].level===2?
-          <Link to="/Dashboard/Config">
+          <Link to={Pages.DC_CONFIGURATIONS}>
             <LayoutAlert>Vincula alguna Aplicación en la sección de <b>Mi Perfil</b> para alcanzar el nivel 3 de validación.</LayoutAlert>
           </Link>
         :<></>}
+        <LayoutBreadcrump/>
         <Outlet></Outlet>
         <LayoutFooter className="FlexSwitchTablet">
           <LogoER width="150px" color='var(--gray_tint)' />

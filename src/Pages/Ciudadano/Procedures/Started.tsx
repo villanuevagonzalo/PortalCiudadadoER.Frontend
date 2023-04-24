@@ -1,6 +1,6 @@
 import { LayoutSection, LayoutTitle } from "../../../Components/Layout/StyledComponents"
 
-export const MisTramites = () => {
+export const DC_Procedures_Started = () => {
   return (<>
     <LayoutTitle>
       Mis Trámites

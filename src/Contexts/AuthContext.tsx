@@ -44,7 +44,7 @@ const ContextValues = () => {
     const CurrentUserData:IUserData = getLSData('UserData');
     const CurrentUserContact:IUserContact = getLSData('UserContact');
     const CurrentUserRol:IUserRol[] = getLSData('UserRol');
-    console.log('CHECKTOKEN ',CurrentToken)
+    //console.log('CHECKTOKEN ',CurrentToken)
     if(CurrentToken?.token){
       let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
       if( remainingTime > 0 ){

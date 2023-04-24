@@ -1,3 +1,16 @@
+import { IconType } from "react-icons/lib";
+
+/// NAVIGATION ITEMS
+export interface INavigation{
+  name: string;
+  icon?: any;
+  href?: string;
+  children?: {
+    name: string;
+    href: string;
+  }[]
+}
+
 /// RESPONSE
 export interface IResponse{
   status: boolean;

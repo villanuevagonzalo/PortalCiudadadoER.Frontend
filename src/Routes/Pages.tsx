@@ -11,35 +11,50 @@ import { DC_Configurations_EmailChange } from "../Pages/Ciudadano/Configurations
 import { DC_Configurations_EmailChangeValidate } from "../Pages/Ciudadano/Configurations/EmailChangeValidate";
 import { DC_Configurations_NameChange } from "../Pages/Ciudadano/Configurations/NameChange";
 import { DC_Notifications } from "../Pages/Ciudadano/Notifications/Home";
-import { DC_Procedures } from "../Pages/Ciudadano/Procedures/DC_Procedures";
+import { DC_Procedures } from "../Pages/Ciudadano/Procedures/Home";
+import { DC_Procedures_Started } from "../Pages/Ciudadano/Procedures/Started";
 
 import { Auth_EmailResendValidation } from "../Pages/Auth/EmailResendValidation";
 import { Auth_EmailValidate } from "../Pages/Auth/EmailValidate";
 import { Auth_PasswordReset } from "../Pages/Auth/PasswordReset";
 import { Auth_PasswordUpdate } from "../Pages/Auth/PasswordUpdate";
+import { TramitesOnlinePage } from "../Pages/Ciudadano/Procedures/TramitesOnlinePage";
+import { AutenticarToken } from "../Pages/Ciudadano/Configurations/AutenticarToken";
+import { DA_Procedures_Forms_Home } from "../Pages/Actor/Procedures/Forms/Home";
+import { DA_Procedures_Forms_Create } from "../Pages/Actor/Procedures/Forms/Create";
+import { DA_Procedures_List } from "../Pages/Actor/Procedures/List";
 
+interface PageProps {
+  path: string;
+  label: string;
+  element: JSX.Element;
+  scope?: string[];
+  root?: boolean;
+  children?: RawPagesProps;
+}
 interface RawPagesProps {
-  [key: string]: {
-    path: string;
-    label: string;
-    element: JSX.Element;
-    childrens?: RawPagesProps;
-  }
+  [key: string]: PageProps
+}
+interface PagesProps {
+  [key: string]: string;
 }
 
 export const RawPages:RawPagesProps = {
 
   INDEX:{
-    path: '/',
+    path: '',
     label: 'Inicio',
-    element: <Auth_Login />
+    element: <Auth_Login />,
+    root: true
   },
 
   AUTH:{
     path: 'auth',
     label: 'Autenticación',
     element: <Auth_Login />,
-    childrens: {
+    scope: ['public'],
+    root: true,
+    children: {
       LOGIN:{
         path: 'ingresar',
         label: 'Iniciar Sesión',
@@ -69,6 +84,11 @@ export const RawPages:RawPagesProps = {
         path: 'password/update',
         label: 'Actualizar Contraseña',
         element: <Auth_PasswordUpdate />
+      },
+      AUTENTICAR_VALIDATETOKEN:{
+        path: 'autenticar/validate',
+        label: 'Validar Token Autenticar',
+        element: <AutenticarToken />
       }
     }
   },
@@ -77,26 +97,30 @@ export const RawPages:RawPagesProps = {
     path: 'dashboard',
     label: 'Dashboard Ciudadano',
     element: <DC_Home />,
-    childrens: {
+    scope: ['private','citizen'],
+    root: true,
+    children: {
       CONFIGURATIONS:{
         path: 'configurations',
-        label: 'Configuración',
+        label: 'Mi Perfil',
         element: <DC_Configurations />,
-        childrens: {
+        children: {
           NAMECHANGE:{
-            path: 'changename',
-            label: 'Cambiar Nombre',
+            path: 'name/change',
+            label: 'Cambiar Datos Personales',
             element: <DC_Configurations_NameChange />
           },
           EMAILCHANGE:{
-            path: 'changename',
-            label: 'Cambiar Nombre',
-            element: <DC_Configurations_EmailChange />
-          },
-          EMAILCHANGEVALIDATE:{
-            path: 'changename',
-            label: 'Cambiar Nombre',
-            element: <DC_Configurations_EmailChangeValidate />
+            path: 'email/change',
+            label: 'Cambiar Correo Electrónico',
+            element: <DC_Configurations_EmailChange />,
+            children: {
+              VALIDATE:{
+                path: 'validate',
+                label: 'Validación',
+                element: <DC_Configurations_EmailChangeValidate />
+              }
+            }
           }
         }
       },
@@ -107,8 +131,15 @@ export const RawPages:RawPagesProps = {
       },
       PROCEDURES:{
         path: 'procedures',
-        label: 'Mis Tramites',
-        element: <DC_Procedures />
+        label: 'Tramites',
+        element: <TramitesOnlinePage />,
+        children: {
+          STARTED:{
+            path: 'started',
+            label: 'Mis Tramites',
+            element: <DC_Procedures_Started />
+          },
+        }
       }
     }
   },
@@ -117,32 +148,90 @@ export const RawPages:RawPagesProps = {
     path: 'actor',
     label: 'Dashboard Actores',
     element: <DA_Home />,
-    childrens: {
+    scope: ['private','actor'],
+    root: true,
+    children: {
       PROCEDURES:{
         path: 'procedures',
-        label: 'Configurador de Tramites',
+        label: 'Gestor de Tramites',
         element: <DA_Procedures_Home />,
-        childrens: {
-          NEW:{
-            path: 'new',
-            label: 'Crear',
-            element: <DA_Procedures_Create />
+        children: {
+          LIST:{
+            path: 'list',
+            label: 'Trámites',
+            element: <DA_Procedures_List />,
+            children: {
+              NEW:{
+                path: 'new',
+                label: 'Crear',
+                element: <DA_Procedures_Create />
+              }
+            }
+          },
+          FORMS:{
+            path: 'forms',
+            label: 'Formularios',
+            element: <DA_Procedures_Forms_Home />,
+            children: {
+              LIST:{
+                path: 'list',
+                label: 'Lista',
+                element: <DA_Procedures_Forms_Home />
+              },
+              NEW:{
+                path: 'new',
+                label: 'Crear Nuevo Formulario',
+                element: <DA_Procedures_Forms_Create />
+              }
+            }
           }
         }
-      }
+      },
+      NOTIFICATIONS:{
+        path: 'notifications',
+        label: 'Gestor de Notificaciones',
+        element: <DC_Notifications />
+      },
     }
   }
 
 }
 
+const FlattenPages = (RawPages: RawPagesProps, parentPath:string = '', parentKey:string = '', parentScope:string[] = []): RawPagesProps => {
+  const flatObject: RawPagesProps = {};
+  Object.keys(RawPages).forEach((key) => {
+    const path = parentPath + '/' + RawPages[key].path;
+    const label = RawPages[key].label;
+    const root = RawPages[key].root || false;
+    const element = RawPages[key].element;
+    const flatKey = parentKey ? parentKey + "_" + key : key;
+    const scope = RawPages[key].scope || parentScope;
+    const children = RawPages[key].children;
+    if (children) {
+      const flatChilds = FlattenPages(children, path, flatKey, scope);
+      for (const childKey in flatChilds) {
+        if (flatChilds.hasOwnProperty(childKey)) {
+          flatObject[childKey] = flatChilds[childKey];
+        }
+      }
+    }
+    flatObject[flatKey] = {
+      path: path + (path=='/'?'':'/'),
+      label,
+      scope,
+      root,
+      element
+    };
+  });
+  return flatObject;
+};
+
+export const FlatPages:RawPagesProps = FlattenPages(RawPages);
+export const Pages:PagesProps = Object.fromEntries(Object.entries(FlatPages).map(([key, value]) => [key, value.path]));
 
 
-interface PagesProps {
-  [key: string]: string;
-}
+export const GetFullPath = (path:string) => Object.values(FlatPages)
+                                                  .filter((item:PageProps)=>path.startsWith(item.path)&&!item.root)
+                                                  .sort((a, b) => (a.path > b.path) ? 1 : -1);
 
-export const Pages:PagesProps = {
-  INDEX: 'inicio'
-}
-
-
+console.log(GetFullPath('/actor/procedures/forms/'))

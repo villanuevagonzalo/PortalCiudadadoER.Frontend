@@ -11,37 +11,45 @@ import { LayoutCiudadano } from './Components/Layout/Ciudadano';
 import { ErrorPage } from './Pages/ErrorPage';
 import { PublicRoute, PrivateRoute } from './Routes/RoutesMiddleware';
 
-// Pages
-import { Auth_Login } from './Pages/Auth/Login';
-import { Auth_Signup } from './Pages/Auth/Signup';
-import { Auth_PasswordReset } from './Pages/Auth/PasswordReset';
-import { Auth_PasswordUpdate } from './Pages/Auth/PasswordUpdate';
 
-import { AutenticarToken } from './Pages/Ciudadano/Configurations/AutenticarToken';
-import { DA_Home } from './Pages/Actor/Home';
-import { DC_Notifications } from './Pages/Ciudadano/Notifications/Home';
-import { DC_Configurations } from './Pages/Ciudadano/Configurations/Home';
-import { DC_Configurations_EmailChange } from './Pages/Ciudadano/Configurations/EmailChange';
-import { DC_Configurations_EmailChangeValidate } from './Pages/Ciudadano/Configurations/EmailChangeValidate';
-import { DC_Home } from './Pages/Ciudadano/Home';
-import { DC_Configurations_NameChange } from './Pages/Ciudadano/Configurations/NameChange';
-import { DC_Validation } from './Pages/Ciudadano/Configurations/DC_Validation';
-import { Auth_EmailResendValidation } from './Pages/Auth/EmailResendValidation';
-import { Auth_EmailValidate } from './Pages/Auth/EmailValidate';
-import { MisTramites } from './Pages/Ciudadano/Procedures/MisTramites';
-import { TramitesOnlinePage } from './Pages/Ciudadano/Procedures/TramitesOnlinePage';
-import { DA_Procedures_Home } from './Pages/Actor/Procedures/Home';
-import { DA_Procedures_Create } from './Pages/Actor/Procedures/Create';
+import { FlatPages } from './Routes/Pages';
 
 export const App = () => {
   
   const { CheckToken } = useContext(AuthContext);
 
   useEffect(CheckToken,[])
-  
+
   return (
     <Routes>
-      <Route element={<PublicRoute><LayoutDefault /></PublicRoute>}>
+      {Object.values(FlatPages).map(item => {
+
+        if(item.scope){
+          return <Route element={
+            item.scope.includes('public')
+            ? <PublicRoute><LayoutDefault /></PublicRoute>
+            : <PrivateRoute>{item.scope.includes('citizen')
+              ?<LayoutCiudadano />
+              :<LayoutActor />
+            }</PrivateRoute>
+          } key={item.path}>
+            <Route path={item.path} element={item.element}/>
+          </Route>
+        }
+        return <Route element={<PublicRoute><LayoutDefault /></PublicRoute>}>
+          <Route path={item.path} element={item.element} key={item.path}/>
+        </Route>
+      })}
+      <Route path="*" element={<ErrorPage />}/>
+    </Routes>
+  );
+}
+
+
+
+/*
+
+<Route element={<PublicRoute><LayoutDefault /></PublicRoute>}>
         <Route index element={<Auth_Login />} />
         <Route path="Inicio" element={<Auth_Login />} />
         <Route path="Ingresar" element={<Auth_Login />} />
@@ -80,6 +88,5 @@ export const App = () => {
 
         <Route path="*" element={<ErrorPage />}/>
       </Route>
-    </Routes>
-  );
-}
+
+*/

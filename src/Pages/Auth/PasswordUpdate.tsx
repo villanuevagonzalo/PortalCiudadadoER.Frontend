@@ -4,15 +4,13 @@ import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle, DivOutlined } from '../../Components/Elements/StyledComponents';
+import { DivLabel, Spinner, DivSubtitle, DivTitle, DivOutlined } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
 import { FormikField } from '../../Components/Forms/FormikField';
 import { AiOutlineLock } from 'react-icons/ai';
-import { Descripcion } from '../../Components/Elements/Descripcion';
 import { GetParams } from '../../Utils/General';
-import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
-import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
+import { Pages } from '../../Routes/Pages';
 
 const FormRequiredFields = [
     'Password',
@@ -38,7 +36,7 @@ export const Auth_PasswordUpdate = () => {
       <DivLabel color="primary">
         Inicia Sesión con tu nueva contraseña
       </DivLabel>
-      <Link to="/Ingresar"><Button disabled={FormState.loading}>
+      <Link to={Pages.AUTH_LOGIN}><Button disabled={FormState.loading}>
         Iniciar Sesión
       </Button></Link>
     </> : <>
@@ -90,7 +88,7 @@ export const Auth_PasswordUpdate = () => {
         <DivSubtitle className='mt-4 text-center'>
           ¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.
         </DivSubtitle>
-        <Link to="/RestaurarPassword"><Button color="secondary">
+        <Link to={Pages.AUTH_PASSWORDRESET}><Button color="secondary">
           Solicitar Nuevo Codigo <AiOutlineLock/>                        
         </Button></Link>
       </>}
@@ -98,9 +96,9 @@ export const Auth_PasswordUpdate = () => {
       <DivLabel color="gray_tint">
         ¿No quieres cambiar tu contraseña?
       </DivLabel>
-      {userData.cuil!==''?<Link to="/Dashboard/Config"><Button disabled={FormState.loading} color="gray">
+      {userData.cuil!==''?<Link to={Pages.DC_CONFIGURATIONS}><Button disabled={FormState.loading} color="gray">
         Volver al Dashboard
-      </Button></Link>:<Link to="/Ingresar"><Button disabled={FormState.loading} color="gray">
+      </Button></Link>:<Link to={Pages.AUTH_LOGIN}><Button disabled={FormState.loading} color="gray">
         Iniciar Sesión
       </Button></Link>}
     </>}

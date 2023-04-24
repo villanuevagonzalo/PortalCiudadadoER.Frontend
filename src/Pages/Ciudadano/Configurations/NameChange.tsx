@@ -14,6 +14,7 @@ import { CountDown } from '../../../Components/Elements/CountDown';
 import moment from 'moment';
 import { BiUserCircle } from 'react-icons/bi';
 import { CapitalizeWords } from '../../../Utils/General';
+import { Pages } from '../../../Routes/Pages';
 
 const FormRequiredFields = [
   'Name',
@@ -82,7 +83,7 @@ export const DC_Configurations_NameChange = () => {
       </>}
       <hr className=''/>
       <FieldGrid className="FlexSwitchForms">
-        <Link to="/Dashboard/Config"><Button disabled={FormState.loading || errors.length>1} color="gray">
+        <Link to={Pages.DC_CONFIGURATIONS}><Button disabled={FormState.loading || errors.length>1} color="gray">
               <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Mi Perfil</b>                                
           </Button></Link>
         <NavigatorSpacer/>

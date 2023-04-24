@@ -7,6 +7,7 @@ import { AuthContext } from "../../../Contexts/AuthContext";
 import { IFormState } from "../../../Interfaces/Data";
 import { DefaultFormState } from "../../../Data/DefaultValues";
 import { BsBookmark, BsBookmarkCheck, BsBookmarkPlus, BsBookmarkStar, BsBookmarkX } from "react-icons/bs";
+import { Pages } from "../../../Routes/Pages";
 
 export const DC_Validation = () => {
 
@@ -49,7 +50,7 @@ export const DC_Validation = () => {
           <h2>Usted no ha completado su información adicional.</h2>
         </div>
         <div>
-        <Link to="/Dashboard/Config"><Button color="error">Completar<br/>Información</Button></Link>
+        <Link to={Pages.DC_CONFIGURATIONS}><Button color="error">Completar<br/>Información</Button></Link>
         </div>
       </LayoutListItem>}
       {userRol[0].level>2?

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
+import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton } from "./StyledComponents";
 import { Card, ColoredLabel, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -14,12 +14,18 @@ import { RiLayout4Fill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import { Pages } from "../../Routes/Pages";
+import { INavigation } from "../../Interfaces/Data";
+import { LayoutBreadcrump } from "./Breadcrump";
 
 
-const navigation = [
-  { name: 'Inicio', icon: RiLayout4Fill, href: '/Actor/' },
-  { name: 'Trámites', icon: FaClipboardList, href: '/Actor/Tramites/' },
-  { name: 'Notificaciones', icon: BiNotification, href: '/Actor/Notificaciones/' }
+const navigation:INavigation[] = [
+  { name: 'Inicio', icon: RiLayout4Fill, href: Pages.DA },
+  { name: 'Gestor de Trámites', icon: FaClipboardList, href: Pages.DA_PROCEDURES, children:[
+    { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
+    { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
+  ] },
+  { name: 'Gestor de Notificaciones', icon: BiNotification, href: Pages.DA_NOTIFICATIONS }
 ]
 
 export const LayoutActor = () => {
@@ -40,15 +46,15 @@ export const LayoutActor = () => {
   return (<>
     <LayoutHeader mobile={mobile}>{mobile?<>
       <div>{open?<BiChevronsLeft onClick={switchmenu} color="var(--secondary)"/>:<BiMenu onClick={switchmenu} color="var(--secondary)"/>}</div>
-      <Link to="/Dashboard/" onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} color="var(--secondary)" /></Link>
-      <Link to="/Dashboard/Config" onClick={closemenu}><BiUserCircle color="var(--secondary)"/></Link>
+      <Link to={Pages.DA} onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} color="var(--secondary)" /></Link>
+      <Link to={Pages.DC_CONFIGURATIONS} onClick={closemenu}><BiUserCircle color="var(--secondary)"/></Link>
     </>:<>
       <LayoutHeaderSpacer/>
-      <Link to="/Dashboard/Config"><RoundedButton>
+      <Link to={Pages.DC_CONFIGURATIONS}><RoundedButton>
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
-      <Link to="/Dashboard/Notificaciones" className="button"><MdNotificationsNone/></Link>
+      <Link to={Pages.DC_NOTIFICATIONS} className="button"><MdNotificationsNone/></Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>
@@ -60,34 +66,40 @@ export const LayoutActor = () => {
             <LogoCiudadanoDigital color="var(--secondary)"/>
           </>}
           <LayoutSidebarMenu>{navigation.map((item) => (
-            <NavLink
-              onClick={switchmenu}
-              key={item.name}
-              to={item.href}
-              className={({isActive}) => (isActive ? 'active':'')}
-            >
+            <div key={item.name} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''} aria-label={item.href + " "+window.location.pathname}>
               <span><item.icon/></span>
-              {item.name}
-            </NavLink>
+              <ul>
+                <li className={item.children?'title haschildren':'title'}>{item.href?<NavLink
+                  onClick={switchmenu}
+                  to={item.href}
+                  children={item.name}
+                />:<p>{item.name}</p>}</li>
+                {item.children?item.children.map(child=><li className="children"><NavLink
+                  onClick={switchmenu}
+                  key={child.name}
+                  to={child.href}
+                  className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}
+                >{child.name}</NavLink></li>):<></>}
+              </ul>
+            </div>
           ))}</LayoutSidebarMenu>
           <Card color="secondary">
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
-            <DivSubtitle color="maincolor" className="mt-1">Actor<b className="ml-2">Nivel 2</b></DivSubtitle>
-           
-              <Link to="/Dashboard/Config" className="f-width"><Button color="maincolor">
+            <DivSubtitle color="maincolor" className="mt-1">Actor<b className="ml-2">Nivel 1</b></DivSubtitle>
+            <Link to={Pages.DC_CONFIGURATIONS} className="f-width"><Button color="maincolor">
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
-              </Button></Link>
+            </Button></Link>
           </Card>
-          
-          <Link to="/Dashboard/"><Button className="mt-4">
-              <AiOutlineArrowLeft/><LayoutSpacer/>Volver al Panel Ciudadano
-              </Button></Link>
+          <Link to={Pages.DC}><Button className="mt-4">
+            <AiOutlineArrowLeft/><LayoutSpacer/>Volver al Panel Ciudadano
+          </Button></Link>
           <Button color="gray" onClick={Logout} className="mt-4">
             Cerrar Sesión
           </Button>
         </div>
       </LayoutSidebar>
       <LayoutBody mobile={mobile}>
+        <LayoutBreadcrump color="secondary"/>
         <Outlet></Outlet>
         <LayoutFooter className="FlexSwitchTablet">
           <LogoER width="150px" color='var(--gray_tint)' />

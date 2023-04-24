@@ -4,16 +4,14 @@ import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { DivLabel, MainContainer, Spinner, DivSubtitle, DivTitle, DivOutlined } from '../../Components/Elements/StyledComponents';
+import { DivLabel, Spinner, DivSubtitle, DivTitle, DivOutlined } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
 import { FormikField } from '../../Components/Forms/FormikField';
-import { Descripcion } from '../../Components/Elements/Descripcion';
-import { LayoutSidebar } from '../../Components/Layout/StyledComponents';
-import { LayoutSidebarLogos } from '../../Components/Layout/LayoutSidebarLogos';
 import { CountDown } from '../../Components/Elements/CountDown';
 import moment from 'moment';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
+import { Pages } from '../../Routes/Pages';
 
 const FormRequiredFields = [
     'CUIL',
@@ -70,7 +68,7 @@ export const Auth_EmailResendValidation = () => {
       <DivLabel color="gray_tint">
         ¿Ya validaste tu correo electrónico?
       </DivLabel>
-      <Link to="/Ingresar">
+      <Link to={Pages.AUTH_LOGIN}>
         <Button disabled={FormState.loading} color="gray">
           Iniciar Sesión
         </Button>

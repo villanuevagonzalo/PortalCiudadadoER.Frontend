@@ -10,6 +10,7 @@ import { Formik, Form } from "formik";
 import { FormikField } from "../../Components/Forms/FormikField";
 import { AiOutlineLock } from "react-icons/ai";
 import { FormikCaptcha } from "../../Components/Forms/FormikCaptcha";
+import { Pages } from "../../Routes/Pages";
 
 const FormRequiredFields = ["CUIL", "Password","Captcha"];
 
@@ -31,11 +32,6 @@ export const Auth_Login = () => {
       initialValues={FieldValues}
       validationSchema={formGetValidations(FormRequiredFields)}
       onSubmit={(values: any) => {
-        console.log({
-          cuil: values.CUIL,
-          password: values.Password,
-          captcha: values.Captcha,
-        })
         Login({
           cuil: values.CUIL,
           password: values.Password,
@@ -58,16 +54,16 @@ export const Auth_Login = () => {
       </DivOutlined>
       <br />
       <DivLabel color="secondary">¿Sos nuevo en Ciudadano Digital?</DivLabel>
-      <Link to="/Registro" className="mb-3"><Button disabled={FormState.loading} color="secondary">
+      <Link to={Pages.AUTH_SIGNUP} className="mb-3"><Button disabled={FormState.loading} color="secondary">
           Crear una cuenta
       </Button></Link>
       <DivLabel color="gray_tint">
         ¿Tuviste algun problema al registrarte?
       </DivLabel>
-      <Link to="/RestaurarPassword"><Button disabled={FormState.loading} color="gray">
+      <Link to={Pages.AUTH_PASSWORDRESET}><Button disabled={FormState.loading} color="gray">
           No recuerdo mi contraseña <AiOutlineLock />
       </Button></Link>
-      <Link to="/EmailVerification"><Button disabled={FormState.loading} color="gray">
+      <Link to={Pages.AUTH_EMAILRESENDVALIDATION}><Button disabled={FormState.loading} color="gray">
           No pude validar mi correo electrónico
       </Button></Link>
     </form>

@@ -11,6 +11,7 @@ import { LayoutSidebarLogos } from '../../../Components/Layout/LayoutSidebarLogo
 import { AuthContext } from '../../../Contexts/AuthContext';
 import { IFormState } from '../../../Interfaces/Data';
 import { DefaultFormState } from '../../../Data/DefaultValues';
+import { Pages } from '../../../Routes/Pages';
 
 export const AutenticarToken = () =>{
 
@@ -50,7 +51,7 @@ export const AutenticarToken = () =>{
                     <br />
                     <DivLabel>Inicia Sesión para utilizar Ciudadano Digital</DivLabel>
                     <br />
-                    <Link to="/Ingresar" className="w-full"><Button>
+                    <Link to={Pages.AUTH_LOGIN} className="w-full"><Button>
                     Iniciar Sesión
                     </Button></Link>
                 </>:<>
@@ -60,11 +61,11 @@ export const AutenticarToken = () =>{
                     <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</DivSubtitle>
                     <br />
                     <form>
-                    <Link to="/ReenviarCodigo" className="w-full"><Button color="secondary">
+                    <Link to={Pages.AUTH_EMAILRESENDVALIDATION} className="w-full"><Button color="secondary">
                         Solicitar Nuevo Codigo
                         <AiOutlineLock/>                        
                     </Button></Link>
-                    <Link to="/" className="w-full"><Button>
+                    <Link to={Pages.INDEX} className="w-full"><Button>
                         <AiFillHome />
                         Volver al Inicio
                     </Button></Link></form>
@@ -77,11 +78,11 @@ export const AutenticarToken = () =>{
             <br />
             <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</DivSubtitle>
             <br />
-            <form><Link to="/ReenviarCodigo" className="w-full mb-3"><Button color="secondary">
+            <form><Link to={Pages.AUTH_EMAILRESENDVALIDATION} className="w-full mb-3"><Button color="secondary">
               Solicitar Nuevo Codigo
               <AiOutlineLock/>                        
           </Button></Link>
-          <Link to="/" className="w-full"><Button>
+          <Link to={Pages.INDEX} className="w-full"><Button>
               <AiFillHome />
               Volver al Inicio
           </Button></Link></form>

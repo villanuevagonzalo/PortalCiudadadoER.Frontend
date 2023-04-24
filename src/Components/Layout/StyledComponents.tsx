@@ -51,7 +51,6 @@ export const LayoutContainer = styled.div<{  }>`
   min-height: 100%;
 `;
 
-
 export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean, mobile?:boolean }>`
   align-items: center;
   align-self: top;
@@ -86,22 +85,19 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
   `}
 `
 
-
 export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
   display: flex;
   flex-direction: column;
-  gap:0.25rem;
   width:100%;
-  margin-bottom:2rem;
+  margin:1rem 0 2rem 0;
+  gap:0.25rem;
 
-  & a{
+  & div{
     display:flex;
     padding:0.75rem;
     border-radius:0.5rem;
-    gap:0.75rem;
-    align-items: center;
+    align-items: top;
     align-self: top;
-    font-weight:600;
     color:var(--maincolor_text);
     transition: background .1s ease-in;
 
@@ -112,6 +108,50 @@ export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
       padding:0.5rem;
       border-radius:0.25rem;
       box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+      height: 2rem;
+    }
+
+    & ul{
+      display: flex;
+      flex-direction: column;
+      flex:1;
+      gap:0rem;
+    }
+
+    & a{
+      display: flex;
+      align-items: center;
+      flex:1;
+      gap:0.5rem;
+    }
+
+    & li{
+      align-items: center;
+      display:flex;
+      height: 2rem;
+      border-radius:0.25rem;
+      padding: 0.5rem 0.75rem;
+
+      &:hover{
+        background:var(--maincolor);
+      }
+
+      &.title{
+        font-weight:600;
+
+        &.haschildren{
+          margin-bottom:0.25rem;
+        }
+      }
+
+      &.children{
+        font-size:0.9rem;
+      }
+
+      & a.active{
+        color:var(--secondary);
+
+      }
     }
 
     &:hover{
@@ -122,13 +162,16 @@ export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
       }
     }
 
-    &.active{
+    &:has(a.active){
       color:black;
       background:white;
       box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
       & span{
         background:var(--secondary);
         color:var(--secondary_text);
+      }
+      & li:has(a.active){
+        background:transparent!important;
       }
     }
 
@@ -145,6 +188,45 @@ export const LayoutFooter = styled.div<{ }>`
   font-size:1rem;
   gap: 1rem;
   width:100%;
+`;
+
+export const LayoutBreadCrumpWrapper = styled.ul<{ color?:string }>`
+  align-items: center;
+  align-items: left;
+  background: var(--maincolor);  
+  border-radius:0.5rem;
+  border: 1px solid var(--disabled);
+  color: var(--maincolor_text);
+  display: flex;
+  font-size:1rem;
+  width:100%;
+  padding:0.5rem;
+  gap:0.25rem;
+
+  & li{
+    display: flex;
+    align-items: center;
+    gap:0.25rem;
+
+    & p,a{
+      display: flex;
+      align-items: center;
+      gap:0.75rem;
+      padding:0.5rem;
+      border-radius:0.5rem;
+    }
+
+    & p{
+      color:var(--${props => (props.color ? props.color : 'primary')});
+      font-weight:600;
+    }
+
+    & a{
+      &:hover{
+        background:var(--maincolor_tint); 
+      }
+    }
+  }
 `;
 
 export const LayoutBody = styled.div<{ mobile?: boolean }>`

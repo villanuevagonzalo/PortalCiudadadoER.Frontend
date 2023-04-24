@@ -19,6 +19,7 @@ import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLoc
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import { Button } from "../../../Components/Forms/Button";
 import { DC_Validation } from "./DC_Validation";
+import { Pages } from "../../../Routes/Pages";
 
 const FormRequiredFields = [
   'Cellphone',
@@ -80,15 +81,15 @@ export const DC_Configurations = () => {
       <hr className="-mt-4 mb-2"/>
       <LayoutStackedPanel>
         <LayoutSpacer/>
-        {userRol[0].level==3?<></>:<Link to="NameChange"><FormikButton color="gray">Cambiar Nombre</FormikButton></Link>}
-        <Link to="/RestaurarPassword"><FormikButton>Solicitar cambio de Contraseña <AiOutlineArrowRight/></FormikButton></Link>
+        {userRol[0].level==3?<></>:<Link to={Pages.DC_CONFIGURATIONS_NAMECHANGE}><FormikButton color="gray">Cambiar Nombre</FormikButton></Link>}
+        <Link to={Pages.AUTH_PASSWORDRESET}><FormikButton>Solicitar cambio de Contraseña <AiOutlineArrowRight/></FormikButton></Link>
       </LayoutStackedPanel>
 
       <h1 className="mt-4"><BiData/>Información Adicional</h1>
       <h2>Información de Contacto</h2>
       <LayoutStackedPanel className="-mt-2">
         <FormikFieldDummy name="Email" value={userData.email} className="flex-1"/>
-        <Link to="EmailChange"><Button>Solicitar cambio de Email <AiOutlineArrowRight/></Button></Link>
+        <Link to={Pages.DC_CONFIGURATIONS_EMAILCHANGE}><Button>Solicitar cambio de Email <AiOutlineArrowRight/></Button></Link>
       </LayoutStackedPanel>
       {(FieldValues)?<Formik
         initialValues={FieldValues}

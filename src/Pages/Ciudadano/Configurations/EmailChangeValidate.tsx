@@ -9,6 +9,7 @@ import { FieldGrid, LayoutSection, LayoutTitle } from '../../../Components/Layou
 import { AuthContext } from '../../../Contexts/AuthContext';
 import { IFormState } from '../../../Interfaces/Data';
 import { DefaultFormState } from '../../../Data/DefaultValues';
+import { Pages } from '../../../Routes/Pages';
 
 export const DC_Configurations_EmailChangeValidate = () => {
 
@@ -55,11 +56,11 @@ export const DC_Configurations_EmailChangeValidate = () => {
     </>}
     <hr className=''/>
     <FieldGrid className="FlexSwitchForms">
-      <Link to="/../Dashboard/Config"><Button disabled={FormState.loading} color="gray">
+      <Link to={Pages.DC_CONFIGURATIONS}><Button disabled={FormState.loading} color="gray">
             <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Mi Perfil</b>                                
         </Button></Link>
       <NavigatorSpacer/>
-      {(FormState.error || !SearchParams.status)?<Link to="/../Dashboard/Config/EmailChange"><Button color="secondary" disabled={FormState.loading}>
+      {(FormState.error || !SearchParams.status)?<Link to={Pages.DC_CONFIGURATIONS_EMAILCHANGE}><Button color="secondary" disabled={FormState.loading}>
             Solicitar Nuevo Codigo
             <AiOutlineLock/>                        
         </Button></Link>:<></>}

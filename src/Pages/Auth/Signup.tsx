@@ -15,6 +15,7 @@ import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { CapitalizeWords } from '../../Utils/General';
 import { GetMessage } from '../../Interfaces/MessageHandler';
 import { FormikCheckbox } from '../../Components/Forms/FormikCheckbox';
+import { Pages } from '../../Routes/Pages';
     
 const FormRequiredFields = [
   'CUIL',
@@ -48,7 +49,7 @@ export const Auth_Signup = () =>{
         <br/>
         <form>
         <DivLabel color="gray_tint">¿Tuviste algun problema?</DivLabel>
-        <Link to="/EmailVerification"><Button disabled={FormState.loading} color="gray">
+        <Link to={Pages.AUTH_EMAILRESENDVALIDATION}><Button disabled={FormState.loading} color="gray">
             No me llego ningun correo de validación                            
         </Button></Link>
         </form>
@@ -101,7 +102,7 @@ export const Auth_Signup = () =>{
             afterHTML={<> 
               <br />
               <DivLabel>¿Ya te registraste?</DivLabel>
-              <Link to="/Ingresar" className="w-full"><Button disabled={FormState.loading}>
+              <Link to={Pages.AUTH_LOGIN} className="w-full"><Button disabled={FormState.loading}>
                   Iniciar Sesión
               </Button></Link>
             </>}

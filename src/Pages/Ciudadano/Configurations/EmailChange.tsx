@@ -12,6 +12,7 @@ import { AiOutlineArrowLeft, AiOutlineMail } from 'react-icons/ai';
 import { FieldGrid, LayoutSection, LayoutTitle } from '../../../Components/Layout/StyledComponents';
 import { CountDown } from '../../../Components/Elements/CountDown';
 import moment from 'moment';
+import { Pages } from '../../../Routes/Pages';
 
 const FormRequiredFields = [
   'Email',
@@ -71,7 +72,7 @@ export const DC_Configurations_EmailChange = () => {
       </>}
       <hr className=''/>
       <FieldGrid className="FlexSwitchForms">
-        <Link to="/Dashboard/Config"><Button disabled={FormState.loading || errors.length>1} color="gray">
+        <Link to={Pages.DC_CONFIGURATIONS}><Button disabled={FormState.loading || errors.length>1} color="gray">
               <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Mi Perfil</b>                                
           </Button></Link>
         <NavigatorSpacer/>

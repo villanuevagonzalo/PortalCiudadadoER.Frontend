@@ -91,7 +91,7 @@ export class AuthAPI {
   public EmailChangeValidate(params: { 
     token: string;
   }) {
-    return this.baseService.post("/v0/user/change/email/", params );
+    return this.baseService.post("/v0/user/change/email", params );
   }
 
   

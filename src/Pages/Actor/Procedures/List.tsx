@@ -1,11 +1,11 @@
 import { LayoutSection } from "../../../Components/Layout/StyledComponents";
 
 
-export const DA_Procedures_Home = () => {
+export const DA_Procedures_List = () => {
 
   return(<>
     <LayoutSection>
-      GESTOR DE TRAMITES, aca el actor tiene que ver que tramites estan ongoing
+      Lista de tramites creados
     </LayoutSection>
   </>);
 }

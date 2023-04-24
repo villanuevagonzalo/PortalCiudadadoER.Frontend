@@ -18,6 +18,8 @@ const data = [
     {title: 'Rectificaión de datos por cambio de género', description:'Este trámite te permite modificar los datos de nombre y género registrados en tu DNI. ...'},
 ];
 
+
+
 const DataName = data.map((item:any)=>item.title);
 
 const FormRequiredFields = ["Tramites"];
