@@ -4,8 +4,6 @@ import { IUserContact, IUserNotification, IUserRol, IResponse } from "../Interfa
 import { delLSData } from "../Utils/General";
 import { NotificationsAPI } from "../Services/NotificationsAPI";
 
-
-
 const ContextValues = () => {
 
   const AxiosNotificationAPI = new NotificationsAPI();
@@ -43,7 +41,7 @@ const ContextValues = () => {
 
 export const NotificationsContext = createContext({} as ReturnType<typeof ContextValues>);
 
-const NotificationsContextProvider: FC<{}> = (props) => {
+const NotificationsContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <NotificationsContext.Provider value={ContextValues()}>
       {props.children}
