@@ -1,4 +1,4 @@
-import { IFormState, IResponse, IToken, IUserContact, IUserData, IUserRol } from "../Interfaces/Data";
+import { IFormState, IResponse, IToken, IUserContact, IUserData, IUserNotification, IUserRol } from "../Interfaces/Data";
 import { GetLevels } from "../Interfaces/UserLevels";
 
 export const DefaultResponse:IResponse = {
@@ -31,6 +31,11 @@ export const DefaultUserData:IUserData = {
   updated_at: null,
   email_verified_at: null,
   deleted_at: null
+}
+
+export const DefaultUserNotification:IUserNotification = {
+  ID: 0,
+  NAME: ""
 }
 
 export const DefaultUserContact:IUserContact = {

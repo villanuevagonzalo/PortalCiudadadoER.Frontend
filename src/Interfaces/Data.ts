@@ -69,3 +69,8 @@ export interface ILocation{
   PAI_ID: number;
   PAIS: string;
 }
+
+export interface IUserNotification{
+  ID: number;
+  NAME: string;
+}
