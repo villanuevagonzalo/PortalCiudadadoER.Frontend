@@ -2,6 +2,32 @@ import styled from "styled-components";
 
 //// Common Elements
 
+export const TableWrapper = styled.table<{ open?: boolean }>`
+
+  & th{
+      --tw-text-opacity: 1;
+      color: rgb(17 24 39 / var(--tw-text-opacity));
+      font-weight: 500;
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+  }
+
+  & td{
+    --tw-text-opacity: 1;
+    color: rgb(17 24 39 / var(--tw-text-opacity));
+    font-weight: 300;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+`;
 
 
 //// HELPERS

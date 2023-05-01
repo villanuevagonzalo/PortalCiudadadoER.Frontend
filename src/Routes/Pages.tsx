@@ -45,6 +45,7 @@ export const RawPages:RawPagesProps = {
     path: '',
     label: 'Inicio',
     element: <Auth_Login />,
+    scope: ['public'],
     root: true
   },
 
@@ -216,7 +217,7 @@ const FlattenPages = (RawPages: RawPagesProps, parentPath:string = '', parentKey
       }
     }
     flatObject[flatKey] = {
-      path: path + (path=='/'?'':'/'),
+      path: path + (path==='/'?'':'/'),
       label,
       scope,
       root,
@@ -229,9 +230,6 @@ const FlattenPages = (RawPages: RawPagesProps, parentPath:string = '', parentKey
 export const FlatPages:RawPagesProps = FlattenPages(RawPages);
 export const Pages:PagesProps = Object.fromEntries(Object.entries(FlatPages).map(([key, value]) => [key, value.path]));
 
-
 export const GetFullPath = (path:string) => Object.values(FlatPages)
                                                   .filter((item:PageProps)=>path.startsWith(item.path)&&!item.root)
                                                   .sort((a, b) => (a.path > b.path) ? 1 : -1);
-
-console.log(GetFullPath('/actor/procedures/forms/'))

@@ -412,7 +412,7 @@ export const LayoutListItem = styled.div<{ color?:string, disabled?:boolean }>`
   justify-items: center;
   align-items: top;
   gap:1.5rem;
-  cursor:${props => (props.color=='disabled' ? 'default' : 'pointer')};
+  cursor:${props => (props.color==='disabled' ? 'default' : 'pointer')};
 
   & .ListItemIcon{
     color: var(--${props => (props.color ? props.color : 'primary')});

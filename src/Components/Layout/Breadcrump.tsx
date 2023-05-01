@@ -12,9 +12,9 @@ export const LayoutBreadcrump = (props: any) => {
     ?
     (<LayoutBreadCrumpWrapper color={props.color}>
       {Path.map((child, index)=><li key={child.path}>
-        {window.location.pathname==child.path
-          ?<p>{index==0?<AiOutlineHome/>:''}{child.label}</p>
-          :<><NavLink to={child.path}>{index==0?<AiOutlineHome/>:''}{child.label}</NavLink><MdKeyboardArrowRight/></>
+        {window.location.pathname===child.path
+          ?<p>{index===0?<AiOutlineHome/>:''}{child.label}</p>
+          :<><NavLink to={child.path}>{index===0?<AiOutlineHome/>:''}{child.label}</NavLink><MdKeyboardArrowRight/></>
         }
       </li>)}
       </LayoutBreadCrumpWrapper>):<></>}</>

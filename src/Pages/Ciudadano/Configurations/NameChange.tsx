@@ -35,7 +35,7 @@ export const DC_Configurations_NameChange = () => {
     </LayoutTitle>
     <LayoutSection>
     <h1><BiUserCircle className='small'/>Cambiar Datos Personales</h1>
-    {userRol[0].level==3?<>
+    {userRol[0].level===3?<>
     
       <DivOutlined className="flex-col">
       <b className='mb-2'>Tu identidad ya ha sido validada.</b>

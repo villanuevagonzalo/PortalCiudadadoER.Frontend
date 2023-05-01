@@ -19,7 +19,7 @@ export const RawLocations = async () => {
   return NewLocations.response.data;
 }
 
-export const LocationByID = (locations:ILocation[], localityID:number) => locations.filter((location:ILocation)=>location.ID==localityID)[0]
-export const LocationFullPath = (location:ILocation) => CapitalizeWords(location.NOMBRE+', '+location.DEPARTAMENTO)
+export const LocationByID = (locations:ILocation[], localityID:number) => locations.filter((location:ILocation)=>location.ID===localityID)[0]
+export const LocationFullPath = (location:ILocation) => location?CapitalizeWords(location.NOMBRE+', '+location.DEPARTAMENTO):'NO ENCONTRADO'
 export const LocationsFullPath = (locations:ILocation[]) => locations.map((item:ILocation)=>LocationFullPath(item))
-export const GetLocationByPath = (locations:ILocation[], localityPath:string) => locations.filter((location:ILocation)=>LocationFullPath(location)==localityPath)[0]
+export const GetLocationByPath = (locations:ILocation[], localityPath:string) => locations.filter((location:ILocation)=>LocationFullPath(location)===localityPath)[0]
