@@ -1,10 +1,12 @@
-import { BsTextParagraph } from "react-icons/bs";
-import { MdTitle, MdErrorOutline, MdShortText } from "react-icons/md";
+import { BsCalendarEvent, BsSliders, BsTextParagraph } from "react-icons/bs";
+import { MdTitle, MdErrorOutline, MdShortText, MdDateRange, MdRadioButtonChecked } from "react-icons/md";
 import { RxTextAlignLeft, RxSection } from "react-icons/rx";
-import { TbNumber } from "react-icons/tb";
+import { TbClockHour4, TbNumber } from "react-icons/tb";
 import { ImPageBreak } from "react-icons/im";
-import { CgPassword } from "react-icons/cg";
+import { CgPassword, CgSelectR } from "react-icons/cg";
 import { FiMail } from "react-icons/fi"
+import { BiCheckSquare } from "react-icons/bi";
+import { AiOutlineCloudUpload, AiOutlineQrcode } from "react-icons/ai";
 
 export type ElementTypes = 'SECTION' | 'TITLE' | 'PARAGRAPH' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
 
@@ -93,13 +95,13 @@ export const ElementBases = {
     description: "Campo de Fecha",
     properties: ["label","required","disabled"] as const,
     format: "date",
-    icon: MdErrorOutline
+    icon: MdDateRange
   },
   HOUR: {
     description: "Campo de Hora",
     properties: ["label","required","disabled"] as const,
     format: "date",
-    icon: MdErrorOutline
+    icon: TbClockHour4
   },
 
   // Multiple Elements
@@ -107,19 +109,25 @@ export const ElementBases = {
     description: "Chequeo de Valores",
     properties: ["label","required","disabled"] as const,
     format: "boolean",
-    icon: MdErrorOutline
+    icon: BiCheckSquare
   },
   RADIO: {
     description: "Radio de Valores",
     properties: ["label","required","disabled"] as const,
     format: "number",
-    icon: MdErrorOutline
+    icon: MdRadioButtonChecked
   },
   SELECT: {
     description: "Lista de Valores",
     properties: ["label","required","disabled"] as const,
     format: "number",
-    icon: MdErrorOutline
+    icon: CgSelectR
+  },
+  RANGE: {
+    description: "Rango de Valores",
+    properties: ["label","required","disabled","value_min","value_max"] as const,
+    format: "number",
+    icon: BsSliders
   },
 
   // Special Elements
@@ -127,19 +135,13 @@ export const ElementBases = {
     description: "Carga de Archivos",
     properties: ["label","required","disabled"] as const,
     format: "files",
-    icon: MdErrorOutline
+    icon: AiOutlineCloudUpload
   },
   CAPTCHA: {
     description: "Verificador CAPTCHA",
     properties: ["label","required","disabled"] as const,
     format: "string",
-    icon: MdErrorOutline
-  },
-  RANGE: {
-    description: "Rango de Valores",
-    properties: ["label","required","disabled","value_min","value_max"] as const,
-    format: "number",
-    icon: MdErrorOutline
+    icon: AiOutlineQrcode
   },
 };
 
@@ -158,7 +160,7 @@ export type ElementMap = {
   CHECKBOX: Pick<ElementProps, typeof ElementBases['CHECKBOX']['properties'][number]>,
   RADIO: Pick<ElementProps, typeof ElementBases['RADIO']['properties'][number]>,
   SELECT: Pick<ElementProps, typeof ElementBases['SELECT']['properties'][number]>,
+  RANGE: Pick<ElementProps, typeof ElementBases['RANGE']['properties'][number]>,
   FILE: Pick<ElementProps, typeof ElementBases['FILE']['properties'][number]>,
   CAPTCHA: Pick<ElementProps, typeof ElementBases['CAPTCHA']['properties'][number]>,
-  RANGE: Pick<ElementProps, typeof ElementBases['RANGE']['properties'][number]>,
 }

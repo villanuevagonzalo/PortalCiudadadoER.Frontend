@@ -14,13 +14,15 @@ export const FieldsBaseMenu = styled.div<{ match?: boolean }>`
     color:var(--maincolor_text);
     transition: background .05s ease-in;
     cursor:pointer;
+    gap:0.5rem;
+    padding: 0 0.5rem;
 
     
 
     & span{
       color:var(--primary_tint);
       font-size:1rem;
-      width: 2rem;
+      width: 1rem;
       height: 2rem;
       display:flex;
       justify-content: center;
@@ -47,8 +49,7 @@ export const FieldsBaseMenu = styled.div<{ match?: boolean }>`
       align-items: center;
       display:flex;
       height: 2rem;
-      border-radius:0.25rem;
-      padding: 0.5rem 0.75rem;
+      font-size:0.8rem;
 
       &.title{
         font-weight:600;
