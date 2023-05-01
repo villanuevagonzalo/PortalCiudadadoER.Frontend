@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { GetMessage } from '../Interfaces/MessageHandler';
 import { getLSData } from '../Utils/General';
 
@@ -18,6 +19,12 @@ axiosBase.interceptors.request.use(
     return err
   }
 );
+interface CustomResponse {
+  status: any;
+  code: number;
+  message: string;
+  response: AxiosResponse<any>;
+}
 
 axiosBase.interceptors.response.use(
   (response: AxiosResponse) => {
