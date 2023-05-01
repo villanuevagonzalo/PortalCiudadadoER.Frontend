@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
+import { NotificationsContext } from "../../Contexts/NotificationContext";
 import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
 import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
@@ -16,6 +17,7 @@ import { IoIosSettings } from "react-icons/io";
 import { AiOutlineArrowRight } from "react-icons/ai";
 
 
+
 const navigation = [
   { name: 'Inicio', icon: RiLayout4Fill, href: 'Dashboard/' },
   { name: 'Mis Trámites', icon: FaClipboardList, href: 'Dashboard/MisTramites' },
@@ -28,6 +30,7 @@ export const LayoutCiudadano = () => {
   const [ mobile, setMobile ] = useState<boolean>(isSmallResolution);
   const [ open, setOpen ] = useState<boolean>(isSmallResolution);
   const { userData, userRol, Logout } = useContext(AuthContext);
+  const { userNotifications } = useContext(NotificationsContext);
   
   useEffect(() => {
     setMobile(isSmallResolution)
