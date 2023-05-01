@@ -57,7 +57,7 @@ export const DC_Configurations = () => {
       let ConvertedBirthdate = moment(userContact.BIRTHDAY).format("YYYY-MM-DD")
       setFieldValues({
         "Cellphone": userContact.CELLPHONE_NUMBER,
-        "Birthdate": ConvertedBirthdate=='Invalid date'?'':ConvertedBirthdate,
+        "Birthdate": ConvertedBirthdate==='Invalid date'?'':ConvertedBirthdate,
         "Locality": "",
         "AddressStreet": userContact.ADDRESS_STREET,
         "AddressNumber": userContact.ADDRESS_NUMBER,
@@ -81,7 +81,7 @@ export const DC_Configurations = () => {
       <hr className="-mt-4 mb-2"/>
       <LayoutStackedPanel>
         <LayoutSpacer/>
-        {userRol[0].level==3?<></>:<Link to={Pages.DC_CONFIGURATIONS_NAMECHANGE}><FormikButton color="gray">Cambiar Nombre</FormikButton></Link>}
+        {userRol[0].level===3?<></>:<Link to={Pages.DC_CONFIGURATIONS_NAMECHANGE}><FormikButton color="gray">Cambiar Nombre</FormikButton></Link>}
         <Link to={Pages.AUTH_PASSWORDRESET}><FormikButton>Solicitar cambio de Contraseña <AiOutlineArrowRight/></FormikButton></Link>
       </LayoutStackedPanel>
 
@@ -115,7 +115,7 @@ export const DC_Configurations = () => {
       ><Form autoComplete="off">
         <FormikField name="Cellphone" disabled={FormState.loading}/>
         <h2 className="mt-4">Datos de Ubicación</h2>
-        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length==0} data={LocationsFullPath(LocationsValues)}/>
+        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length===0} data={LocationsFullPath(LocationsValues)}/>
         <LayoutStackedPanel>
           <FormikField name="AddressStreet" disabled={FormState.loading} className="flex-3"/>
           <FormikField name="AddressNumber" disabled={FormState.loading}/>

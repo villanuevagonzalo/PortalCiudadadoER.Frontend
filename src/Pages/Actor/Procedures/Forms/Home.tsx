@@ -2,7 +2,7 @@ import { Form, Formik } from "formik";
 import { Spinner } from "../../../../Components/Elements/StyledComponents";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IFormState } from "../../../../Interfaces/Data";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
 import { Button } from "../../../../Components/Forms/Button";
@@ -10,6 +10,13 @@ import { Button } from "../../../../Components/Forms/Button";
 import { DefaultFormState } from '../../../../Data/DefaultValues';
 import { Link } from "react-router-dom";
 import { Pages } from "../../../../Routes/Pages";
+import { Table } from "../../../../Components/Elements/Table";
+import { ColumnDef } from "@tanstack/react-table";
+
+type Item = {
+  title: string;
+  description: string;
+ }
 
 const data = [
   {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -25,6 +32,18 @@ const DataName = data.map((item:any)=>item.title);
 const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
+
+  const mcolumns = useMemo<ColumnDef<Item>[]>(()=>[
+    {
+      header: 'Name',
+      accessorKey: 'title',
+    },
+    {
+      header: 'Price',
+      accessorKey: 'description',
+    }
+  ],[]);
+  const mdata = useMemo(()=>data,[])
 
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -48,15 +67,14 @@ export const DA_Procedures_Forms_Home = () => {
           </Formik></div>
         <LayoutSpacer/>
         
-        <Link to="#"><Button disabled={FormState.loading} color="secondary">
+        <Button disabled={FormState.loading} color="secondary">
           {FormState.loading ? <Spinner /> : "Actualizar"}
-        </Button></Link>
+        </Button>
         
         <Link to={Pages.DA_PROCEDURES_FORMS_NEW}><Button>Nuevo</Button></Link>
       </LayoutStackedPanel>
-      <div>
-        hola
-      </div>
+      
+      <Table columns={mcolumns} data={mdata} />
     </LayoutSection>
   </>);
 }

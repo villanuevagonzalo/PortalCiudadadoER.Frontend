@@ -34,7 +34,7 @@ export const FormikSearch = ({...props}: Props) => {
 
   const listMatch = (value:string) => {
     setListDataIndex(0);
-    setListData(value==""?[]:props.data.filter((a:string) => a.toLocaleLowerCase().startsWith(value.toString().toLocaleLowerCase())));
+    setListData(value===""?[]:props.data.filter((a:string) => a.toLocaleLowerCase().startsWith(value.toString().toLocaleLowerCase())));
   }
 
   const handleChange = (e:any) => {
@@ -88,7 +88,7 @@ export const FormikSearch = ({...props}: Props) => {
       </div>
       {(ListData.length>0)?<div className="FormDropdown">
         {ListData.map((item:any, index:number) => (
-          <div dangerouslySetInnerHTML={{__html:parseItem(item, field.value)}} onMouseDown={()=>handleClick(item)} key={index} className={ListDataIndex==index?'active':''}/>
+          <div dangerouslySetInnerHTML={{__html:parseItem(item, field.value)}} onMouseDown={()=>handleClick(item)} key={index} className={ListDataIndex===index?'active':''}/>
         ))}
       </div>:<></>}
     </FormWrapperInput>

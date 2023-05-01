@@ -87,7 +87,7 @@ export const FormFields:FieldProps = {
                             if (!value) return true;
                             let consecutive = 0;
                             for (let i = 1; i < value.length; i++) {
-                                consecutive=Number(value[i])-Number(value[i-1])==1?consecutive+1:0
+                                consecutive=Number(value[i])-Number(value[i-1])===1?consecutive+1:0
                                 if(consecutive>=3){ return false }
                             }
                             return true
