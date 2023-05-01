@@ -19,9 +19,9 @@ export const DC_Validation = () => {
       cuil: userData.cuil
     }, setFormState);
 
-    if(Response.status){
-      window.open(Response.response.data, '_blank');
-      //window.location = Response.response.data;
+    if(Response.data.status){
+      window.open(Response.data.response, '_blank');
+      //window.location = response.data.response;
     }
   }
 

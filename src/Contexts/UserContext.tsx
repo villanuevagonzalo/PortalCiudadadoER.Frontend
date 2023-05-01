@@ -28,10 +28,10 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:IResponse | any = await AxiosAuthAPI.UserGetData(data);
 
-    if(response.status){
+    if(response.data.status){
       setFormState((prev:any) => ({ ...prev, error: "" }));
     } else{
-      setFormState((prev:any) => ({ ...prev, error: response.message }));
+      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
     }
 
     setFormState((prev:any) => ({ ...prev, loading: false }));
@@ -42,11 +42,11 @@ const ContextValues = () => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:IResponse | any = await AxiosAuthAPI.UserNameChange(data);
-    if(response.status){
+    if(response.data.status){
       setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
-      setFormState((prev:any) => ({ ...prev, error: response.message }));
+      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
     }
 
     setFormState((prev:any) => ({ ...prev, loading: false }));
@@ -58,7 +58,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:IResponse | any = await AxiosAuthAPI.UserSaveData(data);
 
-    if(response.status){
+    if(response.data.status){
       
 
       let NewUserContact = {...userContact,
@@ -74,8 +74,8 @@ const ContextValues = () => {
     setUserContact(NewUserContact);
     setLSData("UserContact", NewUserContact);
 
-    if(response.response.data.token){
-        SaveToken(response.response.data.token)
+    if(response.data.response.token){
+        SaveToken(response.data.response.token)
     }
     }
 
@@ -95,7 +95,7 @@ const ContextValues = () => {
 
 export const UserContext = createContext({} as ReturnType<typeof ContextValues>);
 
-const UserContextProvider: FC<{}> = (props) => {
+const UserContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <UserContext.Provider value={ContextValues()}>
       {props.children}
