@@ -72,6 +72,9 @@ body {
 .flex-3{ flex:3 !important; }
 
 
+.gap-1{ gap:1rem; }
+
+
 .rc-anchor-light.rc-anchor-normal{
   border:1px solid red!important;
 }

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const FieldsBaseMenu = styled.div<{ match?: boolean }>`
+export const FormElementBasesMenu = styled.div<{ match?: boolean }>`
   display: flex;
   flex-direction: column;
   width:100%;
@@ -75,5 +75,24 @@ export const FieldsBaseMenu = styled.div<{ match?: boolean }>`
     }
 
     
+  }
+`;
+
+export const BaseWrapper = styled.div<{ }>`
+  display: flex;
+  flex-direction:column;
+  border:1px solid var(--disabled);
+  border-radius:0.25rem;
+
+  & label{
+    
+    background-image: linear-gradient(45deg, #aaa 10%, #ffffff 10%, #ffffff 50%, #aaa 50%, #aaa 60%, #ffffff 60%, #ffffff 100%);
+    background-size: 5px 5px;
+    padding:1rem;
+    display: flex;
+    flex-direction:row;
+    justify-content:left;
+    align-items:center;
+    gap: 0.5rem;
   }
 `;

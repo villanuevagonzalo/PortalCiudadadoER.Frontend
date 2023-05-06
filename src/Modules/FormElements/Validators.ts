@@ -1,4 +1,4 @@
-import { ElementMap, ElementTypes } from "./Props";
+import { FormElementMap, FormElementTypes } from "./Props";
 
 export const ValidationsMessages: {[key: string]: string} = {
   REQUIRED: 'El campo es obligatorio',
@@ -19,7 +19,7 @@ export const validators = {
     value > max ? `Value must be smaller than ${max}` : null,
 };
 
-export const getValidations = (type: ElementTypes, properties: Partial<ElementMap[ElementTypes]> = {}) => {
+export const getValidations = (type: FormElementTypes, properties: Partial<FormElementMap[FormElementTypes]> = {}) => {
   const validations = {};
 
 }
