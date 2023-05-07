@@ -29,7 +29,7 @@ export const App = () => {
             item.scope.includes('mixed')?<><LayoutMixed/></>:
             (item.scope.includes('public')
             ? <PublicRoute><LayoutDefault /></PublicRoute>
-            : <PrivateRoute>{item.scope.includes('citizen')
+            : <PublicRoute>{item.scope.includes('citizen')
               ?<LayoutCiudadano />
               :<LayoutActor />
             }</PrivateRoute>)
