@@ -6,13 +6,15 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 export const LayoutBreadcrump = (props: any) => {
 
-  const Path = GetFullPath(window.location.pathname);
-
+  let pathname = window.location.pathname;
+  pathname = pathname+(pathname[pathname.length-1]!=='/'?'/':'')
+  const Path = GetFullPath(pathname);
+  
   return (<>{Path.length>0
     ?
     (<LayoutBreadCrumpWrapper color={props.color}>
       {Path.map((child, index)=><li key={child.path}>
-        {window.location.pathname==child.path
+        {pathname==child.path
           ?<p>{index==0?<AiOutlineHome/>:''}{child.label}</p>
           :<><NavLink to={child.path}>{index==0?<AiOutlineHome/>:''}{child.label}</NavLink><MdKeyboardArrowRight/></>
         }

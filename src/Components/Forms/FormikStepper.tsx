@@ -1,5 +1,5 @@
 import { Form, Formik, FormikConfig, FormikValues } from "formik";
-import React, { useCallback, useEffect } from "react";
+import React, { ReactNode, useCallback, useEffect } from "react";
 import { useState } from "react";
 import { NavigatorSpacer, NavigatorWrapper, Spinner } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
@@ -27,7 +27,7 @@ export function FormikStepper({ children, FormState2, extraHTML, ...props }:Form
   const [step, setStep] = useState(0);
   let [FormState, setFormState] = FormState2
 
-  const childrenArray = React.Children.toArray(children).filter((e:any)=>e.type===FormikStep) as React.ReactElement<FormikStepProps>[];
+  const childrenArray = React.Children.toArray(children as ReactNode).filter((e:any)=>e.type===FormikStep) as React.ReactElement<FormikStepProps>[];
   const currentChild = childrenArray[step];
 
   const isLastStep = () => step === childrenArray.length - 1;

@@ -31,6 +31,7 @@ const ContextValues = () => {
       expiration: new Date(DecodeToken.exp*1000)
     };
     const NewUserRol = GetLevels(DecodeToken.scopes);
+    //const NewUserRol = GetLevels(["level_2"]);
 
     setAuthToken(NewToken);
     setUserRol(NewUserRol);
@@ -94,12 +95,12 @@ const ContextValues = () => {
     const response:IResponse | any = await AxiosAuthAPI.UserLogin(data);
     
     if(response.status){
-      const NewUserData = response.response.data.user_data.user;
-      const NewUserContact = response.response.data.user_data.user_contact;
+      const NewUserData = response.data.response.user_data.user;
+      const NewUserContact = response.data.response.user_data.user_contact;
 
       setIsLogged(true);
 
-      SaveToken(response.response.data.access_token);
+      SaveToken(response.data.response.access_token);
 
       setUserData(NewUserData);
       setUserContact(NewUserContact || DefaultUserContact);
@@ -169,8 +170,8 @@ const ContextValues = () => {
     setUserContact(NewUserContact);
     setLSData("UserContact", NewUserContact);
 
-    if(response.response.data.token){
-        SaveToken(response.response.data.token)
+    if(response.data.response.token){
+        SaveToken(response.data.response.token)
     }
     }
 
@@ -283,10 +284,42 @@ const ContextValues = () => {
     return response;
   }
 
-  const AFIP_getToken = async (data: any, setFormState:Function) => {
+  const AFIP_checkToken = async (data: any, setFormState:Function) => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:IResponse | any = await AxiosAuthAPI.Autenticar_AFIP_getToken(data);
+    const response:IResponse | any = await AxiosAuthAPI.Autenticar_AFIP_checkToken(data);
+
+    console.log(response)
+
+    if(response.status){
+      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
+    } else{
+      setFormState((prev:any) => ({ ...prev, error: response.message }));
+    }
+
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
+
+  const MIARGENTINA_getURL = async (data: any, setFormState:Function) => {
+
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosAuthAPI.Autenticar_MIARGENTINA_getURL(data);
+
+    if(response.status){
+      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
+    } else{
+      setFormState((prev:any) => ({ ...prev, error: response.message }));
+    }
+
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
+
+  const MIARGENTINA_checkToken = async (data: any, setFormState:Function) => {
+
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosAuthAPI.Autenticar_MIARGENTINA_checkToken(data);
 
     if(response.status){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
@@ -304,13 +337,14 @@ const ContextValues = () => {
     UserGetData, SaveData, UserNameChange,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
-    AFIP_getURL,AFIP_getToken
+    AFIP_getURL, AFIP_checkToken,
+    MIARGENTINA_getURL, MIARGENTINA_checkToken
   }
 }
 
 export const AuthContext = createContext({} as ReturnType<typeof ContextValues>);
 
-const AuthContextProvider: FC<{}> = (props) => {
+const AuthContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <AuthContext.Provider value={ContextValues()}>
       {props.children}

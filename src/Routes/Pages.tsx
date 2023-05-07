@@ -19,7 +19,7 @@ import { Auth_EmailValidate } from "../Pages/Auth/EmailValidate";
 import { Auth_PasswordReset } from "../Pages/Auth/PasswordReset";
 import { Auth_PasswordUpdate } from "../Pages/Auth/PasswordUpdate";
 import { TramitesOnlinePage } from "../Pages/Ciudadano/Procedures/TramitesOnlinePage";
-import { AutenticarToken } from "../Pages/Ciudadano/Configurations/AutenticarToken";
+import { DC_UserValidate } from "../Pages/Ciudadano/Configurations/UserValidate";
 import { DA_Procedures_Forms_Home } from "../Pages/Actor/Procedures/Forms/Home";
 import { DA_Procedures_Forms_Create } from "../Pages/Actor/Procedures/Forms/Create";
 import { DA_Procedures_List } from "../Pages/Actor/Procedures/List";
@@ -45,6 +45,7 @@ export const RawPages:RawPagesProps = {
     path: '',
     label: 'Inicio',
     element: <Auth_Login />,
+    scope: ['public'],
     root: true
   },
 
@@ -56,12 +57,12 @@ export const RawPages:RawPagesProps = {
     root: true,
     children: {
       LOGIN:{
-        path: 'ingresar',
+        path: 'signin',
         label: 'Iniciar Sesión',
         element: <Auth_Login />
       },
       SIGNUP:{
-        path: 'registro',
+        path: 'signup',
         label: 'Registro',
         element: <Auth_Signup />
       },
@@ -85,10 +86,23 @@ export const RawPages:RawPagesProps = {
         label: 'Actualizar Contraseña',
         element: <Auth_PasswordUpdate />
       },
-      AUTENTICAR_VALIDATETOKEN:{
-        path: 'autenticar/validate',
-        label: 'Validar Token Autenticar',
-        element: <AutenticarToken />
+      USERVALIDATE:{
+        path: 'user/validate',
+        label: 'Validación de Usuario',
+        scope: ['private','citizen'],
+        element: <DC_UserValidate />,
+        children: {
+          AFIP:{
+            path: 'afip',
+            label: 'AFIP',
+            element: <DC_UserValidate type="AFIP"/>
+          },
+          MIARGENTINA:{
+            path: 'miargentina',
+            label: 'Mi Argentina',
+            element: <DC_UserValidate type="Mi Argentina" />
+          },
+        }
       }
     }
   },
@@ -216,7 +230,7 @@ const FlattenPages = (RawPages: RawPagesProps, parentPath:string = '', parentKey
       }
     }
     flatObject[flatKey] = {
-      path: path + (path=='/'?'':'/'),
+      path: path + (path==='/'?'':'/'),
       label,
       scope,
       root,
@@ -229,9 +243,6 @@ const FlattenPages = (RawPages: RawPagesProps, parentPath:string = '', parentKey
 export const FlatPages:RawPagesProps = FlattenPages(RawPages);
 export const Pages:PagesProps = Object.fromEntries(Object.entries(FlatPages).map(([key, value]) => [key, value.path]));
 
-
 export const GetFullPath = (path:string) => Object.values(FlatPages)
                                                   .filter((item:PageProps)=>path.startsWith(item.path)&&!item.root)
                                                   .sort((a, b) => (a.path > b.path) ? 1 : -1);
-
-console.log(GetFullPath('/actor/procedures/forms/'))

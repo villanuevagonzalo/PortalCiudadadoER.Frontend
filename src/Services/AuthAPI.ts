@@ -100,11 +100,24 @@ export class AuthAPI {
   }) {
     return this.baseService.get("/v0/authentication/afip/getUrl", { params });
   }
+
+  public Autenticar_MIARGENTINA_getURL(params: {
+    cuil: string;
+  }) {
+    return this.baseService.get("/v0/authentication/miargentina/getUrl", { params });
+  }
   
-  public Autenticar_AFIP_getToken(params: {
+  public Autenticar_AFIP_checkToken(params: {
     cuil: string;
     code: string;
   }) {
     return this.baseService.get("/v0/authentication/afip/getToken", { params });
+  }
+  
+  public Autenticar_MIARGENTINA_checkToken(params: {
+    cuil: string;
+    code: string;
+  }) {
+    return this.baseService.get("/v0/authentication/miargentina/getToken", { params });
   }
 }

@@ -74,8 +74,8 @@ const ContextValues = () => {
     setUserContact(NewUserContact);
     setLSData("UserContact", NewUserContact);
 
-    if(response.response.data.token){
-        SaveToken(response.response.data.token)
+    if(response.data.response.token){
+        SaveToken(response.data.response.token)
     }
     }
 
@@ -95,7 +95,7 @@ const ContextValues = () => {
 
 export const UserContext = createContext({} as ReturnType<typeof ContextValues>);
 
-const UserContextProvider: FC<{}> = (props) => {
+const UserContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <UserContext.Provider value={ContextValues()}>
       {props.children}

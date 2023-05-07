@@ -85,7 +85,7 @@ export const Auth_Signup = () =>{
 
               if(response.status){
                 console.log(response)
-                let userdata = response.response.data;
+                let userdata = response.data.response;
                 
                 setFieldValues({...values, 
                   Name: CapitalizeWords(userdata.Nombres), 

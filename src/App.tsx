@@ -23,7 +23,6 @@ export const App = () => {
   return (
     <Routes>
       {Object.values(FlatPages).map(item => {
-
         if(item.scope){
           return <Route element={
             item.scope.includes('public')
@@ -40,7 +39,9 @@ export const App = () => {
           <Route path={item.path} element={item.element} key={item.path}/>
         </Route>
       })}
-      <Route path="*" element={<ErrorPage />}/>
+      <Route element={<PublicRoute><LayoutDefault /></PublicRoute>}>
+        <Route path="*" element={<ErrorPage />}/>
+      </Route>
     </Routes>
   );
 }
