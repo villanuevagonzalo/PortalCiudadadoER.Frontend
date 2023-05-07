@@ -53,7 +53,7 @@ export const RawPages:RawPagesProps = {
     path: 'auth',
     label: 'Autenticación',
     element: <Auth_Login />,
-    scope: ['public'],
+    scope: ['public'], //
     root: true,
     children: {
       LOGIN:{
