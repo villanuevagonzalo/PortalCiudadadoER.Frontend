@@ -8,6 +8,7 @@ import { IFormState } from "../../../Interfaces/Data";
 import { DefaultFormState } from "../../../Data/DefaultValues";
 import { BsBookmark, BsBookmarkCheck, BsBookmarkPlus, BsBookmarkStar, BsBookmarkX } from "react-icons/bs";
 import { Pages } from "../../../Routes/Pages";
+import { AxiosResponse } from "axios";
 
 export const DC_Validation = () => {
 
@@ -18,20 +19,20 @@ export const DC_Validation = () => {
   const handleValidationsTab = () => {
     setValidationsTab(!ValidationsTab)
   }
-  
-  async function getValidationLink( type = 'afip' ) {
-    let Response;
-    if(type==='afip'){
-      Response = await AFIP_getURL({
+
+  async function getValidationLink( type = 'AFIP' ) {
+    let response: AxiosResponse;
+    if(type==='AFIP'){
+      response = await AFIP_getURL({
         cuil: userData.cuil
       }, setFormState);
-    } else if(type==='miargentina'){
-      Response = await MIARGENTINA_getURL({
+    } else{
+      response = await MIARGENTINA_getURL({
         cuil: userData.cuil
       }, setFormState);
     }
-    if (Response?.status) {
-      window.open(Response.data.response, '_blank');
+    if (response.data.success) {
+      window.open(response.data.data, '_blank');
     }
   }
 

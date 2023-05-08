@@ -21,21 +21,26 @@ axiosBase.interceptors.request.use(
 
 axiosBase.interceptors.response.use(
   (response: AxiosResponse) => {
-    response.data = {
-      status: response.data?.status || true,
-      code: response.status,
-      message: GetMessage(response.data.message, response.status),
-      response: response.data
-    }
     console.log(response)
+    response.data = {
+      success: response.data?.status || true,
+      message: GetMessage(response.data?.message, response.status),
+      data: response.data
+    }
+    delete response.data.data.message;
+    delete response.data.data.status;
+    console.log(response.data)
 
     return response;
 },
   (err) => {
     return {
-    status: false,
-    code: err.response.status,
-    message: GetMessage(err.response.data?.message || err.message, err.response?.status),
-    response: err
-  }}
+      data:{
+        status: false,
+        code: err.response.status,
+        message: GetMessage(err.response.data?.message || err.message, err.response?.status),
+        response: err
+      }
+    }
+  }
 );

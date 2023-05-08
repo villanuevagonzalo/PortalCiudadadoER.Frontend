@@ -13,46 +13,50 @@ import { IFormState } from '../../../Interfaces/Data';
 import { DefaultFormState } from '../../../Data/DefaultValues';
 import { Pages } from '../../../Routes/Pages';
 import { BiUserCircle } from 'react-icons/bi';
+import { AxiosResponse } from 'axios';
 
 
 export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =>{
 
   const SearchParams = GetParams(["code"]);
 
-  const { userData, userRol, AFIP_checkToken, AFIP_getURL, MIARGENTINA_checkToken, MIARGENTINA_getURL  } = useContext(AuthContext);
+  const { userData, userRol, SaveToken, AFIP_checkToken, AFIP_getURL, MIARGENTINA_checkToken, MIARGENTINA_getURL  } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   
   async function getValidationLink( type = 'AFIP' ) {
-    let Response;
+    let response: AxiosResponse;
     if(type==='AFIP'){
-      Response = await AFIP_getURL({
+      response = await AFIP_getURL({
         cuil: userData.cuil
       }, setFormState);
-    } else if(type==='Mi Argentina'){
-      Response = await MIARGENTINA_getURL({
+    } else{
+      response = await MIARGENTINA_getURL({
         cuil: userData.cuil
       }, setFormState);
     }
-    if (Response?.status) {
-      //window.location = Response.data.response
-      console.log(Response.data.response)
+    if (response.data.success) {
+      window.location = response.data.data
     }
   }
 
   async function checkValidation() {
-    let Response;
+    let response: AxiosResponse;
     if(type==='AFIP'){
-      Response = await AFIP_checkToken({
+      response = await AFIP_checkToken({
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
-    } else if(type==='Mi Argentina'){
-      Response = await MIARGENTINA_checkToken({
+    } else{
+      response = await MIARGENTINA_checkToken({
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
     }
-    console.log(Response)
+    if(response.data.data.token){
+      SaveToken(response.data.data.token)
+    } else{
+      setFormState((prev:any) => ({ ...prev, finish: false, error: 'Invalid Token' }));
+    }
   }
 
   useEffect(() => {
@@ -65,7 +69,7 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
   return(<>
     <LayoutSection>
       <h1><BiUserCircle className='small'/>Validación de Identidad por Aplicación</h1>
-      {userRol[0].level==3?<>
+      {(userRol[0].level==3 && !FormState.finish)?<>
         <DivOutlined className="flex-col">
           <b>Tu identidad ya ha sido validada.</b>
         </DivOutlined>

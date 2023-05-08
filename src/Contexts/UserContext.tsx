@@ -26,12 +26,12 @@ const ContextValues = () => {
   const UserGetData = async (data:any, setFormState:Function) => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:IResponse | any = await AxiosAuthAPI.UserGetData(data);
+    const response:AxiosResponse = await AxiosAuthAPI.UserGetData(data);
 
-    if(response.status){
+    if(response.data.success){
       setFormState((prev:any) => ({ ...prev, error: "" }));
     } else{
-      setFormState((prev:any) => ({ ...prev, error: response.message }));
+      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
     }
 
     setFormState((prev:any) => ({ ...prev, loading: false }));
@@ -41,12 +41,12 @@ const ContextValues = () => {
   const UserNameChange = async (data:any, setFormState:Function) => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:IResponse | any = await AxiosAuthAPI.UserNameChange(data);
-    if(response.status){
+    const response:AxiosResponse = await AxiosAuthAPI.UserNameChange(data);
+    if(response.data.success){
       setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
-      setFormState((prev:any) => ({ ...prev, error: response.message }));
+      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
     }
 
     setFormState((prev:any) => ({ ...prev, loading: false }));
@@ -56,9 +56,9 @@ const ContextValues = () => {
   const SaveData = async (data: any, setFormState:Function) => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:IResponse | any = await AxiosAuthAPI.UserSaveData(data);
+    const response:AxiosResponse = await AxiosAuthAPI.UserSaveData(data);
 
-    if(response.status){
+    if(response.data.success){
       
 
       let NewUserContact = {...userContact,
@@ -74,8 +74,8 @@ const ContextValues = () => {
     setUserContact(NewUserContact);
     setLSData("UserContact", NewUserContact);
 
-    if(response.data.response.token){
-        SaveToken(response.data.response.token)
+    if(response.data.data.token){
+        SaveToken(response.data.data.token)
     }
     }
 

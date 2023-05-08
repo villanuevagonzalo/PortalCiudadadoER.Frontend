@@ -57,11 +57,11 @@ export const Auth_PasswordUpdate = () => {
               token: SearchParams.values.token,
               new_password: values.Password,
             }, setFormState)
-            if(response.status){
-              if(response.message==="Contraseña Actualizada"){
+            if(response.data.success){
+              if(response.data.message==="Contraseña Actualizada"){
                 setFormState(prev=>({...prev, error:'', finish:true }))
               } else{
-                setFormState(prev=>({...prev, error:response.message, finish:false}))
+                setFormState(prev=>({...prev, error:response.data.message, finish:false}))
               }
             }
           }}
