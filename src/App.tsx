@@ -28,10 +28,10 @@ export const App = () => {
           return <Route element={
             item.scope.includes('public')
             ? <PublicRoute><LayoutDefault /></PublicRoute>
-            : <PrivateRoute>{item.scope.includes('citizen')
+            : <PublicRoute>{item.scope.includes('citizen')
               ?<LayoutCiudadano />
               :<LayoutActor />
-            }</PrivateRoute>
+            }</PublicRoute>
           } key={item.path}>
             <Route path={item.path} element={item.element}/>
           </Route>
