@@ -56,6 +56,13 @@ export const DA_Procedures_Forms_Create = () => {
   return(<>
     <LayoutSection>
       <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
+      <ElementInstance element={new FormElement('NUMBER',{label:'Ingresá un titulo',value_max:2})}/>
+      <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Subtítulo',required:true})}/>
+      <ElementInstance element={new FormElement('TEXTAREA',{label:'Descripción',required:false})}/>
+      <ElementInstance element={new FormElement('MAIL',{label:'mail',required:true})}/>
+    </LayoutSection>
+    <LayoutSection>
+      <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
       <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Título',required:true})}/>
       <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Subtítulo',required:true})}/>
       <ElementInstance element={new FormElement('TEXTAREA',{label:'Descripción',required:false})}/>

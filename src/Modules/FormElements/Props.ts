@@ -13,6 +13,7 @@ import { FormElement } from "./Types";
 export type FormElementTypes = 'SECTION' | 'TITLE' | 'PARAGRAPH' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
 
 export interface FormElementProps {
+  type: FormElementTypes;
   label: string;
   required: boolean;
   disabled: boolean;
@@ -44,9 +45,11 @@ export const FormElementBases = {
   SECTION: {
     description: "Sección",
     properties:{
-      required: ["label"] as const,
-      optional: ["childrens"] as const,
+      required: ["label","childrens"] as const,
+      optional: [] as const,
     },
+    type: null,
+    format: null,
     icon: RxSection
   },
   TITLE: {
@@ -55,6 +58,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: [] as const,
     },
+    type: null,
+    format: null,
     icon: MdTitle
   },
   PARAGRAPH: {
@@ -63,6 +68,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: [] as const,
     },
+    type: null,
+    format: null,
     icon: BsTextParagraph
   },
   SPACER: {
@@ -71,6 +78,8 @@ export const FormElementBases = {
       required: [] as const,
       optional: [] as const,
     },
+    type: null,
+    format: null,
     icon: ImPageBreak
   },
 
@@ -81,6 +90,7 @@ export const FormElementBases = {
       required: ["label","value_max"] as const,
       optional: ["required","disabled","length_min","length_max","value_min"] as const,
     },
+    type: "input",
     format: "number",
     validations: ["isCUIL"],
     icon: TbNumber
@@ -91,6 +101,7 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled","length_min","length_max"] as const,
     },
+    type: "input",
     format: "string",
     validations: ["character_invalid"],
     icon: MdShortText
@@ -101,7 +112,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled","length_min","length_max"] as const,
     },
-    format: "string",
+    type: "textarea",
+    format: null,
     icon: RxTextAlignLeft
   },
   PASSWORD: {
@@ -110,7 +122,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    format: "string",
+    type: "input",
+    format: "password",
     validations: ["isSecure"],
     icon: CgPassword
   },
@@ -120,7 +133,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    format: "string",
+    type: "input",
+    format: "email",
     icon: FiMail
   },
   DATE: {
@@ -129,6 +143,7 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
+    type: "input",
     format: "date",
     icon: MdDateRange
   },
@@ -138,7 +153,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    format: "date",
+    type: "input",
+    format: "time",
     icon: TbClockHour4
   },
 
@@ -149,7 +165,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    format: "boolean",
+    type: "input",
+    format: "checkbox",
     icon: BiCheckSquare
   },
   RADIO: {
@@ -158,7 +175,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    format: "number",
+    type: "input",
+    format: "radio",
     icon: MdRadioButtonChecked
   },
   SELECT: {
@@ -167,7 +185,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    format: "number",
+    type: "select",
+    format: null,
     icon: CgSelectR
   },
   RANGE: {
@@ -187,7 +206,8 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    format: "files",
+    type: "input",
+    format: "file",
     icon: AiOutlineCloudUpload
   },
   CAPTCHA: {
@@ -196,6 +216,7 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
+    type: "input",
     format: "string",
     icon: AiOutlineQrcode
   },
