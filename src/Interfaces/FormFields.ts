@@ -198,6 +198,95 @@ export const FormFields:FieldProps = {
         placeholder: 'Filtra los tramites',
         validations: yup.string()
     },
+
+    Recipients:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Filtra los destinatarios',
+        validations: yup.string()
+    },
+
+    Age_From:{
+        type: 'number',
+        defaultvalue: '',
+        placeholder: 'Edad Desde',
+        validations: yup.string()
+                        .test('lessThanTen', 'El campo debe tener un numero valido', value => !value || Number(value) > 0)  
+                        .required('El campo es obligatorio')
+    },
+
+    Age_To:{
+        type: 'number',
+        defaultvalue: '',
+        placeholder: 'Edad Hasta',
+        validations: yup.string()
+                        .test('lessThanTen', 'El campo debe tener un numero valido', value => !value || Number(value) > 0)  
+                        .required('El campo es obligatorio')
+    },
+
+    Message_Title:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Titulo',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Message_Body:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Mensaje',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Attachment_Type:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Tipo de Archivo',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Attachment:{
+        type: 'file',
+        defaultvalue: '',
+        placeholder: 'Archivo',
+        validations: yup.object().shape({
+            file: yup.mixed().required('El campo es obligatorio'),
+        })
+    },
+
+    Notification_Date_From:{
+        type: 'String',
+        defaultvalue: '',
+        placeholder: 'Desde',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    Notification_Date_To:{
+        type: 'String',
+        defaultvalue: '',
+        placeholder: 'Hasta',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
+
+    // Send_By_Email:{
+    //     type: 'checkbox',
+    //     defaultvalue: false,
+    //     placeholder: 'Enviar por Email',
+    //     validations: yup.boolean()
+    // },
+
+    Send_By_Email:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Enviar por Email',
+        validations: yup.string()
+                        .required('El campo es obligatorio')
+    },
 }
 
 // Funciones de Obtención de Información

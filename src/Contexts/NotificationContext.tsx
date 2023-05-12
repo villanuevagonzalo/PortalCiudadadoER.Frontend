@@ -25,19 +25,22 @@ const ContextValues = () => {
     return response;
   }
 
-  const UpdateNotification = async (data:any, setFormState:Function) => {
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:IResponse | any = await AxiosNotificationAPI.Get(data);
-    setUserNotifications(prevState => {
-      const index = prevState.findIndex(x => x.ID === data.ID);
-      prevState[index] = data;
-      return prevState;
-    });
+  const UpdateNotification = async () => {
+    // setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosNotificationAPI.Get({});
+    if(response.status){
+      setUserNotifications(response.data);
+      // setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
+    } else {
+      // setFormState((prev:any) => ({ ...prev, error: response.message }));
+    }
+    // console.log(response)
+    return response
   }
 
   return {
     userNotifications
-    ,setUserNotifications
+    ,setUserNotifications, UpdateNotification, CreateNotification
   }
 }
 
