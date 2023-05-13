@@ -103,6 +103,7 @@ export const DC_Notifications = () =>{
 
 
   return (<>
+    <LayoutSection>
     <LayoutTitle>
       Notificaciones
     </LayoutTitle>
@@ -121,7 +122,6 @@ export const DC_Notifications = () =>{
       
 
     </LayoutSection>
-    <LayoutSection>
       
       <LayoutStackedPanel>
         <div>
@@ -129,12 +129,14 @@ export const DC_Notifications = () =>{
             initialValues={FieldValues}
             enableReinitialize={true} 
             validateOnChange={false} 
-            alidateOnBlur={false}
+            validateOnBlur={false}
             validationSchema={formGetValidations(FormRequiredFields).concat(yup.object({
               'Locality': yup.string().oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
             }))}
             onSubmit={async (values: any) => {
-              const LocationData = GetLocationByPath(LocationsValues, values.Locality);
+              console.log(values)
+
+              /*const LocationData = GetLocationByPath(LocationsValues, values.Locality);
               const CreateResponse = await CreateNotification({
                 recipients: values.Recipients,
                 age_from: values.Age_From,
@@ -146,11 +148,11 @@ export const DC_Notifications = () =>{
                 message_title: values.Message_Title,
                 message_body: values.Message_Body,
                 attachment_type: values.Attachment_Type,
-                attachment: values.Attachment,
+                attachment: values.AttachmentTest,
                 send_by_email: values.Send_By_Email,
               }, setFormState);
 
-              console.log(CreateResponse)
+              console.log(CreateResponse)*/
               }}
           >
               <Form autoComplete="off">
@@ -179,15 +181,14 @@ export const DC_Notifications = () =>{
                   ></Field> */}
                   <FormikImage name="Attachment" disabled={FormState.loading} className="flex-3"></FormikImage>
                 </LayoutStackedPanel>
-                {/* <FormikCheckbox name="Send_By_Email"/> */}
-                <FormikField name="Send_By_Email" disabled={FormState.loading} className="flex-3"></FormikField>
+                <FormikCheckbox name="Send_By_Email"/>
+                {/* <FormikField name="Send_By_Email" disabled={FormState.loading} className="flex-3"></FormikField> */}
                 <LayoutStackedPanel>
                   <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
                 </LayoutStackedPanel>
                 
               </Form>
           </Formik></div>
-        <LayoutSpacer/>
         
         
       </LayoutStackedPanel>
@@ -197,3 +198,5 @@ export const DC_Notifications = () =>{
     {/* <Button onClick={() => {prueba()}}>Leer</Button> */}
   </>)
 }
+
+/**/

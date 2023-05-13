@@ -15,19 +15,28 @@ interface Props{
 
 export const FormikImage = ({...props}: Props) => {
 
-    const[Image, setImage] = useState<string | null>(null);
+    const[Image, setImage] = useState<File | null>(null);
 
     const [ field ] = useField(props.name)
 
     const { setFieldValue } = useFormikContext();
 
     function onChange(event:any) {
+
+      setImage(event.currentTarget.files[0])
+      setFieldValue('AttachmentTest',event.currentTarget.files[0])
+
+      console.log(event)
+
+      //setFieldValue(field.name,"hola")
+
+      /*
         try{
             const file = event.currentTarget.files[0];
             setFieldValue(field.name,file)
         } catch(e){
             console.log(e)
-        }
+        }*/
         
         // console.log("Image file:", file);
         // const reader = new FileReader();

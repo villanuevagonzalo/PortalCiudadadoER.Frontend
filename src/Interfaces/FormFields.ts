@@ -281,10 +281,10 @@ export const FormFields:FieldProps = {
     // },
 
     Send_By_Email:{
-        type: 'string',
-        defaultvalue: '',
+        type: 'checkbox',
+        defaultvalue: false,
         placeholder: 'Enviar por Email',
-        validations: yup.string()
+        validations: yup.boolean()
                         .required('El campo es obligatorio')
     },
 }
