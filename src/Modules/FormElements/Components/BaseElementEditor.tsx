@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { FormElement } from "../Types";
-import { FormElementMap, FormElementBases } from "../Props";
-import { BaseWrapper } from "./StyledComponents";
+import { FormElement } from "../OLDTYPES";
+import { ElementPropsMap, FormElementBases } from "../Types";
+import { ElementWrapper } from "./StyledComponents";
 
 interface Props{
-  element: FormElement<keyof FormElementMap>;
+  element: FormElement<keyof ElementPropsMap>;
 }
 
 export const BaseElementEditor: React.FC<Props> = ({ element }) => {
 
   const basetype = FormElementBases[element.type]
   
-  return (<BaseWrapper>
+  return (<ElementWrapper>
     
     <label><basetype.icon/>{basetype.description}</label>
     <ul>
@@ -20,5 +20,5 @@ export const BaseElementEditor: React.FC<Props> = ({ element }) => {
       <li>Opcionales: {JSON.stringify(element.properties_optional)}</li>
     </ul>
     
-  </BaseWrapper>)
+  </ElementWrapper>)
 }

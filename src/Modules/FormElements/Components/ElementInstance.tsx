@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { FormElement, FormElementInstance } from "../Types";
-import { FormElementMap, FormElementBases } from "../Props";
-import { BaseWrapper } from "./StyledComponents";
+import { FormElement, FormElementInstance } from "../OLDTYPES";
+import { ElementPropsMap, FormElementBases } from "../Types";
+import { ElementWrapper } from "./StyledComponents";
 import { FormWrapperInput } from "../../../Components/Forms/StyledComponents";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface Props{
-  element: FormElement<keyof FormElementMap>;
+  element: FormElement<keyof ElementPropsMap>;
 }
 
 export const ElementInstance: React.FC<Props> = ({ element }) => {
@@ -28,14 +28,14 @@ export const ElementInstance: React.FC<Props> = ({ element }) => {
           <div className="FormIcon"><basetype.icon /></div>
         </div>
       </FormWrapperInput>
-      <BaseWrapper>
+      <ElementWrapper>
     {'label' in instance.properties?<>Label: {instance.properties.label}</>:<></>}
     <ul>
       <li>{instance.type}</li>
       <li>Properties: {JSON.stringify(instance.properties)}</li>
       <li>Properties: {JSON.stringify(instance)}</li>
     </ul>
-  </BaseWrapper></>)
+  </ElementWrapper></>)
 }
 
 //{'children' in instance.properties?instance.properties.children.map():<></>}

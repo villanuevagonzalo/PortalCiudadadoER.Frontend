@@ -78,11 +78,104 @@ export const FormElementBasesMenu = styled.div<{ match?: boolean }>`
   }
 `;
 
-export const BaseWrapper = styled.div<{ }>`
+export const ElementWrapper = styled.div<{ }>`
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction:column;
+`;
+
+export const InputWrapper = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean, focus?: boolean, dummy?: boolean, largeerror?:boolean }>`
+background-color: var(--maincolor);
+border-radius: 0.5rem;
+border: 2px solid var(--${props => props.dummy?'maincolor':(props.error?'error':'disabled')});
+position: relative;
+min-width:150px;
+opacity: ${props => props.disabled?'0.5':'1'};
+
+& > div{
+  display:flex;
+}
+
+& input{
+  position: relative;
+  padding: ${props => props.dummy?'0.6rem 0rem 0rem':'0.6rem 0.75rem 0.5rem'};
+  background: transparent;
+  outline:none;
+  width: 100%;
+  z-index: 1;
+  font-size: 0.9rem;
+  color: var(${props => props.error?'--error':'--maincolor_text'});
+}
+
+& label{
+  background: var(--maincolor);
+  border-radius:0.25rem;
+  color:var(--${props => props.dummy?'primary':(props.error?'error':'maincolor_text')});
+  font-size: ${props => props.focus?'0.75rem':'0.90rem'};
+  padding: 0 0.25rem;
+  left: ${props => props.dummy?'-0.25rem':'0.5rem'};
+  pointer-events: none;
+  position: absolute;
+  top: ${props => props.focus?'-0.65rem':'0.55rem'};
+  transition 0.1s;
+  z-index: 2;
+}
+
+& .FormIcon{
+  padding 0.5rem;
+  font-size: 1.5rem;
+  color: var(${props => props.error?'--error':'--maincolor_text'});
+  cursor: pointer;
+}
+
+& .FormDropdown{
+  flex-direction:column;
+  font-size: 0.75rem;
+  margin:0.1rem 0 0.50rem;
+  max-height:10rem;
+  overflow:auto;
+
+  & div{
+    line-height:1.5rem;
+    padding:0.25rem 0.75rem;
+    border-top: 1px solid var(--disabled);
+
+    &.active{
+      background: var(--${props => props.error?'error_text':'primary_text'});
+    }
+    
+    &:hover{
+      background: var(--maincolor_tint);
+      cursor:pointer;
+    }
+  }
+}
+`;
+
+
+export const ElementError = styled.div<{ error?: boolean }>`
+  background: var(--maincolor);
+  color:var(--error);
+  font-size: 0.75rem;
+  margin-top:0.25rem;
+  pointer-events: none;
+  text-align:right;
+  transition 0.1s;
+`;
+
+
+
+
+
+
+
+
+export const BaseWrapperInfo = styled.div<{ }>`
   display: flex;
   flex-direction:column;
   border:1px solid var(--disabled);
   border-radius:0.25rem;
+  margin:1rem 0;
 
   & label{
     
