@@ -25,14 +25,14 @@ export const App = () => {
       {Object.values(FlatPages).map(item => {
 
         if(item.scope){
-          return <Route element={
+          return <Route key={item.label} element={
             item.scope.includes('public')
             ? <PublicRoute><LayoutDefault /></PublicRoute>
-            : <PublicRoute>{item.scope.includes('citizen')
+            : <PrivateRoute>{item.scope.includes('citizen')
               ?<LayoutCiudadano />
               :<LayoutActor />
-            }</PublicRoute>
-          } key={item.path}>
+            }</PrivateRoute>
+          }>
             <Route path={item.path} element={item.element}/>
           </Route>
         }
