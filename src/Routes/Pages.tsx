@@ -4,6 +4,7 @@ import { Auth_Signup } from "../Pages/Auth/Signup";
 import { DA_Home } from "../Pages/Actor/Home";
 import { DA_Procedures_Create } from "../Pages/Actor/Procedures/Create";
 import { DA_Procedures_Home } from "../Pages/Actor/Procedures/Home";
+import { DA_Notifications } from "../Pages/Actor/Notifications/Home";
 
 import { DC_Home } from "../Pages/Ciudadano/Home";
 import { DC_Configurations } from "../Pages/Ciudadano/Configurations/Home";
@@ -211,7 +212,7 @@ export const RawPages:RawPagesProps = {
       NOTIFICATIONS:{
         path: 'notifications',
         label: 'Gestor de Notificaciones',
-        element: <DC_Notifications />
+        element: <DA_Notifications />
       },
     }
   }

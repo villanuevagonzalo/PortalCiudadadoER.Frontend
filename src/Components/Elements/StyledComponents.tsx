@@ -532,6 +532,36 @@ export const Card = styled.div<{ color?: string }>`
   display:flex;
 `;
 
+export const NotificationCard = styled.div<{ color?: string; vista?: boolean }>`
+background-color: var(--${props => (props.color && !props.vista ? props.color : 'primary')}); // Si la notificación ha sido vista, no cambiar el color
+color: ${props => (props.color ? 'black' : 'white')};
+display: flex;
+flex-direction: column;
+width: 100%;
+min-width: 150px;
+padding: 1rem;
+border-radius: 0.5rem;
+display: flex;
+`;
+
+export const NotificacionCompleta = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+export const NotificacionCompletaContenido = styled.div`
+  background-color: white;
+  color: black;
+  padding: 1rem;
+  border-radius: 0.5rem;
+`;
 
 // Elements
 

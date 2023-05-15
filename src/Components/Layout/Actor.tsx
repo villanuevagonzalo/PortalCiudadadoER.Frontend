@@ -57,7 +57,7 @@ export const LayoutActor = () => {
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
-      <Link to={Pages.DC_NOTIFICATIONS} className="button"><MdNotificationsNone/></Link>
+      <Link to={Pages.DA_NOTIFICATIONS} className="button"><MdNotificationsNone/></Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>

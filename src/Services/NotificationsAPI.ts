@@ -16,7 +16,6 @@ export class NotificationsAPI {
     locality_id: number;
     message_title: string;
     message_body: string;
-    attachment_type: string;
     attachment: File;
     notification_date_from: Date;
     notification_date_to: Date;
