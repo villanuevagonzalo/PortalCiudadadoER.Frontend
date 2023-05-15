@@ -6,7 +6,7 @@ import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import * as yup from 'yup';
 import { useTable } from "react-table"
-import { Spinner, Card, DivSubtitle, DivTitle2 } from '../../../Components/Elements/StyledComponents';
+import { Spinner, Card, DivSubtitle, DivTitle2, NotificationCard, NotificacionCompletaContenido, NotificacionCompleta } from '../../../Components/Elements/StyledComponents';
 import { BiMessage } from "react-icons/bi";
 import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
@@ -24,6 +24,7 @@ import { IResponse, IUserNotification } from "../../../Interfaces/Data";
 import { Link } from "react-router-dom";
 import { Pages } from "../../../Routes/Pages";
 import { FormikField } from "../../../Components/Forms/FormikField";
+import { FormWrapperButton } from "../../../Components/Forms/StyledComponents";
 
 
 const FormRequiredFields = [
@@ -37,25 +38,24 @@ const FormRequiredFields = [
   'Message_Body',
 ];
 
+interface Notificacion{
+  ID: number,
+  MESSAGE_TITLE: string,
+  MESSAGE_BODY: string,
+  VISTA: boolean,
+}
+
 export const DC_Notifications = () =>{
 
   const { UpdateNotification, CreateNotification, userNotifications } = useContext(NotificationsContext);
-  const [mostrarNotificaciones, setMostrarNotificaciones] = useState([]);
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState<Notificacion[]>([]);
+  const [notificacionCompleta, setNotificacionCompleta] = useState<Notificacion | null>(null);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
 
   const { userData, userContact, userRol, SaveData, AFIP_getURL } = useContext(AuthContext);
   const [ LocationsValues, setLocationsValues ] = useState< ILocation[]>([]);
-
-
-  useEffect(() => {
-    if(userContact){
-      if(userContact.LOCALITY_ID!==0 && LocationsValues.length>0){
-        setFieldValues({...FieldValues, Locality: LocationFullPath(LocationByID(LocationsValues,userContact.LOCALITY_ID))})
-      }
-    }
-  },[LocationsValues])
 
   useEffect(() => {
     
@@ -83,14 +83,6 @@ export const DC_Notifications = () =>{
     getNotifications();
   }, []);
 
-  // const prueba = async () => {
-  //   const response = await UpdateNotification();
-  //     if(response.status){
-  //       setMostrarNotificaciones(response.data);
-  //     }
-      
-  //     console.log(response)
-  // }
 
   const handleImageChange = (e: any) => {
     const file = e.target.files[0];
@@ -98,6 +90,20 @@ export const DC_Notifications = () =>{
     console.log(file);
   }
 
+  function viewCompleteNotification(notificacion: Notificacion){
+    // alert(`Título: ${notificacion.MESSAGE_TITLE}\n\nCuerpo: ${notificacion.MESSAGE_BODY}`);
+    // notificacion.VISTA = true;
+    setNotificacionCompleta(notificacion);
+    setMostrarNotificaciones(prevmostrarNotificaciones =>
+      prevmostrarNotificaciones.map(notif =>
+        notif.ID === notificacion.ID ? { ...notif, VISTA: true } : notif
+      )
+    );
+  }
+
+  function cerrarNotificacionCompleta() {
+    setNotificacionCompleta(null);
+  }
 
 
 
@@ -107,13 +113,31 @@ export const DC_Notifications = () =>{
       Notificaciones
     </LayoutTitle>
     <LayoutSection>
+      
       {
-        mostrarNotificaciones?.length>0 && mostrarNotificaciones.map((notificacion: any) => (
-          <Card key={notificacion.ID}>
+        mostrarNotificaciones?.length>0 && mostrarNotificaciones.map((notificacion: Notificacion) => (
+          <NotificationCard 
+          key={notificacion.ID} 
+          onClick={() => viewCompleteNotification(notificacion)}
+          color={notificacion.VISTA ? 'white' : undefined}
+          // vista={notificacion.VISTA}
+          >
             <h1>{notificacion.MESSAGE_TITLE}</h1>
             <p>{notificacion.MESSAGE_BODY}</p>
-          </Card>
+          </NotificationCard>
         ))
+      }
+      {notificacionCompleta && (
+        <NotificacionCompleta>
+          <NotificacionCompletaContenido>
+            <h1>{notificacionCompleta.MESSAGE_TITLE}</h1>
+            <p>{notificacionCompleta.MESSAGE_BODY}</p>
+            <br/>
+            <FormWrapperButton color="primary" onClick={cerrarNotificacionCompleta}>Cerrar</FormWrapperButton>
+          </NotificacionCompletaContenido>
+          
+        </NotificacionCompleta>
+      )
       }
     </LayoutSection>
       {
@@ -125,7 +149,6 @@ export const DC_Notifications = () =>{
 
     </LayoutSection>
 
-    {/* <Button onClick={() => {prueba()}}>Leer</Button> */}
   </>)
 }
 
