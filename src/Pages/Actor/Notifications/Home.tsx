@@ -129,7 +129,7 @@ export const DA_Notifications = () =>{
     <LayoutTitle>
       Notificaciones
     </LayoutTitle>
-    <LayoutSection>
+    {/* <LayoutSection> */}
       
       {
         mostrarNotificaciones?.length>0 && mostrarNotificaciones.map((notificacion: Notificacion) => (
@@ -156,7 +156,7 @@ export const DA_Notifications = () =>{
         </NotificacionCompleta>
       )
       }
-    </LayoutSection>
+    {/* </LayoutSection> */}
       {
       mostrarNotificaciones?.length === 0 && 
       <LayoutSection className="items-center">

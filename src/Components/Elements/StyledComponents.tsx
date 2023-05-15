@@ -554,6 +554,7 @@ export const NotificacionCompleta = styled.div`
   justify-content: center;
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index:100;
 `;
 
 export const NotificacionCompletaContenido = styled.div`
