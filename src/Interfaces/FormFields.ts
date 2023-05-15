@@ -258,16 +258,16 @@ export const FormFields:FieldProps = {
     },
 
     Notification_Date_From:{
-        type: 'String',
-        defaultvalue: '',
+        type: 'date',
+        defaultvalue: null,
         placeholder: 'Desde',
         validations: yup.string()
                         .required('El campo es obligatorio')
     },
 
     Notification_Date_To:{
-        type: 'String',
-        defaultvalue: '',
+        type: 'date',
+        defaultvalue: null,
         placeholder: 'Hasta',
         validations: yup.string()
                         .required('El campo es obligatorio')
