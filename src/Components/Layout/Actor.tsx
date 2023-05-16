@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton } from "./StyledComponents";
 import { Card, ColoredLabel, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
@@ -34,6 +34,9 @@ export const LayoutActor = () => {
   const [ mobile, setMobile ] = useState<boolean>(isSmallResolution);
   const [ open, setOpen ] = useState<boolean>(isSmallResolution);
   const { userData, userRol, Logout } = useContext(AuthContext);
+
+  const userCitizen:any = userRol.find((obj) => obj.type === "Ciudadano")
+  const userActor:any = userRol.find((obj) => obj.type === "Actor")
   
   useEffect(() => {
     setMobile(isSmallResolution)
@@ -43,7 +46,7 @@ export const LayoutActor = () => {
   const switchmenu = () => setOpen(!isSmallResolution || !open);
   const closemenu = () => setOpen(false);
 
-  return (<>
+  return (userActor?<>
     <LayoutHeader mobile={mobile}>{mobile?<>
       <div>{open?<BiChevronsLeft onClick={switchmenu} color="var(--secondary)"/>:<BiMenu onClick={switchmenu} color="var(--secondary)"/>}</div>
       <Link to={Pages.DA} onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} color="var(--secondary)" /></Link>
@@ -85,7 +88,7 @@ export const LayoutActor = () => {
           ))}</LayoutSidebarMenu>
           <Card color="secondary">
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
-            <DivSubtitle color="maincolor" className="mt-1">Actor<b className="ml-2">Nivel 1</b></DivSubtitle>
+            <DivSubtitle color="maincolor" className="mt-1">{userActor.type}<b className="ml-2">{userActor.message}</b></DivSubtitle>
             <Link to={Pages.DC_CONFIGURATIONS} className="f-width"><Button color="maincolor">
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
             </Button></Link>
@@ -107,5 +110,5 @@ export const LayoutActor = () => {
         </LayoutFooter>
       </LayoutBody>
     </LayoutContainer>
-  </>);
+  </>:<Navigate to={Pages.DC}/>);
 };

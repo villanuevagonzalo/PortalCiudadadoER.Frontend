@@ -8,6 +8,7 @@ export const Messages: {[key: string]:string} = {
   'Undefined array key 0': 'Error interno del servidor.',
   'User already registered': 'El CUIL ingresado ya se encuentra registrado.',
   'Bad Cuil': 'El CUIL ingresado no se encuenta en la base de datos.',
+  'bad dni': 'El DNI ingresado no se encuenta en la base de datos.',
   'email validation still pending': 'Debes verificar tu email antes de poder iniciar sesión.',
 
   'User not found': 'El CUIL ingresado no pertecene a ningun usuario registrado.',
@@ -18,6 +19,7 @@ export const Messages: {[key: string]:string} = {
   'Bad validation code': 'El Token suministrado es invalido.',
   'Bad confirmation code': 'El Token suministrado es invalido.',
   'Invalid token': 'El Token suministrado es invalido.',
+  'Bad Token': 'El Token suministrado es invalido.',
   'Password changed': 'Contraseña Actualizada',
   'The payload is invalid.': 'Petición invalida.',
 

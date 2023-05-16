@@ -23,6 +23,7 @@ import { DC_UserValidate } from "../Pages/Ciudadano/Configurations/UserValidate"
 import { DA_Procedures_Forms_Home } from "../Pages/Actor/Procedures/Forms/Home";
 import { DA_Procedures_Forms_Create } from "../Pages/Actor/Procedures/Forms/Create";
 import { DA_Procedures_List } from "../Pages/Actor/Procedures/List";
+import { Auth_Redirect } from "../Pages/Auth/Redirect";
 
 interface PageProps {
   path: string;
@@ -56,6 +57,12 @@ export const RawPages:RawPagesProps = {
     scope: ['public'],
     root: true,
     children: {
+      REDIRECT:{
+        path: 'redirect',
+        label: 'Iniciar Sesión',
+        scope: ['mixed'],
+        element: <Auth_Redirect/>
+      },
       LOGIN:{
         path: 'signin',
         label: 'Iniciar Sesión',

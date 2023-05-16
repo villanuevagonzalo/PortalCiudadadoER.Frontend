@@ -1,6 +1,6 @@
 import moment from 'moment'
 import jwt_decode from "jwt-decode";
-import { createContext, FC, useState } from "react";
+import { createContext, FC, useEffect, useState } from "react";
 
 import { delLSData, getLSData, setLSData } from '../Utils/General';
 import { GetLevels } from "../Interfaces/UserLevels";
@@ -14,6 +14,8 @@ const ContextValues = () => {
 
   const AxiosAuthAPI = new AuthAPI();
 
+  const [ContextLoaded, setContextLoaded] = useState<boolean>(false);
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLogged, setIsLogged] = useState<boolean>(false);
 
@@ -23,7 +25,7 @@ const ContextValues = () => {
   const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
 
 
-  const SaveToken = (token:string) => {
+  const SaveToken = (token:string, isactor?:boolean) => {
 
     const DecodeToken:any = jwt_decode(token);
 
@@ -31,7 +33,8 @@ const ContextValues = () => {
       token: token,
       expiration: new Date(DecodeToken.exp*1000)
     };
-    const NewUserRol = GetLevels(DecodeToken.scopes);
+    const NewUserRol = GetLevels(isactor?[...DecodeToken.scopes,"actor_1"]:DecodeToken.scopes);
+    console.log(NewUserRol)
 
     setAuthToken(NewToken);
     setUserRol(NewUserRol);
@@ -89,11 +92,10 @@ const ContextValues = () => {
     return response;
   }
 
-  const Login = async (data: any, setFormState:Function) => {
+  const Redirect = async (data: any, setFormState:Function) => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserLogin(data);
-    console.log(response)
+    const response:AxiosResponse = await AxiosAuthAPI.UserRedirect(data);
     
     if(response.data.success){
       const NewUserData = response.data.data.user_data.user;
@@ -101,7 +103,37 @@ const ContextValues = () => {
 
       setIsLogged(true);
 
-      SaveToken(response.data.data.access_token);
+      SaveToken(response.data.data.access_token,response.data.data.user_data.is_actor);
+
+      setUserData(NewUserData);
+      setUserContact(NewUserContact || DefaultUserContact);
+
+      setLSData("UserData", NewUserData);
+      setLSData("UserContact", NewUserContact || DefaultUserContact);
+
+      setFormState((prev:any) => ({ ...prev, error: "", finish: true }));
+    } else{
+      setIsLogged(false);
+      setIsLoading(false);
+      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
+    }
+
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
+
+  const Login = async (data: any, setFormState:Function) => {
+
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:AxiosResponse = await AxiosAuthAPI.UserLogin(data);
+    
+    if(response.data.success){
+      const NewUserData = response.data.data.user_data.user;
+      const NewUserContact = response.data.data.user_data.user_contact;
+
+      setIsLogged(true);
+
+      SaveToken(response.data.data.access_token,response.data.data.user_data.is_actor);
 
       setUserData(NewUserData);
       setUserContact(NewUserContact || DefaultUserContact);
@@ -332,14 +364,21 @@ const ContextValues = () => {
     return response;
   }
 
+
+  useEffect(() => {
+    setContextLoaded(true)
+  }, [])
+  
+
   return {
     isLoading, isLogged, authToken, userData, userContact, userRol, 
-    Signup, Login, Logout, CheckToken, SaveToken,
+    Signup, Login, Logout, CheckToken, SaveToken, Redirect,
     UserGetData, SaveData, UserNameChange,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
     AFIP_getURL, AFIP_checkToken,
-    MIARGENTINA_getURL, MIARGENTINA_checkToken
+    MIARGENTINA_getURL, MIARGENTINA_checkToken,
+    ContextLoaded
   }
 }
 

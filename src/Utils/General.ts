@@ -32,12 +32,12 @@ export const GetParams = (params: string[]) => {
         values[paramname] = paramvalue;
       } catch (e) {
         values[paramname] = '';
-        errors.push(`El campo ${paramname} presenta un valor invalido`);
+        errors.push(`El parametro ${paramname} presenta un valor invalido`);
         status = false;
       }
     } else {
       values[paramname] = '';
-      errors.push(`El campo ${paramname} no existe`);
+      errors.push(`El parametro ${paramname} no existe`);
       status = false;
   }
   }

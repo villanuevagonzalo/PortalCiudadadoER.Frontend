@@ -13,6 +13,7 @@ import { PublicRoute, PrivateRoute } from './Routes/RoutesMiddleware';
 
 
 import { FlatPages } from './Routes/Pages';
+import { LayoutMixed } from './Components/Layout/Mixed';
 
 export const App = () => {
   
@@ -25,12 +26,13 @@ export const App = () => {
       {Object.values(FlatPages).map(item => {
         if(item.scope){
           return <Route element={
-            item.scope.includes('public')
+            item.scope.includes('mixed')?<><LayoutMixed/></>:
+            (item.scope.includes('public')
             ? <PublicRoute><LayoutDefault /></PublicRoute>
             : <PrivateRoute>{item.scope.includes('citizen')
               ?<LayoutCiudadano />
               :<LayoutActor />
-            }</PrivateRoute>
+            }</PrivateRoute>)
           } key={item.path}>
             <Route path={item.path} element={item.element}/>
           </Route>
@@ -39,7 +41,7 @@ export const App = () => {
           <Route path={item.path} element={item.element} key={item.path}/>
         </Route>
       })}
-      <Route element={<PublicRoute><LayoutDefault /></PublicRoute>}>
+      <Route element={<LayoutMixed />}>
         <Route path="*" element={<ErrorPage />}/>
       </Route>
     </Routes>

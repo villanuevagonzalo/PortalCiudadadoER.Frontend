@@ -21,13 +21,13 @@ export const Levels: {[key: string]:{ type: string; level:number; message: strin
         message: 'Nivel 3'
     },
     
-    'level_4': {
+    'actor_1': {
         type: 'Actor',
         level: 1,
         message: 'Nivel 1'
     },
     
-    'level_5': {
+    'actor_2': {
         type: 'Actor',
         level: 2,
         message: 'Nivel 2'

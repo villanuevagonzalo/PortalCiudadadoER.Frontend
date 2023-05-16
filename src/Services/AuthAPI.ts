@@ -7,6 +7,13 @@ export class AuthAPI {
     this.baseService = axiosBase;
   }
 
+  public UserRedirect(params: {
+    dni: number;
+    token: string;
+  }){
+    return this.baseService.get("/v0/authentication/actor/redirect", {params})
+  }
+
   public UserSignup(params: {
     cuil: number;
     nombre: string;
