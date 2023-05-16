@@ -83,9 +83,9 @@ export const Auth_Signup = () =>{
 
               const response = await UserGetData({'cuil':values.CUIL}, setFormState);
 
-              if(response.status){
+              if(response.data.success){
                 console.log(response)
-                let userdata = response.response.data;
+                let userdata = response.data.data;
                 
                 setFieldValues({...values, 
                   Name: CapitalizeWords(userdata.Nombres), 
@@ -94,7 +94,7 @@ export const Auth_Signup = () =>{
                 });
                 setInitialData(true)
 
-              } else if(response.message==GetMessage('Bad Cuil') || response.message==GetMessage('Cuil not existing in DB')){
+              } else if(response.data.message==GetMessage('Bad Cuil') || response.data.message==GetMessage('Cuil not existing in DB')){
                 setInitialData(false)
                 setFormState((prev:any) => ({ ...prev, error: '' }));
               }

@@ -48,16 +48,15 @@ export const Auth_Login = () => {
         </Button>
       </Form>
     </Formik>
-    <form>
+    <form className="mt-4 flex flex-col gap-2">
       <DivOutlined open={FormState.error ? true : false}>
         {FormState.error}
       </DivOutlined>
-      <br />
-      <DivLabel color="secondary">¿Sos nuevo en Ciudadano Digital?</DivLabel>
-      <Link to={Pages.AUTH_SIGNUP} className="mb-3"><Button disabled={FormState.loading} color="secondary">
+      <DivLabel color="secondary" className="mt-2">¿Sos nuevo en Ciudadano Digital?</DivLabel>
+      <Link to={Pages.AUTH_SIGNUP}><Button disabled={FormState.loading} color="secondary">
           Crear una cuenta
       </Button></Link>
-      <DivLabel color="gray_tint">
+      <DivLabel color="gray_tint" className="mt-2">
         ¿Tuviste algun problema al registrarte?
       </DivLabel>
       <Link to={Pages.AUTH_PASSWORDRESET}><Button disabled={FormState.loading} color="gray">

@@ -1,11 +1,10 @@
 import { Form, Formik } from 'formik';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { NuevosTramites } from '../../../Components/Elements/NuevosTramites';
 import { NavigatorSpacer, Spinner } from '../../../Components/Elements/StyledComponents';
 import { Button } from '../../../Components/Forms/Button';
 import { FormikSearch } from '../../../Components/Forms/FormikSearch';
 import { LayoutColumns, LayoutSection, LayoutTitle, LayoutColumn } from '../../../Components/Layout/StyledComponents';
-import { AuthContext } from '../../../Contexts/AuthContext';
 import { DefaultFormState } from '../../../Data/DefaultValues';
 import { IFormState } from '../../../Interfaces/Data';
 import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';

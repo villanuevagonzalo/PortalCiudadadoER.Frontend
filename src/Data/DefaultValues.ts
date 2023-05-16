@@ -49,4 +49,4 @@ export const DefaultUserContact:IUserContact = {
   DELETED_AT: null
 }
 
-export const DefaultUserRol:IUserRol[] = GetLevels([""])
+export const DefaultUserRol:IUserRol[] = GetLevels(["level_2"])

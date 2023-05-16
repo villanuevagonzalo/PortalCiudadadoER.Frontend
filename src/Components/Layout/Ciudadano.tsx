@@ -34,6 +34,9 @@ export const LayoutCiudadano = () => {
   const [ mobile, setMobile ] = useState<boolean>(isSmallResolution);
   const [ open, setOpen ] = useState<boolean>(isSmallResolution);
   const { userData, userRol, Logout } = useContext(AuthContext);
+
+  const userCitizen:any = userRol.find((obj) => obj.type === "Ciudadano")
+  const userActor:any = userRol.find((obj) => obj.type === "Actor")
   
   useEffect(() => {
     setMobile(isSmallResolution)
@@ -75,9 +78,8 @@ export const LayoutCiudadano = () => {
                   to={item.href}
                   children={item.name}
                 />:<p>{item.name}</p>}</li>
-                {item.children?item.children.map(child=><li className="children"><NavLink
+                {item.children?item.children.map(child=><li className="children" key={child.name}><NavLink
                   onClick={switchmenu}
-                  key={child.name}
                   to={child.href}
                 >{child.name}</NavLink></li>):<></>}
               </ul>
@@ -85,15 +87,14 @@ export const LayoutCiudadano = () => {
           ))}</LayoutSidebarMenu>
           <Card>
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
-            <DivSubtitle color="maincolor" className="mt-1">{userRol[0].type}<b className="ml-2">{userRol[0].message}</b></DivSubtitle>
+            <DivSubtitle color="maincolor" className="mt-1">{userCitizen.type}<b className="ml-2">{userCitizen.message}</b></DivSubtitle>
             <Link to={Pages.DC_CONFIGURATIONS} className="f-width"><Button color="maincolor">
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
             </Button></Link>
           </Card>
-          
-          <Link to={Pages.DA}><Button color="secondary" className="mt-4">
-          Ir al Panel de Actor<LayoutSpacer/><AiOutlineArrowRight/>
-              </Button></Link>
+          {userActor?<Link to={Pages.DA}><Button color="secondary" className="mt-4">
+            Ir al Panel de Actor<LayoutSpacer/><AiOutlineArrowRight/>
+          </Button></Link>:<></>}
           <Button color="primary" onClick={Logout} className="mt-4">
             Cerrar Sesión
           </Button>
@@ -103,12 +104,12 @@ export const LayoutCiudadano = () => {
         {mobile?<LayoutRow className="mt-7">
           <Link to={Pages.DC_PROCEDURES} className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
         </LayoutRow>:<></>}
-        {userRol[0].type==='Ciudadano'&&userRol[0].level===1?
+        {userCitizen.level===1?
           <Link to={Pages.DC_CONFIGURATIONS}>
             <LayoutAlert>Completa tus datos en la sección de <b>Mi Perfil</b> para alcanzar el nivel 2 de validación.</LayoutAlert>
           </Link>
         :<></>}
-        {userRol[0].type==='Ciudadano'&&userRol[0].level===2?
+        {userCitizen.level===2?
           <Link to={Pages.DC_CONFIGURATIONS}>
             <LayoutAlert>Vincula alguna Aplicación en la sección de <b>Mi Perfil</b> para alcanzar el nivel 3 de validación.</LayoutAlert>
           </Link>
