@@ -78,9 +78,8 @@ export const LayoutCiudadano = () => {
                   to={item.href}
                   children={item.name}
                 />:<p>{item.name}</p>}</li>
-                {item.children?item.children.map(child=><li className="children"><NavLink
+                {item.children?item.children.map(child=><li className="children" key={child.name}><NavLink
                   onClick={switchmenu}
-                  key={child.name}
                   to={child.href}
                 >{child.name}</NavLink></li>):<></>}
               </ul>
