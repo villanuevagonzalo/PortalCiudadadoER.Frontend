@@ -87,7 +87,7 @@ export const DA_Notifications_Create = () =>{
           message_title: values.Message_Title,
           message_body: values.Message_Body,
           attachment: values.AttachmentTest,
-          send_by_email: values.Send_By_Email?1:0,
+          send_by_email: values.Send_By_Email?true:false,
           }, setFormState);
 
           console.log(CreateResponse)
