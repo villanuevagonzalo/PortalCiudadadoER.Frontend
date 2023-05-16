@@ -87,3 +87,8 @@ export interface IUserNotification{
   ID: number;
   NAME: string;
 }
+
+export interface IActorNotification{
+  ID: number;
+  NAME: string;
+}
