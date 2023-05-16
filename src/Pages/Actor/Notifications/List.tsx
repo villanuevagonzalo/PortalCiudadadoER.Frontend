@@ -93,20 +93,6 @@ export const DA_Notifications = () =>{
     getNotifications();
   }, []);
 
-  // const prueba = async () => {
-  //   const response = await UpdateNotification();
-  //     if(response.status){
-  //       setMostrarNotificaciones(response.data);
-  //     }
-      
-  //     console.log(response)
-  // }
-
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-    setFieldValues({...FieldValues, Attachment: file});
-    console.log(file);
-  }
 
   function viewCompleteNotification(notificacion: Notificacion){
     // alert(`Título: ${notificacion.MESSAGE_TITLE}\n\nCuerpo: ${notificacion.MESSAGE_BODY}`);
@@ -164,79 +150,7 @@ export const DA_Notifications = () =>{
       </LayoutSection>
       }
     
-        <LayoutTitle>
-          Crear Notificación
-        </LayoutTitle>
-      <LayoutSection>
-      <LayoutStackedPanel>
-        <div>
-          <Formik 
-            initialValues={FieldValues}
-            enableReinitialize={true} 
-            validateOnChange={false} 
-            validateOnBlur={false}
-            validationSchema={formGetValidations(FormRequiredFields).concat(yup.object({
-              'Locality': yup.string().oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
-            }))}
-            onSubmit={async (values: any) => {
-              console.log(values)
-
-              const LocationData = GetLocationByPath(LocationsValues, values.Locality);
-              const CreateResponse = await CreateNotification({
-                recipients: values.Recipients,
-                age_from: values.Age_From,
-                age_to: values.Age_To,
-                notification_date_from: moment(values.Notification_Date_From).format("DD/MM/YYYY"),  
-                notification_date_to: moment(values.Notification_Date_To).format("DD/MM/YYYY"), 
-                department_id: LocationData?.DEP_ID,
-                locality_id: LocationData?.ID,
-                message_title: values.Message_Title,
-                message_body: values.Message_Body,
-                attachment: values.AttachmentTest,
-                send_by_email: values.Send_By_Email,
-              }, setFormState);
-
-              console.log(CreateResponse)
-              }}
-          >
-              <Form autoComplete="off">
-                <LayoutStackedPanel>
-                  <FormikField name="Recipients" disabled={FormState.loading} className="flex-3"></FormikField>
-                  <FormikField name="Age_From" disabled={FormState.loading} className="flex-3"></FormikField>
-                  <FormikField name="Age_To" disabled={FormState.loading} className="flex-3"></FormikField>
-                </LayoutStackedPanel>
-                <LayoutStackedPanel>
-                  <FormikField name="Notification_Date_From" disabled={FormState.loading} className="flex-3"></FormikField>
-                  <FormikField name="Notification_Date_To" disabled={FormState.loading} className="flex-3"></FormikField>
-                </LayoutStackedPanel>
-                <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length==0} data={LocationsFullPath(LocationsValues)}/>
-                <FormikField name="Message_Title" disabled={FormState.loading} className="flex-3"></FormikField>
-                <FormikField name="Message_Body" disabled={FormState.loading} className="flex-3"></FormikField>
-                <LayoutStackedPanel>
-                  {/* <FormikField name="Attachment_Type" disabled={FormState.loading} className="flex-3"></FormikField> */}
-                  {/* <Field 
-                  name="image" 
-                  disabled={FormState.loading} 
-                  type="file" 
-                  className="flex-3"
-                  onChange={(e: any) => {
-                    handleImageChange(e);
-                  }}
-                  ></Field> */}
-                  <FormikImage name="Attachment" disabled={FormState.loading} className="flex-3"></FormikImage>
-                </LayoutStackedPanel>
-                <FormikCheckbox name="Send_By_Email"/>
-                {/* <FormikField name="Send_By_Email" disabled={FormState.loading} className="flex-3"></FormikField> */}
-                <LayoutStackedPanel>
-                  <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
-                </LayoutStackedPanel>
-                
-              </Form>
-          </Formik></div>
         
-        
-      </LayoutStackedPanel>
-      </LayoutSection>
       
     </LayoutSection>
 

@@ -84,6 +84,8 @@ export interface ILocation{
 }
 
 export interface IUserNotification{
-  ID: number;
-  NAME: string;
+  ID: number,
+  MESSAGE_TITLE: string,
+  MESSAGE_BODY: string,
+  VISTA: boolean,
 }

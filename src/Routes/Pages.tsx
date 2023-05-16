@@ -4,7 +4,7 @@ import { Auth_Signup } from "../Pages/Auth/Signup";
 import { DA_Home } from "../Pages/Actor/Home";
 import { DA_Procedures_Create } from "../Pages/Actor/Procedures/Create";
 import { DA_Procedures_Home } from "../Pages/Actor/Procedures/Home";
-import { DA_Notifications } from "../Pages/Actor/Notifications/Home";
+import { DA_Notifications } from "../Pages/Actor/Notifications/List";
 
 import { DC_Home } from "../Pages/Ciudadano/Home";
 import { DC_Configurations } from "../Pages/Ciudadano/Configurations/Home";
@@ -25,6 +25,7 @@ import { DA_Procedures_Forms_Home } from "../Pages/Actor/Procedures/Forms/Home";
 import { DA_Procedures_Forms_Create } from "../Pages/Actor/Procedures/Forms/Create";
 import { DA_Procedures_List } from "../Pages/Actor/Procedures/List";
 import { Auth_Redirect } from "../Pages/Auth/Redirect";
+import { DA_Notifications_Create } from "../Pages/Actor/Notifications/Create";
 
 interface PageProps {
   path: string;
@@ -212,7 +213,14 @@ export const RawPages:RawPagesProps = {
       NOTIFICATIONS:{
         path: 'notifications',
         label: 'Gestor de Notificaciones',
-        element: <DA_Notifications />
+        element: <DA_Notifications_Create />,
+        children: {
+          LIST:{
+            path: 'list',
+            label: 'Lista',
+            element: <DA_Notifications/>
+          },
+        }
       },
     }
   }

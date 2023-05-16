@@ -35,7 +35,9 @@ export const DefaultUserData:IUserData = {
 
 export const DefaultUserNotification:IUserNotification = {
   ID: 0,
-  NAME: ""
+  MESSAGE_TITLE: "",
+  MESSAGE_BODY: "",
+  VISTA: false,
 }
 
 export const DefaultUserContact:IUserContact = {

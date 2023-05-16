@@ -25,7 +25,9 @@ const navigation:INavigation[] = [
     { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
     { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
   ] },
-  { name: 'Gestor de Notificaciones', icon: BiNotification, href: Pages.DA_NOTIFICATIONS }
+  { name: 'Gestor de Notificaciones', icon: BiNotification, href: Pages.DA_NOTIFICATIONS, children:[
+    { name: 'Lista de Notificaciones', href: Pages.DA_NOTIFICATIONS_LIST },
+  ] }
 ]
 
 export const LayoutActor = () => {
