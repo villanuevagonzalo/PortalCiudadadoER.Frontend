@@ -89,3 +89,8 @@ export interface IUserNotification{
   MESSAGE_BODY: string,
   VISTA: boolean,
 }
+
+export interface IActorNotification{
+  ID: number;
+  NAME: string;
+}

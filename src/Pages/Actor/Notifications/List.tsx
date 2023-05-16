@@ -48,7 +48,7 @@ interface Notificacion{
 
 export const DA_Notifications = () =>{
 
-  const { UpdateNotification, CreateNotification, userNotifications } = useContext(NotificationsContext);
+  const { UpdateActorNotification, CreateNotification, userNotifications } = useContext(NotificationsContext);
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState<Notificacion[]>([]);
   const [notificacionCompleta, setNotificacionCompleta] = useState<Notificacion | null>(null);
 
@@ -57,6 +57,7 @@ export const DA_Notifications = () =>{
 
   const { userData, userContact, userRol, SaveData, AFIP_getURL } = useContext(AuthContext);
   const [ LocationsValues, setLocationsValues ] = useState< ILocation[]>([]);
+
 
 
   useEffect(() => {
@@ -78,19 +79,17 @@ export const DA_Notifications = () =>{
   },[userContact])
 
   useEffect(() => {
-    const getNotifications = async () => {
-
-      const response = await UpdateNotification();
-      console.log(response)
-      if(response.status){
-        setMostrarNotificaciones(JSON.parse(response.response.data.notifications));
-      }
-      
-      console.log(response)
-      // console.log(mostrarNotificaciones)
-    };
-    
-    getNotifications();
+      const getNotifications = async () => {
+        const response = await UpdateActorNotification();
+        console.log(response)
+        if(response.status){
+          setMostrarNotificaciones(JSON.parse(response.response.data.notifications));
+        }
+        
+        console.log(response)
+        // console.log(mostrarNotificaciones)
+      };
+      getNotifications();
   }, []);
 
 

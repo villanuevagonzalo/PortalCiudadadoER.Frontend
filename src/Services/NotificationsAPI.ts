@@ -28,6 +28,11 @@ export class NotificationsAPI {
     })
   }
 
+  public GetActor(params: {
+  }){
+    return this.baseService.get('/v0/notification/get/actor/active/news', { params })
+  }
+
   public Get(params: {
   }){
     return this.baseService.get('/v0/notification/get/user/news', { params })
