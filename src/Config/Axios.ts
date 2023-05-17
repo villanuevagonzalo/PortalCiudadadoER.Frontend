@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-import axios, { AxiosResponse } from 'axios';
 import { GetMessage } from '../Interfaces/MessageHandler';
 import { getLSData } from '../Utils/General';
 
@@ -40,12 +39,9 @@ axiosBase.interceptors.response.use(
 },
   (err) => {
     return {
-      data:{
-        status: false,
-        code: err.response.status,
-        message: GetMessage(err.response.data?.message || err.message, err.response?.status),
-        response: err
-      }
-    }
-  }
+    status: false,
+    code: err.response.data.status,
+    message: GetMessage(err.response.data?.message || err.message, err.response?.status),
+    response: err
+  }}
 );

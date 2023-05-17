@@ -49,6 +49,8 @@ export const CheckCUIL = (cuil:string) => {
 
   // Comparamos el largo del string
   if(cuil?.length!==11) return false;
+  // Comparamos el largo del string
+  if(cuil?.length!==11) return false;
 
   // Definimos las partes del cuil
   const XY = cuil.substring(0,2);
@@ -57,6 +59,12 @@ export const CheckCUIL = (cuil:string) => {
 
   // Determinación del sexo
   let sexo = 'u';
+  if(XY==='20' || (XY==='23' && Z==='9')) sexo = 'm';
+  if(XY==='27' || (XY==='23' && Z==='4')) sexo = 'f';
+  if(XY==='24' || (XY==='23' && Z==='3')) sexo = 'r';
+  if(XY==='30' || (XY==='33' && Z==='9')) sexo = 'e';
+  if(XY==='34' || (XY==='33' && Z==='3')) sexo = 'er';
+  if(sexo==='u') return false;
   if(XY==='20' || (XY==='23' && Z==='9')) sexo = 'm';
   if(XY==='27' || (XY==='23' && Z==='4')) sexo = 'f';
   if(XY==='24' || (XY==='23' && Z==='3')) sexo = 'r';
@@ -95,6 +103,7 @@ export const CheckCUIL = (cuil:string) => {
     if(sexo==='er'){ Z2 = '3'; XY2 = '33'; } // Empresa Repetida
   }
 
+  return cuil===XY2+DNI+Z2;
   return cuil===XY2+DNI+Z2;
 }
 

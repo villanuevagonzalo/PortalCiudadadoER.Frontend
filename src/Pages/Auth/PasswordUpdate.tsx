@@ -62,6 +62,7 @@ export const Auth_PasswordUpdate = () => {
                 setFormState(prev=>({...prev, error:'', finish:true }))
               } else{
                 setFormState(prev=>({...prev, error:response.data.message, finish:false}))
+                setFormState(prev=>({...prev, error:response.data.message, finish:false}))
               }
             }
           }}

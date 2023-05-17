@@ -32,6 +32,7 @@ const ContextValues = () => {
       setFormState((prev:any) => ({ ...prev, error: "" }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
+      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
     }
 
     setFormState((prev:any) => ({ ...prev, loading: false }));
@@ -46,6 +47,7 @@ const ContextValues = () => {
       setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
+      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
     }
 
@@ -95,6 +97,7 @@ const ContextValues = () => {
 
 export const UserContext = createContext({} as ReturnType<typeof ContextValues>);
 
+const UserContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
 const UserContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <UserContext.Provider value={ContextValues()}>
