@@ -280,6 +280,42 @@ export const FormFields:FieldProps = {
     //     validations: yup.boolean()
     // },
 
+    /*
+        DocumentFrontPhoto:{
+        type: 'file',
+        defaultvalue: '',
+        placeholder: 'Foto dni frontal',
+        validations: yup.object({
+            Image: yup.mixed().required('El campo es obligatorio')
+            .test('FILE_SIZE', 'El archivo es muy grande', (value:any) => value && value.size < 1024*1024)
+            .test('FILE_TYPE', 'El archivo no es una imagen', (value:any) => value && ['image/jpeg', 'image/png'].includes(value.type))
+        }),
+    },
+
+    DocumentBackPhoto:{
+        type: 'file',
+        defaultvalue: '',
+        placeholder: 'Foto dni trasera',
+        validations: yup.object({
+            Image: yup.mixed().required('El campo es obligatorio')
+            .test('FILE_SIZE', 'El archivo es muy grande', (value:any) => value && value.size < 1024*1024)
+            .test('FILE_TYPE', 'El archivo no es una imagen', (value:any) => value && ['image/jpeg', 'image/png'].includes(value.type))
+        }),
+    },
+
+    DocumentCityzenPhoto:{
+        type: 'file',
+        defaultvalue: '',
+        placeholder: 'Foto de ciudadano',
+        validations: yup.object({
+            Image: yup.mixed().required('El campo es obligatorio')
+            .test('FILE_SIZE', 'El archivo es muy grande', (value:any) => value && value.size < 1024*1024)
+            .test('FILE_TYPE', 'El archivo no es una imagen', (value:any) => value && ['image/jpeg', 'image/png'].includes(value.type))
+        }),
+    },
+    
+    */
+
     Send_By_Email:{
         type: 'checkbox',
         defaultvalue: false,

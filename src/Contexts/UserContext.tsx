@@ -98,7 +98,6 @@ const ContextValues = () => {
 export const UserContext = createContext({} as ReturnType<typeof ContextValues>);
 
 const UserContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
-const UserContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <UserContext.Provider value={ContextValues()}>
       {props.children}

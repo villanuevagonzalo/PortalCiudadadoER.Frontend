@@ -396,7 +396,6 @@ const ContextValues = () => {
 export const AuthContext = createContext({} as ReturnType<typeof ContextValues>);
 
 const AuthContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
-const AuthContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <AuthContext.Provider value={ContextValues()}>
       {props.children}
