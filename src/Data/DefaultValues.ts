@@ -1,4 +1,4 @@
-import { IFormState, IResponse, IToken, IUserContact, IUserData, IUserNotification, IUserRol } from "../Interfaces/Data";
+import { IFormState, IResponse, IToken, IUserContact, IUserData, INotification, IUserRol } from "../Interfaces/Data";
 import { GetLevels } from "../Interfaces/UserLevels";
 
 export const DefaultResponse:IResponse = {
@@ -33,11 +33,21 @@ export const DefaultUserData:IUserData = {
   deleted_at: null
 }
 
-export const DefaultUserNotification:IUserNotification = {
+export const DefaultUserNotification:INotification = {
   ID: 0,
+  RECIPIENTS: "both",
+  AGE_FROM: 0,
+  AGE_TO: 0,
+  DEPARTMENT: 0,
+  LOCALITY: 0,
   MESSAGE_TITLE: "",
   MESSAGE_BODY: "",
-  VISTA: false,
+  ATTACHMENT_TYPE: "none",
+  NOTIFICATION_DATE_FROM: null,
+  NOTIFICATION_DATE_TO: null,
+  SEND_BY_EMAIL: false,
+  CREATED_AT: null,
+  SEE: false
 }
 
 export const DefaultUserContact:IUserContact = {

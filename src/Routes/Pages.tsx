@@ -27,6 +27,8 @@ import { DA_Procedures_List } from "../Pages/Actor/Procedures/List";
 import { Auth_Redirect } from "../Pages/Auth/Redirect";
 import { DA_Notifications_Create } from "../Pages/Actor/Notifications/Create";
 
+const REACTENV = process.env
+
 interface PageProps {
   path: string;
   label: string;

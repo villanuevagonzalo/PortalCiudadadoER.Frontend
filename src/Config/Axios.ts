@@ -21,7 +21,6 @@ axiosBase.interceptors.request.use(
 
 axiosBase.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log(response)
     response.data = {
       success: response.data?.status || true,
       message: GetMessage(response.data?.message, response.status),
@@ -29,7 +28,6 @@ axiosBase.interceptors.response.use(
     }
     delete response.data.data.message;
     delete response.data.data.status;
-    console.log(response.data)
 
     return response;
 },

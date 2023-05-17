@@ -28,21 +28,31 @@ export class NotificationsAPI {
     })
   }
 
-  public GetActor(params: {
-  }){
-    return this.baseService.get('/v0/notification/get/actor/active/news', { params })
+
+  public GetAll(){
+    return this.baseService.get('/v0/notification/get/actor/active/news')
+  }
+  
+  public GetByUserNews(){
+    return this.baseService.get('/v0/notification/get/user/news')
   }
 
-  public Get(params: {
-  }){
-    return this.baseService.get('/v0/notification/get/user/news', { params })
+  public GetByUserAll(){
+    return this.baseService.get('/v0/notification/get/user/all')
   }
 
   public GetAttachment(params: {
-    message_title: string;
+    notification_id: number;
   }){
     return this.baseService.get('/v0/notification/get/user/attachments', { params })
   }
+
+  public Read(params:{
+    notification_id: number;
+  }){
+    return this.baseService.post('/v0/notification/get/user/read', params)
+  }
+
 
 
   

@@ -104,15 +104,18 @@ const Encrypt = (str: string) => CryptoJS.AES.encrypt(str, key, {iv}).toString()
 const Decrypt = (str: string) => CryptoJS.AES.decrypt(str, key, {iv}).toString(CryptoJS.enc.Utf8);
 
 export const getLSData = (item:string) => {
-  const data:any = Decrypt(localStorage.getItem(Encrypt(item)) || "") || null;
+  //const data:any = Decrypt(localStorage.getItem(Encrypt(item)) || "") || null;
+  const data:any = localStorage.getItem(item) || null;
   return JSON.parse(data);
 }
 
 export const setLSData = (item:string, data:any) => {
-  localStorage.setItem(Encrypt(item), Encrypt(JSON.stringify(data)));
+  //localStorage.setItem(Encrypt(item), Encrypt(JSON.stringify(data)));
+  localStorage.setItem(item, JSON.stringify(data));
   return data;
 }
 
 export const delLSData = (item:string) => {
-  localStorage.removeItem(Encrypt(item));
+  //localStorage.removeItem(Encrypt(item));
+  localStorage.removeItem(item);
 }

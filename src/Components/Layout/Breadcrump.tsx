@@ -7,8 +7,10 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 export const LayoutBreadcrump = (props: any) => {
 
   let pathname = window.location.pathname;
+  console.log(pathname)
   pathname = pathname+(pathname[pathname.length-1]!=='/'?'/':'')
   const Path = GetFullPath(pathname);
+  console.log(pathname, Path)
   
   return (<>{Path.length>0
     ?

@@ -1,7 +1,7 @@
 
 import { Field, Form, Formik } from "formik";
 import { FormikCheckbox } from "../../../Components/Forms/FormikCheckbox";
-import { FormikImage } from "../../../Components/Forms/FromikImage";
+import { FormikImage } from "../../../Components/Forms/FormikImage";
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import * as yup from 'yup';
@@ -18,7 +18,7 @@ import { DefaultFormState } from "../../../Data/DefaultValues";
 import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath } from "../../../Utils/Locations";
 import { formGetInitialValues, formGetValidations } from "../../../Interfaces/FormFields";
 import { Button } from "../../../Components/Forms/Button";
-import { IResponse, IUserNotification } from "../../../Interfaces/Data";
+import { IResponse, INotification } from "../../../Interfaces/Data";
 
 
 import { Link } from "react-router-dom";
@@ -48,7 +48,7 @@ interface Notificacion{
 
 export const DA_Notifications = () =>{
 
-  const { UpdateActorNotification, CreateNotification, userNotifications } = useContext(NotificationsContext);
+  const { GetAllNotifications, CreateNotification, userNotifications, actorNotifications } = useContext(NotificationsContext);
   const [mostrarNotificaciones, setMostrarNotificaciones] = useState<Notificacion[]>([]);
   const [notificacionCompleta, setNotificacionCompleta] = useState<Notificacion | null>(null);
 
@@ -77,10 +77,10 @@ export const DA_Notifications = () =>{
     })
 
   },[userContact])
-
+/*
   useEffect(() => {
       const getNotifications = async () => {
-        const response = await UpdateActorNotification();
+        const response = await GetAllNotifications();
         console.log(response)
         if(response.status){
           setMostrarNotificaciones(JSON.parse(response.response.data.notifications));
@@ -90,7 +90,7 @@ export const DA_Notifications = () =>{
         // console.log(mostrarNotificaciones)
       };
       getNotifications();
-  }, []);
+  }, []);*/
 
 
   function viewCompleteNotification(notificacion: Notificacion){

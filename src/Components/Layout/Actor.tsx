@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
-import { Link, NavLink, Navigate, Outlet } from "react-router-dom";
+import { Link, NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton } from "./StyledComponents";
 import { Card, ColoredLabel, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
@@ -17,6 +17,7 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import { Pages } from "../../Routes/Pages";
 import { INavigation } from "../../Interfaces/Data";
 import { LayoutBreadcrump } from "./Breadcrump";
+import { DefaultUserRol } from "../../Data/DefaultValues";
 
 
 const navigation:INavigation[] = [
@@ -30,7 +31,10 @@ const navigation:INavigation[] = [
   ] }
 ]
 
-export const LayoutActor = () => {
+export const LayoutActor = () => { 
+  
+  
+  const navigate = useNavigate();
 
   const isSmallResolution = useMediaQuery('(max-width: 1024px)');
   const [ mobile, setMobile ] = useState<boolean>(isSmallResolution);
@@ -44,6 +48,12 @@ export const LayoutActor = () => {
     setMobile(isSmallResolution)
     setOpen(!isSmallResolution)
   }, [isSmallResolution])
+
+  useEffect(()=>{
+    if(userRol != DefaultUserRol && !userActor){
+      navigate(Pages.DC)
+    }
+  },[userRol])
   
   const switchmenu = () => setOpen(!isSmallResolution || !open);
   const closemenu = () => setOpen(false);
@@ -112,5 +122,5 @@ export const LayoutActor = () => {
         </LayoutFooter>
       </LayoutBody>
     </LayoutContainer>
-  </>:<Navigate to={Pages.DC}/>);
+  </>:<></>);
 };

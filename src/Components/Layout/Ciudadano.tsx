@@ -38,7 +38,7 @@ export const LayoutCiudadano = () => {
 
   const userCitizen:any = userRol.find((obj) => obj.type === "Ciudadano")
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
-  const { userNotifications } = useContext(NotificationsContext);
+  const { userNotifications, UpdateNotifications } = useContext(NotificationsContext);
   
   useEffect(() => {
     setMobile(isSmallResolution)

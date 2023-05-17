@@ -1,7 +1,7 @@
 
 import { Field, Form, Formik } from "formik";
 import { FormikCheckbox } from "../../../Components/Forms/FormikCheckbox";
-import { FormikImage } from "../../../Components/Forms/FromikImage";
+import { FormikImage } from "../../../Components/Forms/FormikImage";
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import * as yup from 'yup';

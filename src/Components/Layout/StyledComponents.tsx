@@ -233,7 +233,7 @@ export const LayoutBody = styled.div<{ mobile?: boolean }>`
   display: flex;
   flex-direction: column;
   flex: 1;
-  gap: 2rem;
+  gap:${props => props.mobile?'1rem':'2rem'};
   padding:${props => props.mobile?'1rem':'2rem'};
 `;
 

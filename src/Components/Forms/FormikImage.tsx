@@ -23,8 +23,8 @@ export const FormikImage = ({...props}: Props) => {
 
     function onChange(event:any) {
 
-      setImage(event.currentTarget.files[0])
-      setFieldValue('AttachmentTest',event.currentTarget.files[0])
+      setImage(event.target.files[0])
+      setFieldValue('AttachmentTest',event.target.files[0])
 
       console.log(event)
 

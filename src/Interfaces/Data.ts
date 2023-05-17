@@ -83,19 +83,20 @@ export interface ILocation{
   PAIS: string;
 }
 
-export interface IUserNotification{
-  ID: number,
-  MESSAGE_TITLE: string,
-  MESSAGE_BODY: string,
-  VISTA: boolean,
-}
-
-export interface IActorNotification{
+export interface INotification{
   ID: number;
-  NAME: string;
-}
-
-export interface IActorNotification{
-  ID: number;
-  NAME: string;
+  RECIPIENTS: "actor" | "citizen" | "both";
+  AGE_FROM: number;
+  AGE_TO: number;
+  DEPARTMENT: number;
+  LOCALITY: number;
+  MESSAGE_TITLE: string;
+  MESSAGE_BODY: string;
+  ATTACHMENT?: File;
+  ATTACHMENT_TYPE: string;
+  NOTIFICATION_DATE_FROM: Date | null;
+  NOTIFICATION_DATE_TO: Date | null;
+  SEND_BY_EMAIL: boolean;
+  CREATED_AT: Date | null;
+  SEE?: boolean;
 }
