@@ -41,24 +41,16 @@ export const DA_Notifications_Create = () =>{
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
   const [ LocationsValues, setLocationsValues ] = useState<ILocation[]>([]);
 
-
-  useEffect(() => {
-    if(userContact){
-      if(userContact.LOCALITY_ID!==0 && LocationsValues.length>0){
-        setFieldValues({...FieldValues, Locality: LocationFullPath(LocationByID(LocationsValues,userContact.LOCALITY_ID))})
-      }
-    }
-  },[LocationsValues])
-
   useEffect(() => {
     
     RawLocations().then((response)=>{
       setLocationsValues(response)
+      console.log(LocationsFullPath(response))
     }).catch((e:any)=>{
       console.log(e)
     })
 
-  },[userContact])
+  },[])
 
   return (<>
     <LayoutSection>
@@ -69,7 +61,7 @@ export const DA_Notifications_Create = () =>{
         validateOnChange={false} 
         validateOnBlur={false}
         validationSchema={formGetValidations(FormRequiredFields).concat(yup.object({
-        'Locality': yup.string().oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
+        'Locality': yup.string().required('El campo es obligatorio').oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
         }))}
         onSubmit={async (values: any) => {
 

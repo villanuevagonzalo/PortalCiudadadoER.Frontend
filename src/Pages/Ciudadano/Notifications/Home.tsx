@@ -8,9 +8,9 @@ import * as yup from 'yup';
 import { useTable } from "react-table"
 import { Spinner, Card, DivSubtitle, DivTitle2, NotificationCard, NotificacionCompletaContenido, NotificacionCompleta } from '../../../Components/Elements/StyledComponents';
 import { BiMessage, BiNotification } from "react-icons/bi";
-import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
+import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer, LayoutNote } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import { AuthContext } from "../../../Contexts/AuthContext";
 import { ILocation } from "../../../Interfaces/Data";
 import { IFormState } from "../../../Interfaces/Data";
@@ -25,6 +25,8 @@ import { Link } from "react-router-dom";
 import { Pages } from "../../../Routes/Pages";
 import { FormikField } from "../../../Components/Forms/FormikField";
 import { FormWrapperButton } from "../../../Components/Forms/StyledComponents";
+import { ColumnDef } from "@tanstack/react-table";
+import { Table } from "../../../Components/Elements/Table";
 
 
 const FormRequiredFields = [
@@ -47,56 +49,18 @@ interface Notificacion{
 
 export const DC_Notifications = () =>{
 
-  const { UpdateNotification, CreateNotification, userNotifications } = useContext(NotificationsContext);
-  const [mostrarNotificaciones, setMostrarNotificaciones] = useState<Notificacion[]>([]);
+  const { userNotifications, setUserNotifications } = useContext(NotificationsContext);
+
   const [notificacionCompleta, setNotificacionCompleta] = useState<INotification | null>(null);
 
-  const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
-  const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
-
-  const { userData, userContact, userRol, SaveData, AFIP_getURL } = useContext(AuthContext);
-  const [ LocationsValues, setLocationsValues ] = useState< ILocation[]>([]);
-
-  useEffect(() => {
-    
-    RawLocations().then((response)=>{
-      setLocationsValues(response)
-    }).catch((e:any)=>{
-      console.log(e)
-    })
-
-  },[userContact])
-
-  useEffect(() => {
-    const getNotifications = async () => {
-
-      const response = await UpdateNotification();
-      console.log(response)
-      if(response.status){
-        setMostrarNotificaciones(JSON.parse(response.response.data.notifications));
-      }
-      
-      console.log(response)
-      // console.log(mostrarNotificaciones)
-    };
-    
-    getNotifications();
-  }, []);
-
-
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
-    setFieldValues({...FieldValues, Attachment: file});
-    console.log(file);
-  }
 
   function viewCompleteNotification(notificacion: INotification){
     // alert(`Título: ${notificacion.MESSAGE_TITLE}\n\nCuerpo: ${notificacion.MESSAGE_BODY}`);
     // notificacion.VISTA = true;
     setNotificacionCompleta(notificacion);
-    setMostrarNotificaciones(prevmostrarNotificaciones =>
-      prevmostrarNotificaciones.map(notif =>
-        notif.ID === notificacion.ID ? { ...notif, VISTA: true } : notif
+    setUserNotifications(prev =>
+      prev.map(notif =>
+        notif.ID === notificacion.ID ? { ...notif, SEE: true } : notif
       )
     );
   }
@@ -104,24 +68,37 @@ export const DC_Notifications = () =>{
   function cerrarNotificacionCompleta() {
     setNotificacionCompleta(null);
   }
-
-
-
+  
+  
+  const mcolumns = useMemo<ColumnDef<INotification>[]>(()=>[
+    {
+      header: 'Fecha',
+      accessorKey: 'CREATED_AT',
+    },
+    {
+      header: 'Titulo',
+      accessorKey: 'MESSAGE_TITLE',
+    },
+    {
+      header: 'Mensaje',
+      accessorKey: 'MESSAGE_BODY',
+    }
+  ],[]);
+  
   return (<>
+    <LayoutNote>Enterate de las actualizaciones de tus trámites y notificaciones de la plataforma</LayoutNote>
     <LayoutSection>
       <h1><BiNotification />Notificaciones</h1>
-      Enterate de las actualizaciones de tus trámites y notificaciones de la plataforma
-      <br/><br/>
+      
       {userNotifications.length > 0 ? (
         userNotifications.map((notificacion: INotification) => (
           <NotificationCard
             key={notificacion.ID}
-            color={notificacion.SEE ? "white" : undefined}
             onClick={() => viewCompleteNotification(notificacion)}
-            // vista={notificacion.VISTA}
+            seen={notificacion.SEE}
           >
             <h1>{notificacion.MESSAGE_TITLE}</h1>
-            <p>{notificacion.MESSAGE_BODY}</p>
+            <p style={{wordBreak:'break-all'}}>{notificacion.MESSAGE_BODY}</p>
           </NotificationCard>
         ))
       ) : (
@@ -134,7 +111,7 @@ export const DC_Notifications = () =>{
         <NotificacionCompleta>
           <NotificacionCompletaContenido>
             <h1>{notificacionCompleta.MESSAGE_TITLE}</h1>
-            <p>{notificacionCompleta.MESSAGE_BODY}</p>
+            <p style={{wordBreak:'break-all'}}>{notificacionCompleta.MESSAGE_BODY}</p>
             <br />
             <FormWrapperButton
               color="primary"

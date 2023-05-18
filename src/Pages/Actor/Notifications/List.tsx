@@ -10,7 +10,7 @@ import { Spinner, Card, DivSubtitle, DivTitle2, NotificationCard, NotificacionCo
 import { BiMessage } from "react-icons/bi";
 import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import { AuthContext } from "../../../Contexts/AuthContext";
 import { ILocation } from "../../../Interfaces/Data";
 import { IFormState } from "../../../Interfaces/Data";
@@ -26,6 +26,8 @@ import { Pages } from "../../../Routes/Pages";
 import { FormikField } from "../../../Components/Forms/FormikField";
 import moment from "moment";
 import { FormWrapperButton } from "../../../Components/Forms/StyledComponents";
+import { Table } from "../../../Components/Elements/Table";
+import { ColumnDef } from "@tanstack/react-table";
 
 
 const FormRequiredFields = [
@@ -107,13 +109,28 @@ export const DA_Notifications = () =>{
   function cerrarNotificacionCompleta() {
     setNotificacionCompleta(null);
   }
-
+  
+  const mcolumns = useMemo<ColumnDef<INotification>[]>(()=>[
+    {
+      header: 'Fecha',
+      accessorKey: 'CREATED_AT',
+    },
+    {
+      header: 'Titulo',
+      accessorKey: 'MESSAGE_TITLE',
+    },
+    {
+      header: 'Mensaje',
+      accessorKey: 'MESSAGE_BODY',
+    }
+  ],[]);
 
   return (<>
     <LayoutSection>
     <LayoutTitle>
       Notificaciones
     </LayoutTitle>
+      <Table columns={mcolumns} data={actorNotifications} />
     {/* <LayoutSection> */}
       
       {

@@ -489,3 +489,35 @@ export const RoundedButton = styled.div<{ }>`
     background:var(--maincolor);
   }
 `;
+
+
+export const LayoutNote = styled.div<{ }>`
+  display: flex;
+  width:100%;
+  background-color: #fdfde9;
+  color: #27272a;
+  border: 1px solid #f2d71d;
+  //color: var(--primary_text);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 150px;
+  font-size: 0.875rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+`;
+
+/*
+
+  background-color: #eee;
+  color: #777;
+  border:1px solid #ccc;
+
+  background-color: #def3ff;
+  color: #00aff0;
+  border:1px solid #75dbff;
+  //color: var(--primary_text);
+
+
+*/

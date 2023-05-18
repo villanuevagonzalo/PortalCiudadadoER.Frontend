@@ -20,7 +20,7 @@ const ContextValues = () => {
     
     const response:IResponse | any = await AxiosNotificationAPI.GetByUserAll();
 
-    if(response.data.success) setUserNotifications(JSON.parse(response.data.data.notifications))
+    if(response?.data?.success) setUserNotifications(JSON.parse(response.data.data.notifications))
 
   }
 
@@ -92,8 +92,9 @@ const ContextValues = () => {
   return {
     UpdateNotifications,
     userNotifications, actorNotifications,
-    CreateNotification, GetAllNotifications
-    ,setUserNotifications, UpdateNotification: UpdateNotificationOld
+    setUserNotifications, 
+    CreateNotification, GetAllNotifications,
+    UpdateNotification: UpdateNotificationOld
   }
 }
 
