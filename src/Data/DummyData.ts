@@ -14,7 +14,9 @@ export const DummyNotifications:INotification[] = [
       "NOTIFICATION_DATE_FROM": new Date("2023-04-05 00:00:00"),
       "NOTIFICATION_DATE_TO": new Date("2024-05-04 00:00:00"),
       "SEND_BY_EMAIL": false,
-      "CREATED_AT": new Date("2023-05-15 19:46:47")
+      "CREATED_AT": new Date("2023-05-15 19:46:47"),
+      "OPEN": false,
+      "TYPE": "general"
   },
   {
       "ID": 47,
@@ -29,7 +31,9 @@ export const DummyNotifications:INotification[] = [
       "NOTIFICATION_DATE_FROM": new Date("2023-05-04 00:00:00"),
       "NOTIFICATION_DATE_TO": new Date("2024-05-04 00:00:00"),
       "SEND_BY_EMAIL": false,
-      "CREATED_AT": new Date("2023-05-15 19:54:40")
+      "CREATED_AT": new Date("2023-05-15 19:54:40"),
+      "OPEN": false,
+      "TYPE": "general"
   },
   {
       "ID": 48,
@@ -44,7 +48,9 @@ export const DummyNotifications:INotification[] = [
       "NOTIFICATION_DATE_FROM": new Date("2023-05-05 00:00:00"),
       "NOTIFICATION_DATE_TO": new Date("2024-05-05 00:00:00"),
       "SEND_BY_EMAIL": false,
-      "CREATED_AT": new Date("2023-05-15 20:15:18")
+      "CREATED_AT": new Date("2023-05-15 20:15:18"),
+      "OPEN": false,
+      "TYPE": "general"
   },
   {
       "ID": 49,
@@ -59,7 +65,9 @@ export const DummyNotifications:INotification[] = [
       "NOTIFICATION_DATE_FROM": new Date("2023-05-05 00:00:00"),
       "NOTIFICATION_DATE_TO": new Date("2024-05-05 00:00:00"),
       "SEND_BY_EMAIL": false,
-      "CREATED_AT": new Date("2023-05-15 20:21:25")
+      "CREATED_AT": new Date("2023-05-15 20:21:25"),
+      "OPEN": false,
+      "TYPE": "general"
   },
   {
       "ID": 50,
@@ -74,6 +82,8 @@ export const DummyNotifications:INotification[] = [
       "NOTIFICATION_DATE_FROM": new Date("2023-01-01 00:00:00"),
       "NOTIFICATION_DATE_TO": new Date("2023-12-01 00:00:00"),
       "SEND_BY_EMAIL": false,
-      "CREATED_AT": new Date("2023-05-16 18:44:22")
+      "CREATED_AT": new Date("2023-05-16 18:44:22"),
+      "OPEN": false,
+      "TYPE": "general"
   }
 ]

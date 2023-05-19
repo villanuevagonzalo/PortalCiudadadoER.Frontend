@@ -5,7 +5,7 @@ import { FormikImage } from "../../../Components/Forms/FormikImage";
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import * as yup from 'yup';
-import { Spinner, Card, DivSubtitle, DivTitle2, NotificationCard, NotificacionCompleta, NotificacionCompletaContenido } from '../../../Components/Elements/StyledComponents';
+import { Spinner } from '../../../Components/Elements/StyledComponents';
 import { BiData, BiMessage } from "react-icons/bi";
 import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";

@@ -9,17 +9,17 @@ export class NotificationsAPI {
   }
 
   public Create(params: {
-    recipients: string;
-    age_from: number;
-    age_to: number;
-    department_id: number;
-    locality_id: number;
     message_title: string;
     message_body: string;
-    attachment: File;
+    recipients: string;
     notification_date_from: Date;
     notification_date_to: Date;
     send_by_email: string;
+    attachment?: File;
+    age_from?: number;
+    age_to?: number;
+    department_id?: number;
+    locality_id?: number;
   }){
     return this.baseService.post('/v0/notification/new', params,{
       headers: {

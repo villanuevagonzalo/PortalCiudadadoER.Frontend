@@ -118,3 +118,5 @@ export const delLSData = (item:string) => {
   //localStorage.removeItem(Encrypt(item));
   localStorage.removeItem(item);
 }
+
+export const stringPreview = (text:string, len:number=100) => text.length>len?(text.slice(0,len)+"..."):text;

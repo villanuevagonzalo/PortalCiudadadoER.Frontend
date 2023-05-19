@@ -98,5 +98,16 @@ export interface INotification{
   NOTIFICATION_DATE_TO: Date | null;
   SEND_BY_EMAIL: boolean;
   CREATED_AT: Date | null;
-  SEE?: boolean;
+  TYPE: "general" | "personal";
+  OPEN: boolean;
+}
+
+export interface CitizenNotification {
+  ID: number;
+  MESSAGE_TITLE: string;
+  MESSAGE_BODY: string;
+  ATTACHMENTS: File[];
+  CREATED_AT: Date;
+  TYPE: "general" | "personal";
+  NEW: boolean;
 }

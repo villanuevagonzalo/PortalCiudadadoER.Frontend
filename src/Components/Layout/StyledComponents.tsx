@@ -7,7 +7,7 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
   display: flex;
   flex-direction: row;
   height: 64px;
-  padding: 1rem;
+  padding:${props => props.mobile?'1rem':'1rem 2rem'};
   width:100%;
   z-index:100;
   gap:${props => props.mobile?'0.5rem':'1rem'};
@@ -506,6 +506,13 @@ export const LayoutNote = styled.div<{ }>`
   padding: 1rem;
   border-radius: 0.5rem;
   display: flex;
+`;
+
+
+export const LayoutText = styled.div`
+  font-size:0.8rem;
+  color: var(--${props => (props.color ? props.color : 'maincolor_text')});
+  width:100%;
 `;
 
 /*

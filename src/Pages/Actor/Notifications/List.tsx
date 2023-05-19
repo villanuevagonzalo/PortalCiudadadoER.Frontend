@@ -6,7 +6,7 @@ import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import * as yup from 'yup';
 import { useTable } from "react-table"
-import { Spinner, Card, DivSubtitle, DivTitle2, NotificationCard, NotificacionCompleta, NotificacionCompletaContenido } from '../../../Components/Elements/StyledComponents';
+import { Spinner, Card, DivSubtitle, DivTitle2, NotificationCardWrapper, NotificationFullSizeWrapper } from '../../../Components/Elements/StyledComponents';
 import { BiMessage } from "react-icons/bi";
 import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
@@ -126,51 +126,9 @@ export const DA_Notifications = () =>{
   ],[]);
 
   return (<>
-    <LayoutSection>
     <LayoutTitle>
       Notificaciones
     </LayoutTitle>
-      <Table columns={mcolumns} data={actorNotifications} />
-    {/* <LayoutSection> */}
-      
-      {
-        mostrarNotificaciones?.length>0 && mostrarNotificaciones.map((notificacion: Notificacion) => (
-          <NotificationCard 
-          key={notificacion.ID} 
-          onClick={() => viewCompleteNotification(notificacion)}
-          color={notificacion.VISTA ? 'white' : undefined}
-          // vista={notificacion.VISTA}
-          >
-            <h1>{notificacion.MESSAGE_TITLE}</h1>
-            <p>{notificacion.MESSAGE_BODY}</p>
-          </NotificationCard>
-        ))
-      }
-      {notificacionCompleta && (
-        <NotificacionCompleta>
-          <NotificacionCompletaContenido>
-            <h1>{notificacionCompleta.MESSAGE_TITLE}</h1>
-            <p>{notificacionCompleta.MESSAGE_BODY}</p>
-            <br/>
-            <FormWrapperButton color="primary" onClick={cerrarNotificacionCompleta}>Cerrar</FormWrapperButton>
-          </NotificacionCompletaContenido>
-          
-        </NotificacionCompleta>
-      )
-      }
-    {/* </LayoutSection> */}
-      {
-      mostrarNotificaciones?.length === 0 && 
-      <LayoutSection className="items-center">
-        <BiMessage /> No tienes ningun mensaje
-      </LayoutSection>
-      }
-    
-        
-      
-    </LayoutSection>
-
-    {/* <Button onClick={() => {prueba()}}>Leer</Button> */}
   </>)
 }
 

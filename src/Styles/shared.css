@@ -18,7 +18,7 @@
     --tertiary_text: #fdeceb;
 
 
-
+  
     
 
     --error: #d44006;
@@ -51,5 +51,19 @@
 
     --disabled-background: #cccccc;
     --disabled-color: #888888;
+
+
+
+    /* RESPONSIVE LAYOUT */
+
+    --spacing-unit: 0.125rem;
+
+    --margin-web-sm: calc(2 * var(var(--spacing-unit)));
+    --margin-web-md: calc(4 * var(var(--spacing-unit)));
+    --margin-web-lg: calc(8 * var(var(--spacing-unit)));
+
+    --margin-mobile-sm: calc(1 * var(var(--spacing-unit)));
+    --margin-mobile-md: calc(2 * var(var(--spacing-unit)));
+    --margin-mobile-lg: calc(4 * var(var(--spacing-unit)));
 
 }
