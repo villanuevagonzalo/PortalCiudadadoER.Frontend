@@ -3,7 +3,6 @@ import { DefaultUserContact, DefaultUserRol } from "../Data/DefaultValues";
 import { IUserContact, IUserRol, IResponse, INotification, CitizenNotification } from "../Interfaces/Data";
 import { delLSData } from "../Utils/General";
 import { NotificationsAPI } from "../Services/NotificationsAPI";
-import { async } from "q";
 import { DummyNotifications } from "../Data/DummyData";
 import moment from "moment";
 
@@ -82,7 +81,7 @@ const ContextValues = () => {
     setIsLoading(true)
     const response:IResponse | any = await AxiosNotificationAPI.GetAll();
 
-    if(response.data.success){ setActorNotifications(response.data) }
+    if(response?.data?.success){ setActorNotifications(response.data) }
     else{
       setErrors("ERROR ACTOR")
     }

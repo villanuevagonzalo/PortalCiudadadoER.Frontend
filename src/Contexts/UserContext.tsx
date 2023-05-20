@@ -28,7 +28,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserGetData(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "" }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -43,7 +43,7 @@ const ContextValues = () => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserNameChange(data);
-    if(response.data.success){
+    if(response?.data?.success){
       setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
@@ -60,7 +60,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserSaveData(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       
 
       let NewUserContact = {...userContact,

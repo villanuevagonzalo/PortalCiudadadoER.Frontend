@@ -34,7 +34,7 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
         cuil: userData.cuil
       }, setFormState);
     }
-    if (response.data.success) {
+    if (response?.data?.success) {
       window.location = response.data.data
     }
   }

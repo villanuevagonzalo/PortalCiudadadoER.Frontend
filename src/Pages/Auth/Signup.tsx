@@ -83,7 +83,7 @@ export const Auth_Signup = () =>{
 
               const response = await UserGetData({'cuil':values.CUIL}, setFormState);
 
-              if(response.data.success){
+              if(response?.data?.success){
                 console.log(response)
                 let userdata = response.data.data;
                 

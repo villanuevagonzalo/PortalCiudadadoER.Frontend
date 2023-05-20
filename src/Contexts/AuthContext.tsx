@@ -82,7 +82,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserSignup(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -97,7 +97,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserRedirect(data);
     
-    if(response.data.success){
+    if(response?.data?.success){
       const NewUserData = response.data.data.user_data.user;
       const NewUserContact = response.data.data.user_data.user_contact;
 
@@ -127,7 +127,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserLogin(data);
     
-    if(response.data.success){
+    if(response?.data?.success){
       const NewUserData = response.data.data.user_data.user;
       const NewUserContact = response.data.data.user_data.user_contact;
 
@@ -158,7 +158,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserGetData(data);
     
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "" }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -173,7 +173,7 @@ const ContextValues = () => {
 
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserNameChange(data);
-    if(response.data.success){
+    if(response?.data?.success){
       setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
@@ -190,7 +190,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserSaveData(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       
 
       let NewUserContact = {...userContact,
@@ -220,7 +220,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserPasswordReset(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -236,7 +236,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.UserPasswordSave(data);
     console.log(response)
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -252,7 +252,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.EmailValidate(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -268,7 +268,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.EmailResendVerification(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -284,7 +284,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.EmailChange(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -300,7 +300,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.EmailChangeValidate(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -316,7 +316,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.Autenticar_AFIP_getURL(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -333,7 +333,7 @@ const ContextValues = () => {
 
     console.log(response)
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -348,7 +348,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.Autenticar_MIARGENTINA_getURL(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
@@ -364,7 +364,7 @@ const ContextValues = () => {
     setFormState((prev:any) => ({ ...prev, loading: true }));
     const response:AxiosResponse = await AxiosAuthAPI.Autenticar_MIARGENTINA_checkToken(data);
 
-    if(response.data.success){
+    if(response?.data?.success){
       setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
     } else{
       setFormState((prev:any) => ({ ...prev, error: response.data.message }));
