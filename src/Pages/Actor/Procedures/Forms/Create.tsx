@@ -8,8 +8,9 @@ import { ElementInstance, ElementSchema } from "../../../../Modules/FormElements
 import { Form, Formik } from "formik";
 import { AiOutlineSave } from "react-icons/ai";
 import { BiSave } from "react-icons/bi";
-import { FormElementBases } from "../../../../Modules/FormElements/Types";
+import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
+import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 
 export const DA_Procedures_Forms_Create = () => {
 
@@ -47,20 +48,14 @@ export const DA_Procedures_Forms_Create = () => {
 
   },[fields])
 
-  const Fields: {[key: string]: ElementInstance} = {
+  const Fields: {[key: string]: ElementInstance<ElementSchemaTypes>} = {
     Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Ingresá el Título'},["isRequired"])),
     Subtitle: new ElementInstance("Subtitle",new ElementSchema('TEXT',{label:'Ingresá el Subtítulo'},["isRequired"])),
-    Description: new ElementInstance("Description",new ElementSchema('TEXTAREA',{label:'Descripción'})),
+    Description: new ElementInstance("Description",new ElementSchema('TEXTAREA',{label:'Descripción',length_max:100},["isRequired"])),
     Keywords: new ElementInstance("Keywords",new ElementSchema('TEXT',{label:'Palabras Claves'},["isRequired"])),
-
-
-    Prueba1: new ElementInstance("Prueba1",new ElementSchema("SPACER",{})),
-    Prueba2: new ElementInstance("Prueba2",new ElementSchema("TEXT",{label:'hola',length_max:2},["isRequired"]),"no"),
-    Prueba3: new ElementInstance("Prueba3",new ElementSchema("NUMBER",{ label:'ESTO ES UN CUIL'},["isCUIL"]),20390317213)
   }
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
-
 
   return(<>
     <LayoutSection>
@@ -73,19 +68,7 @@ export const DA_Procedures_Forms_Create = () => {
         onSubmit={(e:any)=>{
           console.log(e)
         }}
-        validate={(values:any) => {
-          const errors: { [key: string]: string } = {};
-
-          for (const [key, value] of Object.entries(values)) {
-            const validations = Fields[key].schema.validators();
-            validations.forEach(valid=>{
-              const error = valid(value);
-              if (error){  errors[key] = error }
-            })
-          }
-  
-          return errors;
-        }}
+        validate={(values:any) => ValidateForm(values, Fields)}
       >
       <Form autoComplete="off">
         <Element instance={Fields.Title}/>

@@ -1,11 +1,15 @@
 import moment from "moment";
 import 'moment/locale/es';
-import { CitizenNotification } from "../../Interfaces/Data";
-import { NotificationFullSizeWrapper } from "../Elements/StyledComponents";
+import { CitizenNotification, FileBlob } from "../../Interfaces/Data";
+import { NotificationFullSizeWrapper, Spinner } from "../Elements/StyledComponents";
 import { AiOutlineClose, AiOutlineNotification } from "react-icons/ai";
 import { BsFiletypeJpg, BsFiletypePdf } from "react-icons/bs";
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../Layout/StyledComponents";
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents";
 import { Button } from "../Forms/Button";
+import { fileTypes } from "../../Interfaces/FileTypes";
+import { useContext, useEffect, useState } from "react";
+import { NotificationsContext } from "../../Contexts/NotificationContext";
+import { NotificationFile } from "./File";
 
 moment.locale('es')
 
@@ -14,7 +18,23 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
   func: Function
 }
 
+
 export const NotificationFullSize: React.FC<Props> = ({data, func, ...props}) => {
+  
+  const { GetAttachments } = useContext(NotificationsContext);
+  const [ isLoadingFiles, setIsLoadingFiles ] = useState<boolean>(true)
+  const [ Files, setFiles ] = useState<FileBlob[]>([])
+
+  const handleFiles = async () => {
+    const responses = await GetAttachments(data.ATTACHMENTS, setIsLoadingFiles)
+    console.log(responses)
+    setFiles(responses)
+  }
+
+  useEffect(()=>{
+    if(data.ATTACHMENTS.length>0) handleFiles()
+  },[])
+
 
   return <NotificationFullSizeWrapper>
     <LayoutSection className="content">
@@ -26,13 +46,16 @@ export const NotificationFullSize: React.FC<Props> = ({data, func, ...props}) =>
       </div>
       <h1>{data.MESSAGE_TITLE}</h1>
       <p>{data.MESSAGE_BODY}</p>
-      <div className="attachments">
-        <h2>Archivos adjuntos</h2>
-        <div>
-          <span><BsFiletypeJpg /> IMAGEN</span>
-          <span><BsFiletypePdf /> PDF</span>
-        </div>
-      </div>
+        {data.ATTACHMENTS.length>0 ? <div className="attachments">
+          <h2>Archivos adjuntos</h2>
+          {isLoadingFiles
+            ?<div className="loader">
+              <Spinner color='gray' size="1.5rem"/>
+              <span className="flex-1"><b>Cargando archivos</b>. Por favor aguarde.</span>
+            </div>
+            :<div className="files">{Files.map((e:FileBlob)=><NotificationFile data={e}/>)}</div>
+          }
+        </div>: <></>}
       <LayoutStackedPanel className="mt-2">
         <LayoutSpacer/>
         <Button onClick={()=>func()}>Cerrar</Button>

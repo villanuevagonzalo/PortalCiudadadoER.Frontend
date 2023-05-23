@@ -5,8 +5,8 @@ import { getLSData } from '../Utils/General';
 const REACTENV = process.env
 
 export const axiosBase = axios.create({
-    baseURL: REACTENV.REACT_APP_PROJECT_API,
-    responseType: 'json',
+  baseURL: REACTENV.REACT_APP_PROJECT_API,
+  responseType: 'json',
 });
 
 axiosBase.interceptors.request.use(
@@ -18,6 +18,7 @@ axiosBase.interceptors.request.use(
     return err
   }
 );
+
 interface CustomResponse {
   status: any;
   code: number;

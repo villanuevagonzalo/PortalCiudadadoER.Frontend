@@ -720,7 +720,6 @@ export const NotificationFullSizeWrapper = styled.div`
     & p{
       font-size:0.9rem;
       word-break: break-all;
-      min-height:50px;
     }
     
     & div.header{
@@ -756,10 +755,19 @@ export const NotificationFullSizeWrapper = styled.div`
       display: flex;
       flex-direction: column;
 
-      & div{
-        display: grid;
-        grid-gap: 10px;
-        grid-template-columns: repeat(auto-fill, 186px);
+      & div.loader{
+        display: flex;
+        flex-direction: row;
+        padding:1rem;
+        gap:1rem;
+        align-items: center;
+        align-self: left;
+        font-size: 0.8rem;
+        color: var(--maincolor_text);
+      }
+
+      & div.files{
+          display: inline-block;
         
         & span{
           flex-direction: row;

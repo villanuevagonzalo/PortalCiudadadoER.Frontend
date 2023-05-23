@@ -260,7 +260,7 @@ export const FormFields:FieldProps = {
     Notification_Date_From:{
         type: 'date',
         defaultvalue: null,
-        placeholder: 'Desde',
+        placeholder: 'Fecha desde',
         validations: yup.string()
                         .required('El campo es obligatorio')
     },
@@ -268,7 +268,7 @@ export const FormFields:FieldProps = {
     Notification_Date_To:{
         type: 'date',
         defaultvalue: null,
-        placeholder: 'Hasta',
+        placeholder: 'Fecha hasta',
         validations: yup.string()
                         .required('El campo es obligatorio')
     },

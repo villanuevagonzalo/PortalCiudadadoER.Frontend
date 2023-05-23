@@ -1,61 +1,165 @@
 
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, useFormikContext } from "formik";
 import { FormikCheckbox } from "../../../Components/Forms/FormikCheckbox";
 import { FormikImage } from "../../../Components/Forms/FormikImage";
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import * as yup from 'yup';
 import { Spinner } from '../../../Components/Elements/StyledComponents';
-import { BiData, BiMessage } from "react-icons/bi";
-import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
+import { BiData, BiMessage, BiNotification, BiSave } from "react-icons/bi";
+import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer, LayoutNote } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "../../../Contexts/AuthContext";
 import { ILocation } from "../../../Interfaces/Data";
 import { IFormState } from "../../../Interfaces/Data";
 import { DefaultFormState } from "../../../Data/DefaultValues";
-import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath } from "../../../Utils/Locations";
+import { RawLocations, LocationsFullPath, LocationByID, LocationFullPath, GetLocationByPath, GetDepartments, GetLocalitysByDeparment } from "../../../Utils/Locations";
 import { formGetInitialValues, formGetValidations } from "../../../Interfaces/FormFields";
 import { FormikField } from "../../../Components/Forms/FormikField";
 import moment from "moment";
-
-
-const FormRequiredFields = [
-  'Recipients',
-  'Age_From',
-  'Age_To',
-  'Notification_Date_From',
-  'Notification_Date_To',
-  'Locality',
-  'Message_Title',
-  'Message_Body',
-];
-
+import { ButtonWrapper, Element, ElementInstance, ElementSchema, ElementSchemaTypes, ValidateForm } from "../../../Modules/FormElements";
+import { Button } from "../../../Components/Forms/Button";
+import { AiOutlineAreaChart, AiOutlineSearch } from "react-icons/ai";
+import { MdOutlineAutoGraph } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
 
 export const DA_Notifications_Create = () =>{
 
-  const { userContact } = useContext(AuthContext);
-  const { CreateNotification } = useContext(NotificationsContext);
+  const { CreateNotification, GetScope } = useContext(NotificationsContext);
+  const ref:any = useRef(null);
 
+  const [ ScopeFormState, setScopeFormState ] = useState<IFormState>(DefaultFormState);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
-  const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
-  const [ LocationsValues, setLocationsValues ] = useState<ILocation[]>([]);
+  const [ Scope, setScope ] = useState<number>(0);
 
-  useEffect(() => {
-    
-    RawLocations().then((response)=>{
-      setLocationsValues(response)
-      console.log(LocationsFullPath(response))
-    }).catch((e:any)=>{
-      console.log(e)
-    })
+  const [ Locations, setLocations ] = useState<ILocation[]>([]);
+  const [ Deparments, setDeparments ] = useState<any[]>([]);
+  const [ Localities, setLocalities ] = useState<any[]>([]);
 
-  },[])
+  const Fields: {[key: string]: ElementInstance<ElementSchemaTypes>} = {
+    Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título'},["isRequired"])),
+    Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_max:100},["isRequired"])),
+    StartDate: new ElementInstance("StartDate",new ElementSchema('DATE',{label:'Fecha desde'},["isRequired"]),null),
+    EndDate: new ElementInstance("EndDate",new ElementSchema('DATE',{label:'Fecha hasta'},["isRequired"]),null),
+    SendByEmail: new ElementInstance("SendByEmail",new ElementSchema('CHECKBOX',{label:'Enviar por Correo'}),false),
+    Attachments: new ElementInstance("Attachments",new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+    Recipients: new ElementInstance("Recipients",new ElementSchema('SELECT',{label:'Seleccione un destinatario',options:[{
+      value: "actor",
+      label: 'Actores'
+    },{
+      value: "citizen",
+      label: 'Ciudadanos'
+    },{
+      value: "both",
+      label: 'Todos'
+    }]},["isRequired"]), "both"),
+    AgeFrom: new ElementInstance("AgeFrom",new ElementSchema('NUMBER',{label:'Edad desde',value_min:1, value_max:120})),
+    AgeTo: new ElementInstance("AgeTo",new ElementSchema('NUMBER',{label:'Edad hasta',value_min:1, value_max:120})),
+    Department: new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
+    Locality: new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
+  }
+
+  const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
+
+  const handleChange = (e:any) => {
+    setLocalities(GetLocalitysByDeparment(Locations,e.target.value*1))
+  }
+  const handleLocations = async() => {
+    const response = await RawLocations();
+    setLocations(response)
+    setDeparments(GetDepartments(response));
+  }
+  const handleScope = async (e:any) => {
+    e.preventDefault()
+    const values:any = ref.current.values;
+    const ScopeResponse = await GetScope({
+      recipients: values.Recipients,
+      age_from: values.AgeFrom===""?1:values.AgeFrom,
+      age_to: values.AgeTo===""?120:values.AgeTo,
+      department_id: values.Department || 0,
+      locality_id: values.Locality || 0,
+      }, setScopeFormState);
+    if(ScopeResponse?.data?.success){
+      setScope(ScopeResponse.data.data.notification_scope)
+    } else{
+      setScope(0)
+    }
+  }
+
+  useEffect(() => { handleLocations() },[])
 
   return (<>
+    <LayoutNote>
+      Administre desde esta sección las notificaciones generales que serán publicadas en <b>Ciudadano Digital</b>.
+      <br/>Podrá configurar sus notificaciones por rango de edad, ubicación, y si lo desea, enviarlas por correo electrónico.
+      <br/>Vea el alcance que va a tener su notificación.
+    </LayoutNote>
     <LayoutSection>
-      <h1><BiData/>Crear Nueva Notificación</h1>
-      <Formik 
+      <h1 onClick={handleChange}><BiNotification/>Crear Nueva Notificación</h1>
+      <Formik
+        innerRef={ref}
+        validateOnBlur={false}
+        validateOnChange={false}
+        enableReinitialize={true}
+        initialValues={initialValues}
+        onSubmit={async(values:any)=>{
+          const CreateResponse = await CreateNotification({
+            recipients: values.Recipients,
+            age_from: values.AgeFrom===""?1:values.AgeFrom,
+            age_to: values.AgeTo===""?120:values.AgeTo,
+            notification_date_from: moment(values.StartDate).format("DD/MM/YYYY"),  
+            notification_date_to: moment(values.EndDate).format("DD/MM/YYYY"), 
+            department_id: values.Department || 0,
+            locality_id: values.Locality || 0,
+            message_title: values.Title,
+            message_body: values.Message,
+            attachment: values.HELPAttachments,
+            send_by_email: values.SendByEmail?true:false,
+            }, setFormState);
+        }}
+        validate={(values:any) => ValidateForm(values, Fields)}
+      >
+      <Form autoComplete="off">
+        <Element instance={Fields.Title}/>
+        <Element instance={Fields.Message}/>
+          <LayoutStackedPanel>
+        <Element instance={Fields.Attachments} className="flex-2"/>
+            <Element instance={Fields.StartDate} className="flex-1"/>
+            <Element instance={Fields.EndDate} className="flex-1"/>
+          </LayoutStackedPanel>
+        <hr className="mb-4"/>
+          <h2>Configuración del mensaje</h2>
+        <LayoutStackedPanel>
+          <Element instance={Fields.Recipients} className="flex-1"/>
+          <Element instance={Fields.AgeFrom} className="flex-1"/>
+          <Element instance={Fields.AgeTo} className="flex-1"/>
+        </LayoutStackedPanel>
+        <LayoutStackedPanel>
+          <Element instance={Fields.Department} className="flex-1" disabled={Deparments.length===0} onChange={handleChange}/>
+          <Element instance={Fields.Locality} className="flex-1" disabled={Localities.length===0}/>
+          <div><ButtonWrapper onClick={handleScope}>{ScopeFormState.loading ? <Spinner /> : "Ver Alcance"}<FaSearch/></ButtonWrapper></div>
+          <div><ButtonWrapper disabled color="gray">{Scope>0?Scope+" destinatarios":"?"}<MdOutlineAutoGraph/></ButtonWrapper></div>
+        </LayoutStackedPanel>
+        <hr className="mb-4"/>
+        <LayoutStackedPanel>
+          <Element instance={Fields.SendByEmail} className="mt-2"/>
+          <LayoutSpacer/>
+          <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
+        </LayoutStackedPanel>
+      </Form></Formik>
+      
+    </LayoutSection>
+  </>)
+}
+
+
+/*
+
+
+
+
+<Formik 
         initialValues={FieldValues}
         enableReinitialize={true} 
         validateOnChange={false} 
@@ -90,17 +194,17 @@ export const DA_Notifications_Create = () =>{
           <FormikField name="Message_Title" disabled={FormState.loading} className="flex-3"></FormikField>
           <FormikField name="Message_Body" disabled={FormState.loading} className="flex-3"></FormikField>
           <LayoutStackedPanel>
+            <FormikField name="Notification_Date_From" disabled={FormState.loading} className="flex-3"></FormikField>
+            <FormikField name="Notification_Date_To" disabled={FormState.loading} className="flex-3"></FormikField>
+          </LayoutStackedPanel>
+          <LayoutStackedPanel>
             <FormikImage name="Attachment" disabled={FormState.loading} className="flex-3"></FormikImage>
           </LayoutStackedPanel>
-          <h2>Filtros</h2>
+          <h2>Configuración del mensaje</h2>
           <LayoutStackedPanel>
             <FormikField name="Recipients" disabled={FormState.loading} className="flex-3"></FormikField>
             <FormikField name="Age_From" disabled={FormState.loading} className="flex-3"></FormikField>
             <FormikField name="Age_To" disabled={FormState.loading} className="flex-3"></FormikField>
-          </LayoutStackedPanel>
-          <LayoutStackedPanel>
-            <FormikField name="Notification_Date_From" disabled={FormState.loading} className="flex-3"></FormikField>
-            <FormikField name="Notification_Date_To" disabled={FormState.loading} className="flex-3"></FormikField>
           </LayoutStackedPanel>
           <FormikSearch name="Locality" label="Localidad" disabled={FormState.loading || LocationsValues.length==0} data={LocationsFullPath(LocationsValues)}/>
                 
@@ -109,7 +213,4 @@ export const DA_Notifications_Create = () =>{
             <LayoutSpacer/><FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
           </LayoutStackedPanel>
         </Form>
-      </Formik>
-    </LayoutSection>
-  </>)
-}
+      </Formik>*/

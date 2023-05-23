@@ -1,12 +1,11 @@
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases, FormElementInitialValues, FormElementProps } from "./Types";
 import { getValidationFunctions } from "./Validators";
-import { getValidators } from "./ValidatorsOLD";
 
 export class ElementSchema<T extends ElementSchemaTypes> {
   
   public type: T;
   public properties: ElementPropsMap[T];
-  private aditionalValidations: string[];
+  public aditionalValidations: string[];
 
   constructor(type: T, properties: ElementPropsMap[T], aditionalValidations: string[] = []){
     this.type = type;
@@ -16,8 +15,10 @@ export class ElementSchema<T extends ElementSchemaTypes> {
   
   validators = () => getValidationFunctions(this.type, this.properties as FormElementProps, this.aditionalValidations)
   
-
   update(properties: Partial<ElementPropsMap[T]>): void {
+
+    //console.log("ACTUALIZANDO", properties)
+
     for (const prop in properties) {
       
       // Skip properties not found in the allowed properties
@@ -41,7 +42,19 @@ export class ElementSchema<T extends ElementSchemaTypes> {
 
 }
 
-export class ElementInstance {
+export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema<T> {
+  public name: string;
+  public value: any;
+
+  constructor(name: string, schema: ElementSchema<T>, defaultValue: any = "") {
+    super(schema.type, schema.properties, schema.aditionalValidations);
+    this.name = name;
+    this.value = defaultValue;
+  }
+}
+
+
+/*export class ElementInstance {
   public name: string;
   public schema: ElementSchema<ElementSchemaTypes>;
   public value: any;
@@ -51,4 +64,4 @@ export class ElementInstance {
     this.schema = schema;
     this.value = defaultvalue;
   }
-}
+}*/

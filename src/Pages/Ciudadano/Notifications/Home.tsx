@@ -10,19 +10,17 @@ import { NotificationFullSize } from "../../../Components/Notifications/FullSize
 
 export const DC_Notifications = () =>{
 
-  const { isLoading, userNotifications, setUserNotifications, ReadNotification } = useContext(NotificationsContext);
+  const { isLoading, userNotifications, ReadNotification } = useContext(NotificationsContext);
   const [ FullSizeNotification, setFullSizeNotification ] = useState<CitizenNotification | null>(null);
   const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
 
   const ShowNotification = async (N: CitizenNotification) => {
     const response = await ReadNotification(N.ID, setLoadingNotification);
-    
-window.scrollTo({ top: 0, behavior: 'smooth' });
-    if(response?.data?.succes){
+    if(response?.data?.success){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       setFullSizeNotification(N);
     } else{
       console.log(response,0);
-      setFullSizeNotification(N);
     }
   }
 

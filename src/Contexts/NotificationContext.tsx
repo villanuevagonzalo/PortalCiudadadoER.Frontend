@@ -1,12 +1,16 @@
 import { FC, createContext, useEffect, useState } from "react";
 import { DefaultUserContact, DefaultUserRol } from "../Data/DefaultValues";
-import { IUserContact, IUserRol, IResponse, INotification, CitizenNotification } from "../Interfaces/Data";
-import { delLSData } from "../Utils/General";
+import { IUserContact, IUserRol, IResponse, INotification, CitizenNotification, FileBlob } from "../Interfaces/Data";
+import { delLSData, getLSData } from "../Utils/General";
 import { NotificationsAPI } from "../Services/NotificationsAPI";
 import { DummyNotifications } from "../Data/DummyData";
 import moment from "moment";
+import axios from "axios";
+import { fileTypes } from "../Interfaces/FileTypes";
 
 const NotificationsUpdateSecondsInterval = 1000
+
+const REACTENV = process.env
 
 const ContextValues = () => {
 
@@ -22,20 +26,33 @@ const ContextValues = () => {
 
     setIsLoading(true)
     
-    const responseAll:IResponse | any = await AxiosNotificationAPI.GetByUserAll();
+    let responseAll:IResponse | any = await AxiosNotificationAPI.GetByUserAll();
     const responseNew:IResponse | any = await AxiosNotificationAPI.GetByUserNews();
 
-    if(!responseAll?.data?.success){ setErrors("ERROR LOADING 1"); setIsLoading(false); return; }
+    //console.log(responseAll,JSON.parse(responseNew.data.data.notifications))
+
+    if(!responseAll?.data?.success){ 
+      if(!responseNew?.data?.success){ 
+        setErrors("ERROR LOADING 1"); setIsLoading(false); return;
+      } else{
+        responseAll = responseNew
+      }
+    }
     if(!responseNew?.data?.success){ setErrors("ERROR LOADING 2"); setIsLoading(false); return; }
 
     const NewNotifications:number[] = JSON.parse(responseNew.data.data.notifications).map((notification:Partial<INotification>)=>notification.ID)
 
     const Notifications:CitizenNotification[] = JSON.parse(responseAll.data.data.notifications).map((notification:Partial<INotification>)=>{
+      //console.log(notification)
+
       return { 
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,
         MESSAGE_BODY: notification.MESSAGE_BODY,
-        ATTACHMENTS: [],
+        ATTACHMENTS: notification.MULTIMEDIA_ID!=""?[{
+          ID: notification.MULTIMEDIA_ID,
+          type: notification.ATTACHMENT_TYPE
+        }]:[],
         CREATED_AT: notification.CREATED_AT,
         TYPE: "general",
         NEW: NewNotifications.includes(notification.ID as number)
@@ -89,7 +106,91 @@ const ContextValues = () => {
     setIsLoading(false)
   }
 
-  /*useEffect(() => {
+  const GetScope = async (data:any, setFormState:Function) => {
+    setFormState((prev:any) => ({ ...prev, loading: true }));
+    const response:IResponse | any = await AxiosNotificationAPI.GetScope(data);
+    if(response?.data?.success){
+      setUserNotifications(prevState => ([...prevState, data]));
+      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
+    } else {
+      setFormState((prev:any) => ({ ...prev, error: response.message }));
+    }
+    setFormState((prev:any) => ({ ...prev, loading: false }));
+    return response;
+  }
+
+  const GetAttachments = async (data:any, setFormState:Function) => {
+
+    setFormState(true);
+    const FileIds:{ID:number,type:string}[] = data;
+
+    try {
+      const promises = FileIds.map(async (element) => {
+        const response = await AxiosNotificationAPI.GetAttachment({ multimedia_id: element.ID });
+        const response2 = await AxiosNotificationAPI.GetAttachmentName({ multimedia_id: element.ID });
+        const reader = new FileReader();
+  
+        return new Promise<FileBlob>((resolve, reject) => {
+          reader.onloadend = () => {
+            console.log(element);
+            const imageDataURL = reader.result as string;
+            const data:FileBlob = {
+              name: response2.data.data.attachment_name,
+              type: element.type,
+              data: imageDataURL.replace('text/html', fileTypes[element.type].fulltype),
+            };
+            resolve(data);
+          };
+  
+          reader.onerror = reject;
+  
+          reader.readAsDataURL(response.data.data);
+        });
+      });
+  
+      const responses:FileBlob[] = await Promise.all(promises);
+  
+      setFormState(false);
+  
+      return responses;
+
+
+    } catch (error) {
+      setFormState(false);
+      console.error('Error al obtener los datos:', error);
+      throw error;
+    }
+  }
+
+
+
+
+  /*
+  
+  
+      const responses:FileBlob[] = [];
+
+      for (const element of FileIds) {
+        const response = await AxiosNotificationAPI.GetAttachment({multimedia_id:element.ID});
+        const response2 = await AxiosNotificationAPI.GetAttachmentName({multimedia_id:element.ID});
+        const reader = new FileReader();
+        reader.onloadend = async () => {
+          const imageDataURL = reader.result as string;
+          const data = {name:response2.data.data.attachment_name,type:element.type,data:imageDataURL.replace('text/html',fileTypes[element.type].fulltype)}
+          console.log(data)
+          responses.push(data);
+        };
+        reader.readAsDataURL(response.data.data);
+      }
+      setFormState(false);
+      return responses;
+  
+  
+  
+  
+  
+  
+  useEffect(() => {
     const interval = setInterval(() => {
       console.log('test')
     }, NotificationsUpdateSecondsInterval);
@@ -105,7 +206,7 @@ const ContextValues = () => {
   return {
     UpdateNotifications, ReadNotification,
     isLoading, userNotifications, actorNotifications,
-    setUserNotifications, 
+    setUserNotifications, GetScope, GetAttachments,
     CreateNotification, GetAllNotifications,
   }
 }

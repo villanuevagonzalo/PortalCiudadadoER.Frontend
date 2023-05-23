@@ -492,20 +492,16 @@ export const RoundedButton = styled.div<{ }>`
 
 
 export const LayoutNote = styled.div<{ }>`
-  display: flex;
   width:100%;
   background-color: #fdfde9;
   color: #27272a;
   border: 1px solid #f2d71d;
   //color: var(--primary_text);
-  display: flex;
-  flex-direction: column;
   width: 100%;
   min-width: 150px;
   font-size: 0.875rem;
   padding: 1rem;
   border-radius: 0.5rem;
-  display: flex;
 `;
 
 

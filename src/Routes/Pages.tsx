@@ -217,6 +217,11 @@ export const RawPages:RawPagesProps = {
         label: 'Gestor de Notificaciones',
         element: <DA_Notifications_Create />,
         children: {
+          NEW:{
+            path: 'new',
+            label: 'Crear Nueva',
+            element: <DA_Notifications_Create/>
+          },
           LIST:{
             path: 'list',
             label: 'Lista',

@@ -42,9 +42,19 @@ export class NotificationsAPI {
   }
 
   public GetAttachment(params: {
-    notification_id: number;
+    multimedia_id: number;
   }){
-    return this.baseService.get('/v0/notification/get/user/attachments', { params })
+    return this.baseService.get('/v0/notification/get/user/attachments', { params, responseType: 'blob' })
+  }
+  public GetAttachmentName(params: {
+    multimedia_id: number;
+  }){
+    return this.baseService.get('/v0/notification/get/attachment/name', { params })
+  }
+
+  public GetScope(params:{
+  }){
+    return this.baseService.get('/v0/notification/new/scope', { params })
   }
 
   public Read(params:{

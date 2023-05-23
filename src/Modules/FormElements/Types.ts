@@ -12,6 +12,8 @@ import { FormElement } from "./OLDTYPES";
 // Defining all props in the project
 export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'PARAGRAPH' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
 
+export const HelpToken:string = "HELP";
+
 export interface FormElementProps {
   type: ElementSchemaTypes;
   label: string;
@@ -24,6 +26,7 @@ export interface FormElementProps {
   value_default: any;
   value_regex: any,
   childrens: FormElement<keyof ElementPropsMap>[];
+  options: {value: any, label:string}[] | {};
 }
 
 export const FormElementInitialValues: Record<string, any> = {
@@ -37,12 +40,13 @@ export const FormElementInitialValues: Record<string, any> = {
   value_default: "",
   value_regex: "",
   childrens: [],
+  options: {}
 }
 
 export const FormElementBases = {
 
   // Non-editable Elements
-  SECTION: {
+  "SECTION": {
     description: "Sección",
     properties:{
       required: ["label","childrens"] as const,
@@ -52,7 +56,7 @@ export const FormElementBases = {
     format: null,
     icon: RxSection
   },
-  TITLE: {
+  "TITLE": {
     description: "Título",
     properties:{
       required: ["label"] as const,
@@ -62,7 +66,7 @@ export const FormElementBases = {
     format: null,
     icon: MdTitle
   },
-  PARAGRAPH: {
+  "PARAGRAPH": {
     description: "Párrafo",
     properties:{
       required: ["label"] as const,
@@ -72,7 +76,7 @@ export const FormElementBases = {
     format: null,
     icon: BsTextParagraph
   },
-  SPACER: {
+  "SPACER": {
     description: "Separador",
     properties:{
       required: [] as const,
@@ -84,7 +88,7 @@ export const FormElementBases = {
   },
 
   // Singles Elements
-  NUMBER: {
+  "NUMBER": {
     description: "Campo Numérico",
     properties:{
       required: ["label"] as const,
@@ -95,7 +99,7 @@ export const FormElementBases = {
     aditionalValidations: ["isCUIL"],
     icon: TbNumber
   },
-  TEXT: {
+  "TEXT": {
     description: "Campo de Texto",
     properties:{
       required: ["label"] as const,
@@ -106,7 +110,7 @@ export const FormElementBases = {
     aditionalValidations: ["character_invalid"],
     icon: MdShortText
   },
-  TEXTAREA: {
+  "TEXTAREA": {
     description: "Campo de Texto Multilínea",
     properties:{
       required: ["label"] as const,
@@ -116,7 +120,7 @@ export const FormElementBases = {
     format: null,
     icon: RxTextAlignLeft
   },
-  PASSWORD: {
+  "PASSWORD": {
     description: "Campo de Contraseña",
     properties:{
       required: ["label"] as const,
@@ -127,7 +131,7 @@ export const FormElementBases = {
     aditionalValidations: ["isSecure"],
     icon: CgPassword
   },
-  MAIL: {
+  "MAIL": {
     description: "Campo de Correo Electrónico",
     properties:{
       required: ["label"] as const,
@@ -137,7 +141,7 @@ export const FormElementBases = {
     format: "email",
     icon: FiMail
   },
-  DATE: {
+  "DATE": {
     description: "Campo de Fecha",
     properties:{
       required: ["label"] as const,
@@ -147,7 +151,7 @@ export const FormElementBases = {
     format: "date",
     icon: MdDateRange
   },
-  HOUR: {
+  "HOUR": {
     description: "Campo de Hora",
     properties:{
       required: ["label"] as const,
@@ -159,17 +163,17 @@ export const FormElementBases = {
   },
 
   // Multiple Elements
-  CHECKBOX: {
+  "CHECKBOX": {
     description: "Chequeo de Valores",
     properties:{
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    type: "input",
-    format: "checkbox",
+    type: "checkbox",
+    format: null,
     icon: BiCheckSquare
   },
-  RADIO: {
+  "RADIO": {
     description: "Radio de Valores",
     properties:{
       required: ["label"] as const,
@@ -179,17 +183,17 @@ export const FormElementBases = {
     format: "radio",
     icon: MdRadioButtonChecked
   },
-  SELECT: {
+  "SELECT": {
     description: "Lista de Valores",
     properties:{
-      required: ["label"] as const,
+      required: ["label","options"] as const,
       optional: ["required","disabled"] as const,
     },
     type: "select",
     format: null,
     icon: CgSelectR
   },
-  RANGE: {
+  "RANGE": {
     description: "Rango de Valores",
     properties:{
       required: ["label"] as const,
@@ -201,17 +205,17 @@ export const FormElementBases = {
   },
 
   // Special Elements
-  FILE: {
+  "FILE": {
     description: "Carga de Archivos",
     properties:{
       required: ["label"] as const,
       optional: ["required","disabled"] as const,
     },
-    type: "input",
-    format: "file",
+    type: "file",
+    format: null,
     icon: AiOutlineCloudUpload
   },
-  CAPTCHA: {
+  "CAPTCHA": {
     description: "Verificador CAPTCHA",
     properties:{
       required: ["label"] as const,

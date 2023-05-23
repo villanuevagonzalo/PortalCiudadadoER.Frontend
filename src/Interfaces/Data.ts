@@ -93,6 +93,7 @@ export interface INotification{
   MESSAGE_TITLE: string;
   MESSAGE_BODY: string;
   ATTACHMENT?: File;
+  MULTIMEDIA_ID?: string;
   ATTACHMENT_TYPE: string;
   NOTIFICATION_DATE_FROM: Date | null;
   NOTIFICATION_DATE_TO: Date | null;
@@ -110,4 +111,10 @@ export interface CitizenNotification {
   CREATED_AT: Date;
   TYPE: "general" | "personal";
   NEW: boolean;
+}
+
+export interface FileBlob {
+  name: string;
+  type: string;
+  data: string;
 }
