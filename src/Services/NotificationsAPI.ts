@@ -8,7 +8,7 @@ export class NotificationsAPI {
     this.baseService = axiosBase;
   }
 
-  public Create(params: {
+  Create = async (params: {
     message_title: string;
     message_body: string;
     recipients: string;
@@ -20,7 +20,7 @@ export class NotificationsAPI {
     age_to?: number;
     department_id?: number;
     locality_id?: number;
-  }){
+  }) => {
     return this.baseService.post('/v0/notification/new', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -28,38 +28,37 @@ export class NotificationsAPI {
     })
   }
 
-
-  public GetAll(){
+  GetAll = async () => {
     return this.baseService.get('/v0/notification/get/actor/active/news')
   }
   
-  public GetByUserNews(){
+  GetByUserNews = async () => {
     return this.baseService.get('/v0/notification/get/user/news')
   }
 
-  public GetByUserAll(){
+  GetByUserAll = async () => {
     return this.baseService.get('/v0/notification/get/user/all')
   }
 
-  public GetAttachment(params: {
+  GetAttachment = async (params: {
     multimedia_id: number;
-  }){
+  }) => {
     return this.baseService.get('/v0/notification/get/user/attachments', { params, responseType: 'blob' })
   }
-  public GetAttachmentName(params: {
+  GetAttachmentName = async (params: {
     multimedia_id: number;
-  }){
+  }) => {
     return this.baseService.get('/v0/notification/get/attachment/name', { params })
   }
 
-  public GetScope(params:{
-  }){
+  GetScope = async (params:{
+  }) => {
     return this.baseService.get('/v0/notification/new/scope', { params })
   }
 
-  public Read(params:{
+  Read = async (params:{
     notification_id: number;
-  }){
+  }) => {
     return this.baseService.post('/v0/notification/get/user/read', params)
   }
 

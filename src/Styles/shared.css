@@ -17,6 +17,13 @@
     --tertiary_tint: #bc332a;
     --tertiary_text: #fdeceb;
 
+    /* NOTES COLORS */
+    --note-error-bg: #fde9e9;
+    --note-error-text: #fa9d9d;
+    --note-warning-bg: #fdfde9;
+    --note-warning-text: #f2d71d;
+    --note-info-bg: #e9f7fd;
+    --note-info-text: #9dd5fa;
 
   
     

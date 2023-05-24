@@ -5,7 +5,7 @@ import { FormikImage } from "../../../Components/Forms/FormikImage";
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import * as yup from 'yup';
-import { Spinner } from '../../../Components/Elements/StyledComponents';
+import { DivOutlined, Spinner } from '../../../Components/Elements/StyledComponents';
 import { BiData, BiMessage, BiNotification, BiSave } from "react-icons/bi";
 import { LayoutSection, LayoutTitle, LayoutStackedPanel, LayoutSpacer, LayoutNote } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
@@ -20,9 +20,12 @@ import { FormikField } from "../../../Components/Forms/FormikField";
 import moment from "moment";
 import { ButtonWrapper, Element, ElementInstance, ElementSchema, ElementSchemaTypes, ValidateForm } from "../../../Modules/FormElements";
 import { Button } from "../../../Components/Forms/Button";
-import { AiOutlineAreaChart, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineAreaChart, AiOutlineArrowLeft, AiOutlineSearch } from "react-icons/ai";
 import { MdOutlineAutoGraph } from "react-icons/md";
 import { FaSearch } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { Pages } from "../../../Routes/Pages";
+import { CountDown } from "../../../Components/Elements/CountDown";
 
 export const DA_Notifications_Create = () =>{
 
@@ -31,7 +34,7 @@ export const DA_Notifications_Create = () =>{
 
   const [ ScopeFormState, setScopeFormState ] = useState<IFormState>(DefaultFormState);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
-  const [ Scope, setScope ] = useState<number>(0);
+  const [ Scope, setScope ] = useState<number>(-1);
 
   const [ Locations, setLocations ] = useState<ILocation[]>([]);
   const [ Deparments, setDeparments ] = useState<any[]>([]);
@@ -83,11 +86,11 @@ export const DA_Notifications_Create = () =>{
     if(ScopeResponse?.data?.success){
       setScope(ScopeResponse.data.data.notification_scope)
     } else{
-      setScope(0)
+      setScope(-1)
     }
   }
 
-  useEffect(() => { handleLocations() },[])
+  useEffect(() => { handleLocations(); },[])
 
   return (<>
     <LayoutNote>
@@ -96,59 +99,79 @@ export const DA_Notifications_Create = () =>{
       <br/>Vea el alcance que va a tener su notificación.
     </LayoutNote>
     <LayoutSection>
-      <h1 onClick={handleChange}><BiNotification/>Crear Nueva Notificación</h1>
-      <Formik
-        innerRef={ref}
-        validateOnBlur={false}
-        validateOnChange={false}
-        enableReinitialize={true}
-        initialValues={initialValues}
-        onSubmit={async(values:any)=>{
-          const CreateResponse = await CreateNotification({
-            recipients: values.Recipients,
-            age_from: values.AgeFrom===""?1:values.AgeFrom,
-            age_to: values.AgeTo===""?120:values.AgeTo,
-            notification_date_from: moment(values.StartDate).format("DD/MM/YYYY"),  
-            notification_date_to: moment(values.EndDate).format("DD/MM/YYYY"), 
-            department_id: values.Department || 0,
-            locality_id: values.Locality || 0,
-            message_title: values.Title,
-            message_body: values.Message,
-            attachment: values.HELPAttachments,
-            send_by_email: values.SendByEmail?true:false,
-            }, setFormState);
-        }}
-        validate={(values:any) => ValidateForm(values, Fields)}
-      >
-      <Form autoComplete="off">
-        <Element instance={Fields.Title}/>
-        <Element instance={Fields.Message}/>
-          <LayoutStackedPanel>
-        <Element instance={Fields.Attachments} className="flex-2"/>
-            <Element instance={Fields.StartDate} className="flex-1"/>
-            <Element instance={Fields.EndDate} className="flex-1"/>
-          </LayoutStackedPanel>
-        <hr className="mb-4"/>
-          <h2>Configuración del mensaje</h2>
-        <LayoutStackedPanel>
-          <Element instance={Fields.Recipients} className="flex-1"/>
-          <Element instance={Fields.AgeFrom} className="flex-1"/>
-          <Element instance={Fields.AgeTo} className="flex-1"/>
-        </LayoutStackedPanel>
-        <LayoutStackedPanel>
-          <Element instance={Fields.Department} className="flex-1" disabled={Deparments.length===0} onChange={handleChange}/>
-          <Element instance={Fields.Locality} className="flex-1" disabled={Localities.length===0}/>
-          <div><ButtonWrapper onClick={handleScope}>{ScopeFormState.loading ? <Spinner /> : "Ver Alcance"}<FaSearch/></ButtonWrapper></div>
-          <div><ButtonWrapper disabled color="gray">{Scope>0?Scope+" destinatarios":"?"}<MdOutlineAutoGraph/></ButtonWrapper></div>
-        </LayoutStackedPanel>
-        <hr className="mb-4"/>
-        <LayoutStackedPanel>
-          <Element instance={Fields.SendByEmail} className="mt-2"/>
+      <h1><BiNotification/>Crear Nueva Notificación General</h1>
+      {FormState.finish?<>
+        <DivOutlined className="mt-2 mb-4 flex-col" color="primary">
+          <b className='mb-2'>Nueva Notificación General creada exitosamente.</b>
+          <span className='text-sm'>Puedes revisarla en el Gestor de Notificaciones</span>
+        </DivOutlined>
+        <LayoutStackedPanel className="-mb-4">
+          <Link to={Pages.DA_NOTIFICATIONS}><Button color="gray">
+            <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Gestor de Notificaciones</b>                                
+          </Button></Link>
           <LayoutSpacer/>
-          <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
+          <FormikButton disabled={false} color="secondary" onClick={()=>setFormState(prev=>({...prev, finish:false}))}>
+            Crear nueva Notificación
+          </FormikButton>
         </LayoutStackedPanel>
-      </Form></Formik>
-      
+      </>:<>
+        <Formik
+          innerRef={ref}
+          validateOnBlur={false}
+          validateOnChange={false}
+          enableReinitialize={true}
+          initialValues={initialValues}
+          onSubmit={async(values:any)=>{
+            const response = await CreateNotification({
+              recipients: values.Recipients,
+              age_from: values.AgeFrom===""?1:values.AgeFrom,
+              age_to: values.AgeTo===""?120:values.AgeTo,
+              notification_date_from: moment(values.StartDate).format("DD/MM/YYYY"),  
+              notification_date_to: moment(values.EndDate).format("DD/MM/YYYY"), 
+              department_id: values.Department || 0,
+              locality_id: values.Locality || 0,
+              message_title: values.Title,
+              message_body: values.Message,
+              attachment: values.HELPAttachments,
+              send_by_email: values.SendByEmail?true:false,
+              }, setFormState);
+            console.log(response)
+          }}
+          validate={(values:any) => ValidateForm(values, Fields)}
+        >
+        <Form autoComplete="off">
+          <Element instance={Fields.Title}/>
+          <Element instance={Fields.Message}/>
+            <LayoutStackedPanel>
+          <Element instance={Fields.Attachments} className="flex-2"/>
+              <Element instance={Fields.StartDate} className="flex-1"/>
+              <Element instance={Fields.EndDate} className="flex-1"/>
+            </LayoutStackedPanel>
+          <hr className="mb-4"/>
+            <h2>Configuración del mensaje</h2>
+          <LayoutStackedPanel>
+            <Element instance={Fields.Recipients} className="flex-1"/>
+            <Element instance={Fields.AgeFrom} className="flex-1"/>
+            <Element instance={Fields.AgeTo} className="flex-1"/>
+          </LayoutStackedPanel>
+          <LayoutStackedPanel>
+            <Element instance={Fields.Department} className="flex-1" disabled={Deparments.length===0} onChange={handleChange}/>
+            <Element instance={Fields.Locality} className="flex-1" disabled={Localities.length===0}/>
+            <div><ButtonWrapper onClick={handleScope}>{ScopeFormState.loading ? <Spinner /> : "Ver Alcance"}<FaSearch/></ButtonWrapper></div>
+            <div><ButtonWrapper disabled color="gray">{Scope>-1?Scope+" destinatarios":"?"}<MdOutlineAutoGraph/></ButtonWrapper></div>
+          </LayoutStackedPanel>
+          <hr className="mb-4"/>
+          <LayoutStackedPanel className="-mb-4">
+            <Element instance={Fields.SendByEmail} className="mt-2"/>
+            <LayoutSpacer/>
+            <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
+          </LayoutStackedPanel>
+        </Form>
+        </Formik>
+        <DivOutlined className="mt-2" open={FormState.error ? true : false}>
+          {FormState.error}
+        </DivOutlined>
+      </>}
     </LayoutSection>
   </>)
 }

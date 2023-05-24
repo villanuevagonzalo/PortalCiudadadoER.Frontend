@@ -491,12 +491,11 @@ export const RoundedButton = styled.div<{ }>`
 `;
 
 
-export const LayoutNote = styled.div<{ }>`
+export const LayoutNote = styled.div<{ color?:string }>`
   width:100%;
-  background-color: #fdfde9;
+  background-color: var(--note-${props => (props.color ? props.color : 'warning')}-bg);
   color: #27272a;
-  border: 1px solid #f2d71d;
-  //color: var(--primary_text);
+  border: 1px solid  var(--note-${props => (props.color ? props.color : 'warning')}-text);
   width: 100%;
   min-width: 150px;
   font-size: 0.875rem;

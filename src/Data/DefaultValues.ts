@@ -1,4 +1,4 @@
-import { IFormState, IResponse, IToken, IUserContact, IUserData, INotification, IUserRol } from "../Interfaces/Data";
+import { IFormState, IResponse, IToken, IUserContact, IUserData, ActorNotification, IUserRol } from "../Interfaces/Data";
 import { GetLevels } from "../Interfaces/UserLevels";
 
 export const DefaultResponse:IResponse = {

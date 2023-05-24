@@ -39,7 +39,10 @@ export const GetLocalitysByDeparment = (locations: ILocation[], deparmentId: num
 [{value:0, label:"Ninguna"},...locations.filter((location:ILocation) => location.DEP_ID === deparmentId)
 .map(({ ID, NOMBRE }) => ({ value: ID, label: CapitalizeWords(NOMBRE) }))];
 
-export const LocationByID = (locations:ILocation[], localityID:number) => locations.filter((location:ILocation)=>location.ID===localityID)[0]
+export const DeparmentByID = (locations:ILocation[], deparmentID:number) => locations.filter((location:ILocation)=>location.DEP_ID===deparmentID)[0];
+export const LocationByID = (locations:ILocation[], localityID:number) => locations.filter((location:ILocation)=>location.ID===localityID)[0];
+
+
 export const LocationFullPath = (location:ILocation) => location?CapitalizeWords(location.NOMBRE+', '+location.DEPARTAMENTO):''
 export const LocationsFullPath = (locations:ILocation[]) => locations.map((item:ILocation)=>LocationFullPath(item))
 export const GetLocationByPath = (locations:ILocation[], localityPath:string) => locations.filter((location:ILocation)=>LocationFullPath(location)===localityPath)[0]

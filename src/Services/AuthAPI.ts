@@ -7,14 +7,14 @@ export class AuthAPI {
     this.baseService = axiosBase;
   }
 
-  public UserRedirect(params: {
+  UserRedirect = async (params: {
     dni: number;
     token: string;
-  }){
+  }) => {
     return this.baseService.get("/v0/authentication/actor/redirect", {params})
   }
 
-  public UserSignup(params: {
+  UserSignup = async (params: {
     cuil: number;
     nombre: string;
     apellido: string;
@@ -22,25 +22,25 @@ export class AuthAPI {
     password: string;
     prs_id: number | null;
     captcha: string;
-  }) {
+  }) => {
     return this.baseService.post("/v0/user/signup", params);
   }
 
-  public UserLogin(params: {
+  UserLogin = async (params: {
     cuil: number;
     password: string;
     captcha: string;
-  }) {
+  }) => {
     return this.baseService.post("/v0/user/login", params);
   }
 
-  public UserGetData(params: {
+  UserGetData = async (params: {
     cuil: number;
-  }) {
+  }) => {
     return this.baseService.get("/v0/user/check/cuil", {params});
   }
 
-  public UserSaveData(params: {
+  UserSaveData = async (params: {
     cuil: number;
     birthday: Date;
     cellphone_number: string;
@@ -49,82 +49,82 @@ export class AuthAPI {
     address_street: string;
     address_number: string;
     apartment: string;
-  }) {
+  }) => {
     return this.baseService.post("/v0/user/personal/contact/data", params);
   }
 
-  public UserNameChange(params: {
+  UserNameChange = async (params: {
     cuil: number;
     name: string;
     last_name: string;
-  }) {
+  }) => {
     return this.baseService.post("/v0/user/personal/names", params);
   }
 
-  public UserPasswordReset(params: {
+  UserPasswordReset = async (params: {
     cuil: number;
     captcha: string;
-  }) {
+  }) => {
     return this.baseService.get("/v0/user/password/reset/validation", { params });
   }
 
-  public UserPasswordSave(params: {
+  UserPasswordSave = async (params: {
     token: string;
     new_password: string
-  }) {
+  }) => {
     return this.baseService.post("/v0/user/password/reset", params);
   }
 
-  public EmailValidate(params: {
+  EmailValidate = async (params: {
     token: string;
-  }) {
+  }) => {
     return this.baseService.post("/v0/user/validate/email", params);
   }
 
-  public EmailResendVerification(params: { 
+  EmailResendVerification = async (params: { 
     cuil: number;
     captcha: string;
-  }) {
+  }) => {
     return this.baseService.get("/v0/user/resend/email/verification", { params });
   }
 
-  public EmailChange(params: { 
+  EmailChange = async (params: { 
     cuil: number;
     new_email: string;
-  }) {
+  }) => {
     return this.baseService.get("/v0/user/change/email/validation", { params });
   }
 
-  public EmailChangeValidate(params: { 
+  EmailChangeValidate = async (params: { 
     token: string;
-  }) {
+  }) => {
     return this.baseService.post("/v0/user/change/email", params );
   }
 
   
-  public Autenticar_AFIP_getURL(params: {
+  Autenticar_AFIP_getURL = async (params: {
     cuil: string;
-  }) {
+  }) => {
     return this.baseService.get("/v0/authentication/afip/getUrl", { params });
   }
 
-  public Autenticar_MIARGENTINA_getURL(params: {
+  Autenticar_MIARGENTINA_getURL = async (params: {
     cuil: string;
-  }) {
+  }) => {
     return this.baseService.get("/v0/authentication/miargentina/getUrl", { params });
   }
   
-  public Autenticar_AFIP_checkToken(params: {
+  Autenticar_AFIP_checkToken = async (params: {
     cuil: string;
     code: string;
-  }) {
+  }) => {
     return this.baseService.get("/v0/authentication/afip/getToken", { params });
   }
   
-  public Autenticar_MIARGENTINA_checkToken(params: {
+  Autenticar_MIARGENTINA_checkToken = async (params: {
     cuil: string;
     code: string;
-  }) {
+  }) => {
     return this.baseService.get("/v0/authentication/miargentina/getToken", { params });
   }
 }

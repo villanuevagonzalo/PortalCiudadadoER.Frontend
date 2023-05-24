@@ -24,7 +24,7 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   
   async function getValidationLink( type = 'AFIP' ) {
-    let response: AxiosResponse;
+    let response: AxiosResponse | null;
     if(type==='AFIP'){
       response = await AFIP_getURL({
         cuil: userData.cuil
@@ -34,13 +34,13 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
         cuil: userData.cuil
       }, setFormState);
     }
-    if (response?.data?.success) {
+    if (response) {
       window.location = response.data.data
     }
   }
 
   async function checkValidation() {
-    let response: AxiosResponse;
+    let response: AxiosResponse | null;
     if(type==='AFIP'){
       response = await AFIP_checkToken({
         'cuil':userData.cuil,
@@ -52,7 +52,7 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
         'code':SearchParams.values.code
       }, setFormState);
     }
-    if(response.data.data.token){
+    if(response){
       SaveToken(response.data.data.token)
     } else{
       setFormState((prev:any) => ({ ...prev, finish: false, error: 'Invalid Token' }));

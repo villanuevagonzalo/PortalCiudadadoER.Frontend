@@ -17,11 +17,14 @@ export const Auth_EmailValidate = () =>{
     const { EmailValidate } = useContext(AuthContext);
     const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
     
-    useEffect(() => {if(SearchParams.status){ 
-      const response = EmailValidate({
+    const Validate = async () => {
+      const response:any = await EmailValidate({
         'token':SearchParams.values.token
       }, setFormState);
-
+    }
+    
+    useEffect(() => {if(SearchParams.status){ 
+      Validate()
     }}, [])
 
     return(<>

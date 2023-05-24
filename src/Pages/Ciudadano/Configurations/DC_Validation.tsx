@@ -21,7 +21,7 @@ export const DC_Validation = () => {
   }
 
   async function getValidationLink( type = 'AFIP' ) {
-    let response: AxiosResponse;
+    let response: AxiosResponse | null;
     if(type==='AFIP'){
       response = await AFIP_getURL({
         cuil: userData.cuil
@@ -31,7 +31,7 @@ export const DC_Validation = () => {
         cuil: userData.cuil
       }, setFormState);
     }
-    if (response?.data?.success) {
+    if (response) {
       window.open(response.data.data, '_blank');
     }
   }

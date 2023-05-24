@@ -83,7 +83,7 @@ export interface ILocation{
   PAIS: string;
 }
 
-export interface INotification{
+export interface Notification{
   ID: number;
   RECIPIENTS: "actor" | "citizen" | "both";
   AGE_FROM: number;
@@ -92,15 +92,32 @@ export interface INotification{
   LOCALITY: number;
   MESSAGE_TITLE: string;
   MESSAGE_BODY: string;
-  ATTACHMENT?: File;
   MULTIMEDIA_ID?: string;
   ATTACHMENT_TYPE: string;
   NOTIFICATION_DATE_FROM: Date | null;
   NOTIFICATION_DATE_TO: Date | null;
   SEND_BY_EMAIL: boolean;
   CREATED_AT: Date | null;
-  TYPE: "general" | "personal";
-  OPEN: boolean;
+}
+
+
+export interface ActorNotification{
+  ID: number;
+  RECIPIENTS: "actor" | "citizen" | "both";
+  AGE_FROM: number;
+  AGE_TO: number;
+  DEPARTMENT: number;
+  LOCALITY: number;
+  MESSAGE_TITLE: string;
+  MESSAGE_BODY: string;
+  ATTACHMENTS: {
+    ID: string;
+    type: string;
+  }[];
+  DATE_FROM: Date | null;
+  DATE_TO: Date | null;
+  SEND_BY_EMAIL: boolean;
+  CREATED_AT: Date | null;
 }
 
 export interface CitizenNotification {
@@ -117,4 +134,10 @@ export interface FileBlob {
   name: string;
   type: string;
   data: string;
+}
+
+export const Recipients = {
+  "actor": 'Actores',
+  "citizen": 'Ciudadanos',
+  "both": 'Todos'
 }
