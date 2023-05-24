@@ -30,10 +30,36 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
       padding:4px;
       width:36px;
       border-radius:100%;
+      position:relative;
 
-      & svg{ color:var(--maincolor_text); }
+      & svg{ color:var(--maincolor_text); font-size:16px; }
 
-      &:hover{ background:var(--maincolor); }
+      &:hover { 
+
+        & svg {
+          color:var(--maincolor_texttint);
+        }  
+        & span {
+          background-color: var(--secondary_tint);
+        }        
+       }
+
+      & span {
+        position: absolute; 
+        bottom: -4px; 
+        right: -4px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        background-color: var(--secondary);
+        border:2px solid var(--maincolor_tint);
+        border-radius: 50%;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
     }
   
   `};

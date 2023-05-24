@@ -3,14 +3,14 @@ import { Spinner } from '../../../Components/Elements/StyledComponents';
 import { BiMessage, BiNotification } from "react-icons/bi";
 import { LayoutSection, LayoutNote, LayoutText } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CitizenNotification } from "../../../Interfaces/Data";
 import { NotificationCard } from "../../../Components/Notifications/Card";
 import { NotificationFullSize } from "../../../Components/Notifications/FullSize";
 
 export const DC_Notifications = () =>{
 
-  const { isLoading, errors, userNotifications, ReadNotification } = useContext(NotificationsContext);
+  const { isLoading, errors, userNotifications, ReadNotification, UpdateNotifications } = useContext(NotificationsContext);
   const [ FullSizeNotification, setFullSizeNotification ] = useState<CitizenNotification | null>(null);
   const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
 
@@ -25,6 +25,10 @@ export const DC_Notifications = () =>{
   }
 
   const CloseNotification = () => setFullSizeNotification(null);
+  
+  useEffect(()=>{
+    UpdateNotifications()
+  },[])
 
   return (<>
     <LayoutNote>Enterate de las actualizaciones de tus trámites y notificaciones de la plataforma</LayoutNote>

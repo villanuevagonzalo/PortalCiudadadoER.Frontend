@@ -3,13 +3,13 @@ import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icon
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { NotificationsContext } from "../../Contexts/NotificationContext";
-import { LayoutAlert, LayoutBody, LayoutCenterBox, LayoutColumn, LayoutColumns, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
+import { LayoutAlert, LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
 import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
 import { LogoER } from "../Images/LogoEntreRios";
 
-import { MdNotificationsNone } from "react-icons/md";
+import { HiBellAlert } from "react-icons/hi2";
 import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { FaClipboardList } from "react-icons/fa";
@@ -38,7 +38,7 @@ export const LayoutCiudadano = () => {
 
   const userCitizen:any = userRol.find((obj) => obj.type === "Ciudadano")
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
-  const { userNotifications, UpdateNotifications } = useContext(NotificationsContext);
+  const { userNotifications, actorNotifications } = useContext(NotificationsContext);
   
   useEffect(() => {
     setMobile(isSmallResolution)
@@ -61,7 +61,7 @@ export const LayoutCiudadano = () => {
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
-      <Link to={Pages.DC_NOTIFICATIONS} className="button"><MdNotificationsNone/></Link>
+      <Link to={Pages.DC_NOTIFICATIONS} className="button notifications"><HiBellAlert/>{userNotifications.length>0?<span>{userNotifications.length}</span>:<></>}</Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>
