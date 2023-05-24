@@ -77,7 +77,7 @@ export const FormFields:FieldProps = {
 
     Password:{
         type: 'password',
-        defaultvalue: 'Test456.', // 'Test123.',
+        defaultvalue: '', // 'Test123.',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')

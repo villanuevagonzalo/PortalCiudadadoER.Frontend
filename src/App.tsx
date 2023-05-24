@@ -34,7 +34,7 @@ export const App = () => {
               :<LayoutActor />
             }</PrivateRoute>)
           } key={item.path}>
-            <Route path={item.path} element={item.element}/>
+            <Route path={item.path} element={item.element} />
           </Route>
         }
         return <Route element={<PublicRoute><LayoutDefault /></PublicRoute>}>

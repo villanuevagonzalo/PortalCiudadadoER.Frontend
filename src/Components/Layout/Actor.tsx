@@ -13,7 +13,7 @@ import { RiLayout4Fill } from "react-icons/ri";
 import { IoIosSettings } from "react-icons/io";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { Pages } from "../../Routes/Pages";
-import { INavigation } from "../../Interfaces/Data";
+import { CitizenNotification, INavigation } from "../../Interfaces/Data";
 import { LayoutBreadcrump } from "./Breadcrump";
 import { DefaultUserRol } from "../../Data/DefaultValues";
 import { HiBellAlert } from "react-icons/hi2";
@@ -44,6 +44,7 @@ export const LayoutActor = () => {
   const userCitizen:any = userRol.find((obj) => obj.type === "Ciudadano")
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
   const { userNotifications, actorNotifications } = useContext(NotificationsContext);
+  const newNotifications = userNotifications.filter((N:CitizenNotification)=>N.NEW);
   
   useEffect(() => {
     setMobile(isSmallResolution)
@@ -70,7 +71,7 @@ export const LayoutActor = () => {
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
-      <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><HiBellAlert/>{userNotifications.length>0?<span>{userNotifications.length}</span>:<></>}</Link>
+      <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><HiBellAlert/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>

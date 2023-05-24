@@ -5,6 +5,7 @@ import { App } from './App';
 import AuthContextProvider from './Contexts/AuthContext';
 import './Styles/style.css';
 import NotificationsContextProvider from './Contexts/NotificationContext';
+import ScrollToTop from './Routes/ScrollTop';
 
 const REACTENV = process.env
 
@@ -14,6 +15,7 @@ ReactDOM.render(
       <NotificationsContextProvider>
         <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
           <App />
+          <ScrollToTop/>
         </BrowserRouter>
       </NotificationsContextProvider>
     </AuthContextProvider>

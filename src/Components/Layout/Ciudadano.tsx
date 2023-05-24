@@ -16,7 +16,7 @@ import { FaClipboardList } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { Pages } from "../../Routes/Pages";
-import { INavigation } from "../../Interfaces/Data";
+import { CitizenNotification, INavigation } from "../../Interfaces/Data";
 import { LayoutBreadcrump } from "./Breadcrump";
 
 
@@ -39,6 +39,7 @@ export const LayoutCiudadano = () => {
   const userCitizen:any = userRol.find((obj) => obj.type === "Ciudadano")
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
   const { userNotifications, actorNotifications } = useContext(NotificationsContext);
+  const newNotifications = userNotifications.filter((N:CitizenNotification)=>N.NEW);
   
   useEffect(() => {
     setMobile(isSmallResolution)
@@ -61,7 +62,7 @@ export const LayoutCiudadano = () => {
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <BiUserCircle />
       </RoundedButton></Link>
-      <Link to={Pages.DC_NOTIFICATIONS} className="button notifications"><HiBellAlert/>{userNotifications.length>0?<span>{userNotifications.length}</span>:<></>}</Link>
+      <Link to={Pages.DC_NOTIFICATIONS} className="button notifications"><HiBellAlert/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>
