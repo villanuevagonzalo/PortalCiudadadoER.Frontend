@@ -54,7 +54,7 @@ export const Auth_PasswordReset = () => {
           }}
         ><Form autoComplete="off">
           <FormikField name="CUIL" disabled={FormState.loading || errors.length>1} autoFocus/>
-          <FormikCaptcha name="Captcha"/>
+          <FormikCaptcha name="Captcha" state={FormState}/>
           <Button disabled={FormState.loading || errors.length>1} type="submit">
               {FormState.loading ? <Spinner/> : 'Restablecer contraseña'}                                
           </Button>

@@ -8,7 +8,7 @@ export class GeneralAPI {
     this.baseService = axiosBase;
   }
 
-  public Locations(){
+  Locations = () => {
     return this.baseService.get('/v0/er/locations')
   }
 

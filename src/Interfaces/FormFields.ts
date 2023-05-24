@@ -26,7 +26,7 @@ export const FormFields:FieldProps = {
 
     CUIL:{
         type: 'number',
-        defaultvalue: '', // '20390317213',//'27271187179',
+        defaultvalue: '20135992098', // '20390317213',//'27271187179',20133638084
         label: 'N° de CUIL',
         placeholder: 'Ingresa tu CUIL (sin guiones)',
         validations: yup.string()
@@ -77,7 +77,7 @@ export const FormFields:FieldProps = {
 
     Password:{
         type: 'password',
-        defaultvalue: '', // 'Test123.',
+        defaultvalue: 'Test456.', // 'Test123.',
         placeholder: 'Ingresa tu contraseña',
         validations: yup.string()
                         .required('El campo es obligatorio')

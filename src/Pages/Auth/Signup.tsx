@@ -16,6 +16,7 @@ import { CapitalizeWords } from '../../Utils/General';
 import { GetMessage } from '../../Interfaces/MessageHandler';
 import { FormikCheckbox } from '../../Components/Forms/FormikCheckbox';
 import { Pages } from '../../Routes/Pages';
+import { AxiosResponse } from 'axios';
     
 const FormRequiredFields = [
   'CUIL',
@@ -79,24 +80,18 @@ export const Auth_Signup = () =>{
             label="CUIL"
             validationSchema={formGetValidations(['CUIL'])}
             afterFunction={async (values:any, ) =>{
-              console.log(values)
-
-              const response = await UserGetData({'cuil':values.CUIL}, setFormState);
-
-              if(response?.data?.success){
-                console.log(response)
+              const response:any = await UserGetData({'cuil':values.CUIL}, setFormState);
+              if(response.data){
                 let userdata = response.data.data;
-                
                 setFieldValues({...values, 
                   Name: CapitalizeWords(userdata.Nombres), 
                   LastName: CapitalizeWords(userdata.Apellido), 
                   prs_id: userdata.prs_id
                 });
                 setInitialData(true)
-
-              } else if(response.data.message===GetMessage('Bad Cuil') || response.data.message===GetMessage('Cuil not existing in DB')){
-                setInitialData(false)
+              } else if(response.error.response.data.message==='Cuil not existing in DB'){
                 setFormState((prev:any) => ({ ...prev, error: '' }));
+                setInitialData(false)
               }
             }}
             afterHTML={<> 
@@ -157,7 +152,7 @@ export const Auth_Signup = () =>{
             <DivTitle2>Paso 5</DivTitle2>
             <DivSubtitle>Confirmación Final</DivSubtitle>
             <FormikCheckbox name="AcceptTerms"/>
-            <FormikCaptcha name="Captcha"/>
+            <FormikCaptcha name="Captcha" state={FormState}/>
           </FormikStep>
         </FormikStepper>
       </>}

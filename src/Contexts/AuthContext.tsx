@@ -9,6 +9,7 @@ import { AuthAPI } from "../Services/AuthAPI";
 import { IResponse, IToken, IUserContact, IUserData, IUserRol } from "../Interfaces/Data";
 import { DefaultToken, DefaultUserContact, DefaultUserData, DefaultUserRol  } from "../Data/DefaultValues";
 import { AxiosResponse } from 'axios';
+import { handleResponse, ResponseError } from '../Config/Axios';
 
 const ContextValues = () => {
 
@@ -23,7 +24,6 @@ const ContextValues = () => {
   const [userData, setUserData] = useState<IUserData>(DefaultUserData);
   const [userContact, setUserContact] = useState<IUserContact>(DefaultUserContact);
   const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
-
 
   const SaveToken = (token:string, isactor?:boolean) => {
 
@@ -65,6 +65,7 @@ const ContextValues = () => {
   
   const Logout = () => {
     setIsLogged(false);
+    setIsLoading(false);
 
     setAuthToken(DefaultToken);
     setUserData(DefaultUserData);
@@ -77,27 +78,12 @@ const ContextValues = () => {
     delLSData("UserRol");
   }
 
-  const Signup = async (data:any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserSignup(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
+  const Signup = async (data:any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserSignup, data, setFormState);
 
   const Redirect = async (data: any, setFormState:Function) => {
 
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserRedirect(data);
-    
-    if(response?.data?.success){
+    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserRedirect, data, setFormState);
+    if(response.data){
       const NewUserData = response.data.data.user_data.user;
       const NewUserContact = response.data.data.user_data.user_contact;
 
@@ -111,23 +97,15 @@ const ContextValues = () => {
       setLSData("UserData", NewUserData);
       setLSData("UserContact", NewUserContact || DefaultUserContact);
 
-      setFormState((prev:any) => ({ ...prev, error: "", finish: true }));
-    } else{
-      setIsLogged(false);
-      setIsLoading(false);
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
+    } else{ Logout(); }
     return response;
   }
 
   const Login = async (data: any, setFormState:Function) => {
 
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserLogin(data);
-    
-    if(response?.data?.success){
+    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserLogin, data, setFormState);
+
+    if(response.data){
       const NewUserData = response.data.data.user_data.user;
       const NewUserContact = response.data.data.user_data.user_contact;
 
@@ -141,58 +119,31 @@ const ContextValues = () => {
       setLSData("UserData", NewUserData);
       setLSData("UserContact", NewUserContact || DefaultUserContact);
 
-      setFormState((prev:any) => ({ ...prev, error: "", finish: true }));
-    } else{
-      setIsLogged(false);
-      setIsLoading(false);
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
+    } else{ Logout(); }
     return response;
   }
 
   const UserGetData = async (data:any, setFormState:Function) => {
 
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserGetData(data);
-    
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "" }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
+    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserGetData, data, setFormState);
+    if(response.data){
+      setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
+      setFormState((prev:any) => ({ ...prev, finish:false }));
     }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
     return response;
   }
 
   const UserNameChange = async (data:any, setFormState:Function) => {
 
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserNameChange(data);
-    if(response?.data?.success){
-      setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
+    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserNameChange, data, setFormState);
+    if(response.data) setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
     return response;
   }
 
-  const SaveData = async (data: any, setFormState:Function) => {
+  const SaveData = async (data:any, setFormState:Function) => {
 
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserSaveData(data);
-
-    if(response?.data?.success){
-      
-
+    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserSaveData, data, setFormState);
+    if(response.data){
       let NewUserContact = {...userContact,
         BIRTHDAY: moment(data.birthday,"DD/MM/YYYY").toDate(),
         CELLPHONE_NUMBER: data.cellphone_number,
@@ -201,179 +152,30 @@ const ContextValues = () => {
         ADDRESS_STREET: data.address_street,
         ADDRESS_NUMBER: data.address_number,
         APARTMENT: data.apartment
-    }
+      }
 
-    setUserContact(NewUserContact);
-    setLSData("UserContact", NewUserContact);
+      setUserContact(NewUserContact);
+      setLSData("UserContact", NewUserContact);
 
-    if(response.data.data.token){
+      if(response.data.data.token){
         SaveToken(response.data.data.token)
+      }
     }
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
     return response;
   }
 
-  const PasswordReset = async (data: any, setFormState:Function) => {
+  const PasswordReset = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordReset, data, setFormState);
+  const PasswordUpdate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordSave, data, setFormState);
 
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserPasswordReset(data);
+  const EmailValidate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailValidate, data, setFormState);
+  const EmailResendVerification = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailResendVerification, data, setFormState);
+  const EmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailChange, data, setFormState);
+  const EmailChangeValidate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailChangeValidate, data, setFormState);
 
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const PasswordUpdate = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.UserPasswordSave(data);
-    console.log(response)
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const EmailValidate = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.EmailValidate(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const EmailResendVerification = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.EmailResendVerification(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const EmailChange = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.EmailChange(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const EmailChangeValidate = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.EmailChangeValidate(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const AFIP_getURL = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.Autenticar_AFIP_getURL(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const AFIP_checkToken = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.Autenticar_AFIP_checkToken(data);
-
-    console.log(response)
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const MIARGENTINA_getURL = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.Autenticar_MIARGENTINA_getURL(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
-
-  const MIARGENTINA_checkToken = async (data: any, setFormState:Function) => {
-
-    setFormState((prev:any) => ({ ...prev, loading: true }));
-    const response:AxiosResponse = await AxiosAuthAPI.Autenticar_MIARGENTINA_checkToken(data);
-
-    if(response?.data?.success){
-      setFormState((prev:any) => ({ ...prev, error: "", finish:true }));
-    } else{
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-      setFormState((prev:any) => ({ ...prev, error: response.data.message }));
-    }
-
-    setFormState((prev:any) => ({ ...prev, loading: false }));
-    return response;
-  }
+  const AFIP_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_AFIP_getURL, data, setFormState);
+  const AFIP_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_AFIP_checkToken, data, setFormState);
+  const MIARGENTINA_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_MIARGENTINA_getURL, data, setFormState);
+  const MIARGENTINA_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_MIARGENTINA_checkToken, data, setFormState);
 
 
   useEffect(() => {

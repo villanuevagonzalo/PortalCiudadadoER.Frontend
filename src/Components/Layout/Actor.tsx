@@ -22,12 +22,12 @@ import { DefaultUserRol } from "../../Data/DefaultValues";
 
 const navigation:INavigation[] = [
   { name: 'Inicio', icon: RiLayout4Fill, href: Pages.DA },
-  { name: 'Gestor de Trámites', icon: FaClipboardList, href: Pages.DA_PROCEDURES, children:[
+  /*{ name: 'Gestor de Trámites', icon: FaClipboardList, href: Pages.DA_PROCEDURES, children:[
     { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
     { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
-  ] },
-  { name: 'Gestor de Notificaciones', icon: BiNotification, href: Pages.DA_NOTIFICATIONS_NEW, children:[
-    { name: 'Lista de Notificaciones', href: Pages.DA_NOTIFICATIONS_LIST },
+  ] },*/
+  { name: 'Gestor de Notificaciones', icon: BiNotification, href: Pages.DA_NOTIFICATIONS, children:[
+    { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW },
   ] }
 ]
 

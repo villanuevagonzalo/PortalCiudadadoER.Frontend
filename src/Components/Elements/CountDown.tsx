@@ -11,6 +11,7 @@ export const CountDown : React.FC<{ time?:number; onFinish?:Function; }> = ({tim
         setDuration(duration - 1);
       } else {
         clearInterval(intervalId);
+        console.log('termino')
         if(onFinish) onFinish()
       }
     }, 1000);

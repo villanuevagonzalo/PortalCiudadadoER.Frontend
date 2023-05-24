@@ -44,10 +44,7 @@ export const Auth_Redirect = () =>{
         'token':SearchParams.values.token
       }, setFormState);
 
-      if(response.status){
-        continueLogin()
-      }
-
+      if(response) continueLogin()
     }
   }  
   useEffect(()=>{if(ContextLoaded){

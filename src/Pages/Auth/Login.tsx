@@ -31,8 +31,8 @@ export const Auth_Login = () => {
       enableReinitialize={true}
       initialValues={FieldValues}
       validationSchema={formGetValidations(FormRequiredFields)}
-      onSubmit={(values: any) => {
-        Login({
+      onSubmit={async (values: any) => {
+        await Login({
           cuil: values.CUIL,
           password: values.Password,
           captcha: values.Captcha,
@@ -42,7 +42,7 @@ export const Auth_Login = () => {
       <Form autoComplete="off">
         <FormikField name="CUIL" autoFocus disabled={FormState.loading} />
         <FormikField name="Password" disabled={FormState.loading} />
-        <FormikCaptcha name="Captcha"/>
+        <FormikCaptcha name="Captcha" state={FormState}/>
         <Button disabled={FormState.loading} type="submit">
           {FormState.loading ? <Spinner /> : "Iniciar Sesión"}
         </Button>

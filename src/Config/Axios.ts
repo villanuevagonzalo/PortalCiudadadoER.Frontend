@@ -19,11 +19,10 @@ axiosBase.interceptors.request.use(
   }
 );
 
-interface CustomResponse {
-  status: any;
-  code: number;
+export interface ResponseError {
+  code: string;
   message: string;
-  response: AxiosResponse<any>;
+  error: AxiosResponse<any>;
 }
 
 axiosBase.interceptors.response.use(
@@ -39,10 +38,21 @@ axiosBase.interceptors.response.use(
     return response;
 },
   (err) => {
-    return {
-    status: false,
-    code: err.response.data.status,
-    message: GetMessage(err.response.data?.message || err.message, err.response?.status),
-    response: err
+    throw {
+      code: err.code || "Internal Error",
+      message: GetMessage(err.response.data?.message || err.message, err.response?.status) || "Error",
+      error: err
   }}
 );
+
+export const handleResponse = async (requestFn: any, data: any, setFormState: Function) => {
+  setFormState((prev:any) => ({ ...prev, loading: true }));
+  try { 
+    const response:AxiosResponse = await requestFn(data);
+    setFormState((prev:any) => ({ ...prev, loading: false, error: "", finish:true }));
+    return response;
+  } catch (	error:any ) {
+    setFormState((prev:any) => ({ ...prev, loading: false, error: error.message }));
+    return error;
+  }
+}

@@ -44,7 +44,6 @@ export const Auth_EmailResendValidation = () => {
           initialValues={FieldValues}
           validationSchema={formGetValidations(FormRequiredFields)}
           onSubmit={async(values:any) => {
-            console.log(values)
             const response = await EmailResendVerification({
               cuil: values.CUIL,
               captcha: values.Captcha,
@@ -52,7 +51,7 @@ export const Auth_EmailResendValidation = () => {
           }}
         ><Form autoComplete="off">
           <FormikField name="CUIL" disabled={FormState.loading || errors.length>1} autoFocus/>
-          <FormikCaptcha name="Captcha"/>
+          <FormikCaptcha name="Captcha" state={FormState}/>
           <Button disabled={FormState.loading || errors.length>1} type="submit">
               {FormState.loading ? <Spinner/> : 'Reenviar Email'}                                
           </Button>

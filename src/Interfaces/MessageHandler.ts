@@ -31,6 +31,7 @@ export const Messages: {[key: string]:string} = {
   'Email changed': 'Mail actualizado correctamente.',
   'Data changed': 'Data changed',
   'Application Validated User Identity': 'Validación por Aplicación Exitosa',
+  'Notification loaded successfully': 'Notificación General creada exitosamente.',
 
 }
 

@@ -618,6 +618,11 @@ export const NotificationCardWrapper = styled.div<{ color?: string; new?: boolea
       flex-direction: row;
     }
 
+    &.footer2{
+      margin:1rem 0 0.25rem  -0.25rem;
+      flex-direction: row;
+    }
+
 
 
     & span{
@@ -632,6 +637,14 @@ export const NotificationCardWrapper = styled.div<{ color?: string; new?: boolea
       }
 
 
+
+      &.filters{
+        font-size:0.9rem;
+        background-color: #e4edde;
+        color: #64813e;
+        padding:0.5rem 0.75rem;
+        border-radius:0.5rem;
+      }
 
       &.attachment{
         font-size:0.7rem;
@@ -670,7 +683,7 @@ export const NotificationCardWrapper = styled.div<{ color?: string; new?: boolea
   @media (max-width: 768px) {   
     font-size:1rem;
 
-    & label.footer{
+    & label.footer,label.footer2{
       text-align:left;
       flex-direction: column;
       }

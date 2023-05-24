@@ -10,7 +10,7 @@ import { NotificationFullSize } from "../../../Components/Notifications/FullSize
 
 export const DC_Notifications = () =>{
 
-  const { isLoading, userNotifications, ReadNotification } = useContext(NotificationsContext);
+  const { isLoading, errors, userNotifications, ReadNotification } = useContext(NotificationsContext);
   const [ FullSizeNotification, setFullSizeNotification ] = useState<CitizenNotification | null>(null);
   const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
 
@@ -30,6 +30,7 @@ export const DC_Notifications = () =>{
     <LayoutNote>Enterate de las actualizaciones de tus trámites y notificaciones de la plataforma</LayoutNote>
     <LayoutSection>
       <h1><BiNotification />Notificaciones</h1>
+      {errors!==""?<LayoutNote>{errors}</LayoutNote>:<></>}
       {isLoading?<>
         <br/>
         <Spinner color='secondary' size="3rem"/><br/>
