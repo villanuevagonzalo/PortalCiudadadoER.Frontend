@@ -35,7 +35,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   }
 
   const handleFileChange = (event: any) => {
-    const file = event.target.files[0]
+    const file = Array.from(event.target.files)
+    console.log(file)
     setFieldValue(HelpToken+instance.name,file)
   }
     
@@ -70,10 +71,10 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       case "file": EI = instance as ElementInstance<"FILE">;
         return (<FileWrapper error={thiserror?true:false} focus={focus || !empty}><div>
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-          <input type="file" id={EI.name} hidden {...field} onChange={handleFileChange} onFocus={handleFocus} onBlur={handleFocus} />
+          <input type="file" id={EI.name} hidden {...field} onChange={handleFileChange} onFocus={handleFocus} onBlur={handleFocus} multiple />
           <label className="uploader" htmlFor={EI.name}>
             <div className="FormIcon"><basetype.icon /></div>
-            <span>{HelpField?.value?.name || EI.properties.label}</span>
+            <span>{HelpField.value? JSON.stringify(HelpField.value.length) : EI.properties.label}</span>
           </label>
         </div></FileWrapper>);
 

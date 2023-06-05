@@ -44,10 +44,7 @@ const ContextValues = () => {
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,
         MESSAGE_BODY: notification.MESSAGE_BODY,
-        ATTACHMENTS: notification.MULTIMEDIA_ID!=""?[{
-          ID: notification.MULTIMEDIA_ID,
-          type: notification.ATTACHMENT_TYPE
-        }]:[],
+        ATTACHMENTS: notification.MULTIMEDIA_ID==""?[]:notification.MULTIMEDIA_ID?.split(",").map((e:any)=>e*1),
         CREATED_AT: notification.CREATED_AT,
         TYPE: "general",
         NEW: newNotificaionsIDs.includes(notification.ID as number)
@@ -89,15 +86,13 @@ const ContextValues = () => {
     let notificationsData = "[]";
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
 
+
     const Notifications:ActorNotification[] = JSON.parse(notificationsData).map((notification:Partial<Notification>)=>{
       return { 
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,
         MESSAGE_BODY: notification.MESSAGE_BODY,
-        ATTACHMENTS: notification.MULTIMEDIA_ID!=""?[{
-          ID: notification.MULTIMEDIA_ID,
-          type: notification.ATTACHMENT_TYPE
-        }]:[],
+        ATTACHMENTS: notification.MULTIMEDIA_ID==""?[]:notification.MULTIMEDIA_ID?.split(",").map((e:any)=>e*1),
         CREATED_AT: notification.CREATED_AT,
         DATE_FROM: notification.NOTIFICATION_DATE_FROM,
         DATE_TO: notification.NOTIFICATION_DATE_TO,
@@ -109,6 +104,10 @@ const ContextValues = () => {
         TYPE: "general"
        }
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
+
+
+    console.log(JSON.parse(notificationsData),Notifications)
+
     setActorNotifications(Notifications);
     setIsLoading(false);
   }
@@ -118,22 +117,24 @@ const ContextValues = () => {
   const GetAttachments = async (data:any, setFormState:Function) => {
 
     setFormState(true);
-    const FileIds:{ID:number,type:string}[] = data;
+    const FileIds:number[] = data;
+
+    console.log(FileIds)
 
     try {
-      const promises = FileIds.map(async (element) => {
-        const response = await AxiosNotificationAPI.GetAttachment({ multimedia_id: element.ID });
-        const response2 = await AxiosNotificationAPI.GetAttachmentName({ multimedia_id: element.ID });
+      const promises = FileIds.map(async (id) => {
+        const response = await AxiosNotificationAPI.GetAttachment({ multimedia_id: id });
+        const response2 = await AxiosNotificationAPI.GetAttachmentName({ multimedia_id: id });
         const reader = new FileReader();
   
         return new Promise<FileBlob>((resolve, reject) => {
           reader.onloadend = () => {
-            console.log(element);
+            console.log(id);
             const imageDataURL = reader.result as string;
             const data:FileBlob = {
               name: response2.data.data.attachment_name,
-              type: element.type,
-              data: imageDataURL.replace('text/html', fileTypes[element.type].fulltype),
+              type: "png",
+              data: imageDataURL.replace('text/html', fileTypes["png"].fulltype),
             };
             resolve(data);
           };

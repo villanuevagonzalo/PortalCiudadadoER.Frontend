@@ -37,6 +37,7 @@ export const NotificationActionCard: React.FC<Props> = ({data, loading=false, ..
     </label>
     <h1>{stringPreview(data.MESSAGE_TITLE,30)}</h1>
     <p>{stringPreview(data.MESSAGE_BODY,30)}</p>
+    <p>{data.ATTACHMENTS.length}</p>
     <label className="footer2">
       <span className="filters">{'Fechas: '+moment(data.DATE_FROM).format("DD/MM/YY") + " - " + moment(data.DATE_TO).format("DD/MM/YY")}</span>
       <span className="filters">{'Edad: '+data.AGE_FROM + " - " + data.AGE_TO}</span>
