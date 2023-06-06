@@ -19,7 +19,7 @@ export const Auth_Redirect = () =>{
 
   const { userData, userRol, Redirect, ContextLoaded } = useContext(AuthContext);
 
-  const [ redirect, setRedirect] = useState<boolean>(false);
+  const [ redirect, setRedirect] = useState<boolean>(true);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
 
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
