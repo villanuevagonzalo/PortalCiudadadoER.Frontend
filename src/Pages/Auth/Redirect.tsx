@@ -19,7 +19,7 @@ export const Auth_Redirect = () =>{
 
   const { userData, userRol, Redirect, ContextLoaded } = useContext(AuthContext);
 
-  const [ redirect, setRedirect] = useState<boolean>(true);
+  const [ redirect, setRedirect] = useState<boolean>(false);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
 
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
@@ -48,10 +48,10 @@ export const Auth_Redirect = () =>{
     }
   }  
   useEffect(()=>{if(ContextLoaded){
-    if(userData.cuil==''){
+    //if(userData.cuil==''){
       forceLogin()
 
-    }
+    //}
 
   }},[ContextLoaded])
   
