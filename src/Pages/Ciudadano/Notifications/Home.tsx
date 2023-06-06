@@ -15,13 +15,13 @@ export const DC_Notifications = () =>{
   const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
 
   const ShowNotification = async (N: CitizenNotification) => {
-    //const response = await ReadNotification(N.ID, setLoadingNotification);
-    //if(response?.data?.success){
+    const response = await ReadNotification(N.ID, setLoadingNotification);
+    if(response?.data?.success){
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setFullSizeNotification(N);
-    //} else{
-    //  console.log(response,0);
-    //}
+    } else{
+      console.log(response,0);
+    }
   }
 
   const CloseNotification = () => setFullSizeNotification(null);

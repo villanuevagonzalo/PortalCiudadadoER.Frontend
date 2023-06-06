@@ -3,21 +3,24 @@ import 'moment/locale/es';
 import { ActorNotification, ILocation, Recipients } from "../../Interfaces/Data";
 import { NotificationCardWrapper, Spinner } from "../Elements/StyledComponents";
 import { stringPreview } from "../../Utils/General";
-import { AiOutlineDelete, AiOutlineNotification, AiOutlineStar } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineNotification, AiOutlinePaperClip, AiOutlineStar } from "react-icons/ai";
 import { fileTypes } from "../../Interfaces/FileTypes";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DeparmentByID, LocationByID, RawLocations } from "../../Utils/Locations";
+import { NotificationsContext } from "../../Contexts/NotificationContext";
 
 moment.locale('es')
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
 	data: ActorNotification;
   loading?: boolean;
+  func: Function;
 }
 
-export const NotificationActionCard: React.FC<Props> = ({data, loading=false, ...props}) => {
+export const NotificationActionCard: React.FC<Props> = ({data, loading=false, func, ...props}) => {
   
   const [ Location, setLocation ] = useState<ILocation | null>();
+  const { DeleteNotification } = useContext(NotificationsContext);
 
   const handleLocations = async() => {
     const response = await RawLocations();
@@ -33,11 +36,11 @@ export const NotificationActionCard: React.FC<Props> = ({data, loading=false, ..
   <div className="content">
     <label className="header">
       <span className="title">{moment(data.CREATED_AT).fromNow()}</span>
-        {moment().isBetween(moment(data.DATE_FROM), moment(data.DATE_TO)) ? <span className="new"><AiOutlineStar /> ACTIVA</span> : <></>}
+      {moment().isBetween(moment(data.DATE_FROM), moment(data.DATE_TO)) ? <span className="new"><AiOutlineStar /> ACTIVA</span> : <></>}
+      {data.ATTACHMENTS.length>0 ? <span className="attachment"><AiOutlinePaperClip/> {data.ATTACHMENTS.length} Archivos adjuntos</span>: <></>}
     </label>
     <h1>{stringPreview(data.MESSAGE_TITLE,30)}</h1>
     <p>{stringPreview(data.MESSAGE_BODY,30)}</p>
-    <p>{data.ATTACHMENTS.length}</p>
     <label className="footer2">
       <span className="filters">{'Fechas: '+moment(data.DATE_FROM).format("DD/MM/YY") + " - " + moment(data.DATE_TO).format("DD/MM/YY")}</span>
       <span className="filters">{'Edad: '+data.AGE_FROM + " - " + data.AGE_TO}</span>
@@ -46,7 +49,7 @@ export const NotificationActionCard: React.FC<Props> = ({data, loading=false, ..
     </label>
   </div>
     <div className="icon">
-      {loading?<Spinner color='gray' size="1.5rem"/>:<AiOutlineDelete />}
+      {loading?<Spinner color='gray' size="1.5rem"/>:<AiOutlineDelete onClick={()=>func()} />}
     </div>
   </NotificationCardWrapper>;
 }
