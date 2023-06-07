@@ -21,6 +21,7 @@ const ContextValues = () => {
   const [userNotifications, setUserNotifications] = useState<CitizenNotification[]>([]);
   const [actorNotifications, setActorNotifications] = useState<ActorNotification[]>([]);
 
+  const parseAttachements = (data:string) => (data?.match(/\d+/g) || []).map((e: any) => parseInt(e)).filter((e: any) => e > 0);
 
   const UpdateNotifications = async() => {
 
@@ -40,14 +41,12 @@ const ContextValues = () => {
     if(responseNew && responseNew.status!==204) newNotificaionsIDs = JSON.parse(responseNew.data.data.notifications).map((notification:Partial<Notification>)=>notification.ID);
 
     const Notifications:CitizenNotification[] = notificationsObj.map((notification:Partial<Notification>)=>{
+
       return { 
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,
         MESSAGE_BODY: notification.MESSAGE_BODY,
-        ATTACHMENTS: notification.MULTIMEDIA_ID!=""?[{
-          ID: notification.MULTIMEDIA_ID,
-          type: notification.ATTACHMENT_TYPE
-        }]:[],
+        ATTACHMENTS: parseAttachements(notification.MULTIMEDIA_ID as string),
         CREATED_AT: notification.CREATED_AT,
         TYPE: "general",
         NEW: newNotificaionsIDs.includes(notification.ID as number)
@@ -79,6 +78,35 @@ const ContextValues = () => {
 
   }
 
+  const DeleteNotification = async (notification_id:number, setFormState:Function) => {
+
+    const response:AxiosResponse = await handleResponse(AxiosNotificationAPI.Delete, {notification_id}, setFormState);
+    console.log(notification_id, response)
+    if(response.data){
+      //setUserNotifications(prevState => ([...prevState, data]));
+    }
+    return response;
+
+  }
+
+  const GetScopeByID = async (notification_id:number, setFormState:Function) => {
+    setFormState(true);
+    try {
+    const response:AxiosResponse = await AxiosNotificationAPI.GetScopeByID({ notification_id });
+    console.log(notification_id, response)
+    if(response.data){
+      //setUserNotifications(prevState => ([...prevState, data]));
+    }
+    setFormState(false);
+    return response;
+
+  } catch (error) {
+    setFormState(false);
+    console.error('Error al obtener los datos:', error);
+    //throw error;
+  }
+  }
+
   const GetAllNotifications = async () => {
 
     setIsLoading(true)
@@ -89,15 +117,14 @@ const ContextValues = () => {
     let notificationsData = "[]";
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
 
+
     const Notifications:ActorNotification[] = JSON.parse(notificationsData).map((notification:Partial<Notification>)=>{
+
       return { 
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,
         MESSAGE_BODY: notification.MESSAGE_BODY,
-        ATTACHMENTS: notification.MULTIMEDIA_ID!=""?[{
-          ID: notification.MULTIMEDIA_ID,
-          type: notification.ATTACHMENT_TYPE
-        }]:[],
+        ATTACHMENTS: parseAttachements(notification.MULTIMEDIA_ID as string),
         CREATED_AT: notification.CREATED_AT,
         DATE_FROM: notification.NOTIFICATION_DATE_FROM,
         DATE_TO: notification.NOTIFICATION_DATE_TO,
@@ -109,31 +136,42 @@ const ContextValues = () => {
         TYPE: "general"
        }
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
+
+
+    console.log(JSON.parse(notificationsData),Notifications)
+
     setActorNotifications(Notifications);
     setIsLoading(false);
   }
 
   const GetScope = async (data:any, setFormState:Function) => await handleResponse(AxiosNotificationAPI.GetScope, data, setFormState);
 
+
+
+
   const GetAttachments = async (data:any, setFormState:Function) => {
 
     setFormState(true);
-    const FileIds:{ID:number,type:string}[] = data;
+    const FileIds:number[] = data;
+
+    console.log(FileIds)
 
     try {
-      const promises = FileIds.map(async (element) => {
-        const response = await AxiosNotificationAPI.GetAttachment({ multimedia_id: element.ID });
-        const response2 = await AxiosNotificationAPI.GetAttachmentName({ multimedia_id: element.ID });
+      const promises = FileIds.map(async (id) => {
+        const response = await AxiosNotificationAPI.GetAttachment({ multimedia_id: id });
+        const response2 = await AxiosNotificationAPI.GetAttachmentName({ multimedia_id: id });
         const reader = new FileReader();
   
         return new Promise<FileBlob>((resolve, reject) => {
           reader.onloadend = () => {
-            console.log(element);
             const imageDataURL = reader.result as string;
+            const filefile = response2.data.data.attachment_name;
+            const filext = filefile.split(".");
+            console.log(imageDataURL);
             const data:FileBlob = {
-              name: response2.data.data.attachment_name,
-              type: element.type,
-              data: imageDataURL.replace('text/html', fileTypes[element.type].fulltype),
+              name: filefile,
+              type: filext[1],
+              data: imageDataURL.replace('text/html', fileTypes[filext[1]].fulltype),
             };
             resolve(data);
           };
@@ -182,8 +220,8 @@ const ContextValues = () => {
   return {
     UpdateNotifications, ReadNotification, errors,
     isLoading, userNotifications, actorNotifications,
-    setUserNotifications, GetScope, GetAttachments,
-    CreateNotification, GetAllNotifications,
+    setUserNotifications, GetScope, GetAttachments, GetScopeByID,
+    CreateNotification, GetAllNotifications, DeleteNotification,
   }
 }
 

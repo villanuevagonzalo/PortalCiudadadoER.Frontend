@@ -3,7 +3,7 @@ import 'moment/locale/es';
 import { CitizenNotification } from "../../Interfaces/Data";
 import { NotificationCardWrapper, Spinner } from "../Elements/StyledComponents";
 import { stringPreview } from "../../Utils/General";
-import { AiOutlineStar, AiOutlineNotification } from "react-icons/ai";
+import { AiOutlineStar, AiOutlineNotification, AiOutlinePaperClip } from "react-icons/ai";
 import { fileTypes } from "../../Interfaces/FileTypes";
 
 moment.locale('es')
@@ -27,9 +27,7 @@ export const NotificationCard: React.FC<Props> = ({data, loading=false, ...props
       <p>{stringPreview(data.MESSAGE_BODY)}</p>
       <label className="footer">
         <span className="time">{moment(data.CREATED_AT).fromNow()}</span>
-        {data.ATTACHMENTS.length>0 ? <span className="attachments">Adjuntos: {data.ATTACHMENTS.map((e:any)=>{
-          const tt = fileTypes[e.type] || fileTypes["png"];        
-          return (<span className="attachment" key={e.ID}><tt.icon /> {tt.label}</span>)})}</span>: <></>}
+        {data.ATTACHMENTS.length>0 ? <span className="attachments"><AiOutlinePaperClip/> {data.ATTACHMENTS.length} Archivos adjuntos</span>: <></>}
       </label>
     </div>
   </NotificationCardWrapper>;

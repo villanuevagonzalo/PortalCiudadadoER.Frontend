@@ -56,13 +56,22 @@ export class NotificationsAPI {
     return this.baseService.get('/v0/notification/new/scope', { params })
   }
 
+  GetScopeByID = async (params:{
+    notification_id: number;
+  }) => {
+    return this.baseService.get('/v0/notification/notification/number-reached', {params})
+  }
+
   Read = async (params:{
     notification_id: number;
   }) => {
     return this.baseService.post('/v0/notification/get/user/read', params)
   }
 
-
-
+  Delete = async (params:{
+    notification_id: number;
+  }) => {
+    return this.baseService.post('/v0/notification/notification/soft-delete', params)
+  }
   
 }

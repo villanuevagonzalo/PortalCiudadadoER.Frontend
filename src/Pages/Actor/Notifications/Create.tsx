@@ -122,7 +122,7 @@ export const DA_Notifications_Create = () =>{
           enableReinitialize={true}
           initialValues={initialValues}
           onSubmit={async(values:any)=>{
-            const response = await CreateNotification({
+            const test = {
               recipients: values.Recipients,
               age_from: values.AgeFrom===""?1:values.AgeFrom,
               age_to: values.AgeTo===""?120:values.AgeTo,
@@ -134,7 +134,10 @@ export const DA_Notifications_Create = () =>{
               message_body: values.Message,
               attachment: values.HELPAttachments,
               send_by_email: values.SendByEmail?true:false,
-              }, setFormState);
+            };
+
+              console.log(test)
+            const response = await CreateNotification(test, setFormState);
             console.log(response)
           }}
           validate={(values:any) => ValidateForm(values, Fields)}

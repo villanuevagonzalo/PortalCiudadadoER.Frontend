@@ -759,7 +759,28 @@ export const NotificationFullSizeWrapper = styled.div`
         cursor:pointer;
       }
     }
-    
+
+    & div.scope{
+      display: flex;
+      font-size:0.8rem;
+      gap:0.5rem;
+      align-items: center;
+      align-self: left;
+      flex-direction: row;
+
+      & .data{
+        display:flex;
+        align-items: center;
+        align-self: left;
+        gap:0.25rem;
+        font-size:0.7rem;
+        background-color: #effaff;
+        color: #0090d4;
+        padding:0.25rem 0.5rem;
+        border-radius:0.5rem;
+      }
+    }
+
     & div.attachments{
       border-top:1px solid #ddd;
       margin-top:0.5rem;
