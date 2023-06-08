@@ -111,6 +111,53 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
   `}
 `
 
+export const LayoutActorSidebar = styled.div<{ collapsable?: boolean, open?: boolean, mobile?:boolean }>`
+  align-items: center;
+  align-self: top;
+  background: #799f4f;
+  box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
+  z-index:100;
+  transition: all .1s ease-in;
+  overflow:hidden;
+  min-width:360px;
+
+  &::before {
+    content: "";
+    display: block;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; 
+    background: #617f43; 
+  }
+
+  & .Content{
+    position: absolute;
+    top: -20px;
+    max-width:360px;
+    margin:0 auto;
+    padding:30px;
+  }
+
+  @media (min-width: 720px) {
+    max-width:400px;
+  }
+
+  ${props => props.collapsable?`
+    margin-right: ${props.open?'-360px':'0'}!important;
+    width: ${props.open?'360px':'0px'}!important;
+    min-width: ${props.open?'360px':'0px'};
+
+    & .Content{
+      padding:20px;
+    }
+  `:`
+    margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
+    min-width: 360px;
+  `}
+`
+
 export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
   display: flex;
   flex-direction: column;
@@ -513,6 +560,30 @@ export const RoundedButton = styled.div<{ }>`
 
   &:hover{
     background:var(--maincolor);
+  }
+`;
+
+export const RoundedActorButton = styled.div<{ }>`
+  align-items: center;
+  align-self: center;
+  border: 2px solid transparent;
+  display:flex;
+  font-size: 0.9rem;
+  gap: 0.25rem;
+  padding:0.25rem 0.25rem 0.25rem 0.75rem;
+  border-radius:0.5rem;
+  font-weight:600;
+  color:var(--gray_tint);
+  margin-right:-0.25rem;
+
+  & svg{
+    margin:0px;
+    color:var(--gray)!important;
+  }
+
+  &:hover{
+    // background:var(--maincolor);
+    color: black;
   }
 `;
 
