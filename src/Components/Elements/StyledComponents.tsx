@@ -70,6 +70,21 @@ export const ColoredLabel = styled.button<{ fullwidth?: boolean, size?:number }>
   font-weight:bold;
 `;
 
+export const ColoredActorLabel = styled.button<{ fullwidth?: boolean, size?:number }>`
+  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
+  border-radius: 0.375rem;
+  color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
+  display:flex;
+  font-size: 0.7rem;
+  justify-content:center;
+  min-width:65px;
+  margin: -1rem 5rem 2rem auto;
+  height:1.4rem;
+  padding: 0.25rem 0.25rem;
+  text-align:center;
+  font-weight:bold;
+`;
+
 // REVIEW >>>>>>>>>>>>>>>>>>>
 
 
@@ -129,6 +144,25 @@ export const MainContainer = styled.div`
   flex-direction: column;
   gap:0;
   flex:1;
+`;
+
+export const LogoActorContainer = styled.div`
+  align-items: center;
+  align-self: top;
+  // background: #799f4f;
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  flex:1;
+  // min-width: 400px;
+  // max-width: 400px;
+  // width:100%;
+  // height:100%;
+  // padding:1rem;
+  position: relative;
+  background: transparent;
+  width: 100%;
+  height: 50px;
 `;
 
 export const ToDo = styled.div`

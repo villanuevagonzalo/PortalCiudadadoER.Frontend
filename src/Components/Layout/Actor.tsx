@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton } from "./StyledComponents";
-import { Card, ColoredLabel, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
+import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutActorSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton, RoundedActorButton } from "./StyledComponents";
+import { Card, ColoredLabel, DivSubtitle, DivTitle2, LogoActorContainer, MainContainer } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
 import { LogoER } from "../Images/LogoEntreRios";
@@ -11,7 +11,7 @@ import { LogoER } from "../Images/LogoEntreRios";
 import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { IoIosSettings } from "react-icons/io";
-import { AiOutlineArrowLeft } from "react-icons/ai";
+import { AiOutlineArrowLeft, AiOutlineBell, AiOutlineMore } from "react-icons/ai";
 import { Pages } from "../../Routes/Pages";
 import { CitizenNotification, INavigation } from "../../Interfaces/Data";
 import { LayoutBreadcrump } from "./Breadcrump";
@@ -67,20 +67,19 @@ export const LayoutActor = () => {
       <Link to={Pages.DC_CONFIGURATIONS} onClick={closemenu}><BiUserCircle color="var(--secondary)"/></Link>
     </>:<>
       <LayoutHeaderSpacer/>
-      <Link to={Pages.DC_CONFIGURATIONS}><RoundedButton>
+      <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
+      <Link to={Pages.DC_CONFIGURATIONS}><RoundedActorButton>
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
-        <BiUserCircle />
-      </RoundedButton></Link>
-      <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><HiBellAlert/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
+        <AiOutlineMore />
+      </RoundedActorButton></Link>
     </>}</LayoutHeader>
 
     <LayoutContainer>
       <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
-      <LayoutSidebar collapsable={mobile} open={open}>
+      <LayoutActorSidebar collapsable={mobile} open={open}>
         <div className="Content">
           {mobile?<></>:<>
-            <ColoredLabel color="secondary" className="mb-2">ACTORES</ColoredLabel>
-            <LogoCiudadanoDigital color="var(--secondary)"/>
+            <LogoActorContainer><LogoER width="150px" color='white'/></LogoActorContainer>
           </>}
           <LayoutSidebarMenu>{navigation.map((item) => (
             <div key={item.name} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''} aria-label={item.href + " "+window.location.pathname}>
@@ -100,21 +99,21 @@ export const LayoutActor = () => {
               </ul>
             </div>
           ))}</LayoutSidebarMenu>
-          <Card color="secondary">
+          {/* <Card color="secondary">
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
             <DivSubtitle color="maincolor" className="mt-1">{userActor.type}<b className="ml-2">{userActor.message}</b></DivSubtitle>
             <Link to={Pages.DC_CONFIGURATIONS} className="f-width"><Button color="maincolor">
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
             </Button></Link>
-          </Card>
-          <Link to={Pages.DC}><Button className="mt-4">
+          </Card> */}
+          {/* <Link to={Pages.DC}><Button className="mt-4">
             <AiOutlineArrowLeft/><LayoutSpacer/>Volver al Panel Ciudadano
-          </Button></Link>
+          </Button></Link> */}
           <Button color="gray" onClick={Logout} className="mt-4">
             Cerrar Sesión
           </Button>
         </div>
-      </LayoutSidebar>
+      </LayoutActorSidebar>
       <LayoutBody mobile={mobile}>
         <LayoutBreadcrump color="secondary"/>
         <Outlet></Outlet>
