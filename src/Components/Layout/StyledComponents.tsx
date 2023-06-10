@@ -3,7 +3,7 @@ import styled from "styled-components";
 /// MAIN LAYOUT COMPONENTS
 
 export const LayoutHeader = styled.div<{ mobile?:boolean }>`
-  background: var(--maincolor_tint);
+  background: white;
   display: flex;
   flex-direction: row;
   height: 64px;
@@ -128,7 +128,7 @@ export const LayoutActorSidebar = styled.div<{ collapsable?: boolean, open?: boo
     top: 0;
     left: 0;
     width: 100%;
-    height: 60px; 
+    height: 64px; 
     background: #617f43; 
   }
 
@@ -229,6 +229,100 @@ export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
 
     &:hover{
       color:black;
+      & span{
+        background:var(--gray_tint);
+        color:var(--gray_text);
+      }
+    }
+
+    &:has(a.active){
+      color:black;
+      background:white;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+      & span{
+        background:var(--secondary);
+        color:var(--secondary_text);
+      }
+      & li:has(a.active){
+        background:transparent!important;
+      }
+    }
+
+    
+  }
+`;
+
+export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  margin:1rem 0 2rem 0;
+  gap:0.25rem;
+
+  & div{
+    display:flex;
+    padding:0.75rem;
+    border-radius:0.5rem;
+    align-items: top;
+    align-self: top;
+    color:white;
+    transition: background .1s ease-in;
+
+    & span{
+      background:white;
+      transition: background .1s ease-in;
+      color:var(--maincolor_text);
+      padding:0.5rem;
+      border-radius:0.25rem;
+      box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+      height: 2rem;
+    }
+
+    & ul{
+      display: flex;
+      flex-direction: column;
+      flex:1;
+      gap:0rem;
+    }
+
+    & a{
+      display: flex;
+      align-items: center;
+      flex:1;
+      gap:0.5rem;
+    }
+
+    & li{
+      align-items: center;
+      display:flex;
+      height: 2rem;
+      border-radius:0.25rem;
+      padding: 0.5rem 0.75rem;
+
+      &:hover{
+        background:var(--maincolor);
+      }
+
+      &.title{
+        font-weight:600;
+
+        &.haschildren{
+          margin-bottom:0.25rem;
+        }
+      }
+
+      &.children{
+        font-size:0.9rem;
+      }
+
+      & a.active{
+        color:var(--secondary);
+
+      }
+    }
+
+    &:hover{
+      color:white;
       & span{
         background:var(--gray_tint);
         color:var(--gray_text);
