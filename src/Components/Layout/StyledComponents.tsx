@@ -3,6 +3,69 @@ import styled from "styled-components";
 /// MAIN LAYOUT COMPONENTS
 
 export const LayoutHeader = styled.div<{ mobile?:boolean }>`
+  background: var(--maincolor_tint);
+  display: flex;
+  flex-direction: row;
+  height: 64px;
+  padding:${props => props.mobile?'1rem':'1rem 2rem'};
+  width:100%;
+  z-index:100;
+  gap:${props => props.mobile?'0.5rem':'1rem'};
+
+  & svg[stroke="currentColor"]{
+    color:var(--primary_tint);
+    height:28px;
+    width:28px;
+    cursor:pointer;
+  }
+
+  ${props => props.mobile?`
+  
+  border-bottom: 1px solid var(--disabled);
+  
+  `:`
+    & .button{
+      margin-top:2px;
+      height:36px;
+      padding:4px;
+      width:36px;
+      border-radius:100%;
+      position:relative;
+
+      & svg{ color:var(--maincolor_text); font-size:16px; }
+
+      &:hover { 
+
+        & svg {
+          color:var(--maincolor_texttint);
+        }  
+        & span {
+          background-color: var(--secondary_tint);
+        }        
+       }
+
+      & span {
+        position: absolute; 
+        bottom: -4px; 
+        right: -4px; 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 22px;
+        height: 22px;
+        background-color: var(--secondary);
+        border:2px solid var(--maincolor_tint);
+        border-radius: 50%;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+      }
+    }
+  
+  `};
+`;
+
+export const LayoutActorHeader = styled.div<{ mobile?:boolean }>`
   background: white;
   display: flex;
   flex-direction: row;

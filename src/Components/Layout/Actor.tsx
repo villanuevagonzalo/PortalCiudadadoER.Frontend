@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutActorSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton, RoundedActorButton, LayoutActorSidebarMenu } from "./StyledComponents";
+import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutActorSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton, RoundedActorButton, LayoutActorSidebarMenu, LayoutActorHeader } from "./StyledComponents";
 import { Card, ColoredLabel, DivSubtitle, DivTitle2, LogoActorContainer, MainContainer } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -61,7 +61,7 @@ export const LayoutActor = () => {
   const closemenu = () => setOpen(false);
 
   return (userActor?<>
-    <LayoutHeader mobile={mobile}>{mobile?<>
+    <LayoutActorHeader mobile={mobile}>{mobile?<>
       <div>{open?<BiChevronsLeft onClick={switchmenu} color="var(--secondary)"/>:<BiMenu onClick={switchmenu} color="var(--secondary)"/>}</div>
       <Link to={Pages.DA} onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} color="var(--secondary)" /></Link>
       <Link to={Pages.DC_CONFIGURATIONS} onClick={closemenu}><BiUserCircle color="var(--secondary)"/></Link>
@@ -72,7 +72,7 @@ export const LayoutActor = () => {
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
         <AiOutlineMore />
       </RoundedActorButton></Link>
-    </>}</LayoutHeader>
+    </>}</LayoutActorHeader>
 
     <LayoutContainer>
       <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
