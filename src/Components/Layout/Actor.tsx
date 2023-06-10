@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutActorSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton, RoundedActorButton } from "./StyledComponents";
+import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutActorSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton, RoundedActorButton, LayoutActorSidebarMenu } from "./StyledComponents";
 import { Card, ColoredLabel, DivSubtitle, DivTitle2, LogoActorContainer, MainContainer } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -81,7 +81,7 @@ export const LayoutActor = () => {
           {mobile?<></>:<>
             <LogoActorContainer><LogoER width="150px" color='white'/></LogoActorContainer>
           </>}
-          <LayoutSidebarMenu>{navigation.map((item) => (
+          <LayoutActorSidebarMenu>{navigation.map((item) => (
             <div key={item.name} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''} aria-label={item.href + " "+window.location.pathname}>
               <span><item.icon/></span>
               <ul>
@@ -98,7 +98,7 @@ export const LayoutActor = () => {
                 >{child.name}</NavLink></li>):<></>}
               </ul>
             </div>
-          ))}</LayoutSidebarMenu>
+          ))}</LayoutActorSidebarMenu>
           {/* <Card color="secondary">
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
             <DivSubtitle color="maincolor" className="mt-1">{userActor.type}<b className="ml-2">{userActor.message}</b></DivSubtitle>
