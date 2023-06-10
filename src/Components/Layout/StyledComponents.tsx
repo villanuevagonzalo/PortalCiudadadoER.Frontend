@@ -69,8 +69,8 @@ export const LayoutActorHeader = styled.div<{ mobile?:boolean }>`
   background: white;
   display: flex;
   flex-direction: row;
-  height: 64px;
-  padding:${props => props.mobile?'1rem':'1rem 2rem'};
+  height: 56px;
+  padding:${props => props.mobile?'1rem':'0.5rem 2rem'};
   width:100%;
   z-index:100;
   gap:${props => props.mobile?'0.5rem':'1rem'};
@@ -134,6 +134,12 @@ export const LayoutHeaderSpacer = styled.div<{  }>`
   height:10px;
 `;
 
+export const LayoutActorHeaderSpacer = styled.div<{  }>`
+  min-width: 376px;
+  flex:1;
+  height:10px;
+`;
+
 export const LayoutContainer = styled.div<{  }>`
   display: flex;
   flex: 1;
@@ -175,6 +181,7 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
 `
 
 export const LayoutActorSidebar = styled.div<{ collapsable?: boolean, open?: boolean, mobile?:boolean }>`
+  position: relative;
   align-items: center;
   align-self: top;
   background: #799f4f;
@@ -197,10 +204,10 @@ export const LayoutActorSidebar = styled.div<{ collapsable?: boolean, open?: boo
 
   & .Content{
     position: absolute;
-    top: -20px;
+    top: 8px;
     max-width:360px;
     margin:0 auto;
-    padding:30px;
+    // padding:30px;
   }
 
   @media (min-width: 720px) {
@@ -217,7 +224,7 @@ export const LayoutActorSidebar = styled.div<{ collapsable?: boolean, open?: boo
     }
   `:`
     margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
-    min-width: 360px;
+    min-width: 256px;
   `}
 `
 
@@ -319,25 +326,27 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
   display: flex;
   flex-direction: column;
   width:100%;
-  margin:1rem 0 2rem 0;
+  margin:1rem 0 0rem 0;
   gap:0.25rem;
 
   & div{
+    // box-sizing: border-box;
+    width: 100%;
     display:flex;
     padding:0.75rem;
-    border-radius:0.5rem;
+    border-radius:0rem;
     align-items: top;
     align-self: top;
     color:white;
     transition: background .1s ease-in;
 
     & span{
-      background:white;
+      background:transparent;
       transition: background .1s ease-in;
-      color:var(--maincolor_text);
+      color:white;
       padding:0.5rem;
       border-radius:0.25rem;
-      box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+      // box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
       height: 2rem;
     }
 
@@ -359,11 +368,11 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
       align-items: center;
       display:flex;
       height: 2rem;
-      border-radius:0.25rem;
+      // border-radius:0.25rem;
       padding: 0.5rem 0.75rem;
 
       &:hover{
-        background:var(--maincolor);
+        background:black; //cambia color de fondo de los items cuando paso el mouse
       }
 
       &.title{
@@ -379,7 +388,7 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
       }
 
       & a.active{
-        color:var(--secondary);
+        color:white;
 
       }
     }
@@ -387,17 +396,18 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
     &:hover{
       color:white;
       & span{
-        background:var(--gray_tint);
+        background:transparent; //color del icono cuando paso el mouse por encima
         color:var(--gray_text);
       }
     }
 
     &:has(a.active){
-      color:black;
-      background:white;
-      box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
+      width: 100%;
+      color:white;
+      background:#74a55c;
+      // box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
       & span{
-        background:var(--secondary);
+        background:transparent;
         color:var(--secondary_text);
       }
       & li:has(a.active){
