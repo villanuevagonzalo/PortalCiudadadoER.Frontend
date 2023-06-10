@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icons/bi";
 import { Link, NavLink, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutActorSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton, RoundedActorButton, LayoutActorSidebarMenu, LayoutActorHeader } from "./StyledComponents";
+import { LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutActorSidebar, LayoutSidebarMenu, LayoutSpacer, RoundedButton, RoundedActorButton, LayoutActorSidebarMenu, LayoutActorHeader, LayoutActorHeaderSpacer } from "./StyledComponents";
 import { Card, ColoredLabel, DivSubtitle, DivTitle2, LogoActorContainer, MainContainer } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -11,7 +11,7 @@ import { LogoER } from "../Images/LogoEntreRios";
 import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { IoIosSettings } from "react-icons/io";
-import { AiOutlineArrowLeft, AiOutlineBell, AiOutlineMore } from "react-icons/ai";
+import { AiFillEdit, AiOutlineArrowLeft, AiOutlineBell, AiOutlineHome, AiOutlineMore } from "react-icons/ai";
 import { Pages } from "../../Routes/Pages";
 import { CitizenNotification, INavigation } from "../../Interfaces/Data";
 import { LayoutBreadcrump } from "./Breadcrump";
@@ -21,12 +21,12 @@ import { NotificationsContext } from "../../Contexts/NotificationContext";
 
 
 const navigation:INavigation[] = [
-  { name: 'Inicio', icon: RiLayout4Fill, href: Pages.DA },
+  { name: 'Inicio', icon: AiOutlineHome, href: Pages.DA },
   /*{ name: 'Gestor de Trámites', icon: FaClipboardList, href: Pages.DA_PROCEDURES, children:[
     { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
     { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
   ] },*/
-  { name: 'Gestor de Notificaciones', icon: BiNotification, href: Pages.DA_NOTIFICATIONS, children:[
+  { name: 'Gestor de Notificaciones', icon: AiFillEdit, href: Pages.DA_NOTIFICATIONS, children:[
     { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW },
   ] }
 ]
@@ -66,7 +66,7 @@ export const LayoutActor = () => {
       <Link to={Pages.DA} onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} color="var(--secondary)" /></Link>
       <Link to={Pages.DC_CONFIGURATIONS} onClick={closemenu}><BiUserCircle color="var(--secondary)"/></Link>
     </>:<>
-      <LayoutHeaderSpacer/>
+      <LayoutActorHeaderSpacer/>
       <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
       <Link to={Pages.DC_CONFIGURATIONS}><RoundedActorButton>
         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
@@ -79,23 +79,33 @@ export const LayoutActor = () => {
       <LayoutActorSidebar collapsable={mobile} open={open}>
         <div className="Content">
           {mobile?<></>:<>
-            <LogoActorContainer><LogoER width="150px" color='white'/></LogoActorContainer>
+            <LogoActorContainer><LogoER width="135px" color='white'/></LogoActorContainer>
           </>}
           <LayoutActorSidebarMenu>{navigation.map((item) => (
             <div key={item.name} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''} aria-label={item.href + " "+window.location.pathname}>
               <span><item.icon/></span>
               <ul>
-                <li className={item.children?'title haschildren':'title'}>{item.href?<NavLink
-                  onClick={switchmenu}
-                  to={item.href}
-                  children={item.name}
-                />:<p>{item.name}</p>}</li>
-                {item.children?item.children.map(child=><li className="children"
-                  key={child.name}><NavLink
+                <li className='title'>
+                  {
+                    item.href?<NavLink
+                      onClick={switchmenu}
+                      to={item.href}
+                      children={item.name}
+                    />:<p>{item.name}</p>
+                  }
+                </li>
+                {
+                item.children?item.children.map(child=>
+                  <li className='children'>
+                  <NavLink
                   onClick={switchmenu}
                   to={child.href}
                   className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}
-                >{child.name}</NavLink></li>):<></>}
+                  >
+                    {child.name}
+                  </NavLink>
+                  </li>):<></>
+                }
               </ul>
             </div>
           ))}</LayoutActorSidebarMenu>

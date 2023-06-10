@@ -158,11 +158,11 @@ export const LogoActorContainer = styled.div`
   // max-width: 400px;
   // width:100%;
   // height:100%;
-  // padding:1rem;
+  padding:0.7rem;
   position: relative;
   background: transparent;
   width: 100%;
-  height: 50px;
+  height: 40px;
 `;
 
 export const ToDo = styled.div`
