@@ -65,7 +65,7 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
   `};
 `;
 
-export const LayoutActorHeader = styled.div<{ mobile?:boolean }>`
+export const LayoutActorHeader = styled.div<{ mobile?:boolean, secondaryHeader?:boolean }>`
   background: white;
   display: flex;
   flex-direction: row;
@@ -75,13 +75,24 @@ export const LayoutActorHeader = styled.div<{ mobile?:boolean }>`
   z-index:100;
   gap:${props => props.mobile?'0.5rem':'1rem'};
 
+  position: ${props => props.secondaryHeader ? 'absolute' : 'static'};
+  top: ${props => props.secondaryHeader ? '56px' : 'auto'};
+  width: 100%;
+  ${props => props.secondaryHeader && `
+    height: 50px;
+  `}
+  ${props => props.secondaryHeader && `
+    margin-left: 0;
+  `}
+  border-top: ${props => props.secondaryHeader ? '1px solid var(--disabled)' : 'none'};
+  border-bottom: ${props => props.secondaryHeader ? '1px solid var(--disabled)' : 'none'};
+
   & svg[stroke="currentColor"]{
     color:var(--primary_tint);
     height:28px;
     width:28px;
     cursor:pointer;
   }
-
   ${props => props.mobile?`
   
   border-bottom: 1px solid var(--disabled);
@@ -441,6 +452,45 @@ export const LayoutBreadCrumpWrapper = styled.ul<{ color?:string }>`
   font-size:1rem;
   width:100%;
   padding:0.5rem;
+  gap:0.25rem;
+
+  & li{
+    display: flex;
+    align-items: center;
+    gap:0.25rem;
+
+    & p,a{
+      display: flex;
+      align-items: center;
+      gap:0.75rem;
+      padding:0.5rem;
+      border-radius:0.5rem;
+    }
+
+    & p{
+      color:var(--${props => (props.color ? props.color : 'primary')});
+      font-weight:600;
+    }
+
+    & a{
+      &:hover{
+        background:var(--maincolor_tint); 
+      }
+    }
+  }
+`;
+
+export const LayoutActorBreadCrumpWrapper = styled.ul<{ color?:string }>`
+  align-items: center;
+  align-items: left;
+  background: transparent;  
+  border-radius:0.5rem;
+  // border: 1px solid var(--disabled);
+  color: var(--maincolor_text);
+  display: flex;
+  font-size:1rem;
+  width:100%;
+  padding:0.5rem 15rem;
   gap:0.25rem;
 
   & li{

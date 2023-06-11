@@ -18,6 +18,7 @@ import { LayoutBreadcrump } from "./Breadcrump";
 import { DefaultUserRol } from "../../Data/DefaultValues";
 import { HiBellAlert } from "react-icons/hi2";
 import { NotificationsContext } from "../../Contexts/NotificationContext";
+import { LayoutActorBreadcrump } from "./ActorBreadcrump";
 
 
 const navigation:INavigation[] = [
@@ -73,6 +74,10 @@ export const LayoutActor = () => {
         <AiOutlineMore />
       </RoundedActorButton></Link>
     </>}</LayoutActorHeader>
+    <LayoutActorHeader mobile={mobile} secondaryHeader={true}>
+    {/* Contenido del encabezado inferior */}
+    <LayoutActorBreadcrump color="gray"/>
+    </LayoutActorHeader>
 
     <LayoutContainer>
       <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
@@ -125,7 +130,7 @@ export const LayoutActor = () => {
         </div>
       </LayoutActorSidebar>
       <LayoutBody mobile={mobile}>
-        <LayoutBreadcrump color="secondary"/>
+        {/* <LayoutBreadcrump color="secondary"/> */}
         <Outlet></Outlet>
         <LayoutFooter className="FlexSwitchTablet">
           <LogoER width="150px" color='var(--gray_tint)' />
