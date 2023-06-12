@@ -338,7 +338,7 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
     transition: background .1s ease-in;
 
     &:hover{
-      background:#579e3d; //cambia color de fondo de los items cuando paso el mouse
+      background:#2e5f46; //cambia color de fondo de los items cuando paso el mouse
       border: 0px solid black;
     }
 
