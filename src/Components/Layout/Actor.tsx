@@ -19,17 +19,26 @@ import { DefaultUserRol } from "../../Data/DefaultValues";
 import { HiBellAlert } from "react-icons/hi2";
 import { NotificationsContext } from "../../Contexts/NotificationContext";
 import { LayoutActorBreadcrump } from "./ActorBreadcrump";
+import { FaClipboardList } from "react-icons/fa";
 
 
-const navigation:INavigation[] = [
-  { name: 'Inicio', icon: AiOutlineHome, href: Pages.DA },
-  /*{ name: 'Gestor de Trámites', icon: FaClipboardList, href: Pages.DA_PROCEDURES, children:[
-    { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
-    { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
-  ] },*/
-  { name: 'Gestor de Notificaciones', icon: AiFillEdit, href: Pages.DA_NOTIFICATIONS, children:[
-    { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW },
-  ] }
+const navigation:INavigation[] = 
+[
+  {
+    name: 'Validación presencial', icon: AiOutlineHome
+  },
+  { name: 'Gestor de Notificaciones', icon: AiFillEdit, children:
+    [
+      { name: 'Lista de Notificaciones', href: Pages.DA_NOTIFICATIONS },
+      { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW },
+    ] 
+  },
+  { name: 'Gestor de Trámites', icon: FaClipboardList, children:
+    [
+      { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
+      { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
+    ] 
+  }
 ]
 
 export const LayoutActor = () => { 
@@ -61,82 +70,112 @@ export const LayoutActor = () => {
   const switchmenu = () => setOpen(!isSmallResolution || !open);
   const closemenu = () => setOpen(false);
 
-  return (userActor?<>
-    <LayoutActorHeader mobile={mobile}>{mobile?<>
-      <div>{open?<BiChevronsLeft onClick={switchmenu} color="var(--secondary)"/>:<BiMenu onClick={switchmenu} color="var(--secondary)"/>}</div>
-      <Link to={Pages.DA} onClick={closemenu} className="flex-1 items-center"><LogoCiudadanoDigital width="250px" mobile={true} color="var(--secondary)" /></Link>
-      <Link to={Pages.DC_CONFIGURATIONS} onClick={closemenu}><BiUserCircle color="var(--secondary)"/></Link>
-    </>:<>
-      <LayoutActorHeaderSpacer/>
-      <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
-      <Link to={Pages.DC_CONFIGURATIONS}><RoundedActorButton>
-        <span>{userData.name} {userData.last_name.toUpperCase()}</span>
-        <AiOutlineMore />
-      </RoundedActorButton></Link>
-    </>}</LayoutActorHeader>
-    <LayoutActorHeader mobile={mobile} secondaryHeader={true}>
-    {/* Contenido del encabezado inferior */}
-    <LayoutActorBreadcrump color="gray"/>
-    </LayoutActorHeader>
-
-    <LayoutContainer>
-      <LayoutOverlay visible={open && mobile} onClick={switchmenu}/>
-      <LayoutActorSidebar collapsable={mobile} open={open}>
-        <div className="Content">
-          {mobile?<></>:<>
-            <LogoActorContainer><LogoER width="135px" color='white'/></LogoActorContainer>
-          </>}
-          <LayoutActorSidebarMenu>{navigation.map((item) => (
-            <div key={item.name} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''} aria-label={item.href + " "+window.location.pathname}>
-              <span><item.icon/></span>
-              <ul>
-                <li className='title'>
-                  {
-                    item.href?<NavLink
-                      onClick={switchmenu}
-                      to={item.href}
-                      children={item.name}
+  return (
+    <LayoutContainer className='FlexSwitchMobile'>
+      <LayoutActorSidebar>
+      <div className="Content">
+           <LayoutActorSidebarMenu>
+           <div>  
+               <ul>
+                 <li className='title'>
+                 <span><AiOutlineHome/></span>
+                     <NavLink
+                       onClick={switchmenu}
+                       to={Pages.DA}
+                       children='Inicio'/>
+                 </li>
+               </ul>
+             </div>
+             <h2>
+              CIUDADANO DIGITAL
+             </h2>
+            {navigation.map((item) => (
+             <div key={item.name} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''} aria-label={item.href + " "+window.location.pathname}>
+               <ul>
+                 <li className='title'>
+                 <span><item.icon/></span>
+                   {
+                     item.href?<NavLink
+                       onClick={switchmenu}
+                       to={item.href}
+                       children={item.name}
                     />:<p>{item.name}</p>
-                  }
-                </li>
-                {
-                item.children?item.children.map(child=>
-                  <li className='children'>
-                  <NavLink
-                  onClick={switchmenu}
-                  to={child.href}
-                  className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}
-                  >
-                    {child.name}
-                  </NavLink>
-                  </li>):<></>
-                }
-              </ul>
-            </div>
-          ))}</LayoutActorSidebarMenu>
-          {/* <Card color="secondary">
-            <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
-            <DivSubtitle color="maincolor" className="mt-1">{userActor.type}<b className="ml-2">{userActor.message}</b></DivSubtitle>
-            <Link to={Pages.DC_CONFIGURATIONS} className="f-width"><Button color="maincolor">
-              <IoIosSettings/>Mi perfil<LayoutSpacer/>
-            </Button></Link>
-          </Card> */}
-          {/* <Link to={Pages.DC}><Button className="mt-4">
-            <AiOutlineArrowLeft/><LayoutSpacer/>Volver al Panel Ciudadano
-          </Button></Link> */}
+                   }
+                 </li>
+                 {
+                 item.children?item.children.map(child=>
+                   <li className='children'>
+                   <span><item.icon/></span>
+                   <NavLink
+                   onClick={switchmenu}
+                   to={child.href}
+                   className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}
+                   >
+                   {child.name}
+                   </NavLink>
+                   </li>):<></>
+                 }
+               </ul>
+             </div>
+           ))}</LayoutActorSidebarMenu>
           <Button color="gray" onClick={Logout} className="mt-4">
-            Cerrar Sesión
-          </Button>
-        </div>
+             Cerrar Sesión
+           </Button>
+         </div>
       </LayoutActorSidebar>
-      <LayoutBody mobile={mobile}>
-        {/* <LayoutBreadcrump color="secondary"/> */}
-        <Outlet></Outlet>
-        <LayoutFooter className="FlexSwitchTablet">
-          <LogoER width="150px" color='var(--gray_tint)' />
-          <div>Secretaría de Modernización</div> 
-        </LayoutFooter>
-      </LayoutBody>
+      <MainContainer>
+           <LayoutActorHeader mobile={mobile}>
+       <LayoutActorHeaderSpacer/>
+       <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
+       <Link to={Pages.DC_CONFIGURATIONS}><RoundedActorButton>
+         <span>{userData.name} {userData.last_name.toUpperCase()}</span>
+         {/* <AiOutlineMore /> */}
+        
+       </RoundedActorButton></Link>
+       {/* <DropdownItem/> */}
+     </LayoutActorHeader>
+     <LayoutActorHeader mobile={mobile} secondaryHeader={true}>
+     {/* Contenido del encabezado inferior */}
+     <LayoutActorBreadcrump color="gray"/>
+     </LayoutActorHeader>
+        <LayoutBody mobile={mobile}>
+         {/* <LayoutBreadcrump color="secondary"/> */}
+         <Outlet></Outlet>
+         <LayoutFooter className="FlexSwitchTablet">
+           <LogoER width="150px" color='var(--gray_tint)' />
+           <div>Secretaría de Modernización</div> 
+         </LayoutFooter>
+       </LayoutBody>
+      </MainContainer>
     </LayoutContainer>
-  </>:<></>);
+
+
+  )
+ };
+
+const DropdownItem = (props: any) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleLogout = () => {
+    // Lógica para cerrar sesión
+  };
+
+  return(
+      <div className="dropdownItem">
+          {/* <AiOutlineMore /> */}
+          <button className="dropdown-toggle" onClick={handleToggle}>
+          <AiOutlineMore />
+          </button>
+      {isOpen && (
+        <ul className="dropdown-menu">
+          <li>
+            <button onClick={handleLogout}>Cerrar sesión</button>
+          </li>
+        </ul>
+      )}
+      </div>
+  );
 };
