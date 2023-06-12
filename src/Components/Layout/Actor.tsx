@@ -11,7 +11,7 @@ import { LogoER } from "../Images/LogoEntreRios";
 import useMediaQuery from "../../Utils/Hooks";
 import { RiLayout4Fill } from "react-icons/ri";
 import { IoIosSettings } from "react-icons/io";
-import { AiFillEdit, AiOutlineArrowLeft, AiOutlineBell, AiOutlineHome, AiOutlineMore } from "react-icons/ai";
+import { AiFillEdit, AiOutlineArrowLeft, AiOutlineBell, AiOutlineHome, AiOutlineMenu, AiOutlineMore } from "react-icons/ai";
 import { Pages } from "../../Routes/Pages";
 import { CitizenNotification, INavigation } from "../../Interfaces/Data";
 import { LayoutBreadcrump } from "./Breadcrump";
@@ -44,11 +44,11 @@ const navigation:INavigation[] =
 
 export const LayoutActor = () => { 
   
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   
   const navigate = useNavigate();
 
   const isSmallResolution = useMediaQuery('(max-width: 1024px)');
-  const [ mobile, setMobile ] = useState<boolean>(isSmallResolution);
   const [ open, setOpen ] = useState<boolean>(isSmallResolution);
   const { userData, userRol, Logout } = useContext(AuthContext);
 
@@ -57,10 +57,6 @@ export const LayoutActor = () => {
   const { userNotifications, actorNotifications } = useContext(NotificationsContext);
   const newNotifications = userNotifications.filter((N:CitizenNotification)=>N.NEW);
   
-  useEffect(() => {
-    setMobile(isSmallResolution)
-    setOpen(!isSmallResolution)
-  }, [isSmallResolution])
 
   useEffect(()=>{
     if(userRol != DefaultUserRol && !userActor){
@@ -68,12 +64,10 @@ export const LayoutActor = () => {
     }
   },[userRol])
   
-  const switchmenu = () => setOpen(!isSmallResolution || !open);
-  const closemenu = () => setOpen(false);
 
   return (
     <LayoutContainer className='FlexSwitchMobile'>
-      <LayoutActorSidebar>
+      <LayoutActorSidebar sidebarVisible={sidebarVisible}>
       
       <div className="Content">
         <div className="LogoContainer">
@@ -85,7 +79,6 @@ export const LayoutActor = () => {
                  <li className='title'>
                  <span><AiOutlineHome/></span>
                      <NavLink
-                       onClick={switchmenu}
                        to={Pages.DA}
                        children='Inicio'/>
                  </li>
@@ -102,7 +95,7 @@ export const LayoutActor = () => {
                  <span><item.icon/></span>
                    {
                      item.href?<NavLink
-                       onClick={switchmenu}
+                       
                        to={item.href}
                        children={item.name}
                     />:<p>{item.name}</p>
@@ -113,7 +106,7 @@ export const LayoutActor = () => {
                    <li className='children'>
                    <span><item.icon/></span>
                    <NavLink
-                   onClick={switchmenu}
+               
                    to={child.href}
                    className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}
                    >
@@ -128,16 +121,19 @@ export const LayoutActor = () => {
          </div>
       </LayoutActorSidebar>
       <MainContainer>
-           <LayoutActorHeader mobile={mobile}>
+    <LayoutActorHeader>
+    <button onClick={() => setSidebarVisible(!sidebarVisible)}>
+    {sidebarVisible ? <AiOutlineMenu size={25} color="gray"/> : <AiOutlineMenu size={25} color="gray"/>}
+  </button>
        <LayoutActorHeaderSpacer/>
        <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
        <DropDownEx/>
      </LayoutActorHeader>
-     <LayoutActorHeader mobile={mobile} secondaryHeader={true}>
+     <LayoutActorHeader secondaryHeader={true}>
      {/* Contenido del encabezado inferior */}
      <LayoutActorBreadcrump color="gray"/>
      </LayoutActorHeader>
-        <LayoutBody mobile={mobile}>
+        <LayoutBody>
          {/* <LayoutBreadcrump color="secondary"/> */}
          <Outlet></Outlet>
          <LayoutFooter className="FlexSwitchTablet">
@@ -151,38 +147,3 @@ export const LayoutActor = () => {
 
   )
  };
-
-// const DropdownItem = (props: any) => {
-//   const [isOpen, setIsOpen] = useState(false);
-//   const handleToggle = () => {
-//     setIsOpen(!isOpen);
-//   };
-
-//   const handleLogout = () => {
-//     // Lógica para cerrar sesión
-//   };
-
-//   return(
-//       <><button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600" type="button" onClick={handleToggle}>
-//       {/* <svg className="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"></path></svg> */}
-//       <AiOutlineMore />
-//       </button>
-//     <div id="dropdownDots" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-//         {/* <AiOutlineMore /> */}
-//         {/* <button className="dropdown-toggle" onClick={handleToggle}>
-//     <AiOutlineMore />
-//     </button> */}
-//         {isOpen && (
-//           <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-//             <li>
-//               <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onClick={handleLogout}>Cerrar Sesión</a>
-//               {/* <button onClick={handleLogout}>Cerrar sesión</button> */}
-//             </li>
-//             <li>
-//               <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-//             </li>
-//           </ul>
-//         )}
-//       </div></>
-//   );
-// };
