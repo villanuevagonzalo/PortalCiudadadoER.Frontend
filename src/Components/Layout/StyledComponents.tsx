@@ -182,7 +182,7 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
   `}
 `
 
-export const LayoutActorSidebar = styled.div`
+export const LayoutActorSidebar = styled.div<{sidebarVisible?:boolean}>`
   position: relative;
   align-items: center;
   // align-self: top;
@@ -193,6 +193,7 @@ export const LayoutActorSidebar = styled.div`
   overflow:hidden;
   margin-top:0;
   min-width: 256px;
+  display: ${({ sidebarVisible }) => sidebarVisible ? 'block' : 'none'};
 
   & .Content{
     position: relative;
