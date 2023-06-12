@@ -20,9 +20,9 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
   }
 
   ${props => props.mobile?`
-  
+
   border-bottom: 1px solid var(--disabled);
-  
+
   `:`
     & .button{
       margin-top:2px;
@@ -34,20 +34,20 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
 
       & svg{ color:var(--maincolor_text); font-size:16px; }
 
-      &:hover { 
+      &:hover {
 
         & svg {
           color:var(--maincolor_texttint);
-        }  
+        }
         & span {
           background-color: var(--secondary_tint);
-        }        
+        }
        }
 
       & span {
-        position: absolute; 
-        bottom: -4px; 
-        right: -4px; 
+        position: absolute;
+        bottom: -4px;
+        right: -4px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -61,7 +61,7 @@ export const LayoutHeader = styled.div<{ mobile?:boolean }>`
         font-weight: bold;
       }
     }
-  
+
   `};
 `;
 
@@ -101,20 +101,20 @@ export const LayoutActorHeader = styled.div<{ mobile?:boolean, secondaryHeader?:
 
     & svg{ color:var(--maincolor_text); font-size:16px; }
 
-    &:hover { 
+    &:hover {
 
       & svg {
         color:var(--maincolor_texttint);
-      }  
+      }
       & span {
         background-color: var(--secondary_tint);
-      }        
+      }
       }
 
     & span {
-      position: absolute; 
-      bottom: -4px; 
-      right: -4px; 
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -182,53 +182,38 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
   `}
 `
 
-export const LayoutActorSidebar = styled.div<{ collapsable?: boolean, open?: boolean, mobile?:boolean }>`
+export const LayoutActorSidebar = styled.div`
   position: relative;
   align-items: center;
-  align-self: top;
+  // align-self: top;
   background: #799f4f;
   box-shadow: rgba(0, 0, 0, 0.05) 3px 0px 15px;
   z-index:100;
   transition: all .1s ease-in;
   overflow:hidden;
-  min-width:360px;
-
-  &::before {
-    content: "";
-    display: block;
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 64px; 
-    background: #617f43; 
-  }
+  margin-top:0;
+  min-width: 256px;
 
   & .Content{
-    position: absolute;
-    top: 8px;
+    position: relative;
+    top: 0px;
     max-width:360px;
     margin:0 auto;
     // padding:30px;
+
+    .LogoContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #617f43;
+      height: 56px;
+    }
   }
 
   @media (min-width: 720px) {
     max-width:400px;
   }
-
-  ${props => props.collapsable?`
-    margin-right: ${props.open?'-360px':'0'}!important;
-    width: ${props.open?'360px':'0px'}!important;
-    min-width: ${props.open?'360px':'0px'};
-
-    & .Content{
-      padding:20px;
-    }
-  `:`
-    margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
-    min-width: 256px;
-  `}
-`
+`;
 
 export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
   display: flex;
@@ -320,7 +305,7 @@ export const LayoutSidebarMenu = styled.div<{ match?: boolean }>`
       }
     }
 
-    
+
   }
 `;
 
@@ -328,14 +313,24 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
   display: flex;
   flex-direction: column;
   width:100%;
-  margin:1rem 0 0rem 0;
-  gap:0.25rem;
+  justify-content: center;
+  align-items: left;
+  // margin:1rem 0 0rem 0;
+  gap:0rem;
+
+  & h2{
+    margin-top: 1rem;
+    padding: 0.75rem 1rem 0rem;
+    color: white;
+    font-weight: 700;
+    font-size: 70%;
+  }
 
   & div{
     // box-sizing: border-box;
     width: 100%;
     display:flex;
-    padding:0.75rem;
+    padding:0.55rem 0.75rem 0.55rem 0.75rem;
     border-radius:0rem;
     align-items: top;
     align-self: top;
@@ -378,7 +373,9 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
       }
 
       &.title{
-        font-weight:600;
+        font-weight:400;
+        font-size: 95%;
+
 
         &.haschildren{
           margin-bottom:0.25rem;
@@ -417,7 +414,7 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
       }
     }
 
-    
+
   }
 `;
 
@@ -435,7 +432,7 @@ export const LayoutFooter = styled.div<{ }>`
 export const LayoutBreadCrumpWrapper = styled.ul<{ color?:string }>`
   align-items: center;
   align-items: left;
-  background: var(--maincolor);  
+  background: var(--maincolor);
   border-radius:0.5rem;
   border: 1px solid var(--disabled);
   color: var(--maincolor_text);
@@ -465,7 +462,7 @@ export const LayoutBreadCrumpWrapper = styled.ul<{ color?:string }>`
 
     & a{
       &:hover{
-        background:var(--maincolor_tint); 
+        background:var(--maincolor_tint);
       }
     }
   }
@@ -474,14 +471,14 @@ export const LayoutBreadCrumpWrapper = styled.ul<{ color?:string }>`
 export const LayoutActorBreadCrumpWrapper = styled.ul<{ color?:string }>`
   align-items: center;
   align-items: left;
-  background: transparent;  
+  background: transparent;
   border-radius:0.5rem;
   // border: 1px solid var(--disabled);
   color: var(--maincolor_text);
   display: flex;
   font-size:1rem;
   width:100%;
-  padding:0.5rem 15rem;
+  // padding:0.5rem 15rem;
   gap:0.25rem;
 
   & li{
@@ -504,7 +501,7 @@ export const LayoutActorBreadCrumpWrapper = styled.ul<{ color?:string }>`
 
     & a{
       &:hover{
-        background:var(--maincolor_tint); 
+        background:var(--maincolor_tint);
       }
     }
   }
@@ -539,7 +536,7 @@ export const LayoutOverlay = styled.div<{ visible?: boolean }>`
   position: absolute;
   transition: all .1s ease-in;
   top:0;
-  left:0;  
+  left:0;
   width:100%;
   height:100%;
   cursor:pointer;
@@ -588,7 +585,7 @@ export const LayoutRow = styled.div<{ }>`
 `;
 
 export const LayoutSection = styled.div<{ }>`
-  background: var(--maincolor);  
+  background: var(--maincolor);
   border-radius:0.5rem;
   border: 1px solid var(--disabled);
   width:100%;
@@ -599,7 +596,7 @@ export const LayoutSection = styled.div<{ }>`
   align-self: top;
   display: flex;
   gap:0.75rem;
-  
+
   & h1{
     display: flex;
     width:100%;
@@ -609,7 +606,7 @@ export const LayoutSection = styled.div<{ }>`
     font-weight:600;
     margin-bottom:0.5rem;
   }
-  
+
   & h2,h3{
     display: flex;
     width:100%;
@@ -628,7 +625,7 @@ export const LayoutSection = styled.div<{ }>`
     color:var(--secondary_tint);
   }
 
-  
+
   & h1 svg{
     width: 2rem;
     height: 2rem;
@@ -655,7 +652,7 @@ export const LayoutGrid = styled.div<{ }>`
 export const LayoutGridItem = styled.div<{ }>`
   display:flex;
   flex-direction:row;
-  background: var(--maincolor);  
+  background: var(--maincolor);
   border-radius:0.5rem;
   padding:2rem;
   border: 1px solid var(--disabled);
@@ -673,7 +670,7 @@ export const LayoutGridItem = styled.div<{ }>`
     font-weight:600;
     margin-bottom:0.5rem;
   }
-  
+
   & h2{
     display: flex;
     width:100%;
@@ -686,7 +683,7 @@ export const LayoutGridItem = styled.div<{ }>`
 export const LayoutListItem = styled.div<{ color?:string, disabled?:boolean }>`
   display:flex;
   width:100%;
-  background: var(--maincolor);  
+  background: var(--maincolor);
   border-radius:0.5rem;
   padding:1.5rem;
   border: 1px solid var(--disabled);
@@ -710,12 +707,12 @@ export const LayoutListItem = styled.div<{ color?:string, disabled?:boolean }>`
     font-weight:600;
     margin-bottom:0.25rem!important;
 
-   
-      
+
+
     color: var(--${props => (props.color ? props.color : 'primary')});
-   
+
   }
-  
+
   & h2{
     color: var(--${props => (props.color ? props.color : 'primary')});
     display: flex;
