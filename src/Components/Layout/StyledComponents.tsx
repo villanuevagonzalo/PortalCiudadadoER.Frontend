@@ -70,20 +70,16 @@ export const LayoutActorHeader = styled.div<{ mobile?:boolean, secondaryHeader?:
   display: flex;
   flex-direction: row;
   height: 56px;
-  padding:${props => props.mobile?'1rem':'0.5rem 2rem'};
+  padding:0.5rem 2rem;
   width:100%;
   z-index:100;
-  gap:${props => props.mobile?'0.5rem':'1rem'};
+  gap:1rem;
 
-  position: ${props => props.secondaryHeader ? 'absolute' : 'static'};
-  top: ${props => props.secondaryHeader ? '56px' : 'auto'};
-  width: 100%;
   ${props => props.secondaryHeader && `
     height: 50px;
-  `}
-  ${props => props.secondaryHeader && `
     margin-left: 0;
   `}
+
   border-top: ${props => props.secondaryHeader ? '1px solid var(--disabled)' : 'none'};
   border-bottom: ${props => props.secondaryHeader ? '1px solid var(--disabled)' : 'none'};
 
@@ -93,50 +89,44 @@ export const LayoutActorHeader = styled.div<{ mobile?:boolean, secondaryHeader?:
     width:28px;
     cursor:pointer;
   }
-  ${props => props.mobile?`
-  
-  border-bottom: 1px solid var(--disabled);
-  
-  `:`
-    & .button{
-      margin-top:2px;
-      height:36px;
-      padding:4px;
-      width:36px;
-      border-radius:100%;
-      position:relative;
 
-      & svg{ color:var(--maincolor_text); font-size:16px; }
+  & .button{
+    margin-top:2px;
+    height:36px;
+    padding:4px;
+    width:36px;
+    border-radius:100%;
+    position:relative;
 
-      &:hover { 
+    & svg{ color:var(--maincolor_text); font-size:16px; }
 
-        & svg {
-          color:var(--maincolor_texttint);
-        }  
-        & span {
-          background-color: var(--secondary_tint);
-        }        
-       }
+    &:hover { 
 
+      & svg {
+        color:var(--maincolor_texttint);
+      }  
       & span {
-        position: absolute; 
-        bottom: -4px; 
-        right: -4px; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 22px;
-        height: 22px;
-        background-color: var(--secondary);
-        border:2px solid var(--maincolor_tint);
-        border-radius: 50%;
-        color: white;
-        font-size: 12px;
-        font-weight: bold;
+        background-color: var(--secondary_tint);
+      }        
       }
+
+    & span {
+      position: absolute; 
+      bottom: -4px; 
+      right: -4px; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background-color: var(--secondary);
+      border:2px solid var(--maincolor_tint);
+      border-radius: 50%;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
     }
-  
-  `};
+  }
 `;
 
 export const LayoutHeaderSpacer = styled.div<{  }>`
