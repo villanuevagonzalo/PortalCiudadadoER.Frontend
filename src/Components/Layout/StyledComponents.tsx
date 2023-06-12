@@ -337,6 +337,11 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
     color:white;
     transition: background .1s ease-in;
 
+    &:hover{
+      background:#579e3d; //cambia color de fondo de los items cuando paso el mouse
+      border: 0px solid black;
+    }
+
     & span{
       background:transparent;
       transition: background .1s ease-in;
@@ -368,12 +373,7 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
       // border-radius:0.25rem;
       padding: 0.5rem 0.75rem;
 
-      &:hover{
-        background:#579e3d; //cambia color de fondo de los items cuando paso el mouse
-        
-        padding: 0.75rem;
-        border: 0px solid black;
-      }
+      
 
       &.title{
         font-weight:350;
