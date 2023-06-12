@@ -369,12 +369,15 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
       padding: 0.5rem 0.75rem;
 
       &:hover{
-        background:black; //cambia color de fondo de los items cuando paso el mouse
+        background:#579e3d; //cambia color de fondo de los items cuando paso el mouse
+        
+        padding: 0.75rem;
+        border: 0px solid black;
       }
 
       &.title{
-        font-weight:400;
-        font-size: 95%;
+        font-weight:350;
+        font-size: 94%;
 
 
         &.haschildren{
@@ -403,7 +406,8 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
     &:has(a.active){
       width: 100%;
       color:white;
-      background:#74a55c;
+      //background:#74a55c; //cambiar tipo de verde de los items cuando estan activos
+      background-color: rgba(255, 255, 255, 0.05);
       // box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 5px;
       & span{
         background:transparent;

@@ -26,7 +26,7 @@ import DropDownEx from "./dropdown";
 const navigation:INavigation[] = 
 [
   {
-    name: 'Validación presencial', icon: AiOutlineHome
+    name: 'Validación presencial', icon: AiFillEdit
   },
   { name: 'Gestor de Notificaciones', icon: AiFillEdit, children:
     [
