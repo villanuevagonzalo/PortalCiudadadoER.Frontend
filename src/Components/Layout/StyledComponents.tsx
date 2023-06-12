@@ -82,6 +82,7 @@ export const LayoutActorHeader = styled.div<{ mobile?:boolean, secondaryHeader?:
 
   border-top: ${props => props.secondaryHeader ? '1px solid var(--disabled)' : 'none'};
   border-bottom: ${props => props.secondaryHeader ? '1px solid var(--disabled)' : 'none'};
+  z-index: ${props => props.secondaryHeader ? '10' : 'none'};
 
   & svg[stroke="currentColor"]{
     color:var(--primary_tint);
