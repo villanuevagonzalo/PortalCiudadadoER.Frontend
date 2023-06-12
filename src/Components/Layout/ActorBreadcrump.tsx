@@ -17,8 +17,8 @@ export const LayoutActorBreadcrump = (props: any) => {
     (<LayoutActorBreadCrumpWrapper color={props.color}>
       {Path.map((child, index)=><li key={child.path}>
         {window.location.pathname===child.path
-          ?<p>{index===0?<AiOutlineHome/>:''}{child.label}</p>
-          :<><NavLink to={child.path}>{index===0?<AiOutlineHome/>:''}{child.label}</NavLink><MdKeyboardArrowRight/></>
+          ?<p>{index===0?<AiOutlineHome color="gray"/>:''}{child.label}</p>
+          :<><NavLink to={child.path}>{index===0?<AiOutlineHome color="gray"/>:''}{child.label}</NavLink><MdKeyboardArrowRight/></>
         }
       </li>)}
       </LayoutActorBreadCrumpWrapper>):<></>}</>

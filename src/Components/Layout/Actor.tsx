@@ -74,7 +74,11 @@ export const LayoutActor = () => {
   return (
     <LayoutContainer className='FlexSwitchMobile'>
       <LayoutActorSidebar>
+      
       <div className="Content">
+        <div className="LogoContainer">
+          <LogoER width="135px" color="white" />
+        </div>
            <LayoutActorSidebarMenu>
            <div>  
                <ul>
@@ -87,7 +91,8 @@ export const LayoutActor = () => {
                  </li>
                </ul>
              </div>
-             <h2>
+             {/* <h2 className=" text-white py-5 px-4 text-xs font-bold"> */}
+              <h2>
               CIUDADANO DIGITAL
              </h2>
             {navigation.map((item) => (
@@ -118,21 +123,15 @@ export const LayoutActor = () => {
                  }
                </ul>
              </div>
-           ))}</LayoutActorSidebarMenu>
-          <Button color="gray" onClick={Logout} className="mt-4">
-             Cerrar Sesión
-           </Button>
+           ))}
+           </LayoutActorSidebarMenu>
          </div>
       </LayoutActorSidebar>
       <MainContainer>
            <LayoutActorHeader mobile={mobile}>
        <LayoutActorHeaderSpacer/>
        <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
-       
-       
-       {/* <DropdownItem/> */}
        <DropDownEx/>
-       
      </LayoutActorHeader>
      <LayoutActorHeader mobile={mobile} secondaryHeader={true}>
      {/* Contenido del encabezado inferior */}
