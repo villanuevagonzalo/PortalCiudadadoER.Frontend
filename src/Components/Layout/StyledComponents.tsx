@@ -192,8 +192,9 @@ export const LayoutActorSidebar = styled.div<{sidebarVisible?:boolean}>`
   transition: all .1s ease-in;
   overflow:hidden;
   margin-top:0;
-  min-width: 256px;
-  display: ${({ sidebarVisible }) => sidebarVisible ? 'block' : 'none'};
+  // min-width: 256px;
+  width: ${({ sidebarVisible }) => sidebarVisible ? '256px' : '0'};
+  transform: ${({ sidebarVisible }) => sidebarVisible ? 'translateX(0%)' : 'translateX(-100%)'};
 
   & .Content{
     position: relative;
