@@ -58,7 +58,7 @@ export default function DropDownEx() {
             <div className="py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <a
+                  <button
                     onClick={Logout}
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -67,7 +67,7 @@ export default function DropDownEx() {
                   >
                     <BiLogOut color='gray ' className="mr-2"/>Cerrar Sesion
                    
-                  </a>
+                  </button>
                 )}
               </Menu.Item>
               </div>
