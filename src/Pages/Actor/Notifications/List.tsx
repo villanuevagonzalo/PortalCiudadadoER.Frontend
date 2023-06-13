@@ -54,7 +54,6 @@ export const DA_Notifications = () =>{
       
       //actorNotifications[3].AGE_FROM = 5
       //actorNotifications[3].DEPARTMENT = 258
-    console.log(actorNotifications)
 
     const newdata:ActorTableNotification[] = actorNotifications.map((N:ActorNotification)=>{
       return ({
@@ -66,11 +65,10 @@ export const DA_Notifications = () =>{
         :(N.AGE_TO==120 ? N.AGE_FROM + " <" : (N.AGE_FROM + " a " + N.AGE_TO))),
       Recipients: Recipients[N.RECIPIENTS],
       Attachments: ""+N.ATTACHMENTS.length||"-",
-      Active: moment().isBetween(moment(N.DATE_FROM), moment(N.DATE_TO))?"ACTIVA":"-",
+      Active: N.DELETED_AT!=""?"BORRADA":moment().isBetween(moment(N.DATE_FROM), moment(N.DATE_TO))?"ACTIVA":"-",
       Disabled: N.DELETED_AT!="",
       ALL: N
     })})
-    console.log(newdata)
     setData(newdata)
    }
 
@@ -84,10 +82,7 @@ export const DA_Notifications = () =>{
       show: false,
       cell: ({ cell }) => {
         const val = cell.getValue()+"";
-        console.log(cell.getValue());
-        return <TableLabel>
-          {val}
-        </TableLabel>
+        return <TableLabel>{val}</TableLabel>
       },
       size: 100
     },

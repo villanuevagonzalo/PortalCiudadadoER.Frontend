@@ -28,17 +28,17 @@ const REACTENV = process.env
 const navigation:INavigation[] = 
 [
   {
-    name: 'Validación presencial', href: Pages.DA_PRESENTIAL, icon: TbPencil
+    name: 'Validación presencial', href: Pages.DA_PRESENTIAL, icon: TbPencil, path: '/ciudadano_digital/autenticar'
   },
-  { name: 'Notificaciones Generales', href: Pages.DA_NOTIFICATIONS, icon: TbPencil, children:
+  { name: 'Notificaciones Generales', href: Pages.DA_NOTIFICATIONS, icon: TbPencil, path: '/ciudadano_digital/notificaciones_generales', children:
     [
-      { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW },
+      { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW, path: '/ciudadano_digital/notificaciones_generales' },
     ] 
   },
-  { name: 'Trámites', href: Pages.DA_PROCEDURES, icon: TbPencil, children:
+  { name: 'Trámites', href: Pages.DA_PROCEDURES, icon: TbPencil, path: "/ciudadano_digital/tramites", children:
     [
-      { name: 'Generador de Formularios', href: Pages.DA_PROCEDURES_FORMS },
-      { name: 'Configurador de Tramites', href: Pages.DA_PROCEDURES_LIST },
+      { name: 'Generador de Formularios', href: Pages.DA_PROCEDURES_FORMS, path: "/ciudadano_digital/tramites/formularios" },
+      { name: 'Configurador de Tramites', href: Pages.DA_PROCEDURES_LIST, path: "/ciudadano_digital/tramites/configuracion" },
     ] 
   }
 ]
@@ -57,14 +57,19 @@ export const LayoutActor = () => {
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
   const { userNotifications, actorNotifications } = useContext(NotificationsContext);
   const newNotifications = userNotifications.filter((N:CitizenNotification)=>N.NEW);
+
+  let paths = actorActions.map(e=>e[1]);
+  
+  //paths = ['/ciudadano_digital', '/ciudadano_digital/autenticar', '/ciudadano_digital/notificaciones_generales',, '/ciudadano_digital/tramites','/ciudadano_digital/tramites/configuracion',  '/ciudadano_digital/tramites/formularios']
+  //paths = [  '/ciudadano_digital/tramites','/ciudadano_digital/tramites/configuracion',]
   
 
   useEffect(()=>{
-    if((userRol != DefaultUserRol && !userActor) || actorActions.length==0){
+    if((userRol != DefaultUserRol && !userActor)){
       const location = REACTENV.REACT_APP_PROJECT_ADMIN+"/" ;
       window.location.href = location;
     }
-  },[userRol, actorActions])
+  },[userRol])
   
 
   return (
@@ -79,8 +84,7 @@ export const LayoutActor = () => {
               <ul>
                 <li className='title'>
                   <span><AiOutlineHome/></span>
-                  <NavLink to={Pages.DA} children='Bienvenido' />
-                  {window.location.pathname==Pages.DA}
+                  <a href="#" onClick={()=>{window.location.href= REACTENV.REACT_APP_PROJECT_ADMIN+"bienvenido" }} children='Bienvenido' />
                 </li>
               </ul>
             </div>
@@ -88,15 +92,19 @@ export const LayoutActor = () => {
               CIUDADANO DIGITAL
             </h2>
             {navigation.map((item) => (
-              <div key={item.name} aria-label={item.href + " "+window.location.pathname} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''}>
+              <div key={item.name} aria-label={item.href + " "+window.location.pathname} 
+              className={(window.location.pathname.startsWith(item.href||"") ? 'active' : '')+" "+(paths.includes(item.path||"")?"":"HIDE")}
+              >
                 <ul>
                   <li className='title'>
                     <span><item.icon/></span>
                     {item.href?<NavLink to={item.href} children={item.name}/>:<p>{item.name}</p>}
                   </li>
                   {item.children?item.children.map(child=>
-                    <li className='children'>
-                      <NavLink to={child.href} className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}>
+                    <li className={'children'+" "+(paths.includes(child.path||"")?"":"HIDE")}>
+                      <NavLink to={child.href}
+                        className={(window.location.pathname.startsWith(child.href||"") ? 'active' : '')}
+                      >
                         {child.name}
                       </NavLink>
                     </li>):<></>

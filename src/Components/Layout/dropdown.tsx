@@ -7,13 +7,15 @@ import { RoundedActorButton } from './StyledComponents'
 import { MdOutlineEdit, MdOutlineMoreVert } from 'react-icons/md'
 import { BiLogOut } from 'react-icons/bi'
 
+const REACTENV = process.env
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function DropDownEx() {
 
-    const { userData, userRol, Logout } = useContext(AuthContext);
+    const { userData, userRol, Logout2 } = useContext(AuthContext);
 
 
   return (
@@ -32,7 +34,7 @@ export default function DropDownEx() {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  href="#"
+                href="#" onClick={()=>{window.location.href= REACTENV.REACT_APP_PROJECT_ADMIN+"perfil" }}
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                     'flex items-center block px-4 py-2 text-sm'
@@ -45,6 +47,9 @@ export default function DropDownEx() {
             <Menu.Item>
               {({ active }) => (
                 <a
+                  onClick={()=>{
+                    window.open('https://apps.entrerios.gov.ar/cambioclave/',"_blank")
+                  }}
                   href="#"
                   className={classNames(
                     active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -59,7 +64,7 @@ export default function DropDownEx() {
               <Menu.Item>
                 {({ active }) => (
                   <button
-                    onClick={Logout}
+                    onClick={Logout2}
                     className={classNames(
                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                       'flex items-center block w-full px-4 py-2 text-left text-sm'

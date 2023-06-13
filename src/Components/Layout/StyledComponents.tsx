@@ -323,6 +323,10 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
     //background: hsla(0,0%,100%,.05);
   }
 
+  & div.HIDE, li.HIDE{
+    display:none
+  }
+
   & li:hover{
     
     background:#2e5f46;

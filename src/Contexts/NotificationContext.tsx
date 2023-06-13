@@ -117,7 +117,7 @@ const ContextValues = () => {
 
 
     const Notifications:ActorNotification[] = JSON.parse(notificationsData).map((notification:Partial<Notification>)=>{
-      console.log(notification)
+      //console.log(notification)
       return { 
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,

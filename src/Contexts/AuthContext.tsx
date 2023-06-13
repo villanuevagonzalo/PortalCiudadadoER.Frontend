@@ -11,6 +11,8 @@ import { DefaultToken, DefaultUserContact, DefaultUserData, DefaultUserRol  } fr
 import { AxiosResponse } from 'axios';
 import { handleResponse, ResponseError } from '../Config/Axios';
 
+const REACTENV = process.env
+
 const ContextValues = () => {
 
   const AxiosAuthAPI = new AuthAPI();
@@ -49,6 +51,7 @@ const ContextValues = () => {
     const CurrentUserData:IUserData = getLSData('UserData');
     const CurrentUserContact:IUserContact = getLSData('UserContact');
     const CurrentUserRol:IUserRol[] = getLSData('UserRol');
+    const CurrentActorActions:any[] = getLSData('ActorActions');
     //console.log('CHECKTOKEN ',CurrentToken)
     if(CurrentToken?.token){
       let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
@@ -58,6 +61,7 @@ const ContextValues = () => {
         setUserData(CurrentUserData);
         setUserContact(CurrentUserContact);
         setUserRol(CurrentUserRol);
+        setActorActions(CurrentActorActions);
       } else{
         Logout();
       }
@@ -81,6 +85,26 @@ const ContextValues = () => {
     delLSData("ActorActions");
   }
 
+  const Logout2 = () => {
+    setIsLogged(false);
+    setIsLoading(false);
+
+    setAuthToken(DefaultToken);
+    setUserData(DefaultUserData);
+    setUserContact(DefaultUserContact);
+    setUserRol(DefaultUserRol);
+    setActorActions([]);
+    
+    delLSData("authToken");
+    delLSData("UserData");
+    delLSData("UserContact");
+    delLSData("UserRol");
+    delLSData("ActorActions");
+
+    const location = REACTENV.REACT_APP_PROJECT_ADMIN+"/" ;
+    window.location.href = location;
+  }
+
   const Signup = async (data:any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserSignup, data, setFormState);
 
   const Redirect = async (data: any, setFormState:Function) => {
@@ -102,7 +126,7 @@ const ContextValues = () => {
       setLSData("UserContact", NewUserContact || DefaultUserContact);
       setLSData("ActorActions", data.data || []);
 
-    } else{ Logout(); }
+    } else{ Logout2(); }
     return response;
   }
 
@@ -190,7 +214,7 @@ const ContextValues = () => {
 
   return {
     isLoading, isLogged, authToken, userData, userContact, userRol, 
-    Signup, Login, Logout, CheckToken, SaveToken, Redirect,
+    Signup, Login, Logout, CheckToken, SaveToken, Redirect, Logout2,
     UserGetData, SaveData, UserNameChange, actorActions,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,

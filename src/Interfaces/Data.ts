@@ -6,9 +6,11 @@ export interface INavigation{
   name: string;
   icon?: any;
   href?: string;
+  path?: string;
   children?: {
     name: string;
     href: string;
+    path?: string;
   }[]
 }
 
