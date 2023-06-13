@@ -4,17 +4,18 @@ import { Link, useNavigate} from 'react-router-dom';
 import { DivOutlined, DivLabel, Spinner, DivSubtitle, DivTitle2, ColoredLabel } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { AiFillHome, AiOutlineArrowLeft, AiOutlineLock } from 'react-icons/ai';
-import { GetParams } from '../../Utils/General';
+import { GetParams, actionData } from '../../Utils/General';
 import { AuthContext } from '../../Contexts/AuthContext';
 import { IFormState } from '../../Interfaces/Data';
 import { DefaultFormState } from '../../Data/DefaultValues';
 import { Pages } from '../../Routes/Pages';
 import { LogoCiudadanoDigital } from '../../Components/Images/LogoCiudadanoDigital';
 import { LayoutSpacer } from '../../Components/Layout/StyledComponents';
+import { LogoER } from '../../Components/Images/LogoEntreRios';
 
 export const Auth_Redirect = () =>{
 
-  const SearchParams = GetParams(["dni","token","redirect_path"]);
+  const SearchParams = GetParams(["dni","token","redirect_path","data"]);
   const navigate = useNavigate();
 
   const { userData, userRol, Redirect, ContextLoaded } = useContext(AuthContext);
@@ -41,7 +42,9 @@ export const Auth_Redirect = () =>{
     if(SearchParams.status){ 
       const response = await Redirect({
         'dni': SearchParams.values.dni,
-        'token':SearchParams.values.token
+        'token':SearchParams.values.token,
+        'data': actionData(SearchParams.values.data)
+        
       }, setFormState);
 
       if(response) continueLogin()
@@ -58,9 +61,9 @@ export const Auth_Redirect = () =>{
 
 
   return(<>
-    <div className="Content mt-4 mb-2">
-      <ColoredLabel color="secondary" className="mb-2">ACTORES</ColoredLabel>
-      <LogoCiudadanoDigital color="var(--secondary)"/>
+    <div className="Content mb-4">
+      
+    <LogoER width="135px"/>
     </div>
     <hr className='mb-4'/>
     {ContextLoaded?
@@ -69,7 +72,7 @@ export const Auth_Redirect = () =>{
         <DivSubtitle className='text-center'>Estamos validando tu identidad.<br/>Por favor aguarde.</DivSubtitle>
       </>:(redirect?
         (FormState.finish?<>
-          TODO OK
+          <DivSubtitle className='text-center'>Validación completada</DivSubtitle>
         </>:<>
           <DivSubtitle className='text-center'>Ha ocurrido el siguiente error:</DivSubtitle>
           <DivOutlined color="error" className='mb-4'>{FormState.error}</DivOutlined>

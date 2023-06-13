@@ -329,8 +329,8 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
   }
 
   & h2{
-    margin: 1rem 0 1rem 0;
-    padding: 0.75rem 1rem 0rem;
+    margin: 1rem 0 0.75rem 0;
+    padding: 0.75rem 1rem 0rem 1rem;
     color: white;
     font-weight: 700;
     font-size: 70%;
@@ -349,7 +349,7 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
     align-items: center;
     display:flex;
     height:48px;
-    font-size:95%;
+    font-size:90%;
     padding:0 1rem;
     gap:0.5rem;
     transition: background .1s ease-in;

@@ -81,6 +81,7 @@ const ContextValues = () => {
 
     const response:AxiosResponse = await handleResponse(AxiosNotificationAPI.Delete, {notification_id}, setFormState);
     if(response.data){
+      setActorNotifications(prev => prev.map(N => N.ID === notification_id ? { ...N, DELETED_AT: "now" } : N));
       //setUserNotifications(prevState => ([...prevState, data]));
     }
     return response;

@@ -23,6 +23,7 @@ import { FaClipboardList } from "react-icons/fa";
 import DropDownEx from "./dropdown";
 import { TbPencil } from "react-icons/tb";
 
+const REACTENV = process.env
 
 const navigation:INavigation[] = 
 [
@@ -50,7 +51,7 @@ export const LayoutActor = () => {
 
   const isSmallResolution = useMediaQuery('(max-width: 1024px)');
   const [ open, setOpen ] = useState<boolean>(isSmallResolution);
-  const { userData, userRol, Logout } = useContext(AuthContext);
+  const { userData, userRol, actorActions, Logout } = useContext(AuthContext);
 
   const userCitizen:any = userRol.find((obj) => obj.type === "Ciudadano")
   const userActor:any = userRol.find((obj) => obj.type === "Actor")
@@ -59,10 +60,11 @@ export const LayoutActor = () => {
   
 
   useEffect(()=>{
-    if(userRol != DefaultUserRol && !userActor){
-      navigate(Pages.DC)
+    if((userRol != DefaultUserRol && !userActor) || actorActions.length==0){
+      const location = REACTENV.REACT_APP_PROJECT_ADMIN+"/" ;
+      window.location.href = location;
     }
-  },[userRol])
+  },[userRol, actorActions])
   
 
   return (

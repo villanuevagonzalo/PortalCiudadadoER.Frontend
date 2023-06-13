@@ -13,8 +13,12 @@ export const DA_PRESENTIAL = () => {
   useEffect(()=>{
 
     const location = REACTENV.REACT_APP_PROJECT_ADMIN+"ciudadano_digital/autenticar" ;
-    navigate(location);
 
+
+    console.log(location)
+    window.location.href = location;
+
+    
   },[])
 
   return(<>
