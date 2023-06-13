@@ -1,6 +1,8 @@
 
 import { AiOutlineDelete, AiOutlineOrderedList } from "react-icons/ai";
 import { GrFormView } from "react-icons/gr";
+import { AiOutlineDelete, AiOutlineOrderedList } from "react-icons/ai";
+import { GrFormView } from "react-icons/gr";
 import { LayoutNote, LayoutSection, LayoutText, LayoutTitle } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
 import { useContext, useState, useEffect, useMemo } from "react";
