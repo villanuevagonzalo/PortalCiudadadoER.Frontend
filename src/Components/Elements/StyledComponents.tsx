@@ -2,6 +2,17 @@ import styled from "styled-components";
 
 //// Common Elements
 
+export const TableLabel = styled.div<{  }>`
+    display:flex;
+    align-items: center;
+    align-self: left;
+    gap:0.25rem;
+    font-size:0.7rem;
+    background-color: #effaff;
+    color: #0090d4;
+    padding:0.25rem 0.5rem;
+    border-radius:0.5rem;
+`
 export const TableFunctions = styled.div<{  }>`
   display:flex;
   flex-direction:row;
@@ -25,6 +36,24 @@ export const TableWrapper = styled.table<{ open?: boolean }>`
       text-align:left;
       padding:0.5rem;
       border-bottom:1px solid grey;
+  }
+
+  & .HIDE{
+    display:none
+  }
+
+  & .DISABLED{
+    background:#eee;
+    cursor:default;
+
+    & *{
+      
+    color:#888;
+    }
+
+    & .DELETE{
+      display:none;
+    }
   }
 
   & tbody tr{

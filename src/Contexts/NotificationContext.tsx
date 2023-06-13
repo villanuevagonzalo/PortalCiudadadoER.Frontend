@@ -5,7 +5,7 @@ import { delLSData, getLSData } from "../Utils/General";
 import { NotificationsAPI } from "../Services/NotificationsAPI";
 import moment from "moment";
 import axios, { AxiosResponse } from "axios";
-import { fileTypes } from "../Interfaces/FileTypes";
+import { fileTypes, getFileType } from "../Interfaces/FileTypes";
 import { AuthContext } from "./AuthContext";
 import { ResponseError, handleResponse } from "../Config/Axios";
 
@@ -52,7 +52,6 @@ const ContextValues = () => {
         NEW: newNotificaionsIDs.includes(notification.ID as number)
        }
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
-    console.log(Notifications)
     setUserNotifications(Notifications);
     setIsLoading(false); 
   }
@@ -81,7 +80,6 @@ const ContextValues = () => {
   const DeleteNotification = async (notification_id:number, setFormState:Function) => {
 
     const response:AxiosResponse = await handleResponse(AxiosNotificationAPI.Delete, {notification_id}, setFormState);
-    console.log(notification_id, response)
     if(response.data){
       //setUserNotifications(prevState => ([...prevState, data]));
     }
@@ -93,7 +91,6 @@ const ContextValues = () => {
     setFormState(true);
     try {
     const response:AxiosResponse = await AxiosNotificationAPI.GetScopeByID({ notification_id });
-    console.log(notification_id, response)
     if(response.data){
       //setUserNotifications(prevState => ([...prevState, data]));
     }
@@ -119,13 +116,14 @@ const ContextValues = () => {
 
 
     const Notifications:ActorNotification[] = JSON.parse(notificationsData).map((notification:Partial<Notification>)=>{
-
+      console.log(notification)
       return { 
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,
         MESSAGE_BODY: notification.MESSAGE_BODY,
         ATTACHMENTS: parseAttachements(notification.MULTIMEDIA_ID as string),
         CREATED_AT: notification.CREATED_AT,
+        DELETED_AT: notification.DELETED_AT,
         DATE_FROM: notification.NOTIFICATION_DATE_FROM,
         DATE_TO: notification.NOTIFICATION_DATE_TO,
         AGE_FROM: notification.AGE_FROM,
@@ -137,8 +135,6 @@ const ContextValues = () => {
        }
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
 
-
-    console.log(JSON.parse(notificationsData),Notifications)
 
     setActorNotifications(Notifications);
     setIsLoading(false);
@@ -154,8 +150,6 @@ const ContextValues = () => {
     setFormState(true);
     const FileIds:number[] = data;
 
-    console.log(FileIds)
-
     try {
       const promises = FileIds.map(async (id) => {
         const response = await AxiosNotificationAPI.GetAttachment({ multimedia_id: id });
@@ -167,11 +161,10 @@ const ContextValues = () => {
             const imageDataURL = reader.result as string;
             const filefile = response2.data.data.attachment_name;
             const filext = filefile.split(".");
-            console.log(imageDataURL);
             const data:FileBlob = {
               name: filefile,
               type: filext[1],
-              data: imageDataURL.replace('text/html', fileTypes[filext[1]].fulltype),
+              data: imageDataURL.replace('text/html', getFileType(filext[1]).fulltype),
             };
             resolve(data);
           };
@@ -196,24 +189,7 @@ const ContextValues = () => {
     }
   }
 
-
-
-
-  /*
-  
-    
-  
   useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('test')
-    }, NotificationsUpdateSecondsInterval);
-  
-    // Limpia el intervalo cuando el componente se desmonta
-    return () => clearInterval(interval);
-  }, []);*/
-
-  useEffect(() => {
-    console.log(isLogged)
     if(isLogged){ UpdateNotifications() }
   }, [isLogged])
 

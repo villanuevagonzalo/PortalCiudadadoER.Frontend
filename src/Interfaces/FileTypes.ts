@@ -1,6 +1,11 @@
-import { BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from "react-icons/bs";
+import { BsFile, BsFiletypeJpg, BsFiletypePdf, BsFiletypePng } from "react-icons/bs";
 
 export const fileTypes:any = {
+  "null":{
+    label: "NULL",
+    fulltype: "image/jpg",
+    icon: BsFile
+  },
   "jpg":{
     label: "IMAGEN",
     fulltype: "image/jpg",
@@ -21,4 +26,8 @@ export const fileTypes:any = {
     fulltype: "application/pdf",
     icon: BsFiletypePdf
   }
+}
+
+export const getFileType = (type:string) => {
+  return fileTypes[type] || fileTypes["null"]
 }

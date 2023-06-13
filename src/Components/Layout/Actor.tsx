@@ -21,23 +21,23 @@ import { NotificationsContext } from "../../Contexts/NotificationContext";
 import { LayoutActorBreadcrump } from "./ActorBreadcrump";
 import { FaClipboardList } from "react-icons/fa";
 import DropDownEx from "./dropdown";
+import { TbPencil } from "react-icons/tb";
 
 
 const navigation:INavigation[] = 
 [
   {
-    name: 'Validación presencial', href: Pages.DA_PRESENTIAL, icon: AiFillEdit
+    name: 'Validación presencial', href: Pages.DA_PRESENTIAL, icon: TbPencil
   },
-  { name: 'Gestor de Notificaciones', href: Pages.DA_NOTIFICATIONS, icon: AiFillEdit, children:
+  { name: 'Notificaciones Generales', href: Pages.DA_NOTIFICATIONS, icon: TbPencil, children:
     [
-      { name: 'Lista de Notificaciones', href: Pages.DA_NOTIFICATIONS },
       { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW },
     ] 
   },
-  { name: 'Gestor de Trámites', href: Pages.DA_PROCEDURES, icon: FaClipboardList, children:
+  { name: 'Trámites', href: Pages.DA_PROCEDURES, icon: TbPencil, children:
     [
-      { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
-      { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
+      { name: 'Generador de Formularios', href: Pages.DA_PROCEDURES_FORMS },
+      { name: 'Configurador de Tramites', href: Pages.DA_PROCEDURES_LIST },
     ] 
   }
 ]

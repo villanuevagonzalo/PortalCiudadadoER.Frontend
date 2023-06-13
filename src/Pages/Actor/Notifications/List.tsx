@@ -1,15 +1,13 @@
 
 import { AiOutlineDelete, AiOutlineOrderedList } from "react-icons/ai";
 import { GrFormView } from "react-icons/gr";
-import { AiOutlineDelete, AiOutlineOrderedList } from "react-icons/ai";
-import { GrFormView } from "react-icons/gr";
 import { LayoutNote, LayoutSection, LayoutText, LayoutTitle } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
 import { useContext, useState, useEffect, useMemo } from "react";
-import { Spinner, TableFunctions } from "../../../Components/Elements/StyledComponents";
+import { Spinner, TableFunctions, TableLabel } from "../../../Components/Elements/StyledComponents";
 import { BiMessage } from "react-icons/bi";
 import { NotificationActionCard } from "../../../Components/Notifications/ActorCard";
-import { ActorNotification, ILocation, Recipients, IFormState } from "../../../Interfaces/Data";
+import { ActorNotification, ILocation, Recipients, IFormState, ActorTableNotification } from "../../../Interfaces/Data";
 import { ColumnDef } from "@tanstack/react-table";
 import { Table } from "../../../Components/Elements/Table";
 import moment from "moment";
@@ -28,12 +26,11 @@ type Item = {
 export const DA_Notifications = () =>{
 
   const { isLoading, errors, GetAllNotifications, actorNotifications, DeleteNotification } = useContext(NotificationsContext);
-  const [ data, setData ] = useState<any[]>([]);
+  const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
 
   const handleLocations = async() => {
     const response = await RawLocations();
-    //console.log(response)
     setLocation(response)
   }
   const [ FullSizeNotification, setFullSizeNotification ] = useState<ActorNotification | null>(null);
@@ -41,13 +38,8 @@ export const DA_Notifications = () =>{
   const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
   
   const ShowNotification = async (N: ActorNotification) => {
-    //const response = await ReadNotification(N.ID, setLoadingNotification);
-    //if(response?.data?.success){
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setFullSizeNotification(N);
-    //} else{
-    //  console.log(response,0);
-    //}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setFullSizeNotification(N);
   }
 
   const CloseNotification = () => setFullSizeNotification(null);
@@ -62,12 +54,9 @@ export const DA_Notifications = () =>{
       
       //actorNotifications[3].AGE_FROM = 5
       //actorNotifications[3].DEPARTMENT = 258
+    console.log(actorNotifications)
 
-    const newdata = actorNotifications.map((N:ActorNotification)=>{
-      
-      
-      //console.log(N.LOCALITY,LocationByID(Location,N.LOCALITY))
-
+    const newdata:ActorTableNotification[] = actorNotifications.map((N:ActorNotification)=>{
       return ({
       Title: stringPreview(N.MESSAGE_TITLE,30),
       Date: moment(N.DATE_FROM).format("DD/MM/YY") + " a " + moment(N.DATE_TO).format("DD/MM/YY"),
@@ -76,10 +65,11 @@ export const DA_Notifications = () =>{
         ?(N.AGE_TO==120 ? "-" : "< " + N.AGE_TO)
         :(N.AGE_TO==120 ? N.AGE_FROM + " <" : (N.AGE_FROM + " a " + N.AGE_TO))),
       Recipients: Recipients[N.RECIPIENTS],
-      Attachments: N.ATTACHMENTS.length,
+      Attachments: ""+N.ATTACHMENTS.length||"-",
+      Active: moment().isBetween(moment(N.DATE_FROM), moment(N.DATE_TO))?"ACTIVA":"-",
+      Disabled: N.DELETED_AT!="",
       ALL: N
     })})
-
     console.log(newdata)
     setData(newdata)
    }
@@ -87,10 +77,24 @@ export const DA_Notifications = () =>{
     //setData(actorNotifications)
   },[actorNotifications, Location])
 
-  const mcolumns = useMemo<ColumnDef<any>[]>(()=>[
+  const mcolumns = useMemo<ColumnDef<ActorTableNotification>[]>(()=>[
+    {
+      header: 'Estado',
+      accessorKey: 'Active',
+      show: false,
+      cell: ({ cell }) => {
+        const val = cell.getValue()+"";
+        console.log(cell.getValue());
+        return <TableLabel>
+          {val}
+        </TableLabel>
+      },
+      size: 100
+    },
     {
       header: 'Titulo',
-      accessorKey: 'Title',
+      accessorKey: 'Title', show: false
+      
     },
     {
       header: 'Fechas',
@@ -118,8 +122,16 @@ export const DA_Notifications = () =>{
       cell: ({ cell }) => {
         const NN = cell.row.original.ALL;
         //console.log(cell.row.original);
-        return <TableFunctions><GrFormView onClick={() => ShowNotification(NN)}/> <AiOutlineDelete  onClick={()=>DeleteNotification(NN.ID,setFormState)} /></TableFunctions>
+        return <TableFunctions>
+          <GrFormView onClick={() => ShowNotification(NN)}/>
+          <AiOutlineDelete  onClick={()=>DeleteNotification(NN.ID,setFormState)} className="DELETE"/>
+        </TableFunctions>
       }
+    },
+    {
+      header: 'Disabled',
+      accessorKey: 'Disabled',
+      show: false,
     },
 
   ],[]);

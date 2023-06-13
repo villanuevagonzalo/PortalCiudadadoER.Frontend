@@ -1,4 +1,5 @@
 import { IconType } from "react-icons/lib";
+import { boolean } from "yup";
 
 /// NAVIGATION ITEMS
 export interface INavigation{
@@ -98,6 +99,7 @@ export interface Notification{
   NOTIFICATION_DATE_TO: Date | null;
   SEND_BY_EMAIL: boolean;
   CREATED_AT: Date | null;
+  DELETED_AT: string;
 }
 
 
@@ -118,6 +120,19 @@ export interface ActorNotification{
   DATE_TO: Date | null;
   SEND_BY_EMAIL: boolean;
   CREATED_AT: Date | null;
+  DELETED_AT: string;
+}
+
+export interface ActorTableNotification{
+  Title: string;
+  Date: string;
+  Loc: string;
+  AgeRange: string;
+  Recipients: string;
+  Attachments: string;
+  Active: string;
+  Disabled: boolean;
+  ALL: ActorNotification;
 }
 
 export interface CitizenNotification {

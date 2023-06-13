@@ -29,14 +29,25 @@ export const NotificationActorFullSize: React.FC<Props> = ({data, func, ...props
   const [ scope, setScope ] = useState<number>(0)
 
   const handleFiles = async () => {
-    const responses = await GetAttachments(data.ATTACHMENTS, setIsLoadingFiles)
-    console.log(responses)
-    setFiles(responses)
+    try{
+      const responses = await GetAttachments(data.ATTACHMENTS, setIsLoadingFiles)
+      setFiles(responses)
+
+    } catch(e:any){
+      console.log(e)
+      setFiles([
+        {
+            "name": "Hubo un error al cargar los datos",
+            "type": "null",
+            "data": ""
+        }
+    ])
+    }
   }
 
   const handleScope = async () => {
-    const responses = await GetScopeByID(data.ID, setIsLoadingScope)
-    console.log(data.ID,responses)
+    const responses:any = await GetScopeByID(data.ID, setIsLoadingScope)
+    setScope(responses.data.data.notification_reached)
     //setScope(responses)
   }
 
