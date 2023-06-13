@@ -26,15 +26,15 @@ import DropDownEx from "./dropdown";
 const navigation:INavigation[] = 
 [
   {
-    name: 'Validación presencial', icon: AiFillEdit
+    name: 'Validación presencial', href: Pages.DA_PRESENTIAL, icon: AiFillEdit
   },
-  { name: 'Gestor de Notificaciones', icon: AiFillEdit, children:
+  { name: 'Gestor de Notificaciones', href: Pages.DA_NOTIFICATIONS, icon: AiFillEdit, children:
     [
       { name: 'Lista de Notificaciones', href: Pages.DA_NOTIFICATIONS },
       { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW },
     ] 
   },
-  { name: 'Gestor de Trámites', icon: FaClipboardList, children:
+  { name: 'Gestor de Trámites', href: Pages.DA_PROCEDURES, icon: FaClipboardList, children:
     [
       { name: 'Lista de Formularios', href: Pages.DA_PROCEDURES_FORMS },
       { name: 'Lista de Tramites', href: Pages.DA_PROCEDURES_LIST },
@@ -68,82 +68,63 @@ export const LayoutActor = () => {
   return (
     <LayoutContainer className='FlexSwitchMobile'>
       <LayoutActorSidebar sidebarVisible={sidebarVisible}>
-      
-      <div className="Content">
-        <div className="LogoContainer">
-          <LogoER width="135px" color="white" />
-        </div>
-           <LayoutActorSidebarMenu>
-           <div>  
-               <ul>
-                 <li className='title'>
-                 <span><AiOutlineHome/></span>
-                     <NavLink
-                       to={Pages.DA}
-                       children='Inicio'/>
-                 </li>
-               </ul>
-             </div>
-             {/* <h2 className=" text-white py-5 px-4 text-xs font-bold"> */}
-              <h2>
+        <div className="Content">
+          <div className="LogoContainer">
+            <LogoER width="135px" color="white" />
+          </div>
+          <LayoutActorSidebarMenu>
+            <div className={window.location.pathname==Pages.DA ? 'active' : ''}>  
+              <ul>
+                <li className='title'>
+                  <span><AiOutlineHome/></span>
+                  <NavLink to={Pages.DA} children='Bienvenido' />
+                  {window.location.pathname==Pages.DA}
+                </li>
+              </ul>
+            </div>
+            <h2>
               CIUDADANO DIGITAL
-             </h2>
+            </h2>
             {navigation.map((item) => (
-             <div key={item.name} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''} aria-label={item.href + " "+window.location.pathname}>
-               <ul>
-                 <li className='title'>
-                 <span><item.icon/></span>
-                   {
-                     item.href?<NavLink
-                       
-                       to={item.href}
-                       children={item.name}
-                    />:<p>{item.name}</p>
-                   }
-                 </li>
-                 {
-                 item.children?item.children.map(child=>
-                   <li className='children'>
-                   <span><item.icon/></span>
-                   <NavLink
-               
-                   to={child.href}
-                   className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}
-                   >
-                   {child.name}
-                   </NavLink>
-                   </li>):<></>
-                 }
-               </ul>
+              <div key={item.name} aria-label={item.href + " "+window.location.pathname} className={window.location.pathname.startsWith(item.href||"") ? 'active' : ''}>
+                <ul>
+                  <li className='title'>
+                    <span><item.icon/></span>
+                    {item.href?<NavLink to={item.href} children={item.name}/>:<p>{item.name}</p>}
+                  </li>
+                  {item.children?item.children.map(child=>
+                    <li className='children'>
+                      <NavLink to={child.href} className={window.location.pathname.startsWith(child.href||"") ? 'active' : ''}>
+                        {child.name}
+                      </NavLink>
+                    </li>):<></>
+                  }
+                </ul>
              </div>
            ))}
            </LayoutActorSidebarMenu>
-         </div>
+        </div>
       </LayoutActorSidebar>
       <MainContainer>
-    <LayoutActorHeader>
-    <button onClick={() => setSidebarVisible(!sidebarVisible)}>
-    {sidebarVisible ? <AiOutlineMenu size={25} color="gray"/> : <AiOutlineMenu size={25} color="gray"/>}
-  </button>
-       <LayoutActorHeaderSpacer/>
-       <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
-       <DropDownEx/>
-     </LayoutActorHeader>
-     <LayoutActorHeader secondaryHeader={true}>
-     {/* Contenido del encabezado inferior */}
-     <LayoutActorBreadcrump color="gray"/>
-     </LayoutActorHeader>
+        <LayoutActorHeader>
+          <button onClick={() => setSidebarVisible(!sidebarVisible)}>
+            {sidebarVisible ? <AiOutlineMenu size={25} color="gray"/> : <AiOutlineMenu size={25} color="gray"/>}
+          </button>
+          <LayoutActorHeaderSpacer/>
+          <Link to={Pages.DA_NOTIFICATIONS} className="button notifications"><AiOutlineBell/>{newNotifications.length>0?<span>{newNotifications.length}</span>:<></>}</Link>
+          <DropDownEx/>
+        </LayoutActorHeader>
+        <LayoutActorHeader secondaryHeader={true}>
+          <LayoutActorBreadcrump color="gray"/>
+        </LayoutActorHeader>
         <LayoutBody>
-         {/* <LayoutBreadcrump color="secondary"/> */}
-         <Outlet></Outlet>
-         <LayoutFooter className="FlexSwitchTablet">
-           <LogoER width="150px" color='var(--gray_tint)' />
-           <div>Secretaría de Modernización</div> 
-         </LayoutFooter>
-       </LayoutBody>
+          <Outlet></Outlet>
+          <LayoutFooter className="FlexSwitchTablet">
+            <LogoER width="150px" color='var(--gray_tint)' />
+            <div>Secretaría de Modernización</div> 
+          </LayoutFooter>
+        </LayoutBody>
       </MainContainer>
     </LayoutContainer>
-
-
   )
  };

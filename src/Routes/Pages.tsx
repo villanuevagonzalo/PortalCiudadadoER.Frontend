@@ -26,6 +26,7 @@ import { DA_Procedures_Forms_Create } from "../Pages/Actor/Procedures/Forms/Crea
 import { DA_Procedures_List } from "../Pages/Actor/Procedures/List";
 import { Auth_Redirect } from "../Pages/Auth/Redirect";
 import { DA_Notifications_Create } from "../Pages/Actor/Notifications/Create";
+import { DA_PRESENTIAL } from "../Pages/Actor/Presential";
 
 const REACTENV = process.env
 
@@ -223,6 +224,11 @@ export const RawPages:RawPagesProps = {
             element: <DA_Notifications_Create/>
           }
         }
+      },
+      PRESENTIAL:{
+        path: 'presential',
+        label: 'Validación Presencial',
+        element: <DA_PRESENTIAL />
       },
     }
   }

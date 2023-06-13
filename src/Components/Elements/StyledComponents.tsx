@@ -2,6 +2,18 @@ import styled from "styled-components";
 
 //// Common Elements
 
+export const TableFunctions = styled.div<{  }>`
+  display:flex;
+  flex-direction:row;
+  gap:0.5rem;
+
+  & svg{
+    width:1.5rem;
+    height:1.5rem;
+    cursor:pointer;
+  }
+`
+
 export const TableWrapper = styled.table<{ open?: boolean }>`
 
   & th{
@@ -10,10 +22,16 @@ export const TableWrapper = styled.table<{ open?: boolean }>`
       font-weight: 500;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
+      text-align:left;
+      padding:0.5rem;
+      border-bottom:1px solid grey;
+  }
+
+  & tbody tr{
+    &:hover{
+      background:#ddd;
+    }
+
   }
 
   & td{
@@ -22,10 +40,8 @@ export const TableWrapper = styled.table<{ open?: boolean }>`
     font-weight: 300;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding:0.5rem;
+
   }
 `;
 
