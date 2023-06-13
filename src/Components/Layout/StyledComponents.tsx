@@ -317,8 +317,64 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
   width:100%;
   justify-content: center;
   align-items: left;
-  // margin:1rem 0 0rem 0;
-  gap:0rem;
+
+  & div.active{
+    background: rgba(0,0,0,.2);;
+    //background: hsla(0,0%,100%,.05);
+  }
+
+  & li:hover{
+    
+    background:#2e5f46;
+  }
+
+  & h2{
+    margin: 1rem 0 1rem 0;
+    padding: 0.75rem 1rem 0rem;
+    color: white;
+    font-weight: 700;
+    font-size: 70%;
+  }
+
+  & ul{
+    display:flex;
+    align-items: top;
+    align-self: top;
+    color:white;
+    flex-direction: column;
+    transition: background .1s ease-in;
+  }
+
+  & li{
+    align-items: center;
+    display:flex;
+    height:48px;
+    font-size:95%;
+    padding:0 1rem;
+    gap:0.5rem;
+    transition: background .1s ease-in;
+
+    &.children{
+      padding-left:3.5rem;
+    }
+  }
+
+  
+  & svg{
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.75rem;
+  }
+
+`
+
+
+export const LayoutActorSidebarMenu2 = styled.div<{ match?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  width:100%;
+  justify-content: center;
+  align-items: left;
 
   & h2{
     margin-top: 1rem;
@@ -329,17 +385,13 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
   }
 
   & div{
-    // box-sizing: border-box;
-    width: 100%;
     display:flex;
-    padding:0.55rem 0.75rem 0.55rem 0.75rem;
-    border-radius:0rem;
     align-items: top;
     align-self: top;
     color:white;
     transition: background .1s ease-in;
 
-    &:hover{
+    & li:hover{
       background:#2e5f46; //cambia color de fondo de los items cuando paso el mouse
       border: 0px solid black;
     }
@@ -371,9 +423,7 @@ export const LayoutActorSidebarMenu = styled.div<{ match?: boolean }>`
     & li{
       align-items: center;
       display:flex;
-      height: 2rem;
-      // border-radius:0.25rem;
-      padding: 0.5rem 0.75rem;
+      padding: .8445rem 1rem;
 
       
 
@@ -516,9 +566,11 @@ export const LayoutActorBreadCrumpWrapper = styled.ul<{ color?:string }>`
 export const LayoutBody = styled.div<{ mobile?: boolean }>`
   display: flex;
   flex-direction: column;
+  background:var(--maincolor_tint);
   flex: 1;
   gap:${props => props.mobile?'1rem':'2rem'};
   padding:${props => props.mobile?'1rem':'2rem'};
+  width:100%;
 `;
 
 export const LayoutAlert = styled.div<{ }>`

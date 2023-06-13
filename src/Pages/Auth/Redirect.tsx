@@ -69,7 +69,7 @@ export const Auth_Redirect = () =>{
         <DivSubtitle className='text-center'>Estamos validando tu identidad.<br/>Por favor aguarde.</DivSubtitle>
       </>:(redirect?
         (FormState.finish?<>
-          TODO OKA
+          TODO OK
         </>:<>
           <DivSubtitle className='text-center'>Ha ocurrido el siguiente error:</DivSubtitle>
           <DivOutlined color="error" className='mb-4'>{FormState.error}</DivOutlined>
