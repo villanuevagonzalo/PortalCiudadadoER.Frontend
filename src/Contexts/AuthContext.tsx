@@ -24,6 +24,7 @@ const ContextValues = () => {
   const [userData, setUserData] = useState<IUserData>(DefaultUserData);
   const [userContact, setUserContact] = useState<IUserContact>(DefaultUserContact);
   const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
+  const [actorActions, setActorActions] = useState<any[]>([]);
 
   const SaveToken = (token:string, isactor?:boolean) => {
 
@@ -71,11 +72,13 @@ const ContextValues = () => {
     setUserData(DefaultUserData);
     setUserContact(DefaultUserContact);
     setUserRol(DefaultUserRol);
+    setActorActions([]);
     
     delLSData("authToken");
     delLSData("UserData");
     delLSData("UserContact");
     delLSData("UserRol");
+    delLSData("ActorActions");
   }
 
   const Signup = async (data:any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserSignup, data, setFormState);
@@ -93,9 +96,11 @@ const ContextValues = () => {
 
       setUserData(NewUserData);
       setUserContact(NewUserContact || DefaultUserContact);
+      setActorActions(data.data || []);
 
       setLSData("UserData", NewUserData);
       setLSData("UserContact", NewUserContact || DefaultUserContact);
+      setLSData("ActorActions", data.data || []);
 
     } else{ Logout(); }
     return response;
@@ -186,7 +191,7 @@ const ContextValues = () => {
   return {
     isLoading, isLogged, authToken, userData, userContact, userRol, 
     Signup, Login, Logout, CheckToken, SaveToken, Redirect,
-    UserGetData, SaveData, UserNameChange,
+    UserGetData, SaveData, UserNameChange, actorActions,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
     AFIP_getURL, AFIP_checkToken,

@@ -18,6 +18,8 @@ export const NotificationFile: React.FC<Props> = ({data, ...props}) => {
 
   const downloadImage = () => {
 
+    if(data.data == "") return false;
+
     const downloadButton = document.createElement('a');
     downloadButton.href = fileDataURL;
     downloadButton.download = data.name;

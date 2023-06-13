@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "https://sistemasdesa.entrerios.gov.ar",
   "dependencies": {
+    "@headlessui/react": "^1.7.15",
     "@tanstack/react-table": "^8.9.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",

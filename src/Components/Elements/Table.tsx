@@ -19,21 +19,23 @@ interface ReactTableProps<T extends object> {
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
+
+  const HIDDENCOLUMNS = ["Active","Disabled"]
  
   return (<TableWrapper>
     <thead>{table.getHeaderGroups().map((headerGroup) => (
       <tr key={headerGroup.id}>
         {headerGroup.headers.map((header) => (
-          <th key={header.id}>
+          <th key={header.id} className={HIDDENCOLUMNS.includes(header.column.columnDef.header+"")?"HIDE":""}>
             {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
           </th>
         ))}
       </tr>
     ))}</thead>
     <tbody>{table.getRowModel().rows.map((row) => (
-      <tr key={row.id}>
+      <tr key={row.id} className={((row.getValue("Active")?"ACTIVE":"")+" "+(row.getValue("Disabled")?"DISABLED":""))}>
         {row.getVisibleCells().map((cell) => (
-          <td key={cell.id} style={{wordBreak:'break-all'}}>
+          <td key={cell.id} style={{wordBreak:'break-all'}} className={HIDDENCOLUMNS.includes(cell.column.columnDef.header+"")?"HIDE":""}>
             {flexRender(cell.column.columnDef.cell, cell.getContext())}
           </td>
         ))}

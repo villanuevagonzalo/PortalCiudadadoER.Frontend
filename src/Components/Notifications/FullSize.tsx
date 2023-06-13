@@ -26,9 +26,19 @@ export const NotificationFullSize: React.FC<Props> = ({data, func, ...props}) =>
   const [ Files, setFiles ] = useState<FileBlob[]>([])
 
   const handleFiles = async () => {
-    const responses = await GetAttachments(data.ATTACHMENTS, setIsLoadingFiles)
-    console.log(responses)
-    setFiles(responses)
+    try{
+      const responses = await GetAttachments(data.ATTACHMENTS, setIsLoadingFiles)
+      setFiles(responses)
+
+    } catch(e:any){
+      setFiles([
+        {
+            "name": "Hubo un error al cargar los datos",
+            "type": "null",
+            "data": ""
+        }
+    ])
+    }
   }
 
   useEffect(()=>{

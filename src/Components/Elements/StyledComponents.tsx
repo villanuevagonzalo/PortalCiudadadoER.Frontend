@@ -2,6 +2,29 @@ import styled from "styled-components";
 
 //// Common Elements
 
+export const TableLabel = styled.div<{  }>`
+    display:flex;
+    align-items: center;
+    align-self: left;
+    gap:0.25rem;
+    font-size:0.7rem;
+    background-color: #effaff;
+    color: #0090d4;
+    padding:0.25rem 0.5rem;
+    border-radius:0.5rem;
+`
+export const TableFunctions = styled.div<{  }>`
+  display:flex;
+  flex-direction:row;
+  gap:0.5rem;
+
+  & svg{
+    width:1.5rem;
+    height:1.5rem;
+    cursor:pointer;
+  }
+`
+
 export const TableWrapper = styled.table<{ open?: boolean }>`
 
   & th{
@@ -10,10 +33,34 @@ export const TableWrapper = styled.table<{ open?: boolean }>`
       font-weight: 500;
       font-size: 0.875rem;
       line-height: 1.25rem;
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
+      text-align:left;
+      padding:0.5rem;
+      border-bottom:1px solid grey;
+  }
+
+  & .HIDE{
+    display:none
+  }
+
+  & .DISABLED{
+    background:#eee;
+    cursor:default;
+
+    & *{
+      
+    color:#888;
+    }
+
+    & .DELETE{
+      display:none;
+    }
+  }
+
+  & tbody tr{
+    &:hover{
+      background:#ddd;
+    }
+
   }
 
   & td{
@@ -22,10 +69,8 @@ export const TableWrapper = styled.table<{ open?: boolean }>`
     font-weight: 300;
     font-size: 0.875rem;
     line-height: 1.25rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding:0.5rem;
+
   }
 `;
 
@@ -64,6 +109,21 @@ export const ColoredLabel = styled.button<{ fullwidth?: boolean, size?:number }>
   justify-content:center;
   min-width:65px;
   margin: -1rem 1rem -0.4rem auto;
+  height:1.4rem;
+  padding: 0.25rem 0.25rem;
+  text-align:center;
+  font-weight:bold;
+`;
+
+export const ColoredActorLabel = styled.button<{ fullwidth?: boolean, size?:number }>`
+  background-color: var(--${props => (props.color ? props.color : 'primary')})!important;
+  border-radius: 0.375rem;
+  color: var(--${props => (props.color ? props.color : 'primary')}_text)!important;
+  display:flex;
+  font-size: 0.7rem;
+  justify-content:center;
+  min-width:65px;
+  margin: -1rem 5rem 2rem auto;
   height:1.4rem;
   padding: 0.25rem 0.25rem;
   text-align:center;
@@ -129,6 +189,25 @@ export const MainContainer = styled.div`
   flex-direction: column;
   gap:0;
   flex:1;
+`;
+
+export const LogoActorContainer = styled.div`
+  align-items: center;
+  align-self: top;
+  // background: #799f4f;
+  display: flex;
+  flex-direction: column;
+  gap:0;
+  flex:1;
+  // min-width: 400px;
+  // max-width: 400px;
+  // width:100%;
+  // height:100%;
+  padding:0.7rem;
+  position: relative;
+  background: transparent;
+  width: 100%;
+  height: 40px;
 `;
 
 export const ToDo = styled.div`
