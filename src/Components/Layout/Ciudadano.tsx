@@ -95,9 +95,9 @@ export const LayoutCiudadano = () => {
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
             </Button></Link>
           </Card>
-          {userActor?<Link to={Pages.DA}><Button color="secondary" className="mt-4">
+          {/*userActor?<Link to={Pages.DA}><Button color="secondary" className="mt-4">
             Ir al Panel de Actor<LayoutSpacer/><AiOutlineArrowRight/>
-          </Button></Link>:<></>}
+                </Button></Link>:<></>*/}
           <Button color="primary" onClick={Logout} className="mt-4">
             Cerrar Sesión
           </Button>
