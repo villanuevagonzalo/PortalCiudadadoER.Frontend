@@ -484,9 +484,17 @@ export const LayoutFooter = styled.div<{ }>`
   background: var(--maincolor_tint);
   color: var(--maincolor_text);
   display: flex;
-  font-size:1rem;
+  font-size:0.9rem;
   gap: 1rem;
   width:100%;
+  justify-content: flex-end;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+
+  & a{
+    color: #799F4F;
+    text-decoration: none;
+  }
 `;
 
 export const LayoutBreadCrumpWrapper = styled.ul<{ color?:string }>`

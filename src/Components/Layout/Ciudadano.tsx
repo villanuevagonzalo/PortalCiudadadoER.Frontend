@@ -120,8 +120,9 @@ export const LayoutCiudadano = () => {
         <LayoutBreadcrump/>
         <Outlet></Outlet>
         <LayoutFooter className="FlexSwitchTablet">
-          <LogoER width="150px" color='var(--gray_tint)' />
-          <div>Secretaría de Modernización</div> 
+          <div>
+            Dirección General de Informática - <a target="_blank" rel="noreferrer" href="https://www.entrerios.gov.ar/dgin">www.entrerios.gov.ar/dgin</a>
+          </div> 
         </LayoutFooter>
       </LayoutBody>
     </LayoutContainer>
