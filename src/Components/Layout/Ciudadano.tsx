@@ -88,19 +88,21 @@ export const LayoutCiudadano = () => {
               </ul>
             </div>
           ))}</LayoutSidebarMenu>
+          <div className="Content2">
           <Card>
             <DivTitle2 color="maincolor">{userData.name} {userData.last_name.toUpperCase()}</DivTitle2>
             <DivSubtitle color="maincolor" className="mt-1">{userCitizen.type}<b className="ml-2">{userCitizen.message}</b></DivSubtitle>
             <Link to={Pages.DC_CONFIGURATIONS} className="f-width"><Button color="maincolor">
               <IoIosSettings/>Mi perfil<LayoutSpacer/>
             </Button></Link>
-          </Card>
+          </Card> 
           {/*userActor?<Link to={Pages.DA}><Button color="secondary" className="mt-4">
             Ir al Panel de Actor<LayoutSpacer/><AiOutlineArrowRight/>
                 </Button></Link>:<></>*/}
           <Button color="primary" onClick={Logout} className="mt-4">
             Cerrar Sesión
           </Button>
+          </div>
         </div>
       </LayoutSidebar>
       <LayoutBody mobile={mobile}>

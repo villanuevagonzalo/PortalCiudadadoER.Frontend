@@ -164,6 +164,14 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
     padding:30px;
   }
 
+  & .Content2 {
+    position: absolute;
+    bottom: 70px;
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 0px;
+  }
+
   @media (min-width: 720px) {
     max-width:400px;
   }
@@ -175,6 +183,12 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
 
     & .Content{
       padding:20px;
+    }
+
+    & .Content2{
+      padding:20px;
+      position: relative;
+      margin: 100px auto;
     }
   `:`
     margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
