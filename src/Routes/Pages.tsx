@@ -91,6 +91,7 @@ export const RawPages:RawPagesProps = {
       PASSWORDRESET:{
         path: 'password/reset',
         label: 'Resetear Contraseña',
+        scope: ['mixed'],
         element: <Auth_PasswordReset />
       },
       PASSWORDUPDATE:{
