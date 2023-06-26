@@ -3,7 +3,7 @@ import styled from "styled-components";
 /// MAIN LAYOUT COMPONENTS
 
 export const LayoutHeader = styled.div<{ mobile?:boolean }>`
-  background: var(--maincolor_tint);
+  background: white;
   display: flex;
   flex-direction: row;
   height: 64px;
@@ -481,7 +481,7 @@ export const LayoutActorSidebarMenu2 = styled.div<{ match?: boolean }>`
 export const LayoutFooter = styled.div<{ }>`
   align-items: center;
   align-self: center;
-  background: var(--maincolor_tint);
+  background: white;
   color: var(--maincolor_text);
   display: flex;
   font-size:0.9rem;
@@ -578,7 +578,7 @@ export const LayoutActorBreadCrumpWrapper = styled.ul<{ color?:string }>`
 export const LayoutBody = styled.div<{ mobile?: boolean }>`
   display: flex;
   flex-direction: column;
-  background:var(--maincolor_tint);
+  background:white;
   flex: 1;
   gap:${props => props.mobile?'1rem':'2rem'};
   padding:${props => props.mobile?'1rem':'2rem'};
