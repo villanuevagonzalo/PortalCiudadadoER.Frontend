@@ -188,7 +188,7 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
     & .Content2{
       padding:20px;
       position: relative;
-      margin: 100px auto;
+      margin: 10px auto;
     }
   `:`
     margin-top:${props.hasOwnProperty('open')?'-64px':'0'};
@@ -739,7 +739,7 @@ export const LayoutGridItem = styled.div<{ }>`
   background: var(--maincolor);
   border-radius:0.5rem;
   padding:2rem;
-  border: 1px solid var(--disabled);
+  // border: 1px solid var(--disabled);
   justify-items: center;
   align-items: center;
   gap:1rem;
