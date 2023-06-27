@@ -30,10 +30,8 @@ const navigation:INavigation[] =
   {
     name: 'Validación presencial', href: Pages.DA_PRESENTIAL, icon: TbPencil, path: '/ciudadano_digital/autenticar'
   },
-  { name: 'Notificaciones Generales', href: Pages.DA_NOTIFICATIONS, icon: TbPencil, path: '/ciudadano_digital/notificaciones_generales', children:
-    [
-      { name: 'Crear Nueva Notificación', href: Pages.DA_NOTIFICATIONS_NEW, path: '/ciudadano_digital/notificaciones_generales' },
-    ] 
+  { 
+    name: 'Notificaciones Generales', href: Pages.DA_NOTIFICATIONS, icon: TbPencil, path: '/ciudadano_digital/notificaciones_generales'
   },
   { name: 'Trámites', href: Pages.DA_PROCEDURES, icon: TbPencil, path: "/ciudadano_digital/tramites", children:
     [

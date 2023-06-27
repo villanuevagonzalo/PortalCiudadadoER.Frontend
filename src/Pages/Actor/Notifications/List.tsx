@@ -1,7 +1,7 @@
 
-import { AiOutlineDelete, AiOutlineOrderedList } from "react-icons/ai";
+import { AiOutlineDelete, AiOutlineOrderedList, AiOutlinePlus } from "react-icons/ai";
 import { GrFormView } from "react-icons/gr";
-import { LayoutNote, LayoutSection, LayoutText, LayoutTitle } from "../../../Components/Layout/StyledComponents";
+import { LayoutNote, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText, LayoutTitle } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
 import { useContext, useState, useEffect, useMemo } from "react";
 import { Spinner, TableFunctions, TableLabel } from "../../../Components/Elements/StyledComponents";
@@ -15,6 +15,9 @@ import { DeparmentByID, DeparmentNameByID, LocationByID, LocationNameByID, RawLo
 import { stringPreview } from "../../../Utils/General";
 import { DefaultFormState } from "../../../Data/DefaultValues";
 import { NotificationActorFullSize } from "../../../Components/Notifications/ActorFullSize";
+import { Link } from "react-router-dom";
+import { Pages } from "../../../Routes/Pages";
+import { FormikButton } from "../../../Components/Forms/FormikButton";
 
 type Item = {
   title: string;
@@ -138,6 +141,10 @@ export const DA_Notifications = () =>{
       <br/>Vea el alcance que va a tener su notificación.
     </LayoutNote>
     <LayoutSection>
+      <LayoutStackedPanel>
+        <LayoutSpacer/>
+        <Link to={Pages.DA_NOTIFICATIONS_NEW}><FormikButton>Nuevo<AiOutlinePlus/></FormikButton></Link>
+      </LayoutStackedPanel>
       <h1><AiOutlineOrderedList/>Lista de Notificaciones Generales</h1>
       {isLoading?<>
         <br/>
