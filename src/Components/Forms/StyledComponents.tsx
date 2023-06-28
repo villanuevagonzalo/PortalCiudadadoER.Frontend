@@ -111,6 +111,16 @@ export const FormWrapperButton = styled.button<{ fullwidth?: boolean, size?:numb
   }
 `;
 
+export const LogoWrapperButton = styled.button`
+  position: relative;
+  width: 200px;
+  height: 50px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  `;
+  
+
 
 export const FormWrapperCheckbox = styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, checked?: boolean }>`
 

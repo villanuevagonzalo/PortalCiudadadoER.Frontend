@@ -9,6 +9,9 @@ import { DefaultFormState } from "../../../Data/DefaultValues";
 import { BsBookmark, BsBookmarkCheck, BsBookmarkPlus, BsBookmarkStar, BsBookmarkX } from "react-icons/bs";
 import { Pages } from "../../../Routes/Pages";
 import { AxiosResponse } from "axios";
+import logoAfip from "../../../Assets/LogoAfip.png"
+import logoMiArgentina from "../../../Assets/LogoMiargentina.png"
+import { LogoButton } from "../../../Components/Forms/LogoButton";
 
 export const DC_Validation = () => {
 
@@ -81,8 +84,9 @@ export const DC_Validation = () => {
         </div>
         {ValidationsTab?<><hr/><div className="flex FlexSwitchMobile gap-6">
           
-          <Button color="secondary" onClick={()=>getValidationLink('afip')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : "AFIP"}</Button>
-          <Button color="secondary" onClick={()=>getValidationLink('miargentina')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : "Mi Argentina"}</Button>
+          {/* <Button color="secondary" onClick={()=>getValidationLink('afip')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : "AFIP"}</Button> */}
+          <LogoButton onClick={()=>getValidationLink('AFIP')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoAfip} alt="Logo Afip"/>}</LogoButton>
+          <LogoButton onClick={()=>getValidationLink('miargentina')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoMiArgentina} alt="logo Mi Argentina"/>}</LogoButton>
         </div></>:<></>}
       </LayoutListItem>:<LayoutListItem color="disabled">
         <div className="ListItemIcon"><BsBookmark/></div>
