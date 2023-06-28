@@ -91,6 +91,15 @@ export const DC_Validation = () => {
           <h2>Usted no ha completado su información adicional.</h2>
         </div>
       </LayoutListItem>)}
+
+      <LayoutListItem color="secondary" className="FlexSwitchMobile">
+        <div className="ListItemIcon"><BsBookmarkStar/></div>
+        <div className="flex-1">
+          <h1><b className="mr-2">Nivel 3</b> Por validación Presencial</h1>
+          <h2>Usted puede validar su indentidad de manera presencial.</h2>
+        </div>
+      </LayoutListItem>
+
     </LayoutSection>
   </>)
 }
