@@ -6,6 +6,7 @@ import { NotificationPopUp } from "../../Components/Notifications/NotificationMo
 export const DC_Home = () => {
 
   return(<>
+  
     <NotificationPopUp />     {/* Muestro las notificaciones al estilo pushup al inicio. This is new feature! */}
     <LayoutTitle>
       Bienvenido
