@@ -33,6 +33,25 @@ export const NotificationCard: React.FC<Props> = ({data, loading=false, ...props
   </NotificationCardWrapper>;
 }
 
+export const NotificationCardReduced: React.FC<Props> = ({data, loading=false, ...props}) => {
+  return <NotificationCardWrapper new={data.NEW} {...props} loading={loading}>
+    <div className="icon">
+      {loading?<Spinner color='gray' size="1rem"/>:<AiOutlineNotification />}
+    </div>
+    <div className="content">
+      <label className="header">
+        <span className="title">Gobierno de Entre Ríos</span>
+        {data.NEW ? <span className="new"><AiOutlineStar /> NUEVO</span> : <></>}
+      </label>
+      <h1>{data.MESSAGE_TITLE}</h1>
+      <label className="footer">
+        <span className="time">{moment(data.CREATED_AT).fromNow()}</span>
+        {data.ATTACHMENTS.length>0 ? <span className="attachments"><AiOutlinePaperClip/> {data.ATTACHMENTS.length} Archivos adjuntos</span>: <></>}
+      </label>
+    </div>
+  </NotificationCardWrapper>;
+}
+
 
 /*<span className="attachment"><BsFiletypeJpg /> IMAGEN</span>
           <span className="attachment"><BsFiletypePdf /> PDF</span>*/

@@ -1,10 +1,12 @@
 
 import { LayoutGrid, LayoutTitle, LayoutSection } from "../../Components/Layout/StyledComponents";
 import { NuevosTramites } from "../../Components/Elements/NuevosTramites";
+import { NotificationPopUp } from "../../Components/Notifications/NotificationModal";
 
 export const DC_Home = () => {
 
   return(<>
+    <NotificationPopUp />     {/* Muestro las notificaciones al estilo pushup al inicio. This is new feature! */}
     <LayoutTitle>
       Bienvenido
     </LayoutTitle>
