@@ -166,9 +166,9 @@ export const LayoutSidebar = styled.div<{ collapsable?: boolean, open?: boolean,
 
   & .Content2 {
     position: absolute;
-    bottom: 70px;
-    max-width: auto;
-    margin: 0 auto;
+    bottom: 45px;
+    width: 300px;
+    margin: 20px 1rem 0px 0px;
     padding: 0px;
   }
 
