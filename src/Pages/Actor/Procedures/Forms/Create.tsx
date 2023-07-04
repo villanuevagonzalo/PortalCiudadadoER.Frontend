@@ -11,40 +11,51 @@ import { BiSave } from "react-icons/bi";
 import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
+import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
 
 export const DA_Procedures_Forms_Create = () => {
 
-  const [ fields, setFields ] = useState<any>([]);
-  const [ jsona0, setJsona0 ] = useState<number>(0);
-  const [ jsona, setJsona ] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
+  const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
+  const [ index, setIndex] = useState<number>(0);
+  const [ jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
   const [ jsona2, setJsona2 ] = useState<string>('[]');
 
   const addItem = (type:any) => {
-    const newfield = new FormElement(type,{})
+    //const newfield = new FormElement(type,{}) //FormElement es viejo, ahora hay que unser un ElementSchema 
+    const newfield = new ElementInstance( fields.length.toString (),new ElementSchema(type,{label:'Ingresá el Título'},["isRequired"]))
     setFields((prev: any)=>[...prev,newfield])
+    console.log(type)
   }
+
+  /*
+  Así accedo a los campos.
+
+  fields[0].update(aca le mando el json con las propiedades, el json al formato lo tomo de)
+  { "label": "Prueba", "required":"true"} 
+
+
+  */
+
 
   const update = () => {
     if(fields.length>0){
-      const lastField = fields[jsona0];
-      lastField.update(JSON.parse(jsona));
-      console.log(lastField)
-      const newFields = [...fields.slice(0, -1), lastField];
-      setFields(newFields);
+      const someField = fields[index];
+      someField.update(JSON.parse(jsonproperties));
+    
     }
   }
 
-  const handleChange0 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setJsona0(+event.target.value);
+  const handleIndexChange= (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIndex(+event.target.value);
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJsona(event.target.value);
+  const handleJsonPropiertiesChanges = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setJsonproperties(event.target.value);
   }
 
 
   useEffect(()=>{
-    setJsona2(JSON.stringify(GetJSONData(fields)))
+    //setJsona2(JSON.stringify(GetJSONData(fields)))
 
   },[fields])
 
@@ -75,6 +86,7 @@ export const DA_Procedures_Forms_Create = () => {
         <Element instance={Fields.Subtitle}/>
         <Element instance={Fields.Description}/>
         <Element instance={Fields.Keywords}/>
+        {fields.map((element:ElementInstance<ElementSchemaTypes>) => <Element key={element.name} instance={element} />)}
 
         <LayoutStackedPanel>
           <LayoutSpacer/>
@@ -89,7 +101,33 @@ export const DA_Procedures_Forms_Create = () => {
       <h1><MdOutlineDataset />Administrador de Campos</h1>
       <LayoutStackedPanel>
         <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>
-          ddd
+        {/*  <h2 onClick={update}>Actualizar</h2>
+          <input value={index} type="number" onChange={handleIndexChange}/>
+          <textarea value={jsonproperties} onChange={handleJsonPropiertiesChanges} style={{width:'100%', height:'100px'}} />
+      */ }
+        {fields.map((element:ElementInstance<ElementSchemaTypes>) => <ElementEditor key={element.name} instance={element} />)}
+
+        <Formik
+        validateOnBlur={false}
+        validateOnChange={false}
+        enableReinitialize={true}
+        initialValues={initialValues}
+        onSubmit={(e:any)=>{
+          console.log(e)
+        }}
+      >
+      <Form autoComplete="off">
+        {fields.map((element:ElementInstance<ElementSchemaTypes>) => <div > <Element key={element.name} instance={element} /> <button >asdf</button></div>)}
+
+        <LayoutStackedPanel>
+          <LayoutSpacer/>
+          <div><Button type="submit">
+            Guardar <BiSave/>
+          </Button></div>
+        </LayoutStackedPanel>
+      </Form>
+      </Formik>
+
         </div>
         <div>
           <h2>Elementos</h2>

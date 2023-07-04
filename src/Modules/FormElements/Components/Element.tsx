@@ -20,8 +20,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const [ field ] = useField(instance.name);
   const [ HelpField ] = useField(HelpToken+instance.name)
 
-
-
   const { errors, setFieldValue, values } = useFormikContext();
   const thiserror = getIn(errors, instance.name)
   

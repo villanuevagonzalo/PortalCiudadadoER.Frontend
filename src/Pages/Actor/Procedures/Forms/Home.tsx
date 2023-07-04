@@ -67,11 +67,16 @@ export const DA_Procedures_Forms_Home = () => {
           </Formik></div>
         <LayoutSpacer/>
         
-        <Button disabled={FormState.loading} color="secondary">
-          {FormState.loading ? <Spinner /> : "Actualizar"}
-        </Button>
-        
-        <Link to={Pages.DA_PROCEDURES_FORMS_NEW}><Button>Nuevo</Button></Link>
+        {/* Botones para crear o actualizar formularios */}
+        <div style={{display:"flex", flexDirection:"row"}}>
+          <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }}>
+            {FormState.loading ? <Spinner /> : "Actualizar"}
+          </Button>
+          <Link to={Pages.DA_PROCEDURES_FORMS_NEW} style={{ textDecoration: 'none' }}>
+            <Button style={{ width: '150px', height: '40px' }}>Nuevo</Button>
+          </Link>
+        </div>
+
       </LayoutStackedPanel>
       
       <Table columns={mcolumns} data={mdata} />

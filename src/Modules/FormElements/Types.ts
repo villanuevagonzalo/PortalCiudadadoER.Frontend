@@ -28,7 +28,7 @@ export interface FormElementProps {
   childrens: FormElement<keyof ElementPropsMap>[];
   options: {value: any, label:string}[] | {};
 }
-
+//config por defecto de la interface
 export const FormElementInitialValues: Record<string, any> = {
   label: "Ingrese un Nombre/Texto",
   required: false,
@@ -79,7 +79,7 @@ export const FormElementBases = {
   "SPACER": {
     description: "Separador",
     properties:{
-      required: [] as const,
+      required: ["label"] as const,  //no tiene parametro
       optional: [] as const,
     },
     type: null,
