@@ -140,7 +140,7 @@ export const DA_Procedures_Forms_Create = () => {
         <Form autoComplete="off">
         {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
           <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
-
+            <p style={{margin:"0px 0px 10px 0px"}}>{element.type}</p>
             <Element instance={element} />
             <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px"}}> 
               <Button onClick={() => editarComponente(element, index)}>Editar</Button>
