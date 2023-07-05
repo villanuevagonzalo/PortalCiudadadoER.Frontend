@@ -12,10 +12,13 @@ import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormEl
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
+import { FormFieldsPropertiesPopUp } from "../../../../Components/Forms/FormFieldsProperties";
 
 export const DA_Procedures_Forms_Create = () => {
 
   const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
+  const [instance, setIntance] = useState<ElementInstance<ElementSchemaTypes>>()
+  const [edit, setEdit] = useState(false)
   const [ index, setIndex] = useState<number>(0);
   const [ jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
   const [ jsona2, setJsona2 ] = useState<string>('[]');
@@ -53,7 +56,13 @@ export const DA_Procedures_Forms_Create = () => {
     setJsonproperties(event.target.value);
   }
 
+  const editarComponente =(schema:ElementInstance<ElementSchemaTypes> , indice:number)=> {
 
+    setIntance(schema)
+    setIndex(indice)
+    setEdit(true)
+    
+  }
   useEffect(()=>{
     //setJsona2(JSON.stringify(GetJSONData(fields)))
 
@@ -68,82 +77,103 @@ export const DA_Procedures_Forms_Create = () => {
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
-  return(<>
-    <LayoutSection>
-      <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-      <Formik
-        validateOnBlur={false}
-        validateOnChange={false}
-        enableReinitialize={true}
-        initialValues={initialValues}
-        onSubmit={(e:any)=>{
-          console.log(e)
-        }}
-        validate={(values:any) => ValidateForm(values, Fields)}
-      >
-      <Form autoComplete="off">
-        <Element instance={Fields.Title}/>
-        <Element instance={Fields.Subtitle}/>
-        <Element instance={Fields.Description}/>
-        <Element instance={Fields.Keywords}/>
-        {fields.map((element:ElementInstance<ElementSchemaTypes>) => <Element key={element.name} instance={element} />)}
+  if (edit){
+    if (instance) {
+      return(
+      
+        <FormFieldsPropertiesPopUp instance={instance} func={setEdit} index={index} fields={fields} />
+          );
+    } else {
+      return null; // Otra opción es mostrar un mensaje de error o una carga condicional
+    }
+   
 
-        <LayoutStackedPanel>
-          <LayoutSpacer/>
-          <div><Button type="submit">
-            Guardar <BiSave/>
-          </Button></div>
-        </LayoutStackedPanel>
-      </Form>
-      </Formik>
-    </LayoutSection>
-    <LayoutSection>
-      <h1><MdOutlineDataset />Administrador de Campos</h1>
-      <LayoutStackedPanel>
-        <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>
-        {/*  <h2 onClick={update}>Actualizar</h2>
-          <input value={index} type="number" onChange={handleIndexChange}/>
-          <textarea value={jsonproperties} onChange={handleJsonPropiertiesChanges} style={{width:'100%', height:'100px'}} />
-      */ }
-        {fields.map((element:ElementInstance<ElementSchemaTypes>) => <ElementEditor key={element.name} instance={element} />)}
+  }else{
 
+    return(<>
+      <LayoutSection>
+        <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
         <Formik
-        validateOnBlur={false}
-        validateOnChange={false}
-        enableReinitialize={true}
-        initialValues={initialValues}
-        onSubmit={(e:any)=>{
-          console.log(e)
-        }}
-      >
-      <Form autoComplete="off">
-        {fields.map((element:ElementInstance<ElementSchemaTypes>) => <div > <Element key={element.name} instance={element} /> <button >asdf</button></div>)}
-
+          validateOnBlur={false}
+          validateOnChange={false}
+          enableReinitialize={true}
+          initialValues={initialValues}
+          onSubmit={(e:any)=>{
+            console.log(e)
+          }}
+          validate={(values:any) => ValidateForm(values, Fields)}
+        >
+        <Form autoComplete="off">
+          <Element instance={Fields.Title}/>
+          <Element instance={Fields.Subtitle}/>
+          <Element instance={Fields.Description}/>
+          <Element instance={Fields.Keywords}/>
+  
+          <LayoutStackedPanel>
+            <LayoutSpacer/>
+            <div><Button type="submit">
+              Guardar <BiSave/>
+            </Button></div>
+          </LayoutStackedPanel>
+        </Form>
+        </Formik>
+      </LayoutSection>
+      <LayoutSection>
+        <h1><MdOutlineDataset />Administrador de Campos</h1>
         <LayoutStackedPanel>
-          <LayoutSpacer/>
-          <div><Button type="submit">
-            Guardar <BiSave/>
-          </Button></div>
+          <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>
+          {/*  <h2 onClick={update}>Actualizar</h2>
+            <input value={index} type="number" onChange={handleIndexChange}/>
+            <textarea value={jsonproperties} onChange={handleJsonPropiertiesChanges} style={{width:'100%', height:'100px'}} />
+        
+          {fields.map((element:ElementInstance<ElementSchemaTypes>) => <ElementEditor key={element.name} instance={element} />)}
+  */ }
+          <Formik
+          validateOnBlur={false}
+          validateOnChange={false}
+          enableReinitialize={true}
+          initialValues={initialValues}
+          onSubmit={(e:any)=>{
+            console.log(e)
+          }}
+        >
+        <Form autoComplete="off">
+        {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+          <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+
+            <Element instance={element} />
+            <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px"}}> 
+              <Button onClick={() => editarComponente(element, index)}>Editar</Button>
+            </div>
+          </div>
+        ))}  
+          <LayoutStackedPanel>
+            <LayoutSpacer/>
+            <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"10px 0px 15px 0px"}}> 
+              <Button type="submit">Guardar <BiSave/></Button>
+            </div>
+          </LayoutStackedPanel>
+        </Form>
+        </Formik>
+  
+          </div>
+          <div>
+            <h2>Elementos</h2>
+            <FormElementBasesMenu>{Object.entries(FormElementBases).map(([clave, element], index) => {
+              return(<div key={clave} onClick={()=>addItem(clave)}>
+                <span><element.icon/></span>
+                <ul>
+                  <li className="title"><p>{element.description}</p></li>
+                </ul>
+              </div>)
+            })}</FormElementBasesMenu>
+          </div>
         </LayoutStackedPanel>
-      </Form>
-      </Formik>
-
-        </div>
-        <div>
-          <h2>Elementos</h2>
-          <FormElementBasesMenu>{Object.entries(FormElementBases).map(([clave, element], index) => {
-            return(<div key={clave} onClick={()=>addItem(clave)}>
-              <span><element.icon/></span>
-              <ul>
-                <li className="title"><p>{element.description}</p></li>
-              </ul>
-            </div>)
-          })}</FormElementBasesMenu>
-        </div>
-      </LayoutStackedPanel>
-    </LayoutSection>
-
-  </>);
+      </LayoutSection>
+  
+    </>);
+  }
+ 
 }
 
 /*
