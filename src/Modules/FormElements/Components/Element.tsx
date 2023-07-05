@@ -104,6 +104,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
             <label>{EI.properties.label}</label>
           </div>
           </div></CheckboxWrapper>);
+
         
       default:
         return 'ERROR';

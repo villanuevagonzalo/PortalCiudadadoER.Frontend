@@ -6,10 +6,14 @@ import { ElementInstance } from "../Class";
 import { Button } from "../../../Components/Forms/Button";
 
 interface Props{
-  instance: ElementInstance<ElementSchemaTypes>;
+  instance: ElementInstance<ElementSchemaTypes>,
+  setFields: Function, 
+  index: number, 
+  fields: ElementInstance<ElementSchemaTypes>[]
+
 }
 
-export const ElementEditor: React.FC<Props> = ({ instance }) => {
+export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, index }) => {
 
   const basetype = FormElementBases[instance.type];
   const basetypeString = JSON.stringify(basetype);
@@ -23,29 +27,29 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
 
   const [isRequired, setRequired] = useState(false);
   const [nombreCampo, setNombreCampo] = useState('');
-  const [maxLength, setMaxLength] =  useState<string | number>('');
-  const [minLength, setMinLength] = useState<string | number>('');
-  const [valueMin, setValueMin] = useState<string | number>('');
-  const [valueMax, setValueMax] = useState<string | number>('');
+  const [maxLength, setMaxLength] =  useState<number>();
+  const [minLength, setMinLength] = useState<number>();
+  const [valueMin, setValueMin] = useState<number>();
+  const [valueMax, setValueMax] = useState<number>();
 
   
   const handleMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setMinLength((newValue));
+    setMinLength(parseInt(newValue));
   };
 
   const handleMaxValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue2 = event.target.value;
-    setMaxLength((newValue2));
+    setMaxLength(parseInt(newValue2));
   };
   const handleValueMin = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
-    setValueMin((newValue));
+    setValueMin(parseInt(newValue));
   };
 
   const handleValueMax = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue2 = event.target.value;
-    setValueMax((newValue2));
+    setValueMax(parseInt(newValue2));
   };
 
   const handleNombreCampo = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +117,7 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
     length_min: hasLengthMinCondition ? minLength : 0,
     length_max: hasLengthMaxCondition ? maxLength : 10,
     value_min: hasValueMin ? valueMin : 0,
-    value_max: hasValueMax ? valueMax : 100,
+    value_max: hasValueMax ? valueMax : 0,
     value_default: "",
     value_regex: "",
     childrens: ""
@@ -123,6 +127,10 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
   const newProperties = JSON.stringify(properties);
   console.log("el cambio es: "+newProperties)
   instance.update(JSON.parse(newProperties));
+  const newFields = [...fields]; // Crear una copia del arreglo fields
+  newFields[index] = instance; // Reemplazar el valor en la posición index con el valor de instance
+  setFields(newFields); // Actualizar el estado con la nueva copia del arreglo newFields
+
   }
   
   return (
@@ -159,7 +167,7 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
               onInput={handleMinValue}
               style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
             />
-            <p>Mínima cantidad de caracteres es: {minLength !== '' ? minLength : 'Vacío'}</p>
+            <p>Mínima cantidad de caracteres es: {minLength !== 0 ? minLength : 'Vacío'}</p>
           </div>
         )}
         {hasLengthMaxCondition && (
@@ -170,7 +178,7 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
               onInput={handleMaxValue}
               style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
             />
-            <p>Máxima cantidad de caracteres es: {maxLength !== '' ? maxLength : 'Vacío'}</p>
+            <p>Máxima cantidad de caracteres es: {maxLength !== 0 ? maxLength : 'Vacío'}</p>
           </div>
         )}
 
@@ -182,7 +190,7 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
               onInput={handleValueMin}
               style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
             />
-            <p>Mínima cantidad de caracteres es: {valueMin !== '' ? valueMin : 'Vacío'}</p>
+            <p>Mínima cantidad de caracteres es: {valueMin !== 0 ? valueMin : 'Vacío'}</p>
           </div>
         )}
         {hasValueMax && (
@@ -193,7 +201,7 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
               onInput={handleValueMax}
               style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
             />
-            <p>Mínima cantidad de caracteres es: {valueMax !== '' ? valueMax : 'Vacío'}</p>
+            <p>Mínima cantidad de caracteres es: {valueMax !== 0 ? valueMax : 'Vacío'}</p>
           </div>
         )}
       </ul>

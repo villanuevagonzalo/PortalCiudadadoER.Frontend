@@ -17,15 +17,6 @@ interface Props{
 export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, func , index, fields, ...props})  => {
              
 
-    console.log("a ver gastón :"+JSON.stringify(instance))
-
-    useEffect(() => {
-       
-        fields[index] = instance; 
-    
-      }, [instance]);
-    
-
     return <NotificationFullSizeWrapper>
         <LayoutSection className="content">
           <div className="header">
@@ -35,7 +26,7 @@ export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, func , in
           </div>
 
 
-          <ElementEditor instance={instance} />
+          <ElementEditor instance={instance} setFields={func} index={index} fields={fields} />
         
           <LayoutStackedPanel className="mt-2">
             <LayoutSpacer/>

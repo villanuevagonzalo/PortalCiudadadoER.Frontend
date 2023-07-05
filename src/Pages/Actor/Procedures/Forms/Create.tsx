@@ -65,7 +65,7 @@ export const DA_Procedures_Forms_Create = () => {
   }
   useEffect(()=>{
     //setJsona2(JSON.stringify(GetJSONData(fields)))
-
+    console.log("CAMBIA"+JSON.stringify(fields))
   },[fields])
 
   const Fields: {[key: string]: ElementInstance<ElementSchemaTypes>} = {
