@@ -3,6 +3,7 @@ import { FormElement } from "../OLDTYPES";
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases } from "../Types";
 import { ElementWrapper } from "./StyledComponents";
 import { ElementInstance } from "../Class";
+import { Button } from "../../../Components/Forms/Button";
 
 interface Props{
   instance: ElementInstance<ElementSchemaTypes>;
@@ -11,7 +12,7 @@ interface Props{
 export const ElementEditor: React.FC<Props> = ({ instance }) => {
 
   const basetype = FormElementBases[instance.type];
-  console.log("BASE TYPE: " + JSON.stringify(basetype));
+  const basetypeString = JSON.stringify(basetype);
 
   const [hasLabelCondition, setHasLabelCondition] = useState(false);
   const [hasRequiredCondition, setHasRequiredCondition] = useState(false);
@@ -27,7 +28,7 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
   const [valueMin, setValueMin] = useState<string | number>('');
   const [valueMax, setValueMax] = useState<string | number>('');
 
-
+  
   const handleMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setMinLength((newValue));
@@ -96,7 +97,34 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
   }, []);
 
 
-  console.log("ASDF: "+hasLengthMinCondition)
+  const Guardar = () => {
+
+    
+    //const jsonString = `"properties":{"required":[${hasLabelCondition ? `"label":"${nombreCampo}"` : `"label"`}],"optional":[${hasRequiredCondition ? `"required":"true"` : ''},"disabled"${hasLengthMinCondition ? `,"length_min":"${minLength}"` : ''}${hasLengthMaxCondition ? `,"length_max":"${maxLength}"` : ''}${hasValueMin ? `,"valueMin":"${valueMin}"` : ''}${hasValueMax ? `,"valueMax":"${valueMax}"` : ''}]},`;
+
+    /*const newProperties = `{"required":[${hasLabelCondition ? `"label":"${nombreCampo}"` : `"label"`}],"optional":[${hasRequiredCondition ? `"required":"${isRequired}"` : ''},"disabled"${hasLengthMinCondition ? `,"length_min":"${minLength}"` : ''}${hasLengthMaxCondition ? `,"length_max":"${maxLength}"` : ''}${hasValueMin ? `,"valueMin":"${valueMin}"` : ''}${hasValueMax ? `,"valueMax":"${valueMax}"` : ''}]}`
+    .replace(/,\s*]/, ']');
+    const modifiedBasetype = basetypeString.replace(/"properties"\s*:\s*{[^}]+}/, `"properties":${newProperties}`);
+*/
+  const properties = {
+    label: hasLabelCondition ? nombreCampo : "Prueba",
+    required: isRequired,
+    disabled: false,
+    length_min: hasLengthMinCondition ? minLength : 0,
+    length_max: hasLengthMaxCondition ? maxLength : 10,
+    value_min: hasValueMin ? valueMin : 0,
+    value_max: hasValueMax ? valueMax : 100,
+    value_default: "",
+    value_regex: "",
+    childrens: ""
+  };
+
+
+  const newProperties = JSON.stringify(properties);
+  console.log("el cambio es: "+newProperties)
+  instance.update(JSON.parse(newProperties));
+  }
+  
   return (
     <ElementWrapper>
       <label>
@@ -117,7 +145,7 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
         )}
         {hasRequiredCondition && (
           <><div style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
-            <Checkbox label="¿Campo requerido? " />
+            <Checkbox label="¿Campo requerido? " setCheck={setRequired} />
             <div>
               El campo es: {isRequired ? 'requerido en el formulario' : 'no requerido en el formulario'}
             </div>
@@ -169,6 +197,8 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
           </div>
         )}
       </ul>
+      <Button onClick={()=>Guardar()}>Guardar</Button>
+
     </ElementWrapper>
   );
 };
@@ -176,13 +206,15 @@ export const ElementEditor: React.FC<Props> = ({ instance }) => {
 
 interface CheckboxProps {
   label: string;
+  setCheck: Function
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ label }) => {
+const Checkbox: React.FC<CheckboxProps> = ({ label, setCheck }) => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
+    setCheck(isChecked)
   };
 
   return (

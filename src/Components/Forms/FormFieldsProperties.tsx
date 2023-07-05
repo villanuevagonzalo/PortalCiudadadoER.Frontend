@@ -5,6 +5,7 @@ import { Button } from "./Button"
 import { ElementEditor } from "../../Modules/FormElements/Components/ElementEditor"
 import { ElementInstance } from "../../Modules/FormElements/Class"
 import { ElementSchemaTypes } from "../../Modules/FormElements/Types"
+import { useEffect } from "react"
 
 interface Props{
     instance: ElementInstance<ElementSchemaTypes>,  
@@ -16,6 +17,14 @@ interface Props{
 export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, func , index, fields, ...props})  => {
              
 
+    console.log("a ver gastón :"+JSON.stringify(instance))
+
+    useEffect(() => {
+       
+        fields[index] = instance; 
+    
+      }, [instance]);
+    
 
     return <NotificationFullSizeWrapper>
         <LayoutSection className="content">
@@ -30,7 +39,7 @@ export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, func , in
         
           <LayoutStackedPanel className="mt-2">
             <LayoutSpacer/>
-            <Button onClick={()=>func()}>Cerrar</Button>
+            {/*<Button onClick={()=>func()}>Cerrar</Button>*/}
           </LayoutStackedPanel>
         </LayoutSection>
         <LayoutSpacer/>
