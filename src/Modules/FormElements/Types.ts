@@ -10,7 +10,8 @@ import { AiOutlineCloudUpload, AiOutlineQrcode } from "react-icons/ai";
 import { FormElement } from "./OLDTYPES";
 
 // Defining all props in the project
-export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'PARAGRAPH' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
+//export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'PARAGRAPH' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
+export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
 
 export const HelpToken:string = "HELP";
 
@@ -52,7 +53,7 @@ export const FormElementBases = {
       required: ["label","childrens"] as const,
       optional: [] as const,
     },
-    type: null,
+    type: "section",
     format: null,
     icon: RxSection
   },
@@ -66,7 +67,7 @@ export const FormElementBases = {
     format: null,
     icon: MdTitle
   },
-  "PARAGRAPH": {
+  /*"PARAGRAPH": {
     description: "Párrafo",
     properties:{
       required: ["label"] as const,
@@ -75,7 +76,7 @@ export const FormElementBases = {
     type: null,
     format: null,
     icon: BsTextParagraph
-  },
+  },*/
   "SPACER": {
     description: "Separador",
     properties:{
@@ -177,7 +178,7 @@ export const FormElementBases = {
     description: "Radio de Valores",
     properties:{
       required: ["label"] as const,
-      optional: ["required","disabled"] as const,
+      optional: ["required","disabled","value_min","value_max"] as const,
     },
     type: "input",
     format: "radio",

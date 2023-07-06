@@ -4,6 +4,7 @@ import { ElementPropsMap, ElementSchemaTypes, FormElementBases } from "../Types"
 import { ElementWrapper } from "./StyledComponents";
 import { ElementInstance } from "../Class";
 import { Button } from "../../../Components/Forms/Button";
+import { FormikField } from "../../../Components/Forms/FormikField";
 
 interface Props{
   instance: ElementInstance<ElementSchemaTypes>,
@@ -24,6 +25,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   const [hasLengthMaxCondition, setHasLengthMaxCondition] = useState(false);
   const [hasValueMin, setHasValueMin] = useState(false);
   const [hasValueMax, setHasValueMax] = useState(false);
+  const [hasOptions, setHasOptions] = useState(false); 
 
   const [isRequired, setRequired] = useState(false);
   const [nombreCampo, setNombreCampo] = useState('');
@@ -31,6 +33,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   const [minLength, setMinLength] = useState<number>();
   const [valueMin, setValueMin] = useState<number>();
   const [valueMax, setValueMax] = useState<number>();
+  const [lista, setLista] = useState('');
 
   
   const handleMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,8 +58,13 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   const handleNombreCampo = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNombreCampo(event.target.value);
   };
+
   const handleCheckboxChange = () => {
     setRequired(!isRequired);
+  };
+
+  const handleListValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLista(event.target.value);
   };
 
 
@@ -98,18 +106,22 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
       setHasValueMax(false);
     }
 
+    if (properties &&  Array.isArray(properties.required) && properties.required.includes("options")) {
+      setHasOptions(true);
+    } else {
+      setHasOptions(false);
+    }
+    
   }, []);
 
+  const [focus, setFocus] = useState(false);
+
+  const handleFocus = () => {
+    setFocus(!focus)            
+  }
 
   const Guardar = () => {
 
-    
-    //const jsonString = `"properties":{"required":[${hasLabelCondition ? `"label":"${nombreCampo}"` : `"label"`}],"optional":[${hasRequiredCondition ? `"required":"true"` : ''},"disabled"${hasLengthMinCondition ? `,"length_min":"${minLength}"` : ''}${hasLengthMaxCondition ? `,"length_max":"${maxLength}"` : ''}${hasValueMin ? `,"valueMin":"${valueMin}"` : ''}${hasValueMax ? `,"valueMax":"${valueMax}"` : ''}]},`;
-
-    /*const newProperties = `{"required":[${hasLabelCondition ? `"label":"${nombreCampo}"` : `"label"`}],"optional":[${hasRequiredCondition ? `"required":"${isRequired}"` : ''},"disabled"${hasLengthMinCondition ? `,"length_min":"${minLength}"` : ''}${hasLengthMaxCondition ? `,"length_max":"${maxLength}"` : ''}${hasValueMin ? `,"valueMin":"${valueMin}"` : ''}${hasValueMax ? `,"valueMax":"${valueMax}"` : ''}]}`
-    .replace(/,\s*]/, ']');
-    const modifiedBasetype = basetypeString.replace(/"properties"\s*:\s*{[^}]+}/, `"properties":${newProperties}`);
-*/
   const properties = {
     label: hasLabelCondition ? nombreCampo : "Prueba",
     required: isRequired,
@@ -125,7 +137,6 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
 
   const newProperties = JSON.stringify(properties);
-  console.log("el cambio es: "+newProperties)
   instance.update(JSON.parse(newProperties));
   const newFields = [...fields]; // Crear una copia del arreglo fields
   newFields[index] = instance; // Reemplazar el valor en la posición index con el valor de instance
@@ -139,28 +150,35 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
         <basetype.icon />
         {basetype.description}
       </label>
+      <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 20px 0px"}}>
+      <hr></hr>
+      </div>
       <ul>
+      {hasRequiredCondition && (
+          <><div style={{display:"flex", flexDirection:"column", margin:"15px 0px 20px 0px"}}>
+            <Checkbox label="Elemento obligatorio? " setCheck={setRequired} />
+            <div>
+              {isRequired ? 'Elemento obligatorio' : 'Elemento no obligatorio'} en el formulario
+            </div>
+          </div></>
+        )}
         {hasLabelCondition && (
           <div  style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
+          <h3>Ingrese el nombre del elemento</h3>
           <input
             type="text"
             value={nombreCampo}
             onChange={handleNombreCampo}
             style={{ border: '1px solid black', padding: '5px', marginBottom:"5px" }}
           />
-          <p>El nombre de este campo es: {nombreCampo}</p>
+          <input type="text" onChange={handleNombreCampo} onFocus={handleFocus} onBlur={handleFocus} multiple />
+
+          <p>El nombre de este elemento es: {nombreCampo}</p>
         </div>
-        )}
-        {hasRequiredCondition && (
-          <><div style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
-            <Checkbox label="¿Campo requerido? " setCheck={setRequired} />
-            <div>
-              El campo es: {isRequired ? 'requerido en el formulario' : 'no requerido en el formulario'}
-            </div>
-          </div></>
         )}
        {hasLengthMinCondition && (
           <div>
+            <h3>Ingrese la mínima cantidad de caracteres del campo</h3>
             <input
               type="number"
               value={minLength === 0 ? '' : minLength}
@@ -172,6 +190,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
         )}
         {hasLengthMaxCondition && (
           <div>
+            <h3>Ingrese la máxima cantidad de caracteres del campo</h3>
             <input
               type="number"
               value={maxLength}
@@ -184,6 +203,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
         {hasValueMin && (
           <div>
+            <h3>Ingrese valor mínimo campo</h3>
             <input
               type="number"
               value={valueMin === 0 ? '' : valueMin}
@@ -195,6 +215,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
         )}
         {hasValueMax && (
           <div>
+            <h3>Ingrese valor máximo del campo</h3>
             <input
               type="number"
               value={valueMax === 0 ? '' : valueMax}
@@ -204,8 +225,22 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
             <p>Mínima cantidad de caracteres es: {valueMax !== 0 ? valueMax : 'Vacío'}</p>
           </div>
         )}
+        {hasOptions && (
+          <div>
+            <h3>Ingrese lista de valores separados por ,</h3>
+            <input
+              type="text"
+              value={lista}
+              onInput={handleListValue}
+              style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
+            />
+            <p>Lista de valores: {lista !== '' ? lista : 'Lista vacia'}</p>
+          </div>
+        )}
+
+
       </ul>
-      <Button onClick={()=>Guardar()}>Guardar</Button>
+      <Button onClick={()=>Guardar()}>Guardar datos de elemento</Button>
 
     </ElementWrapper>
   );
@@ -222,7 +257,7 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, setCheck }) => {
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
-    setCheck(isChecked)
+    setCheck(!isChecked)
   };
 
   return (
@@ -238,3 +273,5 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, setCheck }) => {
     </div>
   );
 };
+
+
