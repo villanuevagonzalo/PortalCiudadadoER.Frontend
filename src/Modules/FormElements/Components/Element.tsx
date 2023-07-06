@@ -51,7 +51,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   }, [HelpField.value])
 
 
-  console.log("OBJ: "+JSON.stringify(basetype))
   const renderType = <T extends ElementSchemaTypes>(instance: ElementInstance<T>) => {
     let EI : any;
 
@@ -245,3 +244,4 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       <ErrorMessage name={props.name} component={FormError}/>
     </FormWrapper>
 */
+
