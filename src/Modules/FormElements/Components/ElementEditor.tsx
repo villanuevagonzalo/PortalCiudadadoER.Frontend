@@ -152,7 +152,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   }
 
   const Guardar = () => {
-
+  
   const properties = {
     label: hasLabelCondition ? nombreCampo : "Prueba",
     required: isRequired,
@@ -161,6 +161,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     length_max: hasLengthMaxCondition ? maxLength : 10,
     value_min: hasValueMin ? valueMin : 0,
     value_max: hasValueMax ? valueMax : 0,
+    options: hasOptions ? lista.split(",") : '',
     value_default: "",
     value_regex: "",
     childrens: ""
@@ -168,6 +169,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
 
   const newProperties = JSON.stringify(properties);
+  console.log("se está guardando esto: "+newProperties)
   instance.update(JSON.parse(newProperties));
   const newFields = [...fields]; // Crear una copia del arreglo fields
   newFields[index] = instance; // Reemplazar el valor en la posición index con el valor de instance
