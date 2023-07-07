@@ -7,12 +7,12 @@ import { Element } from "../../../../Modules/FormElements/Components/Element";
 import { ElementInstance, ElementSchema } from "../../../../Modules/FormElements/Class";
 import { Form, Formik } from "formik";
 import { AiOutlineSave } from "react-icons/ai";
-import { BiSave } from "react-icons/bi";
+import { BiBullseye, BiSave } from "react-icons/bi";
 import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
-import { FormFieldsPropertiesPopUp } from "../../../../Components/Forms/FormFieldsProperties";
+import { FormFieldsPropertiesPopUp } from "../../../../Components/Forms/FormFieldsPropertiesPopUp";
 import { FormElementV2 } from "../../../../Modules/FormElements/Components/FormsElement";
 
 export const DA_Procedures_Forms_Create = () => {
@@ -28,7 +28,6 @@ export const DA_Procedures_Forms_Create = () => {
   const [ jsona2, setJsona2 ] = useState<string>('[]');
 
   const [estadoFormulario, setEstadoFormulario] = useState<string>('');
-
 
   const addItem = (type:any) => {
 
@@ -80,13 +79,19 @@ export const DA_Procedures_Forms_Create = () => {
 
   if (ver){
 
-    return ( <FormElementV2 fields={fields} name={"Nombre Form"} subtitle={"Subtitle"} description={"asdfasdf"} keywords={"prueba"} />)
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    return ( 
+
+      <><FormElementV2 fields={fields} name={"Nombre Form"} subtitle={"Subtitle"} description={"asdfasdf"} keywords={"prueba"} /><Button onClick={() => setVer(false)}>Volver a sección editar </Button></>
+
+    )
   }else{
 
     if (edit){
       if (instance) {
         return(
-          <FormFieldsPropertiesPopUp instance={instance} func={setEdit} index={index} fields={fields} />
+          <FormFieldsPropertiesPopUp instance={instance} setField={setFields} index={index} fields={fields} setClose={setEdit} />
         );
       } else {
         return null; // Otra opción es mostrar un mensaje de error o una carga condicional
@@ -195,8 +200,10 @@ export const DA_Procedures_Forms_Create = () => {
               <option value="Publicado">Publicado</option>
             </select>
           </div>
-          <Button type="submit">Guardar <BiSave/></Button>
-          <Button  onClick={()=>setVer(true)}>Ver </Button>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+            <Button type="submit">Guardar <BiSave/></Button>
+            <Button onClick={() => setVer(true)}>Ver <BiBullseye/></Button>
+          </div>
 
         </LayoutSection>
     

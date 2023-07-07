@@ -9,12 +9,15 @@ import { useEffect } from "react"
 
 interface Props{
     instance: ElementInstance<ElementSchemaTypes>,  
-    func: Function, 
+    setField: Function, 
     index: number, 
-    fields: ElementInstance<ElementSchemaTypes>[]
+    fields: ElementInstance<ElementSchemaTypes>[],
+    setClose:Function
   }
+
+
   
-export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, func , index, fields, ...props})  => {
+export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, setField , index, fields, setClose,...props})  => {
              
 
     return <NotificationFullSizeWrapper>
@@ -22,11 +25,11 @@ export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, func , in
           <div className="header">
             <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
             <span className="flex-1"></span>
-            <span className="close" onClick={()=>func()}><AiOutlineClose fontSize={"1rem"}/></span>
+            <span className="close" onClick={()=>setClose()}><AiOutlineClose fontSize={"1rem"}/></span>
           </div>
 
 
-          <ElementEditor instance={instance} setFields={func} index={index} fields={fields} />
+          <ElementEditor instance={instance} setFields={setField} index={index} fields={fields} setClose={setClose} />
         
           <LayoutStackedPanel className="mt-2">
             <LayoutSpacer/>

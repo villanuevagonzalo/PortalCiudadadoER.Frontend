@@ -10,11 +10,11 @@ interface Props{
   instance: ElementInstance<ElementSchemaTypes>,
   setFields: Function, 
   index: number, 
-  fields: ElementInstance<ElementSchemaTypes>[]
-
+  fields: ElementInstance<ElementSchemaTypes>[],
+  setClose:Function
 }
 
-export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, index }) => {
+export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, index, setClose }) => {
 
   const basetype = FormElementBases[instance.type];
   const basetypeString = JSON.stringify(basetype);
@@ -35,7 +35,10 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   const [valueMax, setValueMax] = useState<number>();
   const [lista, setLista] = useState('');
 
-  
+  console.log("LABEL: "+JSON.stringify(fields[index]));
+  console.log("tiene: "+fields[index].properties.hasOwnProperty("length_max"))
+
+ 
   const handleMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setMinLength(parseInt(newValue));
@@ -69,50 +72,78 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
 
   useEffect(() => {
+
     const properties = basetype.properties;
 
     if (properties && Array.isArray(properties.required) && properties.required.includes("label")) {
       setHasLabelCondition(true);
+      setNombreCampo(instance.properties.label)
+
     } else {
       setHasLabelCondition(false);
     }
 
     if (properties && Array.isArray(properties.optional) && properties.optional.includes("required")) {
       setHasRequiredCondition(true);
+      if (fields[index].properties.hasOwnProperty("required")){
+        setRequired(fields[index].properties.)
+      }
     } else {
       setHasRequiredCondition(false);
     }
 
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("length_min")) {
       setHasLengthMinCondition(true);
+      
+      if (fields[index].properties.hasOwnProperty("length_min")){
+        
+          setMinLength(fields[index].properties?.length_min)
+      }
     } else {
       setHasLengthMinCondition(false);
     }
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("length_max")) {
       setHasLengthMaxCondition(true);
+      if (fields[index].properties.hasOwnProperty("length_max")){
+        
+      }
     } else {
       setHasLengthMaxCondition(false);
     }
 
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("value_min")) {
       setHasValueMin(true);
+      if (fields[index].properties.hasOwnProperty("value_min")){
+        
+      }
     } else {
       setHasValueMin(false);
     }
 
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("value_max")) {
       setHasValueMax(true);
+      if (fields[index].properties.hasOwnProperty("value_max")){
+        
+      }
     } else {
       setHasValueMax(false);
     }
 
     if (properties &&  Array.isArray(properties.required) && properties.required.includes("options")) {
       setHasOptions(true);
+      if (fields[index].properties.hasOwnProperty("options")){
+        
+      }
     } else {
       setHasOptions(false);
     }
+
     
   }, []);
+
+  useEffect(() => {
+
+  }, [hasLabelCondition, hasRequiredCondition,hasLengthMinCondition,]);
 
   const [focus, setFocus] = useState(false);
 
@@ -141,7 +172,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   const newFields = [...fields]; // Crear una copia del arreglo fields
   newFields[index] = instance; // Reemplazar el valor en la posición index con el valor de instance
   setFields(newFields); // Actualizar el estado con la nueva copia del arreglo newFields
-
+  setClose(false);
   }
   
   return (
@@ -172,7 +203,6 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
             style={{ border: '1px solid black', padding: '5px', marginBottom:"5px" }}
           />
           <input type="text" onChange={handleNombreCampo} onFocus={handleFocus} onBlur={handleFocus} multiple />
-
           <p>El nombre de este elemento es: {nombreCampo}</p>
         </div>
         )}
