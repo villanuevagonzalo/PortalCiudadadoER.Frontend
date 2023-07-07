@@ -35,9 +35,6 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   const [valueMax, setValueMax] = useState<number>();
   const [lista, setLista] = useState('');
 
-  console.log("LABEL: "+JSON.stringify(fields[index]));
-  console.log("tiene: "+fields[index].properties.hasOwnProperty("length_max"))
-
  
   const handleMinValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
@@ -62,9 +59,6 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     setNombreCampo(event.target.value);
   };
 
-  const handleCheckboxChange = () => {
-    setRequired(!isRequired);
-  };
 
   const handleListValue = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLista(event.target.value);
@@ -74,6 +68,10 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   useEffect(() => {
 
     const properties = basetype.properties;
+
+
+    const EI = instance as ElementInstance<"TEXT">
+
 
     if (properties && Array.isArray(properties.required) && properties.required.includes("label")) {
       setHasLabelCondition(true);
@@ -85,8 +83,8 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
     if (properties && Array.isArray(properties.optional) && properties.optional.includes("required")) {
       setHasRequiredCondition(true);
-      if (fields[index].properties.hasOwnProperty("required")){
-        setRequired(fields[index].properties.)
+      if (instance.properties.hasOwnProperty("required")){
+        setRequired(EI.properties.required ?? false);
       }
     } else {
       setHasRequiredCondition(false);
@@ -95,16 +93,18 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("length_min")) {
       setHasLengthMinCondition(true);
       
-      if (fields[index].properties.hasOwnProperty("length_min")){
+      if (instance.properties.hasOwnProperty("length_min")){
         
-          setMinLength(fields[index].properties?.length_min)
+         setMinLength(EI.properties.length_min)
       }
     } else {
       setHasLengthMinCondition(false);
     }
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("length_max")) {
       setHasLengthMaxCondition(true);
-      if (fields[index].properties.hasOwnProperty("length_max")){
+      if (instance.properties.hasOwnProperty("length_max")){
+
+        setMaxLength(EI.properties.length_max)
         
       }
     } else {
@@ -113,8 +113,8 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("value_min")) {
       setHasValueMin(true);
-      if (fields[index].properties.hasOwnProperty("value_min")){
-        
+      if ("value_min" in EI.properties) {
+        setValueMin(EI.properties.value_min as number | undefined);
       }
     } else {
       setHasValueMin(false);
@@ -122,8 +122,8 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
     if (properties &&  Array.isArray(properties.optional) && properties.optional.includes("value_max")) {
       setHasValueMax(true);
-      if (fields[index].properties.hasOwnProperty("value_max")){
-        
+      if ("value_max" in EI.properties) {
+        setValueMax(EI.properties.value_max as number | undefined);
       }
     } else {
       setHasValueMax(false);
@@ -131,8 +131,8 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
     if (properties &&  Array.isArray(properties.required) && properties.required.includes("options")) {
       setHasOptions(true);
-      if (fields[index].properties.hasOwnProperty("options")){
-        
+      if ("options" in EI.properties) {
+        setLista(EI.properties.options as string);
       }
     } else {
       setHasOptions(false);
@@ -187,7 +187,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
       <ul>
       {hasRequiredCondition && (
           <><div style={{display:"flex", flexDirection:"column", margin:"15px 0px 20px 0px"}}>
-            <Checkbox label="Elemento obligatorio? " setCheck={setRequired} />
+            <Checkbox label="Elemento obligatorio? " setCheck={setRequired} state={isRequired} />
             <div>
               {isRequired ? 'Elemento obligatorio' : 'Elemento no obligatorio'} en el formulario
             </div>
@@ -279,11 +279,12 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
 interface CheckboxProps {
   label: string;
+  state: boolean,
   setCheck: Function
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({ label, setCheck }) => {
-  const [isChecked, setIsChecked] = useState(false);
+const Checkbox: React.FC<CheckboxProps> = ({ label, state, setCheck }) => {
+  const [isChecked, setIsChecked] = useState(state);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
