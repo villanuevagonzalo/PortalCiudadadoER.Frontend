@@ -56,16 +56,28 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
     switch (basetype.type) {
       case "input":
+        console.log("BASE TYPE: "+basetype.type) //ACA ES INPUT
+        console.log("INSTANCE TYPE: "+instance.type) //ACA ES RADIO
         switch (instance.type) {
           case "TEXT": EI = instance as ElementInstance<"TEXT">; break;
           case "NUMBER": EI = instance as ElementInstance<"NUMBER">; break;
           default: EI = instance as ElementInstance<"TEXT">; break;
         }
 
-        return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
-          <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-          <input type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
-        </div></InputWrapper>);
+        switch(instance.type){
+          case "RADIO":
+            return (<div>
+              <input type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
+              <label style={{ marginLeft: '8px' }} className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+            </div>);
+          
+          default:
+            return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
+              <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+              <input type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
+            </div></InputWrapper>);
+        }
+        
       
       case "file": EI = instance as ElementInstance<"FILE">;
         return (<FileWrapper error={thiserror?true:false} focus={focus || !empty}><div>
@@ -89,8 +101,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
           <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
             {EI.properties.options&& EI.properties.options.map((option:any) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+              <option key={option.value} value={option.value} > 
+                {option}
               </option>
             ))}
           </select>
@@ -110,8 +122,30 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       return (<div>
           <label>{EI.properties.label}</label>
           <hr />
-        </div>
+          </div>
         );
+      
+      case "title": EI = instance as ElementInstance<"TITLE">;
+        return(
+          <div>
+          <h2>{EI.properties.label}</h2>
+          </div>
+        )
+      case "input-radio-lista": EI = instance as ElementInstance<"RADIO-LISTA">;
+          return(
+                <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto",   margin:"-0.25rem 0 0rem 0"}}>
+                <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+                <div style={{ display: 'flex', flexDirection:"column", gap: '8px', marginTop:"8px" }}>
+                {EI.properties.options&& EI.properties.options.map((option:any) => (
+                  <div style={{display:"flex", flexDirection:"row"}}>
+                    <input type="radio" autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus} />
+                    <label style={{ marginLeft: '8px'}} className="text">{option}</label>
+                  </div>
+                ))} 
+                </div>
+            </div>
+
+          )
         
       default:
         console.log(basetype.type)

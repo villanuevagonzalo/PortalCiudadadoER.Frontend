@@ -71,7 +71,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
 
     const EI = instance as ElementInstance<"TEXT">
-
+    console.log("ESTO ES LO QUE TIENE: "+JSON.stringify(instance))
 
     if (properties && Array.isArray(properties.required) && properties.required.includes("label")) {
       setHasLabelCondition(true);
@@ -141,9 +141,6 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     
   }, []);
 
-  useEffect(() => {
-
-  }, [hasLabelCondition, hasRequiredCondition,hasLengthMinCondition,]);
 
   const [focus, setFocus] = useState(false);
 
@@ -161,7 +158,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     length_max: hasLengthMaxCondition ? maxLength : 10,
     value_min: hasValueMin ? valueMin : 0,
     value_max: hasValueMax ? valueMax : 0,
-    options: hasOptions ? lista.split(",") : '',
+    options: hasOptions ? lista.split(";") : '',
     value_default: "",
     value_regex: "",
     childrens: ""
@@ -193,24 +190,25 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
             <div>
               {isRequired ? 'Elemento obligatorio' : 'Elemento no obligatorio'} en el formulario
             </div>
-          </div></>
+          </div>
+          
+          </>
         )}
         {hasLabelCondition && (
           <div  style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
-          <h3>Ingrese el nombre del elemento</h3>
+          <h2>Ingrese el nombre del elemento</h2>
           <input
             type="text"
             value={nombreCampo}
             onChange={handleNombreCampo}
             style={{ border: '1px solid black', padding: '5px', marginBottom:"5px" }}
           />
-          <input type="text" onChange={handleNombreCampo} onFocus={handleFocus} onBlur={handleFocus} multiple />
           <p>El nombre de este elemento es: {nombreCampo}</p>
         </div>
         )}
        {hasLengthMinCondition && (
           <div>
-            <h3>Ingrese la mínima cantidad de caracteres del campo</h3>
+            <h2>Ingrese la mínima cantidad de caracteres del campo</h2>
             <input
               type="number"
               value={minLength === 0 ? '' : minLength}
@@ -222,7 +220,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
         )}
         {hasLengthMaxCondition && (
           <div>
-            <h3>Ingrese la máxima cantidad de caracteres del campo</h3>
+            <h2>Ingrese la máxima cantidad de caracteres del campo</h2>
             <input
               type="number"
               value={maxLength}
@@ -235,7 +233,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
         {hasValueMin && (
           <div>
-            <h3>Ingrese valor mínimo campo</h3>
+            <h2>Ingrese valor mínimo campo</h2>
             <input
               type="number"
               value={valueMin === 0 ? '' : valueMin}
@@ -247,7 +245,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
         )}
         {hasValueMax && (
           <div>
-            <h3>Ingrese valor máximo del campo</h3>
+            <h2>Ingrese valor máximo del campo</h2>
             <input
               type="number"
               value={valueMax === 0 ? '' : valueMax}
@@ -259,7 +257,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
         )}
         {hasOptions && (
           <div>
-            <h3>Ingrese lista de valores separados por ,</h3>
+            <h2>Ingrese lista de valores separados por ;</h2>
             <input
               type="text"
               value={lista}
@@ -293,16 +291,21 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, state, setCheck }) => {
     setCheck(!isChecked)
   };
 
+  const [focus, setFocus] = useState(false);
+
+  const handleFocus = () => {
+    setFocus(!focus)            
+  }
+
   return (
     <div>
-      <label>
-        <input
+      <input
           type="checkbox"
           checked={isChecked}
           onChange={handleCheckboxChange}
+          onFocus={handleFocus} onBlur={handleFocus}
         />
-        {label}
-      </label>
+      <label style={{ marginLeft: '8px' }}>{label} </label>
     </div>
   );
 };

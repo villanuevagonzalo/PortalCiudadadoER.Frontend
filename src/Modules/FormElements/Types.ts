@@ -11,7 +11,9 @@ import { FormElement } from "./OLDTYPES";
 
 // Defining all props in the project
 //export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'PARAGRAPH' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
-export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
+//export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
+export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'RADIO-LISTA' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
+
 
 export const HelpToken:string = "HELP";
 
@@ -63,7 +65,7 @@ export const FormElementBases = {
       required: ["label"] as const,
       optional: [] as const,
     },
-    type: null,
+    type: "title",
     format: null,
     icon: MdTitle
   },
@@ -175,12 +177,22 @@ export const FormElementBases = {
     icon: BiCheckSquare
   },
   "RADIO": {
-    description: "Radio de Valores",
+    description: "Radio",
     properties:{
       required: ["label"] as const,
-      optional: ["required","disabled","value_min","value_max"] as const,
+      optional: ["required","disabled"] as const,
     },
     type: "input",
+    format: "radio",
+    icon: MdRadioButtonChecked
+  },
+  "RADIO-LISTA": {
+    description: "Radio lista",
+    properties:{
+      required: ["label","options"] as const,
+      optional: ["required","disabled"] as const,
+    },
+    type: "input-radio-lista",
     format: "radio",
     icon: MdRadioButtonChecked
   },
