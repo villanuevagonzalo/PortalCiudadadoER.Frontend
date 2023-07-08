@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FormElement } from "../OLDTYPES";
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases } from "../Types";
-import { ElementWrapper } from "./StyledComponents";
+import { ElementWrapper, InputWrapper } from "./StyledComponents";
 import { ElementInstance } from "../Class";
 import { Button } from "../../../Components/Forms/Button";
 import { FormikField } from "../../../Components/Forms/FormikField";
@@ -75,7 +75,6 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
     if (properties && Array.isArray(properties.required) && properties.required.includes("label")) {
       setHasLabelCondition(true);
-      setNombreCampo(instance.properties.label)
 
     } else {
       setHasLabelCondition(false);
@@ -142,11 +141,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   }, []);
 
 
-  const [focus, setFocus] = useState(false);
 
-  const handleFocus = () => {
-    setFocus(!focus)            
-  }
 
   const Guardar = () => {
   
@@ -173,6 +168,14 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   setFields(newFields); // Actualizar el estado con la nueva copia del arreglo newFields
   setClose(false);
   }
+
+
+const [focus, setFocus] = useState(false);
+
+const handleFocus = () => {
+  setFocus(!focus)            
+
+}
   
   return (
     <ElementWrapper>
@@ -203,6 +206,13 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
             onChange={handleNombreCampo}
             style={{ border: '1px solid black', padding: '5px', marginBottom:"5px" }}
           />
+          
+          <InputWrapper focus={focus}><div>
+              <label className="text" htmlFor="nombre">Ingrese nombre del componente</label>
+              <input id="nombre" type="text" onFocus={handleFocus} onBlur={handleFocus} value={nombreCampo} onChange={handleNombreCampo}/>
+            </div>
+          </InputWrapper>
+
           <p>El nombre de este elemento es: {nombreCampo}</p>
         </div>
         )}
@@ -309,5 +319,4 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, state, setCheck }) => {
     </div>
   );
 };
-
 

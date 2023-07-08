@@ -80,7 +80,7 @@ export const DA_Procedures_Forms_Create = () => {
   if (ver){
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
+    console.log("VEAMOS CUAL ES EL NOMBRE DEL ELEMENTO: "+JSON.stringify(Fields.Title))
     return ( 
 
       <><FormElementV2 fields={fields} name={"Nombre Form"} subtitle={"Subtitle"} description={"asdfasdf"} keywords={"prueba"} /><Button onClick={() => setVer(false)}>Volver a sección editar </Button></>
@@ -132,12 +132,7 @@ export const DA_Procedures_Forms_Create = () => {
           <h1><MdOutlineDataset />Administrador de Campos</h1>
           <LayoutStackedPanel>
             <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>
-            {/*  <h2 onClick={update}>Actualizar</h2>
-              <input value={index} type="number" onChange={handleIndexChange}/>
-              <textarea value={jsonproperties} onChange={handleJsonPropiertiesChanges} style={{width:'100%', height:'100px'}} />
-          
-            {fields.map((element:ElementInstance<ElementSchemaTypes>) => <ElementEditor key={element.name} instance={element} />)}
-    */ }
+        
             <Formik
             validateOnBlur={false}
             validateOnChange={false}

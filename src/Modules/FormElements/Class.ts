@@ -17,8 +17,6 @@ export class ElementSchema<T extends ElementSchemaTypes> {
   
   update(properties: Partial<ElementPropsMap[T]>): void {
 
-    console.log("ACTUALIZANDO", properties)
-
     for (const prop in properties) {
       
       // Skip properties not found in the allowed properties
