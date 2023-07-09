@@ -13,15 +13,15 @@ import { FormElementBasesMenu } from "../../../../Modules/FormElements/Component
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
 import { FormFieldsPropertiesPopUp } from "../../../../Components/Forms/FormFieldsPropertiesPopUp";
-import { FormElementV2 } from "../../../../Modules/FormElements/Components/FormsElement";
+import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 
 export const DA_Procedures_Forms_Create = () => {
 
   const [edit, setEdit] = useState(false)
   const [ver, setVer] = useState(false)
 
-
   const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
+
   const [instance, setIntance] = useState<ElementInstance<ElementSchemaTypes>>()
   const [ index, setIndex] = useState<number>(0);
   const [ jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
@@ -31,7 +31,6 @@ export const DA_Procedures_Forms_Create = () => {
 
   const addItem = (type:any) => {
 
-    //const newfield = new FormElement(type,{}) //FormElement es viejo, ahora hay que unser un ElementSchema 
     const newfield = new ElementInstance( fields.length.toString (),new ElementSchema(type,{label:'Ingresá el Título'},["isRequired"]))
     setFields((prev: any)=>[...prev,newfield])
   }
@@ -65,7 +64,8 @@ export const DA_Procedures_Forms_Create = () => {
 
   useEffect(()=>{
     //setJsona2(JSON.stringify(GetJSONData(fields)))
-    console.log("CAMBIA"+JSON.stringify(fields))
+    //console.log("CAMBIA"+JSON.stringify(fields))
+    console.log("el titulo del form es: "+Fields.Title.value)
   },[fields])
 
   const Fields: {[key: string]: ElementInstance<ElementSchemaTypes>} = {
@@ -75,15 +75,17 @@ export const DA_Procedures_Forms_Create = () => {
     Keywords: new ElementInstance("Keywords",new ElementSchema('TEXT',{label:'Palabras Claves'},["isRequired"])),
   }
 
+
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   if (ver){
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    console.log("VEAMOS CUAL ES EL NOMBRE DEL ELEMENTO: "+JSON.stringify(Fields.Title))
+    console.log("ejemplo de instance: "+ Fields.Title.value)
+
     return ( 
 
-      <><FormElementV2 fields={fields} name={"Nombre Form"} subtitle={"Subtitle"} description={"asdfasdf"} keywords={"prueba"} /><Button onClick={() => setVer(false)}>Volver a sección editar </Button></>
+      <><FormElementShow fields={fields} title={Fields.Title.value} subtitle={Fields.Subtitle.value} description={Fields.Description.value} keywords={Fields.Keywords.value} /><Button onClick={() => setVer(false)}>Volver a sección editar </Button></>
 
     )
   }else{

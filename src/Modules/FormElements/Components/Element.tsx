@@ -36,6 +36,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     const file = Array.from(event.target.files)
     console.log(file)
     setFieldValue(HelpToken+instance.name,file)
+    console.log("a ver que tenemos acá? "+JSON.stringify(values))
   }
     
   useEffect(() => {
@@ -50,14 +51,17 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     }
   }, [HelpField.value])
 
+  const changeValue = (value:any) => {
+    console.log("lo que se va a guardar: "+value)
+    instance.setValue(value);
+    console.log(JSON.stringify(instance))
+  }
 
   const renderType = <T extends ElementSchemaTypes>(instance: ElementInstance<T>) => {
     let EI : any;
 
     switch (basetype.type) {
       case "input":
-        console.log("BASE TYPE: "+basetype.type) //ACA ES INPUT
-        console.log("INSTANCE TYPE: "+instance.type) //ACA ES RADIO
         switch (instance.type) {
           case "TEXT": EI = instance as ElementInstance<"TEXT">; break;
           case "NUMBER": EI = instance as ElementInstance<"NUMBER">; break;
@@ -66,19 +70,34 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
         switch(instance.type){
           case "RADIO":
+            
             return (<div>
-              <input type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
+              <input 
+                type={basetype.format === 'password' ? (true ? 'password' : 'text') : basetype.format || ""} 
+                autoFocus={props.autoFocus} 
+                {...field} 
+                onFocus={handleFocus} 
+                onBlur={handleFocus}
+                onInput={(e) => changeValue((e.target as HTMLInputElement).value)}
+              />
               <label style={{ marginLeft: '8px' }} className="text" htmlFor={EI.name}>{EI.properties.label}</label>
             </div>);
           
           default:
             return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
               <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-              <input type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
+              <input 
+                type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} 
+                autoFocus={props.autoFocus} 
+                {...field} 
+                onFocus={handleFocus} 
+                onBlur={handleFocus}
+                value={EI.value}
+                onInput={(e) => changeValue((e.target as HTMLInputElement).value)} 
+                />
             </div></InputWrapper>);
         }
         
-      
       case "file": EI = instance as ElementInstance<"FILE">;
         return (<FileWrapper error={thiserror?true:false} focus={focus || !empty}><div>
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
@@ -92,14 +111,28 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       case 'textarea': EI = instance as ElementInstance<"TEXTAREA">;
         return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div style={{height:'100px'}}>
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-          <textarea autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
+          <textarea 
+            autoFocus={props.autoFocus} 
+            {...field} 
+            onFocus={handleFocus} 
+            onBlur={handleFocus}
+            value={EI.value}
+            onInput={(e) => changeValue((e.target as HTMLInputElement).value)} 
+            />
           <div className="FormIcon"><basetype.icon /></div>
         </div></InputWrapper>);
 
       case "select": EI = instance as ElementInstance<"SELECT">;
         return (<SelectWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-          <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
+          <select 
+              autoFocus={props.autoFocus} 
+              {...field} 
+              onFocus={handleFocus} 
+              onBlur={handleFocus}
+              value={EI.value}
+              onInput={(e) => changeValue((e.target as HTMLInputElement).value)} 
+              >
             {EI.properties.options&& EI.properties.options.map((option:any) => (
               <option key={option.value} value={option.value} > 
                 {option}
@@ -110,8 +143,16 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         </div></SelectWrapper>);
 
       case "checkbox": EI = instance as ElementInstance<"CHECKBOX">;
+      
         return (<CheckboxWrapper error={thiserror?true:false} focus={focus || !empty} checked={field.value}><div>
-          <input type="checkbox" {...field} {...props} hidden/>
+          <input 
+            type="checkbox" 
+            {...field} 
+            {...props} 
+            hidden  
+            value={EI.value !== "" ? EI.value : false}
+            onChange={(e) => changeValue(e.target.checked)} 
+          />
           <div className="CheckboxText" onClick={()=>setFieldValue(field.name,!field.value)}>
             <div>{field.value?<AiOutlineCheckCircle />:<MdRadioButtonUnchecked />}</div>
             <label>{EI.properties.label}</label>
@@ -138,7 +179,14 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
                 <div style={{ display: 'flex', flexDirection:"column", gap: '8px', marginTop:"8px" }}>
                 {EI.properties.options&& EI.properties.options.map((option:any) => (
                   <div style={{display:"flex", flexDirection:"row"}}>
-                    <input type="radio" autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus} />
+                    <input 
+                      type="radio" 
+                      autoFocus={props.autoFocus} 
+                      {...field} 
+                      onFocus={handleFocus} 
+                      onBlur={handleFocus}  
+                      value={EI.value}
+                      onInput={(e) => changeValue((e.target as HTMLInputElement).value)} />
                     <label style={{ marginLeft: '8px'}} className="text">{option}</label>
                   </div>
                 ))} 

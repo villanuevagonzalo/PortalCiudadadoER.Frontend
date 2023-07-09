@@ -13,7 +13,7 @@ import {Element} from './Element';
 
 
   interface Props{
-    name: string,
+    title: string,
     subtitle: string,
     description: string,
     keywords: string,
@@ -21,17 +21,17 @@ import {Element} from './Element';
     setFields?:Function
   }
 
-  export const FormElementV2: React.FC<Props> = ({ name, subtitle, description, keywords,fields, setFields }) => {
+  export const FormElementShow: React.FC<Props> = ({ title, subtitle, description, keywords,fields, setFields }) => {
     
     const initialValues = Object.entries(fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
+    console.log("vamos cual es el name;:: "+title)
     return (
 
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             <LayoutSection>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-
-                <h2> {name} </h2>
+                <h2> {title} </h2>
                 <h2> {subtitle} </h2>
                 <h2> {description} </h2>
                 <h2> {keywords} </h2>
@@ -50,6 +50,7 @@ import {Element} from './Element';
             }}
             >
             <Form autoComplete="off">
+
             {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                 <Element instance={element} />

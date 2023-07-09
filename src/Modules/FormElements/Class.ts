@@ -40,6 +40,9 @@ export class ElementSchema<T extends ElementSchemaTypes> {
 
 }
 
+
+
+
 export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema<T> {
   public name: string;
   public value: any;
@@ -48,9 +51,53 @@ export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema
     super(schema.type, schema.properties, schema.aditionalValidations);
     this.name = name;
     this.value = defaultValue;
+  } 
+
+
+  setValue(value:any): void {
+    console.log("VEAMOS LO QUE SE GUARDA: "+value)
+    this.value = value
   }
+
+
 }
 
+/*
+export class ElementData<T extends ElementSchemaTypes> extends ElementInstance<T> {
+  public instance: ElementInstance<T>;
+  public data: string | undefined;
+  
+  constructor(elementInstance: ElementInstance<T>) {
+    super(elementInstance.name, elementInstance, elementInstance.value);
+    this.instance = elementInstance;
+    this.data = "";
+  }
+
+  update(properties: Partial<ElementPropsMap[T]>): void {
+
+    for (const prop in properties) {
+      
+      // Skip properties not found in the allowed properties
+      if (!Object.values(FormElementBases[this.type].properties).flat().includes(prop)) {
+        console.warn(`Invalid property "${prop}" for element type ${this.type}`);
+        continue;
+      }
+
+      // Skip properties with a value that doesn't match the type defined in the interface
+      const propType = typeof properties[prop];
+      const expectedType = typeof (FormElementInitialValues as ElementPropsMap[T])[prop];
+      if (propType !== expectedType) {
+        console.warn(`Invalid type "${propType}" for property "${prop}" in element type ${this.type}. Expected type: "${expectedType}".`);
+        continue;
+      }
+  
+      // Apply the update
+      Object.assign(this.properties, { [prop]: properties[prop] });
+    }
+}
+
+}
+*/
 
 /*export class ElementInstance {
   public name: string;
