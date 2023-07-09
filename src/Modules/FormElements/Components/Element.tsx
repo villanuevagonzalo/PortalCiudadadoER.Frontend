@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ChangeEvent, HTMLAttributes, useEffect, useState } from "react";
+import { ButtonHTMLAttributes, ChangeEvent, HTMLAttributes, SetStateAction, useEffect, useState } from "react";
 import { FormElement, FormElementInstance } from "../OLDTYPES";
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../Types";
 import { ElementWrapper, BaseWrapperInfo, InputWrapper, ElementError, SelectWrapper, FileWrapper, CheckboxWrapper } from "./StyledComponents";
@@ -56,6 +56,14 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     console.log("ASI QUEDA LA INSTANCE:" +JSON.stringify(instance))
   }
 
+  //this is just to radio or radio-list
+  const [selectedValue, setSelectedValue] = useState(instance.value);
+  const handleRadioChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+    setSelectedValue(e.target.value);
+    instance.setValue(e.target.value);
+
+  };
+
   const renderType = <T extends ElementSchemaTypes>(instance: ElementInstance<T>) => {
     let EI : any;
 
@@ -78,7 +86,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
                 onFocus={handleFocus} 
                 value="true"
                 onBlur={handleFocus}
-                onInput={(e) => changeValue((e.target as HTMLInputElement).value)}
+                checked={selectedValue === "true"}
+                onChange={handleRadioChange}
               />
               <label style={{ marginLeft: '8px' }} className="text" htmlFor={EI.name}>{EI.properties.label}</label>
             </div>);
@@ -173,6 +182,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           </div>
         )
       case "input-radio-lista": EI = instance as ElementInstance<"RADIO-LISTA">;
+    
           return(
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto",   margin:"-0.25rem 0 0rem 0"}}>
                 <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
@@ -186,7 +196,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
                       onFocus={handleFocus} 
                       onBlur={handleFocus}  
                       value={option}
-                      onInput={(e) => changeValue((e.target as HTMLInputElement).value)} />
+                      checked={selectedValue === option}
+                      onChange={handleRadioChange}/>
                       
                     <label style={{ marginLeft: '8px'}} className="text">{option}</label>
                   </div>
