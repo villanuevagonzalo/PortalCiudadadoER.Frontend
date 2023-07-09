@@ -52,13 +52,65 @@ export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema
     this.name = name;
     this.value = defaultValue;
   } 
-
-
   setValue(value:any): void {
     console.log("VEAMOS LO QUE SE GUARDA: "+value)
     this.value = value
   }
 
+  getValue():any {
+
+    return this.value
+  }
+
+}
+
+
+
+export class FormInstance<T extends ElementSchemaTypes> {
+
+  private elements: ElementInstance<T>[];
+  private title: string; 
+  private subtitle: string; 
+  private description: string; 
+  private keywords: string; 
+  private status:string;
+
+
+  constructor(title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[]) {
+    this.title=title;
+    this.subtitle=subtitle;
+    this.description=description;
+    this.keywords=keywords;
+    this.status=status;
+    this.elements = elements ;
+  }
+
+  addElement(element: ElementInstance<T>) {
+    this.elements.push(element);
+  }
+
+  addElements(elements: ElementInstance<T> []) {
+    this.elements=elements;
+  }
+
+
+  getElements(): ElementInstance<T>[] {
+    return this.elements;
+  }
+
+  getJSON (): string{
+    const formData = {
+      title: this.title,
+      subtitle: this.subtitle,
+      description: this.description,
+      keywords: this.keywords,
+      status: this.status,
+      elements: this.elements
+    };
+    
+    const jsonData = JSON.stringify(formData);
+    return jsonData;
+  }
 
 }
 

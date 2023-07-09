@@ -1,35 +1,46 @@
 import { FC, createContext, useState } from "react";
-import { ElementInstance } from "../Modules/FormElements/Class";
+import { ElementInstance, FormInstance } from "../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
-
-
-interface Formularios{
-    name: string,
-    subtitle: string,
-    description: string,
-    keywords: string,
-    fields: ElementInstance<ElementSchemaTypes>[]
-    setFields?:Function
-  }
+import axios, { AxiosResponse } from "axios";
+import { ResponseError, handleResponse } from "../Config/Axios";
+import { FormAPI } from "../Services/FormAPI";
 
 
 const ContextValues = () => {
    
-    const [formularios, setFormularios] = useState<Formularios[]>([]);
-    return(
-        null
-    )
+  const AxiosFormAPI = new FormAPI();
+  const [formularios, setFormularios] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+    
 
+    const CreateaForms = async (formularios:any, setFormState:Function) => {
+
+      const response:AxiosResponse = await handleResponse(AxiosFormAPI.Create, formularios,setFormState  );
+      if(response.data) setFormularios(prevState => ([...prevState, formularios]));
+      return response;
+  
+    }
     
     const UserClearData = () => {
         setFormularios([]);
+        interface Formularios{
+          name: string,
+          subtitle: string,
+          description: string,
+          keywords: string,
+          fields: ElementInstance<ElementSchemaTypes>[]
+          setFields?:Function
+        }
+      
       
     }
   
     return {
-        formularios
+        formularios, CreateaForms
     }
   }
+
+
+
   
   export const FormContext = createContext({} as ReturnType<typeof ContextValues>);
   

@@ -1,4 +1,5 @@
 import { axiosBase } from "../Config/Axios";
+import { ElementInstance } from "../Modules/FormElements/Class";
 
 export class FormAPI {
 
@@ -9,19 +10,11 @@ export class FormAPI {
   }
 
   Create = async (params: {
-    message_title: string;
-    message_body: string;
-    recipients: string;
-    notification_date_from: Date;
-    notification_date_to: Date;
-    send_by_email: string;
-    attachment?: File;
-    age_from?: number;
-    age_to?: number;
-    department_id?: number;
-    locality_id?: number;
+
+    data:string
+
   }) => {
-    return this.baseService.post('/v0/notification/new', params,{
+    return this.baseService.post('/v0/forms/new', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }

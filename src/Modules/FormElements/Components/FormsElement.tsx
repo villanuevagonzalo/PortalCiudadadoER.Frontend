@@ -13,7 +13,7 @@ import {Element} from './Element';
 
 
   interface Props{
-    title: string,
+    title: any,
     subtitle: string,
     description: string,
     keywords: string,
@@ -25,7 +25,6 @@ import {Element} from './Element';
     
     const initialValues = Object.entries(fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
-    console.log("vamos cual es el name;:: "+title)
     return (
 
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>

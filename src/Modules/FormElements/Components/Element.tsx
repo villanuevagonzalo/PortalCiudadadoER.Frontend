@@ -36,7 +36,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     const file = Array.from(event.target.files)
     console.log(file)
     setFieldValue(HelpToken+instance.name,file)
-    console.log("a ver que tenemos acá? "+JSON.stringify(values))
   }
     
   useEffect(() => {
@@ -54,7 +53,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const changeValue = (value:any) => {
     console.log("lo que se va a guardar: "+value)
     instance.setValue(value);
-    console.log(JSON.stringify(instance))
+    console.log("ASI QUEDA LA INSTANCE:" +JSON.stringify(instance))
   }
 
   const renderType = <T extends ElementSchemaTypes>(instance: ElementInstance<T>) => {
@@ -77,6 +76,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
                 autoFocus={props.autoFocus} 
                 {...field} 
                 onFocus={handleFocus} 
+                value="true"
                 onBlur={handleFocus}
                 onInput={(e) => changeValue((e.target as HTMLInputElement).value)}
               />
@@ -185,8 +185,9 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
                       {...field} 
                       onFocus={handleFocus} 
                       onBlur={handleFocus}  
-                      value={EI.value}
+                      value={option}
                       onInput={(e) => changeValue((e.target as HTMLInputElement).value)} />
+                      
                     <label style={{ marginLeft: '8px'}} className="text">{option}</label>
                   </div>
                 ))} 
