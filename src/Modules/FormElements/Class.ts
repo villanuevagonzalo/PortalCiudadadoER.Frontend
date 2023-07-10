@@ -41,8 +41,6 @@ export class ElementSchema<T extends ElementSchemaTypes> {
 }
 
 
-
-
 export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema<T> {
   public name: string;
   public value: any;
@@ -53,7 +51,6 @@ export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema
     this.value = defaultValue;
   } 
   setValue(value:any): void {
-    console.log("VEAMOS LO QUE SE GUARDA: "+value)
     this.value = value
   }
 
@@ -74,15 +71,17 @@ export class FormInstance<T extends ElementSchemaTypes> {
   private description: string; 
   private keywords: string; 
   private status:string;
+  private code:string;
 
 
-  constructor(title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[]) {
+  constructor(code:string, title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[]) {
     this.title=title;
     this.subtitle=subtitle;
     this.description=description;
     this.keywords=keywords;
     this.status=status;
     this.elements = elements ;
+    this.code=code;
   }
 
   addElement(element: ElementInstance<T>) {
@@ -98,18 +97,19 @@ export class FormInstance<T extends ElementSchemaTypes> {
     return this.elements;
   }
 
-  getJSON (): string{
+  getJSON (){
     const formData = {
-      title: this.title,
-      subtitle: this.subtitle,
-      description: this.description,
-      keywords: this.keywords,
-      status: this.status,
-      elements: this.elements
+      "code": this.code,
+      "title": this.title,
+      "subtitle": this.subtitle,
+      "description": this.description,
+      "keywords": this.keywords,
+      "status": this.status,
+      "elements": JSON.stringify(this.elements)
     };
     
     const jsonData = JSON.stringify(formData);
-    return jsonData;
+    return formData;
   }
 
 }

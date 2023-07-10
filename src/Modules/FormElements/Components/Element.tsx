@@ -174,7 +174,11 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           <hr />
           </div>
         );
-      
+      case "Separador": EI = instance as ElementInstance<"SPACER">;
+        return (<div>
+            <hr />
+            </div>
+          );
       case "title": EI = instance as ElementInstance<"TITLE">;
         return(
           <div>
@@ -182,7 +186,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           </div>
         )
       case "input-radio-lista": EI = instance as ElementInstance<"RADIO-LISTA">;
-    
           return(
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto",   margin:"-0.25rem 0 0rem 0"}}>
                 <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>

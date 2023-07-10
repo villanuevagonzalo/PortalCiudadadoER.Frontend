@@ -7,51 +7,52 @@ import { FormAPI } from "../Services/FormAPI";
 
 
 const ContextValues = () => {
-   
+
   const AxiosFormAPI = new FormAPI();
   const [formularios, setFormularios] = useState<FormInstance<ElementSchemaTypes>[]>([]);
-    
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [errors, setErrors] = useState<string>("");
 
-    const CreateaForms = async (formularios:any, setFormState:Function) => {
+  const SaveForm = async (formularios: any, setFormState: Function) => {
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formularios, setFormState);
+    if (response.data) 
+      {
+        setFormularios(prevState => ([...prevState, formularios]));
+      }
+    return response;
+  }
+  
+  const UpdateForms = async() => {
 
-      const response:AxiosResponse = await handleResponse(AxiosFormAPI.Create, formularios,setFormState  );
-      if(response.data) setFormularios(prevState => ([...prevState, formularios]));
-      return response;
-  
-    }
+    setIsLoading(true)
+    let responseAll:AxiosResponse | ResponseError | null = null;
     
-    const UserClearData = () => {
-        setFormularios([]);
-        interface Formularios{
-          name: string,
-          subtitle: string,
-          description: string,
-          keywords: string,
-          fields: ElementInstance<ElementSchemaTypes>[]
-          setFields?:Function
-        }
-      
-      
-    }
-  
-    return {
-        formularios, CreateaForms
-    }
+    try { responseAll = await AxiosFormAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    console.log("respuesta completa: "+JSON.stringify(responseAll));
+    
+    setIsLoading(false); 
   }
 
-
-
-  
-  export const FormContext = createContext({} as ReturnType<typeof ContextValues>);
-  
-  const FormContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
-    return (
-      <FormContext.Provider value={ContextValues()}>
-        {props.children}
-      </FormContext.Provider>
-    );
+  const UserClearData = () => {
+    setFormularios([]);
   }
- 
-  export default FormContextProvider;
 
+  return {
+    formularios,
+    SaveForm, 
+    UpdateForms
+  }
+}
+
+export const FormContext = createContext({} as ReturnType<typeof ContextValues>);
+
+const FormContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
+  return (
+    <FormContext.Provider value={ContextValues()}>
+      {props.children}
+    </FormContext.Provider>
+  );
+}
+
+export default FormContextProvider;
   

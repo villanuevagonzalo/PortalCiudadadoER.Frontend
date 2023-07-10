@@ -14,13 +14,13 @@ import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
 import { FormFieldsPropertiesPopUp } from "../../../../Components/Forms/FormFieldsPropertiesPopUp";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
-import { FormContext } from "../../../../Contexts/FormContext";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
+import { FormContext } from "../../../../Contexts/FormContext";
 
 export const DA_Procedures_Forms_Create = () => {
 
-  const { CreateaForms } = useContext(FormContext);
+  const { SaveForm } = useContext(FormContext);
 
   const [edit, setEdit] = useState(false)
   const [ver, setVer] = useState(false)
@@ -61,10 +61,10 @@ export const DA_Procedures_Forms_Create = () => {
 
   const guardarFormulario=async ()=> {
 
-   const Formulario= new FormInstance(fields2.Title.value, fields2.Subtitle.value, fields2.Description.value, fields2.Keywords.value, estadoFormulario, fields )
+   const Formulario= new FormInstance("25",fields2.Title.value, fields2.Subtitle.value, fields2.Description.value, fields2.Keywords.value, "Borrador", fields )
    const JsonData = Formulario.getJSON();
-   const response = await CreateaForms(JsonData, setFormState);
-   console.log("RESPUESTA: "+response+" - data a enviar: "+JsonData);
+   const response = await SaveForm(Formulario.getJSON(), setFormState);
+   console.log(response)
 
   }
 

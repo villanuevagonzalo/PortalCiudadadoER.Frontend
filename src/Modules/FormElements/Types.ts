@@ -85,7 +85,7 @@ export const FormElementBases = {
       required: ["label"] as const,  //no tiene parametro
       optional: [] as const,
     },
-    type: null,
+    type: "Separador",
     format: null,
     icon: ImPageBreak
   },

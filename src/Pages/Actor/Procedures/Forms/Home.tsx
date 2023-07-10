@@ -2,7 +2,7 @@ import { Form, Formik } from "formik";
 import { Spinner } from "../../../../Components/Elements/StyledComponents";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
-import { useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { IFormState } from "../../../../Interfaces/Data";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
 import { Button } from "../../../../Components/Forms/Button";
@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { Pages } from "../../../../Routes/Pages";
 import { Table } from "../../../../Components/Elements/Table";
 import { ColumnDef } from "@tanstack/react-table";
+import { FormContext } from "../../../../Contexts/FormContext";
 
 type Item = {
   title: string;
@@ -45,10 +46,15 @@ export const DA_Procedures_Forms_Home = () => {
   ],[]);
   const mdata = useMemo(()=>data,[])
 
+  const { UpdateForms } = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
 
+  useEffect(()=>{
+    UpdateForms()
+  },[])
+  
   return(<>
     <LayoutSection>
       
