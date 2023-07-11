@@ -137,6 +137,17 @@ export interface ActorTableNotification{
   ALL: ActorNotification;
 }
 
+export interface ActorProcedure{
+  
+}
+
+export interface ActorTableProcedures{
+  Title: string;
+  Active: string;
+  Disabled: boolean;
+  ALL: ActorNotification;
+}
+
 export interface CitizenNotification {
   ID: number;
   MESSAGE_TITLE: string;
