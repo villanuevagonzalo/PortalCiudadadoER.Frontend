@@ -727,6 +727,70 @@ export const LayoutSection = styled.div<{ }>`
   }
 `;
 
+export const LayoutActorSection = styled.div<{ }>`
+  background: var(--maincolor);
+  border-radius:0.5rem;
+  border: 1px solid var(--disabled);
+  width:100%;
+  padding:1rem;
+  color: var(--maincolor_text);
+  align-items: left;
+  flex-direction: column;
+  align-self: top;
+  display: flex;
+  gap:0.75rem;
+
+  & h1{
+    display: flex;
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+    margin-bottom:0.5rem;
+  }
+
+  & h2,h3{
+    display: flex;
+    width:100%;
+    font-size:1rem;
+    flex-direction: row;
+    align-items: center;
+    font-weight:600;
+    margin-bottom:1rem;
+  }
+
+  & p{
+    justify-content: flex;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+  }
+
+  & h2{
+    color:var(--primary_tint);
+  }
+
+  & h3{
+    color:var(--secondary_tint);
+  }
+
+
+  & h1 svg{
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
+    &.small{
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.75rem;
+    }
+  }
+
+  & button{
+    flex:0.1;
+  }
+`;
+
 export const LayoutGrid = styled.div<{ }>`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
