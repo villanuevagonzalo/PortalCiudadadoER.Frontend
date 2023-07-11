@@ -13,6 +13,9 @@ import { Pages } from "../../../../Routes/Pages";
 import { Table } from "../../../../Components/Elements/Table";
 import { ColumnDef } from "@tanstack/react-table";
 import { FormContext } from "../../../../Contexts/FormContext";
+import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
+import { FormInstance } from "../../../../Modules/FormElements/Class";
+import { HiMiniTrash, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 
 type Item = {
   title: string;
@@ -46,7 +49,8 @@ export const DA_Procedures_Forms_Home = () => {
   ],[]);
   const mdata = useMemo(()=>data,[])
 
-  const { UpdateForms } = useContext(FormContext);
+
+  const { UpdateForms , formularios} = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -54,6 +58,11 @@ export const DA_Procedures_Forms_Home = () => {
   useEffect(()=>{
     UpdateForms()
   },[])
+
+  const modifyForm = (formulario: FormInstance<ElementSchemaTypes>[]) => {
+    
+  }
+
   
   return(<>
     <LayoutSection>
@@ -86,6 +95,61 @@ export const DA_Procedures_Forms_Home = () => {
       </LayoutStackedPanel>
       
       <Table columns={mcolumns} data={mdata} />
+      < TableForms datos={formularios} modify={modifyForm} />
     </LayoutSection>
   </>);
 }
+
+
+
+interface TableProps {
+  datos: FormInstance<ElementSchemaTypes>[];
+  modify:Function,
+}
+
+const TableForms: React.FC<TableProps> = ({ datos, modify }) => {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>COD.F</th>
+          <th>Título</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+          {/* Agrega más encabezados de columna según tus necesidades */}
+        </tr>
+      </thead>
+      <tbody>
+        {datos.map((item, index) => (
+          <tr key={index}>
+            <td style={{textAlign: 'center', verticalAlign: 'middle'}}>{item.getCode()}</td>
+            <td style={{textAlign: 'center', verticalAlign: 'middle'}}>{item.getTitle()}</td>
+            <td style={{textAlign: 'center', verticalAlign: 'middle'}}>{item.getStatus()}</td>
+            <td style={{textAlign: 'center', verticalAlign: 'middle', width:"auto"}}> 
+            
+              <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"center"}}> 
+                
+                <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
+                  
+                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }}>
+                  { item.getStatus() == "Publicado" ? <HiOutlineMagnifyingGlass/> : <></>}
+                </div>
+                  
+                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }} onClick={()=>modify(item)}>
+                  < HiOutlinePencil/>
+                </div>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }}>
+                  <HiMiniTrash />
+                </div> 
+                  </div>     
+                </div> 
+             
+            </td>
+
+            {/* Agrega más celdas según las propiedades del objeto */}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+};

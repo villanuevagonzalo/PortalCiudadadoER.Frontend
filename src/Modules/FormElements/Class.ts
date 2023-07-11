@@ -72,9 +72,12 @@ export class FormInstance<T extends ElementSchemaTypes> {
   private keywords: string; 
   private status:string;
   private code:string;
+  private created_at:string;
+  private created_by:string; 
 
+  
 
-  constructor(code:string, title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[]) {
+  constructor(code:string, title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[], created_at:string ="",created_by:string="" ) {
     this.title=title;
     this.subtitle=subtitle;
     this.description=description;
@@ -82,6 +85,8 @@ export class FormInstance<T extends ElementSchemaTypes> {
     this.status=status;
     this.elements = elements ;
     this.code=code;
+    this.created_at = created_at ; // Asignar valor predeterminado en caso de que sea null
+    this.created_by = created_by; // Asignar valor predeterminado en caso de que sea null
   }
 
   addElement(element: ElementInstance<T>) {
@@ -91,7 +96,6 @@ export class FormInstance<T extends ElementSchemaTypes> {
   addElements(elements: ElementInstance<T> []) {
     this.elements=elements;
   }
-
 
   getElements(): ElementInstance<T>[] {
     return this.elements;
@@ -112,6 +116,16 @@ export class FormInstance<T extends ElementSchemaTypes> {
     return formData;
   }
 
+  getCode(){
+    return this.code;
+  }
+
+  getTitle(){
+    return this.title;
+  }
+  getStatus(){
+    return this.status;
+  }
 }
 
 /*
