@@ -37,6 +37,7 @@ const navigation:INavigation[] =
     [
       { name: 'Generador de Formularios', href: Pages.DA_PROCEDURES_FORMS, path: "/ciudadano_digital/tramites/formularios" },
       { name: 'Configurador de Tramites', href: Pages.DA_PROCEDURES_CONFIG, path: "/ciudadano_digital/tramites/configuracion" },
+      { name: 'Asociar elementos', href: Pages.DA_PROCEDURES_CONFIG_ASSOCIATE, path: "/ciudadano_digital/tramites/configuracion/asociar" },
     ] 
   }
 ]
