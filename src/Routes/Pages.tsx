@@ -28,6 +28,7 @@ import { Auth_Redirect } from "../Pages/Auth/Redirect";
 import { DA_Notifications_Create } from "../Pages/Actor/Notifications/Create";
 import { DA_PRESENTIAL } from "../Pages/Actor/Presential";
 import { DA_Procedures_Config } from "../Pages/Actor/Procedures/ProceduresConfigurator";
+import { DA_Procedures_Associate } from "../Pages/Actor/Procedures/AssociateElements";
 
 const REACTENV = process.env
 
@@ -199,7 +200,14 @@ export const RawPages:RawPagesProps = {
           CONFIG:{
             path: 'config',
             label: 'Configuración',
-            element: <DA_Procedures_Config />
+            element: <DA_Procedures_Config />,
+            children: {
+              ASSOCIATE:{
+                path: 'associate',
+                label: 'Asociar elementos',
+                element: <DA_Procedures_Associate />
+              }
+            }
           },
           FORMS:{
             path: 'forms',
