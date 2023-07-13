@@ -63,9 +63,9 @@ export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema
 
 
 
-export class FormInstance<T extends ElementSchemaTypes> {
+export class FormInstance<T extends ElementSchemaTypes>  {
 
-  private elements: ElementInstance<T>[];
+  elements: ElementInstance<ElementSchemaTypes>[];
   private title: string; 
   private subtitle: string; 
   private description: string; 
@@ -78,6 +78,7 @@ export class FormInstance<T extends ElementSchemaTypes> {
   
 
   constructor(code:string, title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[], created_at:string ="",created_by:string="" ) {
+    console.log("y en el conscturcot tengo: "+elements)
     this.title=title;
     this.subtitle=subtitle;
     this.description=description;
@@ -97,9 +98,7 @@ export class FormInstance<T extends ElementSchemaTypes> {
     this.elements=elements;
   }
 
-  getElements(): ElementInstance<T>[] {
-    return this.elements;
-  }
+  
 
   getJSON (){
     const formData = {
@@ -119,9 +118,18 @@ export class FormInstance<T extends ElementSchemaTypes> {
   getCode(){
     return this.code;
   }
-
   getTitle(){
     return this.title;
+  }
+
+  getSubtitle(){
+    return this.subtitle;
+  }
+  getDescription(){
+    return this.description;
+  }
+  getKeywords(){
+    return this.keywords;
   }
   getStatus(){
     return this.status;

@@ -4,7 +4,7 @@ import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from
 import { ElementWrapper, BaseWrapperInfo, InputWrapper, ElementError, SelectWrapper, FileWrapper, CheckboxWrapper } from "./StyledComponents";
 import { FormWrapperInput } from "../../../Components/Forms/StyledComponents";
 import { AiOutlineCheckCircle, AiOutlineEyeInvisible } from "react-icons/ai";
-import { ElementInstance, ElementSchema } from "../Class";
+import { ElementInstance, ElementSchema, FormInstance } from "../Class";
 import { ErrorMessage, Form, Formik, getIn, useField, useFormikContext } from "formik";
 import { validationFunctions } from "../Validators";
 import { MdOutlineDataset, MdOutlineNewLabel, MdRadioButtonUnchecked } from "react-icons/md";
@@ -21,19 +21,24 @@ import {Element} from './Element';
     setFields?:Function
   }
 
-  export const FormElementShow: React.FC<Props> = ({ title, subtitle, description, keywords,fields, setFields }) => {
+  interface Arguments {
+    form:FormInstance<ElementSchemaTypes>;
+  }
+
+  export const FormElementShow: React.FC<Arguments> = ({form}) => {
     
-    const initialValues = Object.entries(fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
+    console.log("LLEGO HASTA AQUI: "+JSON.stringify(form))
+    const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
     return (
 
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             <LayoutSection>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-                <h2> {title} </h2>
-                <h2> {subtitle} </h2>
-                <h2> {description} </h2>
-                <h2> {keywords} </h2>
+                <h2> Título del formulario: {form.getTitle()} </h2>
+                <h2> Subtítulo del formulario: {form.getSubtitle()} </h2>
+                <h2> Descripción: {form.getDescription()} </h2>
+                <h2> Keywords:{form.getKeywords()} </h2>
              </LayoutSection>    
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
             <LayoutSection>
@@ -50,7 +55,7 @@ import {Element} from './Element';
             >
             <Form autoComplete="off">
 
-            {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+            {form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                 <Element instance={element} />
             </div>

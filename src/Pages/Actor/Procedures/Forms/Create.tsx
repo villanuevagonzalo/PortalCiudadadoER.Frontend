@@ -26,11 +26,26 @@ export const DA_Procedures_Forms_Create = () => {
   const [ver, setVer] = useState(false)
   const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
   const [instance, setIntance] = useState<ElementInstance<ElementSchemaTypes>>()
+
   const [ index, setIndex] = useState<number>(0);
   const [ jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
   const [ jsona2, setJsona2 ] = useState<string>('[]');
-  const [estadoFormulario, setEstadoFormulario] = useState<string>('');
+  const [estadoFormulario, setEstadoFormulario] = useState<string>('Borrador');
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
+
+
+  console.log("fields: "+JSON.stringify(fields))
+
+  const [formBasicData, setFormBasicData] = useState({
+    Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired"])),
+    Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
+    Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
+    Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
+    Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
+  });
+
+ // const [newForm, setNewForm] = useState<FormInstance<ElementSchemaTypes>>();
+
 
   const addItem = (type:any) => {
     const newfield = new ElementInstance( fields.length.toString (),new ElementSchema(type,{label:'Ingresá el Título'},["isRequired"]))
@@ -61,27 +76,24 @@ export const DA_Procedures_Forms_Create = () => {
 
   const guardarFormulario=async ()=> {
 
-   const Formulario= new FormInstance("25",fields2.Title.value, fields2.Subtitle.value, fields2.Description.value, fields2.Keywords.value, "Borrador", fields )
-   const JsonData = Formulario.getJSON();
-   const response = await SaveForm(Formulario.getJSON(), setFormState);
+   const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
+   //const JsonData = nuevoFormulario.getJSON();
+   const response = await SaveForm(nuevoFormulario.getJSON(), setFormState);
    console.log(response)
 
   }
-
-  const [fields2, setFields2] = useState({
-    Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
-    Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
-    Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
-    Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
-  });
   
-  
-  const initialValues = Object.entries(fields2).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
+  const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   if (ver){
 
+    const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
+
     return ( 
-      <><FormElementShow fields={fields} title={fields2.Title.value} subtitle={fields2.Subtitle.value} description={fields2.Description.value} keywords={fields2.Keywords.value} /><Button onClick={() => setVer(false)}>Volver a sección editar </Button></>
+      <>
+        <FormElementShow form={nuevoFormulario}  />
+        <Button onClick={() => setVer(false)}>Volver a sección editar </Button>
+      </>
     )
   }else{
 
@@ -105,13 +117,14 @@ export const DA_Procedures_Forms_Create = () => {
             onSubmit={(e:any)=>{
               console.log(e)
             }}
-            validate={(values:any) => ValidateForm(values, fields2)}
+            validate={(values:any) => ValidateForm(values, formBasicData)}
           >
           <Form autoComplete="off">
-            <Element instance={fields2.Title}/>
-            <Element instance={fields2.Subtitle}/>
-            <Element instance={fields2.Description}/>
-            <Element instance={fields2.Keywords}/>
+            <Element instance={formBasicData.Code}/>
+            <Element instance={formBasicData.Title}/>
+            <Element instance={formBasicData.Subtitle}/>
+            <Element instance={formBasicData.Description}/>
+            <Element instance={formBasicData.Keywords}/>
             <LayoutStackedPanel>
               <LayoutSpacer/>
             </LayoutStackedPanel>
@@ -179,7 +192,10 @@ export const DA_Procedures_Forms_Create = () => {
   
           <div>
           <label>Estado</label>
-            <select value={estadoFormulario} onChange={handleEstadoFormulario}>
+            <select value={estadoFormulario} 
+              onInput={(e) => setEstadoFormulario((e.target as HTMLInputElement).value)} 
+              >
+              
               <option value="Borrador">Borrador</option>
               <option value="Publicado">Publicado</option>
             </select>

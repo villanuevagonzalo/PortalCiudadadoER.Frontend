@@ -1,9 +1,13 @@
 import { FC, SetStateAction, createContext, useEffect, useState } from "react";
-import { ElementInstance, FormInstance } from "../Modules/FormElements/Class";
+import { ElementInstance, ElementSchema, FormInstance } from "../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import axios, { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/FormAPI";
+
+
+
+type FieldsType = ElementInstance<ElementSchemaTypes>[];
 
 
 const ContextValues = () => {
@@ -22,47 +26,71 @@ const ContextValues = () => {
     return response;
   }
 
-
-  useEffect(() => {
-    console.log("los formularios son: "+JSON.stringify(formularios))
-  }, [formularios])
-  
   const UpdateForms = async() => {
+
+    let fields: FieldsType = [];
 
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
     
     try { responseAll = await AxiosFormAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    let forms=responseAll!.data.data; 
+    //let forms=responseAll!.data.data; 
    // response_without_backslashes = json.loads(response.replace('\\', ''))
     
    //let FormData = "[]";
    if(responseAll && responseAll.status!==204) 
    {
     const FormData = responseAll.data.data;
-      
-      console.log("esto llega: "+FormData)
-
-      let str = '[ { "CODE": 25, "TITLE": "asdf", "SUBTITLE": "", "DESCRIPTION": "asdf", "KEYWORDS": "Borrador", "ELEMENTS": "asdf", "STATUS": "[{\\"type\\":\\"TEXT\\",\\"properties\\":{\\"label\\":\\"aaaaaaaaaaa\\",\\"required\\":false,\\"disabled\\":false},\\"aditionalValidations\\":[\\"isRequired\\"],\\"name\\":\\"0\\",\\"value\\":\\"\\"}]", "CREATED_AT": "2023-07-10 20:49:46", "UPDATED_AT": "2023-07-10 21:05:19", "CREATED_BY": 48, "UPDATED_BY": "" } ]';
-      console.log("asi debería ser: "+str);
-
-      const notificationsObj = JSON.parse(FormData);
-      console.log("este es el status: "+JSON.stringify(notificationsObj[0]));
+      const FormsObj = JSON.parse(FormData);
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
+      console.log("ESTO ES LO QUE EN PRIMERA INSTANCIA LLEGA: "+FormData)
+      console.log("ESTO ES LO QUE SE PARCEA: "+FormsObj)
+      console.log("ESTO ES LO QUE SE PARCEA EN STRING"+JSON.stringify(FormsObj))
 
-      notificationsObj.forEach((notification: { CODE: string; TITLE: string; SUBTITLE: string; DESCRIPTION: string; KEYWORDS: string; ELEMENTS: string; STATUS: ElementInstance<ElementSchemaTypes>[]; }) => {
+      const mappedArray = FormsObj.map((formInstance: any) => {
+        // Procesar cada elemento del arreglo aquí y retornar el resultado
+        // Puedes hacer cualquier operación o transformación en formInstance
+
+        let componentes= JSON.parse(formInstance.STATUS)
+        componentes.map((componente: any, index:number)=> {
+
+          const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+          aux.update((componente.properties))
+          fields.push(aux);
+
+
+        });
+
+        console.log("FIELDS"+JSON.stringify(fields))
+
+
         const Formulario = new FormInstance(
-          notification.CODE,
-          notification.TITLE,
-          notification.SUBTITLE,
-          notification.DESCRIPTION,
-          notification.KEYWORDS,
-          notification.ELEMENTS,
-          notification.STATUS
+          formInstance.CODE,
+          formInstance.TITLE,
+          formInstance.SUBTITLE,
+          formInstance.DESCRIPTION,
+          formInstance.KEYWORDS,
+          formInstance.ELEMENTS,
+          fields
+        );
+        formulariosAux.push(Formulario);
+      });   
+      
+     /* FormsObj.forEach((forms: { CODE: string; TITLE: string; SUBTITLE: string; DESCRIPTION: string; KEYWORDS: string; ELEMENTS: string; STATUS: ElementInstance<ElementSchemaTypes>[]; }) => {
+        console.log("ESTO SE GUARDA DE ELEMENTS: "+  forms.STATUS        )
+
+        const Formulario = new FormInstance(
+          forms.CODE,
+          forms.TITLE,
+          forms.SUBTITLE,
+          forms.DESCRIPTION,
+          forms.KEYWORDS,
+          JSON.parse(forms.ELEMENTS),
+          forms.STATUS
         );
 
         formulariosAux.push(Formulario);
-      });
+      });*/
 
       setFormularios(formulariosAux);
    }
