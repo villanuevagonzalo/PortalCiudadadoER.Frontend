@@ -12,31 +12,22 @@ import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../Compon
 import {Element} from './Element';
 
 
-  interface Props{
-    title: any,
-    subtitle: string,
-    description: string,
-    keywords: string,
-    fields: ElementInstance<ElementSchemaTypes>[]
-    setFields?:Function
-  }
-
-  interface Arguments {
+interface Arguments {
     form:FormInstance<ElementSchemaTypes>;
   }
 
   export const FormElementShow: React.FC<Arguments> = ({form}) => {
     
-    console.log("LLEGO HASTA AQUI: "+JSON.stringify(form))
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
+    console.log("esto es lo que se muestra:" +JSON.stringify(form.elements))
     return (
 
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             <LayoutSection>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-                <h2> Título del formulario: {form.getTitle()} </h2>
-                <h2> Subtítulo del formulario: {form.getSubtitle()} </h2>
+                <h2 style={{textAlign:"center"}}> {form.getTitle()} </h2>
+                <h3>  {form.getSubtitle()} </h3>
                 <h2> Descripción: {form.getDescription()} </h2>
                 <h2> Keywords:{form.getKeywords()} </h2>
              </LayoutSection>    

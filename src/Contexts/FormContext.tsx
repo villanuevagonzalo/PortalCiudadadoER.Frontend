@@ -6,7 +6,6 @@ import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/FormAPI";
 
 
-
 type FieldsType = ElementInstance<ElementSchemaTypes>[];
 
 
@@ -14,6 +13,7 @@ const ContextValues = () => {
 
   const AxiosFormAPI = new FormAPI();
   const [formularios, setFormularios] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
@@ -26,9 +26,19 @@ const ContextValues = () => {
     return response;
   }
 
+  const UpdateOneForm = async(formulario: any, setFormState: Function) => {
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formulario, setFormState);
+
+    if (response.data) 
+      {
+        //setFormularios(prevState => ([...prevState, formularios]));
+      }
+    return response;
+
+  }
+
   const UpdateForms = async() => {
 
-    let fields: FieldsType = [];
 
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
@@ -51,6 +61,8 @@ const ContextValues = () => {
         // Procesar cada elemento del arreglo aquí y retornar el resultado
         // Puedes hacer cualquier operación o transformación en formInstance
 
+        let fields: FieldsType = [];
+
         let componentes= JSON.parse(formInstance.STATUS)
         componentes.map((componente: any, index:number)=> {
 
@@ -63,17 +75,17 @@ const ContextValues = () => {
 
         console.log("FIELDS"+JSON.stringify(fields))
 
-
         const Formulario = new FormInstance(
           formInstance.CODE,
           formInstance.TITLE,
           formInstance.SUBTITLE,
           formInstance.DESCRIPTION,
-          formInstance.KEYWORDS,
           formInstance.ELEMENTS,
+          formInstance.KEYWORDS,
           fields
         );
         formulariosAux.push(Formulario);
+
       });   
       
      /* FormsObj.forEach((forms: { CODE: string; TITLE: string; SUBTITLE: string; DESCRIPTION: string; KEYWORDS: string; ELEMENTS: string; STATUS: ElementInstance<ElementSchemaTypes>[]; }) => {

@@ -23,5 +23,9 @@ export class FormAPI {
     return this.baseService.get('/v0/admin/form-units')
   }
   
+
+  Update = async () => {
+    return this.baseService.put('/v0/admin/form-units')
+  }
   
 }

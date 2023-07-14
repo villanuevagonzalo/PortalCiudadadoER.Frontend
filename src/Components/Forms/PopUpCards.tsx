@@ -14,12 +14,9 @@ interface Props{
     fields: ElementInstance<ElementSchemaTypes>[],
     setClose:Function
   }
-
-
   
 export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, setField , index, fields, setClose,...props})  => {
              
-
     return <NotificationFullSizeWrapper>
         <LayoutSection className="content">
           <div className="header">
@@ -27,7 +24,6 @@ export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, setField 
             <span className="flex-1"></span>
             <span className="close" onClick={()=>setClose()}><AiOutlineClose fontSize={"1rem"}/></span>
           </div>
-
 
           <ElementEditor instance={instance} setFields={setField} index={index} fields={fields} setClose={setClose} />
         
@@ -38,4 +34,32 @@ export const FormFieldsPropertiesPopUp: React.FC<Props> = ({ instance, setField 
         </LayoutSection>
         <LayoutSpacer/>
       </NotificationFullSizeWrapper>
-    }
+}
+
+interface createFormProps{
+  formTitle: string,  
+  create: Function, 
+  close:Function
+}
+export const CreateFormPopUp: React.FC<createFormProps> = ({ formTitle, create, close})  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <h2> {formTitle} </h2>
+        <h3>¿Está seguro de crear el formulario?</h3>      
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <Button onClick={()=>close()}>Volver</Button>
+            <Button onClick={()=>create()}>Guardar</Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}

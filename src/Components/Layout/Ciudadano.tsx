@@ -41,7 +41,6 @@ export const LayoutCiudadano = () => {
   const { userNotifications, actorNotifications } = useContext(NotificationsContext);
   const newNotifications = userNotifications.filter((N:CitizenNotification)=>N.NEW);
   
-  console.log("esta es la notificación que hay: "+JSON.stringify(newNotifications))
   useEffect(() => {
     setMobile(isSmallResolution)
     setOpen(!isSmallResolution)

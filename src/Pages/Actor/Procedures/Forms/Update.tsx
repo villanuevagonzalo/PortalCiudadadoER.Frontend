@@ -12,20 +12,21 @@ import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormEl
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
-import { CreateFormPopUp, FormFieldsPropertiesPopUp } from "../../../../Components/Forms/PopUpCards";
+import { FormFieldsPropertiesPopUp } from "../../../../Components/Forms/PopUpCards";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FormContext } from "../../../../Contexts/FormContext";
 
-export const DA_Procedures_Forms_Create = () => {
 
-  const { SaveForm } = useContext(FormContext);
+interface Arguments {
+    formToUpdate:FormInstance<ElementSchemaTypes>;
+  }
+
+export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
 
   const [edit, setEdit] = useState(false)
   const [ver, setVer] = useState(false)
-  const [crear, setCrear] = useState(false)
-
   const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
   const [instance, setIntance] = useState<ElementInstance<ElementSchemaTypes>>()
 
@@ -42,6 +43,20 @@ export const DA_Procedures_Forms_Create = () => {
     Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
     Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
   });
+
+  useEffect(()=>{
+    formBasicData.Code.setValue(formToUpdate?.getCode())
+    formBasicData.Title.setValue(formToUpdate?.getTitle())
+    formBasicData.Subtitle.setValue(formToUpdate?.getSubtitle())
+    formBasicData.Description.setValue(formToUpdate?.getDescription())
+    formBasicData.Keywords.setValue(formToUpdate?.getKeywords())
+
+    setFields(formToUpdate.elements);
+
+
+  },[])
+
+  
 
  // const [newForm, setNewForm] = useState<FormInstance<ElementSchemaTypes>>();
 
@@ -77,14 +92,13 @@ export const DA_Procedures_Forms_Create = () => {
 
    const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
    //const JsonData = nuevoFormulario.getJSON();
-   const response = await SaveForm(nuevoFormulario.getJSON(), setFormState);
-   console.log(response)
+//   const response = await SaveForm(nuevoFormulario.getJSON(), setFormState);
+  // console.log(response)
 
   }
   
   const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
-  console.log("titulo: "+formBasicData.Title.value)
   if (ver){
 
     const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
@@ -107,10 +121,6 @@ export const DA_Procedures_Forms_Create = () => {
       }  
     }else{
       return(<>
-
-        {crear && (
-                <CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} />
-              )}
         <LayoutSection>
           <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
           <Formik
@@ -205,7 +215,7 @@ export const DA_Procedures_Forms_Create = () => {
             </select>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <Button type="submit" onClick={() => {setCrear(true);  window.scrollTo({ top: 0, behavior: 'smooth' });}}>Guardar <BiSave/></Button>
+            <Button type="submit" onClick={() => guardarFormulario()}>Guardar <BiSave/></Button>
             <Button onClick={() => setVer(true)}>Ver <BiBullseye/></Button>
           </div>
         </LayoutSection>
@@ -214,64 +224,3 @@ export const DA_Procedures_Forms_Create = () => {
 
   }
 }
-
-
-
-
-
-/*
-
-
-
-        <Element instance={Fields.Prueba1}/>
-        <Element instance={Fields.Prueba2}/>
-        <Element instance={Fields.Prueba3}/>
-
-
-<Element name="Prueba" schema={schematest3}/>
-      <Element name="Prueba2" schema={schematest4}/>
-      <Element name="Prueba3" schema={schematest5}/>
-
-
-<hr/>
-      <ElementInstance element={new FormElement('NUMBER',{label:'Ingresá un titulo',value_max:2})}/>
-      <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Subtítulo',required:true})}/>
-      <ElementInstance element={new FormElement('TEXTAREA',{label:'Descripción',required:false})}/>
-      <ElementInstance element={new FormElement('MAIL',{label:'mail',required:true})}/>
-    <LayoutSection>
-      <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-      <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Título',required:true})}/>
-      <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Subtítulo',required:true})}/>
-      <ElementInstance element={new FormElement('TEXTAREA',{label:'Descripción',required:false})}/>
-      <ElementInstance element={new FormElement('TEXT',{label:'Palabras Claves',required:true})}/>
-    </LayoutSection>
-    <LayoutSection>
-      <h1><MdOutlineDataset />Administrador de Campos</h1>
-      <LayoutStackedPanel>
-        <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>
-          <h2 onClick={update}>Actualizar</h2>
-          <input value={jsona0} type="number" onChange={handleChange0}/>
-          <textarea value={jsona} onChange={handleChange} style={{width:'100%', height:'100px'}} />
-          <h2>Formulario Generado - EDICION</h2>
-          {fields.map((element:FormElement<any>) => <BaseElementEditor key={element.id} element={element} />)}
-          <hr/>
-          <h2>Formulario Generado - CARGA DE DATOS</h2>
-          {fields.map((element:FormElement<any>) => <ElementInstance key={element.id} element={element}/>)}
-          <h2>Exportacion</h2>
-          <textarea value={jsona2} style={{width:'100%', height:'100px'}} />
-        </div>
-        <div>
-          <h2>Elementos</h2>
-          <FormElementBasesMenu>{Object.entries(FormElementBases).map(([clave, element], index) => {
-            return(<div key={clave} onClick={()=>addItem(clave)}>
-              <span><element.icon/></span>
-              <ul>
-                <li className="title"><p>{element.description}</p></li>
-              </ul>
-            </div>)
-          })}</FormElementBasesMenu>
-        </div>
-      </LayoutStackedPanel>
-    </LayoutSection>
-
-*/

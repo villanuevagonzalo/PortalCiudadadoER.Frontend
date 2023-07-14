@@ -17,7 +17,8 @@ import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { FormInstance } from "../../../../Modules/FormElements/Class";
 import { HiMiniTrash, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
-
+import { FormUpdate } from "./Update";
+/*
 type Item = {
   title: string;
   description: string;
@@ -31,15 +32,13 @@ const data = [
   {title: 'Rectificaión de datos por cambio de género', description:'Este trámite te permite modificar los datos de nombre y género registrados en tu DNI. ...'},
 ];
 
-
-const DataName = data.map((item:any)=>item.title);
-
-
+*/
+//const DataName = data.map((item:any)=>item.title);
 
 const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
-
+/*
   const mcolumns = useMemo<ColumnDef<Item>[]>(()=>[
     {
       header: 'Name',
@@ -50,87 +49,93 @@ export const DA_Procedures_Forms_Home = () => {
       accessorKey: 'description',
     }
   ],[]);
-  const mdata = useMemo(()=>data,[])
+  const mdata = useMemo(()=>data,[])*/
 
 
   const { UpdateForms , formularios} = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
-  const [verForm, setVerForm] = useState(false)
+  const [updateForm, setUpdateForm] = useState(false)
+  const [seeOptions, setSeeOptions] = useState("home")
   const [formToCheck, setFormToCheck] = useState<FormInstance<ElementSchemaTypes>>()
 
   useEffect(()=>{
     UpdateForms()
   },[])
 
-  const modifyForm = (formulario: FormInstance<ElementSchemaTypes>[]) => {
-    
-  }
 
-  
-  console.log("componente type: "+ JSON.stringify(formularios))
 
-  if (verForm){
-    return (
-      <>
-        <FormElementShow form={formularios[1]}  />
-        <Button onClick={() => setVerForm(false)}>Volver a sección editar </Button>
-      </>
+  const renderElement = () => {
+    if (seeOptions=="seeForm") {
+      return (
+        <>
+          <FormElementShow form={formToCheck!}  />
+          <Button onClick={() => setSeeOptions("home")}>Volver</Button>
+        </>
+      )
+    } else if (seeOptions=="modify") {
+      console.log("este es el log a updatear: "+JSON.stringify(formToCheck))
+      return <div>
+          <FormUpdate formToUpdate= {formToCheck!} />
+          <Button onClick={() => setSeeOptions("home")}>Volver</Button>
 
-    )
-    
-
-  }else{
-
-    return(<>
-      <LayoutSection>
-        
-        <LayoutStackedPanel>
-          <div>
-            <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
-                initialValues={FieldValues}
-                validationSchema={formGetValidations(FormRequiredFields)}
-                onSubmit={async (values: any) => {
-                
-                }}
-            >
-                <Form autoComplete="off">
-                    <FormikSearch name="Tramites" data={DataName} autoFocus/>
-                </Form>
-            </Formik></div>
-          <LayoutSpacer/>
+        </div>;
+    } else {
+      return(<>
+        <LayoutSection>
           
-          {/* Botones para crear o actualizar formularios */}
-          <div style={{display:"flex", flexDirection:"row"}}>
-            <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }}>
-              {FormState.loading ? <Spinner /> : "Actualizar"}
-            </Button>
-            <Link to={Pages.DA_PROCEDURES_FORMS_NEW} style={{ textDecoration: 'none' }}>
-              <Button style={{ width: '150px', height: '40px' }}>Nuevo</Button>
-            </Link>
-          </div>
-  
-        </LayoutStackedPanel>
-        
-        <Table columns={mcolumns} data={mdata} />
-        < TableForms datos={formularios} modify={modifyForm} setFormToCheck={setFormToCheck} setVerForm={setVerForm} />
-      </LayoutSection>
-    </>);
+          <LayoutStackedPanel>
+            {/*<div>
+              <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
+                  initialValues={FieldValues}
+                  validationSchema={formGetValidations(FormRequiredFields)}
+                  onSubmit={async (values: any) => {
+                  
+                  }}
+              >
+                  <Form autoComplete="off">
+                      <FormikSearch name="Tramites" data={DataName} autoFocus/>
+                  </Form>
+              </Formik></div>*/}
+            <LayoutSpacer/>
+            
+            {/* Botones para crear o actualizar formularios */}
+            <div style={{display:"flex", flexDirection:"row"}}>
+              <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }}>
+                {FormState.loading ? <Spinner /> : "Actualizar"}
+              </Button>
+              <Link to={Pages.DA_PROCEDURES_FORMS_NEW} style={{ textDecoration: 'none' }}>
+                <Button style={{ width: '150px', height: '40px' }}>Nuevo</Button>
+              </Link>
+            </div>
+    
+          </LayoutStackedPanel>
+          
+        {/*  <Table columns={mcolumns} data={mdata} />*/}
+          < TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} />
+        </LayoutSection>
+      </>);
+    }
+  };
 
-  }
+  return (
+    <div>
+        {renderElement()}
+    </div>
+  );
+};
   
-}
+
 
 
 interface TableProps {
   datos: FormInstance<ElementSchemaTypes>[];
-  modify:Function,
   setFormToCheck:Function,
-  setVerForm:Function,
+  setSeeOptions:Function,
 }
 
-const TableForms: React.FC<TableProps> = ({ datos, modify, setFormToCheck, setVerForm }) => {
+const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions }) => {
   
   return (
     <table>
@@ -156,11 +161,11 @@ const TableForms: React.FC<TableProps> = ({ datos, modify, setFormToCheck, setVe
                 
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
                   
-                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }}  onClick={() => { setVerForm(true); setFormToCheck(item); }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
                   { item.getStatus() != "asd22f" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
                   
-                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }} onClick={()=>modify(item)}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
                   < HiOutlinePencil/>
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }}>
