@@ -139,6 +139,9 @@ interface TableProps {
 
 const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions }) => {
   
+  console.log("LOS DATOS CUANDO SE RENDERIZA: "+datos)
+  console.log("LOS DATOS CUANDO SE RENDERIZA: "+JSON.stringify(datos))
+
   return (
 
     <TableWrapper>

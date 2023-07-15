@@ -74,10 +74,8 @@ export class FormInstance<T extends ElementSchemaTypes>  {
   private created_at:string;
   private created_by:string; 
 
-  
 
   constructor(code:string, title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[], created_at:string ="",created_by:string="" ) {
-    console.log("y en el conscturcot tengo: "+elements)
     this.title=title;
     this.subtitle=subtitle;
     this.description=description;
@@ -97,8 +95,6 @@ export class FormInstance<T extends ElementSchemaTypes>  {
     this.elements=elements;
   }
 
-  
-
   getJSON (){
     const formData = {
       "code": this.code,
@@ -117,6 +113,7 @@ export class FormInstance<T extends ElementSchemaTypes>  {
   getCode(){
     return this.code;
   }
+
   getTitle(){
     return this.title;
   }
@@ -133,6 +130,24 @@ export class FormInstance<T extends ElementSchemaTypes>  {
   getStatus(){
     return this.status;
   }
+}
+
+
+
+export class ProcedureInstance<T extends ElementSchemaTypes>  {
+  
+  forms: FormInstance<ElementSchemaTypes>[];
+
+  constructor(forms:FormInstance<T>[] ) {
+
+    this.forms=forms; 
+
+  }
+
+  addForm(form: FormInstance<T>) {
+    this.forms.push(form);
+  }
+
 }
 
 /*

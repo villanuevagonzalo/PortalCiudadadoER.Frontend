@@ -9,7 +9,6 @@ export class FormAPI {
   }
 
   Create = async (params: {
-
     data:string
   }) => {
     return this.baseService.post('/v0/admin/form-units', params,{
@@ -24,8 +23,14 @@ export class FormAPI {
   }
   
 
-  Update = async () => {
-    return this.baseService.put('/v0/admin/form-units')
+  Update = async (params: {
+    data:string
+  }) => {
+    return this.baseService.put('/v0/admin/form-units', params,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
   
 }

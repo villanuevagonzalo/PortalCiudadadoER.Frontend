@@ -6,7 +6,7 @@ import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/FormAPI";
 
 
-type FieldsType = ElementInstance<ElementSchemaTypes>[];
+export type FieldsType = ElementInstance<ElementSchemaTypes>[];
 
 
 const ContextValues = () => {
@@ -17,17 +17,39 @@ const ContextValues = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
-  const SaveForm = async (formularios: any, setFormState: Function) => {
-    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formularios, setFormState);
-    if (response.data) 
-      {
-        setFormularios(prevState => ([...prevState, formularios]));
+  const SaveForm = async (formulario: any, setFormState: Function, code:string, title:string) => {
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formulario, setFormState);
+    if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
+      const status = response.data.success;
+      const responseData = JSON.parse(response.data.data);
+      const codeResponse = responseData[0].CODE;
+      const titleResponse = responseData[0].TITLE
+
+      if (status && codeResponse == code && titleResponse == title) {
+
+        const elements=JSON.parse(formulario.elements)
+        let newFields: FieldsType = [];
+
+        elements.map((componente: any, index: number) => {
+
+          const aux = new ElementInstance((index + 1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+          aux.update((componente.properties))
+          newFields.push(aux);
+
+        });
+        const nuevoFormulario = new FormInstance(formulario.code, formulario.title,formulario.subtitle, formulario.description, formulario.keywords, formulario.status, newFields)
+        setFormularios(prevState => ([...prevState, nuevoFormulario]));
+        return true;
       }
-    return response;
+      else{
+        return false;
+      }
+    }
+    return false;
   }
 
   const UpdateOneForm = async(formulario: any, setFormState: Function) => {
-    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formulario, setFormState);
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Update, formulario, setFormState);
 
     if (response.data) 
       {
@@ -38,7 +60,6 @@ const ContextValues = () => {
   }
 
   const UpdateForms = async() => {
-
 
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
@@ -98,6 +119,7 @@ const ContextValues = () => {
     formularios,
     setFormularios,
     SaveForm, 
+    UpdateOneForm,
     UpdateForms
   }
 }
