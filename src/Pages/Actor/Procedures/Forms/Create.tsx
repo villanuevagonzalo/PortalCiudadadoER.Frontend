@@ -12,11 +12,11 @@ import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormEl
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
-import { CreateFormPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp} from "../../../../Components/Forms/PopUpCards";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FormContext } from "../../../../Contexts/FormContext";
+import { CreateFormPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp } from "../../../../Components/Forms/PopUpCards";
 
 export const DA_Procedures_Forms_Create = () => {
 
@@ -77,6 +77,7 @@ export const DA_Procedures_Forms_Create = () => {
   }
 
   const guardarFormulario=async ()=> {
+
 
    const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
    //const JsonData = nuevoFormulario.getJSON();

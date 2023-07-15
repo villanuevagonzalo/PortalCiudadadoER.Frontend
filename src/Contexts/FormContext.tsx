@@ -82,23 +82,6 @@ const ContextValues = () => {
         formulariosAux.push(Formulario);
 
       });   
-      
-     /* FormsObj.forEach((forms: { CODE: string; TITLE: string; SUBTITLE: string; DESCRIPTION: string; KEYWORDS: string; ELEMENTS: string; STATUS: ElementInstance<ElementSchemaTypes>[]; }) => {
-        console.log("ESTO SE GUARDA DE ELEMENTS: "+  forms.STATUS        )
-
-        const Formulario = new FormInstance(
-          forms.CODE,
-          forms.TITLE,
-          forms.SUBTITLE,
-          forms.DESCRIPTION,
-          forms.KEYWORDS,
-          JSON.parse(forms.ELEMENTS),
-          forms.STATUS
-        );
-
-        formulariosAux.push(Formulario);
-      });*/
-
       setFormularios(formulariosAux);
    }
    
@@ -111,6 +94,7 @@ const ContextValues = () => {
   }
 
   return {
+    isLoading,
     formularios,
     setFormularios,
     SaveForm, 

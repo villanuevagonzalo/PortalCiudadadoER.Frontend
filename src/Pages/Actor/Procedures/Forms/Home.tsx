@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import { Spinner, TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { IFormState } from "../../../../Interfaces/Data";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
@@ -52,7 +52,7 @@ export const DA_Procedures_Forms_Home = () => {
   const mdata = useMemo(()=>data,[])*/
 
 
-  const { UpdateForms , formularios} = useContext(FormContext);
+  const { UpdateForms , formularios, isLoading} = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -99,7 +99,7 @@ export const DA_Procedures_Forms_Home = () => {
             
             {/* Botones para crear o actualizar formularios */}
             <div style={{display:"flex", flexDirection:"row"}}>
-              <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }}>
+              <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateForms()} >
                 {FormState.loading ? <Spinner /> : "Actualizar"}
               </Button>
               <Link to={Pages.DA_PROCEDURES_FORMS_NEW} style={{ textDecoration: 'none' }}>
@@ -110,7 +110,12 @@ export const DA_Procedures_Forms_Home = () => {
           </LayoutStackedPanel>
           
         {/*  <Table columns={mcolumns} data={mdata} />*/}
-            < TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} />
+        {isLoading?<>
+        <br/>
+        <Spinner color='secondary' size="3rem"/><br/>
+        <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
+      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} />
+      }
         </LayoutSection>
       </>);
     }
