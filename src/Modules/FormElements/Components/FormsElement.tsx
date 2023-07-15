@@ -20,7 +20,6 @@ interface Arguments {
     
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
-    console.log("esto es lo que se muestra:" +JSON.stringify(form.elements))
     return (
 
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>

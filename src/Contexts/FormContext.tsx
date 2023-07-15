@@ -53,9 +53,6 @@ const ContextValues = () => {
     const FormData = responseAll.data.data;
       const FormsObj = JSON.parse(FormData);
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
-      console.log("ESTO ES LO QUE EN PRIMERA INSTANCIA LLEGA: "+FormData)
-      console.log("ESTO ES LO QUE SE PARCEA: "+FormsObj)
-      console.log("ESTO ES LO QUE SE PARCEA EN STRING"+JSON.stringify(FormsObj))
 
       const mappedArray = FormsObj.map((formInstance: any) => {
         // Procesar cada elemento del arreglo aquí y retornar el resultado
@@ -72,8 +69,6 @@ const ContextValues = () => {
 
 
         });
-
-        console.log("FIELDS"+JSON.stringify(fields))
 
         const Formulario = new FormInstance(
           formInstance.CODE,

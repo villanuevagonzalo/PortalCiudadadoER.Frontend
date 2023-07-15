@@ -101,7 +101,6 @@ export const DA_Procedures_Forms_Create = () => {
     })
     setCargadoCorrectamente(true)
     setCrear(false)
-    console.log("CARGADO CORRECTAMENTE")
    }else{
     setErrorCarga(true)
 

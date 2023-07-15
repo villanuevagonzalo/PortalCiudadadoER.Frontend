@@ -76,7 +76,6 @@ export const DA_Procedures_Forms_Home = () => {
         </>
       )
     } else if (seeOptions=="modify") {
-      console.log("este es el log a updatear: "+JSON.stringify(formToCheck))
       return <div>
           <FormUpdate formToUpdate= {formToCheck!} />
           <Button onClick={() => setSeeOptions("home")}>Volver</Button>
