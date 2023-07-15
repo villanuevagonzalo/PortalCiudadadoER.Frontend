@@ -190,12 +190,6 @@ export const ElementError = styled.div<{ error?: boolean }>`
 `;
 
 
-
-
-
-
-
-
 export const BaseWrapperInfo = styled.div<{ }>`
   display: flex;
   flex-direction:column;

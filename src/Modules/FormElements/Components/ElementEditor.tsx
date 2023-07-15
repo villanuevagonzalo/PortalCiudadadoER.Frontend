@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FormElement } from "../OLDTYPES";
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases } from "../Types";
-import { ElementWrapper, InputWrapper } from "./StyledComponents";
+import { CheckboxWrapper, ElementWrapper, InputWrapper } from "./StyledComponents";
 import { ElementInstance } from "../Class";
 import { Button } from "../../../Components/Forms/Button";
 import { FormikField } from "../../../Components/Forms/FormikField";
@@ -64,6 +64,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     setLista(event.target.value);
   };
 
+  console.log("ESTO ES LO QUE TIENE: "+minLength)
 
   useEffect(() => {
 
@@ -71,7 +72,6 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
 
     const EI = instance as ElementInstance<"TEXT">
-    console.log("ESTO ES LO QUE TIENE: "+JSON.stringify(instance))
 
     if (properties && Array.isArray(properties.required) && properties.required.includes("label")) {
       setHasLabelCondition(true);
@@ -169,11 +169,27 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
   }
 
 
-const [focus, setFocus] = useState(false);
+const [focusNombre, setFocusNombre] = useState(false);
+const [focusMinLength, setFocusMinLength] = useState(false);
+const [focusMaxLength, setFocusMaxLength] = useState(false);
+const [focusValueMin, setFocusValueMin] = useState(false);
+const [focusValueMax, setFocusValueMax] = useState(false);
+const [focusLista, setFocusLista] = useState(false);
 
-const handleFocus = () => {
-  setFocus(!focus)            
-
+const handleFocus = (component:string) => {
+  if (component=="nombreCampo")
+    setFocusNombre(!focusNombre)            
+  else if (component == "minLength")
+  setFocusMinLength(!focusMinLength)
+  else if (component=="maxLength")
+  setFocusMaxLength(!focusMaxLength)
+  else if (component =="valueMin")
+  setFocusValueMin(!focusValueMin)
+  else if (component=="valueMax")
+  setFocusValueMax(!focusValueMax)
+  else if (component=="lista")
+  setFocusLista(!focusLista)
+  
 }
   
   return (
@@ -188,9 +204,12 @@ const handleFocus = () => {
       <ul>
       {hasRequiredCondition && (
           <><div style={{display:"flex", flexDirection:"column", margin:"15px 0px 20px 0px"}}>
-            <Checkbox label="Elemento obligatorio? " setCheck={setRequired} state={isRequired} />
-            <div>
+            <CheckboxWrapper >
+              <Checkbox label="Elemento obligatorio? " setCheck={setRequired} state={isRequired} />
               {isRequired ? 'Elemento obligatorio' : 'Elemento no obligatorio'} en el formulario
+
+            </CheckboxWrapper>
+            <div>
             </div>
           </div>
           
@@ -198,82 +217,96 @@ const handleFocus = () => {
         )}
         {hasLabelCondition && (
           <div  style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
-          <h2>Ingrese el nombre del elemento</h2>
+          <InputWrapper focus={focusNombre} >
+          <label className="text" htmlFor="nombre">Ingrese nombre del componente</label>
           <input
             type="text"
             value={nombreCampo}
             onChange={handleNombreCampo}
-            style={{ border: '1px solid black', padding: '5px', marginBottom:"5px" }}
+            onFocus={()=>handleFocus("nombreCampo")} 
+            onBlur={()=>handleFocus("nombreCampo")}
           />
-          
-          <InputWrapper focus={focus}><div>
-              <label className="text" htmlFor="nombre">Ingrese nombre del componente</label>
-              <input id="nombre" type="text" onFocus={handleFocus} onBlur={handleFocus} value={nombreCampo} onChange={handleNombreCampo}/>
-            </div>
           </InputWrapper>
+          
 
-          <p>El nombre de este elemento es: {nombreCampo}</p>
+{  /*        <p>El nombre de este elemento es: {nombreCampo}</p> */}
         </div>
         )}
        {hasLengthMinCondition && (
-          <div>
-            <h2>Ingrese la mínima cantidad de caracteres del campo</h2>
+          <div style={{ marginBottom: '15px' }}>
+            <InputWrapper focus={focusMinLength} >
+            <label className="text" htmlFor="nombre">Ingrese la mínima cantidad de caracteres del campo</label>
+
             <input
               type="number"
               value={minLength === 0 ? '' : minLength}
-              onInput={handleMinValue}
-              style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
+              onInput={handleMinValue} 
+              onFocus={()=>handleFocus("minLength")} 
+            onBlur={()=>handleFocus("minLength")}
             />
-            <p>Mínima cantidad de caracteres es: {minLength !== 0 ? minLength : 'Vacío'}</p>
+            </InputWrapper>
+
           </div>
         )}
         {hasLengthMaxCondition && (
-          <div>
-            <h2>Ingrese la máxima cantidad de caracteres del campo</h2>
+          <div style={{ marginBottom: '15px' }}>
+            <InputWrapper focus={focusMaxLength} >
+            <label className="text" htmlFor="nombre">Ingrese la máxima cantidad de caracteres del campo</label>
             <input
               type="number"
               value={maxLength}
               onInput={handleMaxValue}
-              style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
+              onFocus={()=>handleFocus("maxLength")} 
+              onBlur={()=>handleFocus("maxLength")}
             />
-            <p>Máxima cantidad de caracteres es: {maxLength !== 0 ? maxLength : 'Vacío'}</p>
+            </InputWrapper>
           </div>
         )}
 
         {hasValueMin && (
-          <div>
-            <h2>Ingrese valor mínimo campo</h2>
+          <div style={{ marginBottom: '15px' }}>
+            <InputWrapper focus={focusValueMin} >
+            <label className="text" htmlFor="nombre">Ingrese  el valor mínimo del campo</label>
+
             <input
               type="number"
               value={valueMin === 0 ? '' : valueMin}
               onInput={handleValueMin}
-              style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
+              onFocus={()=>handleFocus("valueMin")} 
+              onBlur={()=>handleFocus("valueMin")}
             />
-            <p>Mínima cantidad de caracteres es: {valueMin !== 0 ? valueMin : 'Vacío'}</p>
+          </InputWrapper >
+
           </div>
         )}
         {hasValueMax && (
-          <div>
-            <h2>Ingrese valor máximo del campo</h2>
+          <div style={{ marginBottom: '15px' }}>
+            <InputWrapper focus={focusValueMax} >
+            <label className="text" htmlFor="nombre">Ingrese  el valor máximo del campo</label>
             <input
               type="number"
               value={valueMax === 0 ? '' : valueMax}
               onInput={handleValueMax}
-              style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
+              onFocus={()=>handleFocus("valueMax")} 
+              onBlur={()=>handleFocus("valueMax")}
             />
-            <p>Mínima cantidad de caracteres es: {valueMax !== 0 ? valueMax : 'Vacío'}</p>
+            </InputWrapper >
+
           </div>
         )}
         {hasOptions && (
           <div>
-            <h2>Ingrese lista de valores separados por ;</h2>
+            <InputWrapper focus={focusLista} >
+
+            <label className="text" htmlFor="nombre">Ingrese lista de valores separadas por ;</label>
             <input
               type="text"
               value={lista}
               onInput={handleListValue}
-              style={{ border: '1px solid black', padding: '5px', marginBottom: '5px' }}
+              onFocus={()=>handleFocus("lista")} 
+              onBlur={()=>handleFocus("lista")}
             />
-            <p>Lista de valores: {lista !== '' ? lista : 'Lista vacia'}</p>
+            </InputWrapper >
           </div>
         )}
 

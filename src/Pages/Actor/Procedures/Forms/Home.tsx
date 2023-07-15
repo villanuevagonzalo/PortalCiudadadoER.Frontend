@@ -64,7 +64,9 @@ export const DA_Procedures_Forms_Home = () => {
     UpdateForms()
   },[])
 
-
+  //lista de titulos de formularios para buscar.
+  const DataName = formularios.map((item:any)=>item.title)
+  
   const renderElement = () => {
     if (seeOptions=="seeForm") {
       return (
@@ -85,18 +87,15 @@ export const DA_Procedures_Forms_Home = () => {
         <LayoutSection>
           
           <LayoutStackedPanel>
-            {/*<div>
+            <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
                   initialValues={FieldValues}
                   validationSchema={formGetValidations(FormRequiredFields)}
-                  onSubmit={async (values: any) => {
-                  
-                  }}
-              >
+                  onSubmit={async (values: any) => { }} >
                   <Form autoComplete="off">
                       <FormikSearch name="Tramites" data={DataName} autoFocus/>
                   </Form>
-              </Formik></div>*/}
+              </Formik></div>
             <LayoutSpacer/>
             
             {/* Botones para crear o actualizar formularios */}
@@ -153,23 +152,23 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
         {datos.map((item, index) => (
           
           <tr key={index}>
-            <td style={{textAlign: 'center', verticalAlign: 'middle'}}>{item.getCode()}</td>
-            <td style={{textAlign: 'center', verticalAlign: 'middle'}}>{item.getTitle()}</td>
-            <td style={{textAlign: 'center', verticalAlign: 'middle'}}>{item.getStatus()}</td>
-            <td style={{textAlign: 'center', verticalAlign: 'middle', width:"auto"}}> 
+            <td style={{ verticalAlign: 'middle'}}>{item.getCode()}</td>
+            <td style={{ verticalAlign: 'middle'}}>{item.getTitle()}</td>
+            <td style={{ verticalAlign: 'middle'}}>{item.getStatus()}</td>
+            <td style={{ verticalAlign: 'middle', width:"auto"}}> 
             
-              <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"center"}}> 
+              <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"left"}}> 
                 
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
                   
-                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
                   { item.getStatus() != "asd22f" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
                   
-                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
                   < HiOutlinePencil/>
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"5px" }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }}>
                   <HiMiniTrash />
                 </div> 
                   </div>     
