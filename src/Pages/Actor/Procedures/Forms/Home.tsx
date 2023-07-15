@@ -1,5 +1,5 @@
 import { Form, Formik } from "formik";
-import { Spinner } from "../../../../Components/Elements/StyledComponents";
+import { Spinner, TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
 import { useContext, useEffect, useMemo, useState } from "react";
@@ -65,7 +65,6 @@ export const DA_Procedures_Forms_Home = () => {
   },[])
 
 
-
   const renderElement = () => {
     if (seeOptions=="seeForm") {
       return (
@@ -113,7 +112,7 @@ export const DA_Procedures_Forms_Home = () => {
           </LayoutStackedPanel>
           
         {/*  <Table columns={mcolumns} data={mdata} />*/}
-          < TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} />
+            < TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} />
         </LayoutSection>
       </>);
     }
@@ -138,9 +137,11 @@ interface TableProps {
 const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions }) => {
   
   return (
-    <table>
+
+    <TableWrapper>
+    <table style={{ marginTop:"15px", width:"100%" }}>
       <thead>
-        <tr>
+        <tr >
           <th>COD.F</th>
           <th>Título</th>
           <th>Estado</th>
@@ -181,5 +182,7 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
         ))}
       </tbody>
     </table>
+    </TableWrapper>
+
   );
 };

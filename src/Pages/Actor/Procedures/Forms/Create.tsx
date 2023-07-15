@@ -12,7 +12,7 @@ import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormEl
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
-import { CreateFormPopUp, FormFieldsPropertiesPopUp } from "../../../../Components/Forms/PopUpCards";
+import { CreateFormPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp} from "../../../../Components/Forms/PopUpCards";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
@@ -20,11 +20,14 @@ import { FormContext } from "../../../../Contexts/FormContext";
 
 export const DA_Procedures_Forms_Create = () => {
 
-  const { SaveForm } = useContext(FormContext);
+  const { SaveForm , setFormularios } = useContext(FormContext);
 
   const [edit, setEdit] = useState(false)
   const [ver, setVer] = useState(false)
   const [crear, setCrear] = useState(false)
+
+  const [cargadoCorrectamente, setCargadoCorrectamente] = useState(false)
+  const [errorCarga, setErrorCarga] = useState(false)
 
   const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
   const [instance, setIntance] = useState<ElementInstance<ElementSchemaTypes>>()
@@ -78,13 +81,36 @@ export const DA_Procedures_Forms_Create = () => {
    const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
    //const JsonData = nuevoFormulario.getJSON();
    const response = await SaveForm(nuevoFormulario.getJSON(), setFormState);
-   console.log(response)
+  
+
+   const status = response.data.success;
+   const responseData = JSON.parse(response.data.data);
+   const code = responseData[0].CODE;
+   const title = responseData[0].TITLE;
+
+   if (status && code == formBasicData.Code.value && title == formBasicData.Title.value){
+    const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
+    setFormularios((prevFormularios) => [...prevFormularios, nuevoFormulario]);
+    setFields([])
+    setFormBasicData({
+      Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired"])),
+      Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
+      Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
+      Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
+      Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
+    })
+    setCargadoCorrectamente(true)
+    setCrear(false)
+    console.log("CARGADO CORRECTAMENTE")
+   }else{
+    setErrorCarga(true)
+
+   }
 
   }
   
   const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
-  console.log("titulo: "+formBasicData.Title.value)
   if (ver){
 
     const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
@@ -111,6 +137,13 @@ export const DA_Procedures_Forms_Create = () => {
         {crear && (
                 <CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} />
               )}
+        {cargadoCorrectamente && (
+                <FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />
+        )}
+        {errorCarga && (
+                <FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />
+        )}
+
         <LayoutSection>
           <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
           <Formik

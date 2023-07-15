@@ -117,6 +117,7 @@ const ContextValues = () => {
 
   return {
     formularios,
+    setFormularios,
     SaveForm, 
     UpdateForms
   }
