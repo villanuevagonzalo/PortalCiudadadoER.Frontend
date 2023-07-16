@@ -3,12 +3,12 @@ import { NotificationFullSizeWrapper } from "../Elements/StyledComponents"
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../Layout/StyledComponents"
 import { Button } from "./Button"
 import { ElementEditor } from "../../Modules/FormElements/Components/ElementEditor"
-import { ElementInstance } from "../../Modules/FormElements/Class"
+import { ElementInstance, FormInstance } from "../../Modules/FormElements/Class"
 import { ElementSchemaTypes } from "../../Modules/FormElements/Types"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Pages } from "../../Routes/Pages"
-import { BiArrowBack, BiSave } from "react-icons/bi"
+import { BiArrowBack, BiSave, BiTrash } from "react-icons/bi"
 
 interface Props{
     instance: ElementInstance<ElementSchemaTypes>,  
@@ -159,3 +159,35 @@ export const FormCreateCompleteFieldsPopUp: React.FC<formCreateCompleteFieldsPro
       <LayoutSpacer/>
     </NotificationFullSizeWrapper>
 };
+
+
+interface deleteFormProps{
+  formToDelete: FormInstance<ElementSchemaTypes>,  
+  handleDeleteForm: Function, 
+  close:Function
+}
+export const DeleteFormPopUp: React.FC<deleteFormProps> = ({ formToDelete, handleDeleteForm, close})  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
+          <AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />
+          <h1>Formulario: {formToDelete.getTitle()}</h1>
+          <h2 >¿Está seguro de borrar el formulario?</h2>
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <Button onClick={()=>close()}><BiArrowBack/>Volver</Button>
+            <Button onClick={()=>{handleDeleteForm(formToDelete.getCode()); close(false)}}>SI <BiTrash/></Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}

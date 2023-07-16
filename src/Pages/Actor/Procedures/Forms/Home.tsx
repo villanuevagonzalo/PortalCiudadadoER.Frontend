@@ -18,6 +18,7 @@ import { FormInstance } from "../../../../Modules/FormElements/Class";
 import { HiMiniTrash, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { FormUpdate } from "./Update";
+import { DeleteFormPopUp } from "../../../../Components/Forms/PopUpCards";
 
 
 const FormRequiredFields = ["Tramites"];
@@ -37,23 +38,31 @@ export const DA_Procedures_Forms_Home = () => {
   const mdata = useMemo(()=>data,[])*/
 
 
-  const { UpdateForms , formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const { UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
   const [updateForm, setUpdateForm] = useState(false)
   const [seeOptions, setSeeOptions] = useState("home")
   const [formToCheck, setFormToCheck] = useState<FormInstance<ElementSchemaTypes>>()
+  const [formToDelete, setFormToDelete] = useState<FormInstance<ElementSchemaTypes>>()
+  const [deleteForm, setDeleteForm] = useState(false)
 
-  
   useEffect(()=>{
     UpdateForms()
   },[])
 
-  const deleteForm = (code:string)=> {
+  const handleDeleteForm = async (code:string)=> {
 
-    DeleteOneForm(code,setFormState);
+    const response = await DeleteOneForm(code,setFormState);
+    if (response){
+      setFormularios(prevFormularios => prevFormularios.filter(form => form !== formToDelete));
+    }
+    setDeleteForm(false)
+
   }
+
+ 
 
   const DataName = formularios.map((item:any)=>item.title)
   
@@ -73,6 +82,8 @@ export const DA_Procedures_Forms_Home = () => {
         </div>;
     } else {
       return(<>
+        {deleteForm && (<DeleteFormPopUp formToDelete={formToDelete!} handleDeleteForm={handleDeleteForm} close={setDeleteForm}  /> )}
+
         <LayoutSection>
           <LayoutStackedPanel>
             <div>
@@ -103,7 +114,7 @@ export const DA_Procedures_Forms_Home = () => {
         <br/>
         <Spinner color='secondary' size="3rem"/><br/>
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} deleteForm={deleteForm} />
+      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} />
       }
         </LayoutSection>
       </>);
@@ -124,10 +135,11 @@ interface TableProps {
   datos: FormInstance<ElementSchemaTypes>[];
   setFormToCheck:Function,
   setSeeOptions:Function,
-  deleteForm:Function
+  setDeleteForm:Function,
+  setFormToDelete:Function
 }
 
-const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, deleteForm }) => {
+const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, setDeleteForm, setFormToDelete }) => {
   
 
   return (
@@ -163,7 +175,7 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
                   < HiOutlinePencil/>
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>deleteForm(item.getCode()) }>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>{setFormToDelete(item);setDeleteForm(true)} }>
                   <HiMiniTrash />
                 </div> 
                   </div>     

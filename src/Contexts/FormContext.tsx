@@ -70,9 +70,15 @@ const ContextValues = () => {
   }
 
   const DeleteOneForm = async(code:string, setFormState: Function) => {
-    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Delete, code, setFormState);
-    console.log("esto devuelve"+response)
+    setIsLoading(true);
 
+    const jsonObject = {
+      code: code
+    };
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Delete, jsonObject, setFormState);
+    setIsLoading(false);
+
+    return response;
   }
 
 
