@@ -69,7 +69,6 @@ export const LayoutActor = () => {
     }
   },[userRol])
   
-
   return (
     <LayoutContainer className='FlexSwitchMobile'>
       <LayoutActorSidebar sidebarVisible={sidebarVisible}>

@@ -18,22 +18,7 @@ import { FormInstance } from "../../../../Modules/FormElements/Class";
 import { HiMiniTrash, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { FormUpdate } from "./Update";
-/*
-type Item = {
-  title: string;
-  description: string;
- }
 
-const data = [
-  {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
-  {title: 'Reemplazo de Libreta Cívica o Libreta de Enrolamiento por nuevo DNI Tarjeta', description:'Es el trámite que te permite reemplazar la Libreta de Enrolamiento o Libreta Cívica por el nuevo DNI Digital en formato tarjeta (Documento Nacional de Identidad). este nuevo DNI Digital conserva el mismo número que tu libreta anterior. ...'},
-  {title: 'Solicitud de un nuevo ejemplar de DNI por extravío, robo o deterioro', description: 'Es el trámite que te permite solicitar un nuevo ejemplar de DNI (Documento Nacional de Identidad) en formato tarjeta ante el extravío, robo o deterioro. El nuveo DNI que obtengas conservará el mismo número que el anterior. ...'},
-  {title: 'Solicitud de DNI para argentinos naturalizados', description: 'Este trámite te permite solicitar tu DNI (Documento Nacional de Identidad) argentino una vez que ya tengas la carta de ciudadanía, la cual se obtiene mediante proceso judicial que se lleva a cabo exclusiamente ante los tribunales federales argentinos. ...'},
-  {title: 'Rectificaión de datos por cambio de género', description:'Este trámite te permite modificar los datos de nombre y género registrados en tu DNI. ...'},
-];
-
-*/
-//const DataName = data.map((item:any)=>item.title);
 
 const FormRequiredFields = ["Tramites"];
 
@@ -64,7 +49,10 @@ export const DA_Procedures_Forms_Home = () => {
     UpdateForms()
   },[])
 
-  //lista de titulos de formularios para buscar.
+  const deleteForm = ()=> {
+
+  }
+
   const DataName = formularios.map((item:any)=>item.title)
   
   const renderElement = () => {
@@ -84,7 +72,6 @@ export const DA_Procedures_Forms_Home = () => {
     } else {
       return(<>
         <LayoutSection>
-          
           <LayoutStackedPanel>
             <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
@@ -114,7 +101,7 @@ export const DA_Procedures_Forms_Home = () => {
         <br/>
         <Spinner color='secondary' size="3rem"/><br/>
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} />
+      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} deleteForm={deleteForm} />
       }
         </LayoutSection>
       </>);
@@ -135,12 +122,11 @@ interface TableProps {
   datos: FormInstance<ElementSchemaTypes>[];
   setFormToCheck:Function,
   setSeeOptions:Function,
+  deleteForm:Function
 }
 
-const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions }) => {
+const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, deleteForm }) => {
   
-  console.log("LOS DATOS CUANDO SE RENDERIZA: "+datos)
-  console.log("LOS DATOS CUANDO SE RENDERIZA: "+JSON.stringify(datos))
 
   return (
 
@@ -175,7 +161,7 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
                   < HiOutlinePencil/>
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>deleteForm(item.getCode()) }>
                   <HiMiniTrash />
                 </div> 
                   </div>     

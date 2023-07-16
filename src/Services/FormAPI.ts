@@ -32,5 +32,11 @@ export class FormAPI {
       }
     })
   }
+
+  Delete = async (params: {
+    data:string
+  }) => {
+    return this.baseService.delete('/v0/admin/form-units', params)
+  }
   
 }

@@ -50,6 +50,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
     Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
     Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
   });
+  const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   useEffect(()=>{
     formBasicData.Code.setValue(formToUpdate?.getCode())
@@ -57,16 +58,8 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
     formBasicData.Subtitle.setValue(formToUpdate?.getSubtitle())
     formBasicData.Description.setValue(formToUpdate?.getDescription())
     formBasicData.Keywords.setValue(formToUpdate?.getKeywords())
-
     setFields(formToUpdate.elements);
-
-
   },[])
-
-  
-
- // const [newForm, setNewForm] = useState<FormInstance<ElementSchemaTypes>>();
-
 
   const addItem = (type:any) => {
     const newfield = new ElementInstance( fields.length.toString (),new ElementSchema(type,{label:'Ingresá el Título'},["isRequired"]))
@@ -96,44 +89,19 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
   }
 
   const guardarFormulario=async ()=> {
-
    const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
-   const response = await UpdateOneForm(nuevoFormulario.getJSON(), setFormState);
-
-   console.log("esto es lo que devuelve el update: "+JSON.stringify(response))
-   
-   const status = response.data.success;
-   const responseData = JSON.parse(response.data.data);
-   const code = responseData[0].CODE;
-   const title = responseData[0].TITLE;
-
-   if (status && code == formBasicData.Code.value && title == formBasicData.Title.value){
-   const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
-   setFormularios((prevFormularios) => [...prevFormularios, nuevoFormulario]);
-   setFields([])
-   setFormBasicData({
-     Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired"])),
-     Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
-     Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
-     Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
-     Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
-   })
-   setCargadoCorrectamente(true)
-   setCrear(false)
+   const response = await UpdateOneForm(nuevoFormulario.getJSON(), setFormState, formBasicData.Code.value);
+   if (response){
+    setCargadoCorrectamente(true)
+    setCrear(false)
    }else{
-   setErrorCarga(true)
-
+    setErrorCarga(true)
    }
  }
-
   
-  
-  const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
-
-  if (ver){
+ if (ver){
 
     const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
-
     return ( 
       <>
         <FormElementShow form={nuevoFormulario}  />
@@ -141,7 +109,6 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
       </>
     )
   }else{
-
     if (edit){
       if (instance) {
         return(
@@ -151,21 +118,12 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
         return null; // Otra opción es mostrar un mensaje de error o una carga condicional
       }  
     }else{
-      return(<>
-              {crear && (
-                <CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} />
-              )}
-        {cargadoCorrectamente && (
-                <FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />
-        )}
-        {errorCarga && (
-                <FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />
-        )}
-        {
-          completarCampos && (
-            <FormCreateCompleteFieldsPopUp close={setCompletarCampos} crear={setCrear} />
-            
-        )}
+      return(
+      <>
+        {crear && (<CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} /> )}
+        {cargadoCorrectamente && (<FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />)}
+        {errorCarga && (<FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />)}
+        {completarCampos && (<FormCreateCompleteFieldsPopUp close={setCompletarCampos} crear={setCrear} /> )}
         <LayoutSection>
           <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
           <Formik
@@ -266,10 +224,6 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
         </LayoutSection>
       </>);
     }
-
   }
 }
 
-function UpdateOneForm(arg0: { code: string; title: string; subtitle: string; description: string; keywords: string; status: string; elements: string; }, setFormState: Dispatch<SetStateAction<IFormState>>) {
-    throw new Error("Function not implemented.");
-}
