@@ -26,7 +26,7 @@ export class FormAPI {
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.put('/v0/admin/form-units', params,{
+    return this.baseService.post('/v0/admin/form-units/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -36,7 +36,7 @@ export class FormAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.delete('/v0/admin/form-units', params)
+    return this.baseService.post('/v0/admin/form-units/delete', params)
   }
   
 }

@@ -52,6 +52,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
   });
   const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
+  console.log("EL TITULO ES: "+ formBasicData.Title.value)
   useEffect(()=>{
     formBasicData.Code.setValue(formToUpdate?.getCode())
     formBasicData.Title.setValue(formToUpdate?.getTitle())
@@ -89,7 +90,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
   }
 
   const guardarFormulario=async ()=> {
-   const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
+   const nuevoFormulario = new FormInstance(formBasicData.Code.getValue(), formBasicData.Title.getValue(), formBasicData.Subtitle.getValue(), formBasicData.Description.getValue(), formBasicData.Keywords.getValue(), estadoFormulario, fields)
    const response = await UpdateOneForm(nuevoFormulario.getJSON(), setFormState, formBasicData.Code.value);
    if (response){
     setCargadoCorrectamente(true)

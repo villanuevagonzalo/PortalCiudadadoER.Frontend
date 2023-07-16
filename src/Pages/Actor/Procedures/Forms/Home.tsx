@@ -37,7 +37,7 @@ export const DA_Procedures_Forms_Home = () => {
   const mdata = useMemo(()=>data,[])*/
 
 
-  const { UpdateForms , formularios, isLoading} = useContext(FormContext);
+  const { UpdateForms , formularios, isLoading, DeleteOneForm} = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -45,12 +45,14 @@ export const DA_Procedures_Forms_Home = () => {
   const [seeOptions, setSeeOptions] = useState("home")
   const [formToCheck, setFormToCheck] = useState<FormInstance<ElementSchemaTypes>>()
 
+  
   useEffect(()=>{
     UpdateForms()
   },[])
 
-  const deleteForm = ()=> {
+  const deleteForm = (code:string)=> {
 
+    DeleteOneForm(code,setFormState);
   }
 
   const DataName = formularios.map((item:any)=>item.title)

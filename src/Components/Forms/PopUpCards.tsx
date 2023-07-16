@@ -55,7 +55,7 @@ export const CreateFormPopUp: React.FC<createFormProps> = ({ formTitle, create, 
         </div>
         <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
           <AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />
-          <h4>{formTitle}</h4>
+          <h1>{formTitle}</h1>
           <h2 >¿Está seguro de crear el formulario?</h2>
         </div>
         <LayoutStackedPanel className="mt-2">

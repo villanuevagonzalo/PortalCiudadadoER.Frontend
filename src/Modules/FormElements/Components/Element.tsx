@@ -51,9 +51,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   }, [HelpField.value])
 
   const changeValue = (value:any) => {
-    console.log("lo que se va a guardar: "+value)
     instance.setValue(value);
-    console.log("ASI QUEDA LA INSTANCE:" +JSON.stringify(instance))
   }
 
   //this is just to radio or radio-list
