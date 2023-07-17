@@ -138,7 +138,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             validate={(values:any) => ValidateForm(values, formBasicData)}
           >
           <Form autoComplete="off">
-            <h2> Código de referencia: {formBasicData.Code.getValue()}</h2>
+            <h1 style={{margin:"10px 0px 20px 0px"}}> Código de referencia: {formBasicData.Code.getValue()}</h1>
             <Element instance={formBasicData.Title}/>
             <Element instance={formBasicData.Subtitle}/>
             <Element instance={formBasicData.Description}/>
@@ -219,8 +219,8 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             </select>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <Button type="submit" onClick={() => guardarFormulario()}>Guardar <BiSave/></Button>
-            <Button onClick={() => setVer(true)}>Ver <BiBullseye/></Button>
+            <Button type="submit" onClick={() => {guardarFormulario(); window.scrollTo({ top: 0, behavior: 'smooth' });}}>Guardar <BiSave/></Button>
+            <Button onClick={() => setVer(true)}>Ver<BiBullseye/></Button>
           </div>
         </LayoutSection>
       </>);

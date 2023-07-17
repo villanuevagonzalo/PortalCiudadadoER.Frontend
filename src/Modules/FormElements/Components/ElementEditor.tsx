@@ -180,18 +180,18 @@ const handleFocus = (component:string) => {
   if (component=="nombreCampo")
     setFocusNombre(!focusNombre)            
   else if (component == "minLength")
-  setFocusMinLength(!focusMinLength)
+    setFocusMinLength(!focusMinLength)
   else if (component=="maxLength")
-  setFocusMaxLength(!focusMaxLength)
+    setFocusMaxLength(!focusMaxLength)
   else if (component =="valueMin")
-  setFocusValueMin(!focusValueMin)
+    setFocusValueMin(!focusValueMin)
   else if (component=="valueMax")
-  setFocusValueMax(!focusValueMax)
+    setFocusValueMax(!focusValueMax)
   else if (component=="lista")
-  setFocusLista(!focusLista)
+    setFocusLista(!focusLista)
   
 }
-  
+
   return (
     <ElementWrapper>
       <label>
@@ -217,7 +217,7 @@ const handleFocus = (component:string) => {
         )}
         {hasLabelCondition && (
           <div  style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
-          <InputWrapper focus={focusNombre} >
+          <InputWrapper focus={focusNombre || nombreCampo.length >0 } >
           <label className="text" htmlFor="nombre">Ingrese nombre del componente</label>
           <input
             type="text"
@@ -234,7 +234,7 @@ const handleFocus = (component:string) => {
         )}
        {hasLengthMinCondition && (
           <div style={{ marginBottom: '15px' }}>
-            <InputWrapper focus={focusMinLength} >
+            <InputWrapper focus={focusMinLength || !isNaN(minLength!) } >
             <label className="text" htmlFor="nombre">Ingrese la mínima cantidad de caracteres del campo</label>
 
             <input
@@ -250,7 +250,7 @@ const handleFocus = (component:string) => {
         )}
         {hasLengthMaxCondition && (
           <div style={{ marginBottom: '15px' }}>
-            <InputWrapper focus={focusMaxLength} >
+            <InputWrapper focus={focusMaxLength || !isNaN(maxLength!) } >
             <label className="text" htmlFor="nombre">Ingrese la máxima cantidad de caracteres del campo</label>
             <input
               type="number"
@@ -265,7 +265,7 @@ const handleFocus = (component:string) => {
 
         {hasValueMin && (
           <div style={{ marginBottom: '15px' }}>
-            <InputWrapper focus={focusValueMin} >
+            <InputWrapper focus={focusValueMin || !isNaN(valueMin!) } >
             <label className="text" htmlFor="nombre">Ingrese  el valor mínimo del campo</label>
 
             <input
@@ -281,7 +281,7 @@ const handleFocus = (component:string) => {
         )}
         {hasValueMax && (
           <div style={{ marginBottom: '15px' }}>
-            <InputWrapper focus={focusValueMax} >
+            <InputWrapper focus={focusValueMax || !isNaN(valueMax!)} >
             <label className="text" htmlFor="nombre">Ingrese  el valor máximo del campo</label>
             <input
               type="number"
@@ -296,8 +296,7 @@ const handleFocus = (component:string) => {
         )}
         {hasOptions && (
           <div>
-            <InputWrapper focus={focusLista} >
-
+            <InputWrapper focus={focusLista || lista!=""} >
             <label className="text" htmlFor="nombre">Ingrese lista de valores separadas por ;</label>
             <input
               type="text"
@@ -312,7 +311,7 @@ const handleFocus = (component:string) => {
 
 
       </ul>
-      <Button onClick={()=>Guardar()}>Guardar datos de elemento</Button>
+      <Button style={{marginTop:"15px"}} onClick={()=>Guardar()}>Guardar datos de elemento</Button>
 
     </ElementWrapper>
   );

@@ -53,9 +53,8 @@ export const CreateFormPopUp: React.FC<createFormProps> = ({ formTitle, create, 
           <span className="flex-1"></span>
           <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
         </div>
-        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
-          <AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />
-          <h1>{formTitle}</h1>
+        <div style={{  display: "flex", flexDirection: "row", alignItems: "left", justifyContent: "left", textAlign:"left", margin:" 15px 0px 15px 0px" }}>
+          <AiOutlineAlert fontSize={"2rem"} color="red" style={{margin:"0px 10px 0px 0px"}} />
           <h2 >¿Está seguro de crear el formulario?</h2>
         </div>
         <LayoutStackedPanel className="mt-2">
@@ -85,9 +84,11 @@ export const FormCreatedPopUp: React.FC<FormCreatedProps> = ({ formTitle, close 
           <span className="flex-1"></span>
           <span className="close" onClick={()=>close(false)}><AiOutlineClose fontSize={"1rem"}/></span>
         </div>
-        <AiOutlineStar fontSize={"2rem"}/>
-        <h2> {formTitle} </h2>
-        <h3>Formulario cargado correctamente</h3>      
+        <div style={{  display: "flex", flexDirection: "row", alignItems: "left", justifyContent: "left", textAlign:"left", margin:" 15px 0px 15px 0px" }}>
+          <AiOutlineStar fontSize={"2rem"} color="#efb810" style={{margin:"0px 10px 0px 0px"}}/>
+          <h2>Formulario cargado correctamente</h2>      
+        </div>
+
         <LayoutStackedPanel className="mt-2">
           <LayoutSpacer/>
           <Link to={Pages.DA_PROCEDURES_FORMS} className="button notifications">

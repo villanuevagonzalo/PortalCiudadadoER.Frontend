@@ -62,6 +62,11 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
   };
 
+  const handleSliderChange= (e: { target: { value: SetStateAction<string>; }; })=> {
+    instance.setValue(e.target.value);
+
+  }
+
   const renderType = <T extends ElementSchemaTypes>(instance: ElementInstance<T>) => {
     let EI : any;
 
@@ -200,7 +205,29 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
             </div>
 
           )
-        
+      case "slider":  EI = instance as ElementInstance<"RANGE">;
+      console.log("RANGE VALUE MIN: "+ EI.value )
+
+      return ( 
+        <InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div style={{height:'100px'}}>
+            <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+            <input 
+              type="range" 
+              autoFocus={props.autoFocus} 
+              {...field} 
+              min={EI.properties.value_min|| 1}
+              max={EI.properties.value_max|| 10}
+              onFocus={handleFocus} 
+              value={EI.value}
+              onBlur={handleFocus}
+              checked={selectedValue === "true"}
+              onChange={handleSliderChange}
+            />
+            <div className="FormIcon"><basetype.icon /></div>
+            <p>{EI.value}</p>
+
+          </div></InputWrapper>
+        )              
       default:
         console.log(basetype.type)
         return "TYPE IS NOT DEFINED";
