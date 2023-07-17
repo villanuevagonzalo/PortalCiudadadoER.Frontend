@@ -8,7 +8,7 @@ import { ElementSchemaTypes } from "../../Modules/FormElements/Types"
 import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { Pages } from "../../Routes/Pages"
-import { BiArrowBack, BiSave, BiTrash } from "react-icons/bi"
+import { BiArrowBack, BiSave } from "react-icons/bi"
 
 interface Props{
     instance: ElementInstance<ElementSchemaTypes>,  
@@ -185,7 +185,7 @@ export const DeleteFormPopUp: React.FC<deleteFormProps> = ({ formToDelete, handl
           <LayoutSpacer/>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
             <Button onClick={()=>close()}><BiArrowBack/>Volver</Button>
-            <Button onClick={()=>{handleDeleteForm(formToDelete.getCode()); close(false)}}>SI <BiTrash/></Button>
+            <Button onClick={()=>{handleDeleteForm(formToDelete.getCode()); close(false)}}>SI</Button>
           </div>
         </LayoutStackedPanel>
       </LayoutSection>

@@ -63,7 +63,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   };
 
   const handleSliderChange= (e: { target: { value: SetStateAction<string>; }; })=> {
-    instance.setValue(e.target.value);
+      instance.setValue(e.target.value);
+      setSelectedValue(e.target.value);
 
   }
 
@@ -135,17 +136,20 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         </div></InputWrapper>);
 
       case "select": EI = instance as ElementInstance<"SELECT">;
-      return (<SelectWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
-        <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-        <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
-          {EI.properties.options&&EI.properties.options.map((option:any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <div className="select-arrow"></div>
-      </div></SelectWrapper>);
+      console.log("selected options: "+EI.properties.options)
+      return (<SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
+        <div>
+          <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+          <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
+            {EI.properties.options && EI.properties.options.map((option: any) => (
+              <option key={option.value} value={option.value}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <div className="select-arrow"></div>
+        </div>
+      </SelectWrapper>);
 
       case "checkbox": EI = instance as ElementInstance<"CHECKBOX">;
       
@@ -206,7 +210,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
           )
       case "slider":  EI = instance as ElementInstance<"RANGE">;
-      console.log("RANGE VALUE MIN: "+ EI.value )
       return ( 
         <InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div style={{height:'100px'}}>
             <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
@@ -214,7 +217,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
               type="range" 
               min={EI.properties.value_min || 1}
               max={EI.properties.value_max|| 10}
-              value={EI.value}
+              step={1}
+              value={selectedValue}
               onChange={handleSliderChange}
             />
             <div className="FormIcon"><basetype.icon /></div>
