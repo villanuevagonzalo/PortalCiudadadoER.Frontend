@@ -15,10 +15,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { FormInstance } from "../../../../Modules/FormElements/Class";
-import { HiMiniTrash, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
+import { HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { FormUpdate } from "./Update";
 import { DeleteFormPopUp } from "../../../../Components/Forms/PopUpCards";
+import { BiTrash } from "react-icons/bi";
 
 
 const FormRequiredFields = ["Tramites"];
@@ -176,7 +177,7 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
                   < HiOutlinePencil/>
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>{setFormToDelete(item);setDeleteForm(true)} }>
-                  <HiMiniTrash />
+                  <BiTrash />
                 </div> 
                   </div>     
                 </div> 
