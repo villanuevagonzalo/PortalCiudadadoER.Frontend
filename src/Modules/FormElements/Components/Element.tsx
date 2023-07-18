@@ -136,20 +136,22 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         </div></InputWrapper>);
 
       case "select": EI = instance as ElementInstance<"SELECT">;
-      console.log("selected options: "+EI.properties.options)
-      return (<SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
-        <div>
-          <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-          <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
-            {EI.properties.options && EI.properties.options.map((option: any) => (
-              <option key={option.value} value={option.value}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <div className="select-arrow"></div>
-        </div>
-      </SelectWrapper>);
+      return (
+        <SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
+          <div>
+            <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+            <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
+              {EI.properties.options && EI.properties.options.map((option: any) => (
+                <option key={option.value} value={option.value}>
+                  {option.value}
+                </option>
+              ))}
+            </select>
+            <div className="select-arrow"></div>
+          </div>
+        </SelectWrapper>
+      );
+      
 
       case "checkbox": EI = instance as ElementInstance<"CHECKBOX">;
       
