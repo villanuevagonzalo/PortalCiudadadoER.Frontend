@@ -5,10 +5,12 @@ import { Button } from "./Button"
 import { ElementEditor } from "../../Modules/FormElements/Components/ElementEditor"
 import { ElementInstance, FormInstance } from "../../Modules/FormElements/Class"
 import { ElementSchemaTypes } from "../../Modules/FormElements/Types"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { Pages } from "../../Routes/Pages"
 import { BiArrowBack, BiSave } from "react-icons/bi"
+import { InputWrapper } from "../../Modules/FormElements/Components/StyledComponents"
+import { HiDocumentDuplicate } from "react-icons/hi2"
 
 interface Props{
     instance: ElementInstance<ElementSchemaTypes>,  
@@ -192,3 +194,64 @@ export const DeleteFormPopUp: React.FC<deleteFormProps> = ({ formToDelete, handl
       <LayoutSpacer/>
     </NotificationFullSizeWrapper>
 }
+
+
+interface CopyFormProps{
+  formToCopy: FormInstance<ElementSchemaTypes>,  
+  handleCopyForm: Function, 
+  close:Function
+}
+export const CopyFormPopUp: React.FC<CopyFormProps> = ({ formToCopy, handleCopyForm, close})  => {
+  
+  const [newCode, setNewCode]=useState("")
+  const [focus, setFocus] = useState(false);
+  const [empty, setEmpty] = useState(newCode=='');
+  const [error , setError] = useState(false)
+
+  const handleFocus = () => {
+    setFocus(!focus)            
+    setEmpty(newCode==='')
+  }
+  const copiar = () => {
+    
+    if (newCode!=""){
+      handleCopyForm(newCode)
+    }else{
+      setError(true)
+    }
+
+  }
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close(false)}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "row" , margin:"15px 0px 0px 0px" }}>
+          <HiDocumentDuplicate fontSize={"2rem"}  style={{ marginRight:"5px"}} />
+          <h2 style={{margin:"5px 0px 15px 0px"}}>COPIA DE FORMULARIO</h2>
+          </div>
+
+          <InputWrapper error={error}  focus={focus || !empty}><div>
+              <label className="text" >Ingrese nuevo código de referencia</label>
+              <input 
+                type="text" 
+                onFocus={handleFocus} 
+                onBlur={handleFocus}
+                value={newCode}
+                onInput={(e) => setNewCode((e.target as HTMLInputElement).value)} 
+                />
+            </div></InputWrapper>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <Button onClick={()=>close()}><BiArrowBack/>Volver</Button>
+            <Button onClick={()=>copiar ()}>COPIAR</Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}
+

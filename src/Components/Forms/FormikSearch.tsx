@@ -14,6 +14,7 @@ interface Props{
   component?: React.Component;
   label?: string;
   data?: any;
+  setValue?:any
 }
 
 export const FormikSearch = ({...props}: Props) => {
@@ -44,6 +45,9 @@ export const FormikSearch = ({...props}: Props) => {
   const handleClick = (item:string) => {
     setFieldValue(props.name, item)
     listMatch("");
+    if (props.setValue)
+    props.setValue(item);
+
   }
 
   const handleKeys = (e:any) => {
@@ -57,6 +61,7 @@ export const FormikSearch = ({...props}: Props) => {
       setFieldValue(props.name, ListData[ListDataIndex]);
       e.preventDefault();
       listMatch("");
+      
     }
   }
 
@@ -78,6 +83,8 @@ export const FormikSearch = ({...props}: Props) => {
     }
   }, [field.value])
   
+  const seleccionar = (value:string) =>{
+  }
 
   return (<FormWrapper {...props}>
     <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} >
@@ -88,7 +95,7 @@ export const FormikSearch = ({...props}: Props) => {
       </div>
       {(ListData.length>0)?<div className="FormDropdown">
         {ListData.map((item:any, index:number) => (
-          <div dangerouslySetInnerHTML={{__html:parseItem(item, field.value)}} onMouseDown={()=>handleClick(item)} key={index} className={ListDataIndex===index?'active':''}/>
+          <div dangerouslySetInnerHTML={{__html:parseItem(item, field.value)}} onMouseDown={()=>handleClick(item)} key={index} className={ListDataIndex===index?'active':''} onClick={()=>seleccionar(item)}/>
         ))}
       </div>:<></>}
     </FormWrapperInput>

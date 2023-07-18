@@ -52,7 +52,6 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
   });
   const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
-  console.log("EL TITULO ES: "+ formBasicData.Title.value)
   useEffect(()=>{
     formBasicData.Code.setValue(formToUpdate?.getCode())
     formBasicData.Title.setValue(formToUpdate?.getTitle())
@@ -198,7 +197,8 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             <div>
               <h2>Elementos</h2>
               <FormElementBasesMenu>{Object.entries(FormElementBases).map(([clave, element], index) => {
-                return(<div key={clave} onClick={()=>addItem(clave)}>
+              console.log("claves: "+clave)
+               return(<div key={clave} onClick={()=>addItem(clave)}>
                   <span><element.icon/></span>
                   <ul>
                     <li className="title"><p>{element.description}</p></li>

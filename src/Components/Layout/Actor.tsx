@@ -98,7 +98,7 @@ export const LayoutActor = () => {
                     {item.href?<NavLink to={item.href} children={item.name}/>:<p>{item.name}</p>}
                   </li>
                   {item.children?item.children.map(child=>
-                    <li className={'children'+" "+(paths.includes(child.path||"")?"":"HIDE")}>
+                    <li  key={child.name} className={'children'+" "+(paths.includes(child.path||"")?"":"HIDE")}>
                       <NavLink to={child.href}
                         className={(window.location.pathname.startsWith(child.href||"") ? 'active' : '')}
                       >

@@ -8,6 +8,7 @@ import { ElementInstance, ElementSchema } from "../Class";
 import { ErrorMessage, getIn, useField, useFormikContext } from "formik";
 import { validationFunctions } from "../Validators";
 import { MdRadioButtonUnchecked } from "react-icons/md";
+import { IndexKind } from "typescript";
 
 interface Props extends HTMLAttributes<HTMLDivElement>{
   instance: ElementInstance<ElementSchemaTypes>;
@@ -138,18 +139,18 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       case "select": EI = instance as ElementInstance<"SELECT">;
       return (
         <SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
-          <div>
-            <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-            <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
-              {EI.properties.options && EI.properties.options.map((option: any) => (
-                <option key={option.value} value={option.value}>
-                  {option.value}
-                </option>
-              ))}
-            </select>
-            <div className="select-arrow"></div>
-          </div>
-        </SelectWrapper>
+        <div>
+          <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+          <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
+            {EI.properties.options && EI.properties.options.map((option: any) => (
+              <option key={option} value={option.value}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <div className="select-arrow"></div>
+        </div>
+      </SelectWrapper>
       );
       
 
@@ -193,7 +194,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
                 <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
                 <div style={{ display: 'flex', flexDirection:"column", gap: '8px', marginTop:"8px" }}>
                 {EI.properties.options&& EI.properties.options.map((option:any) => (
-                  <div style={{display:"flex", flexDirection:"row"}}>
+                  <div key={option} style={{display:"flex", flexDirection:"row"}}>
                     <input 
                       type="radio" 
                       autoFocus={props.autoFocus} 

@@ -110,6 +110,10 @@ export class FormInstance<T extends ElementSchemaTypes>  {
     return formData;
   }
 
+  setCode(code:string){
+    this.code=code;
+  }
+
   getCode(){
     return this.code;
   }

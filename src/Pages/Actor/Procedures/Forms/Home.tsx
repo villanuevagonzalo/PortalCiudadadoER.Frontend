@@ -15,31 +15,18 @@ import { ColumnDef } from "@tanstack/react-table";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { FormInstance } from "../../../../Modules/FormElements/Class";
-import { HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
+import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { FormUpdate } from "./Update";
-import { DeleteFormPopUp } from "../../../../Components/Forms/PopUpCards";
+import { CopyFormPopUp, DeleteFormPopUp, FormCreateErrorPopUp } from "../../../../Components/Forms/PopUpCards";
 import { BiTrash } from "react-icons/bi";
 
 
 const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
-/*
-  const mcolumns = useMemo<ColumnDef<Item>[]>(()=>[
-    {
-      header: 'Name',
-      accessorKey: 'title',
-    },
-    {
-      header: 'Price',
-      accessorKey: 'description',
-    }
-  ],[]);
-  const mdata = useMemo(()=>data,[])*/
 
-
-  const { UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -47,19 +34,37 @@ export const DA_Procedures_Forms_Home = () => {
   const [seeOptions, setSeeOptions] = useState("home")
   const [formToCheck, setFormToCheck] = useState<FormInstance<ElementSchemaTypes>>()
   const [formToDelete, setFormToDelete] = useState<FormInstance<ElementSchemaTypes>>()
+  const [searchForm, setSearchForm] = useState<FormInstance<ElementSchemaTypes>>()
   const [deleteForm, setDeleteForm] = useState(false)
+  const [copy, setCopy] = useState(false)
+  const [newCode, setNewCode] = useState("")
+  const [errorCarga, setErrorCarga] = useState(false)
 
   useEffect(()=>{
     UpdateForms()
   },[])
 
   const handleDeleteForm = async (code:string)=> {
-
     const response = await DeleteOneForm(code,setFormState);
     if (response){
       setFormularios(prevFormularios => prevFormularios.filter(form => form !== formToDelete));
     }
     setDeleteForm(false)
+  }
+
+  const handleCopyForm = async (code:string)=> {
+    if (code!=""){
+      formToCheck!.setCode(code)
+      const response = await SaveForm(formToCheck!.getJSON(), setFormState, code, formToCheck?.getTitle()!);
+      if (response){
+        setFormToCheck(undefined)
+          setCopy(false)
+          setNewCode("")
+      }else{
+        setErrorCarga(true)
+      }
+
+    }
 
   }
 
@@ -79,21 +84,21 @@ export const DA_Procedures_Forms_Home = () => {
       return <div>
           <FormUpdate formToUpdate= {formToCheck!} />
           <Button onClick={() => setSeeOptions("home")}>Volver</Button>
-
         </div>;
-    } else {
+    }else {
       return(<>
         {deleteForm && (<DeleteFormPopUp formToDelete={formToDelete!} handleDeleteForm={handleDeleteForm} close={setDeleteForm}  /> )}
-
+        {copy&&(<CopyFormPopUp formToCopy={formToCheck!} handleCopyForm={handleCopyForm} close={setCopy} /> )}
+        {errorCarga && (<FormCreateErrorPopUp formTitle={""} close={setErrorCarga} />)}
         <LayoutSection>
           <LayoutStackedPanel>
             <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
                   initialValues={FieldValues}
                   validationSchema={formGetValidations(FormRequiredFields)}
-                  onSubmit={async (values: any) => { }} >
+                  onSubmit={async (values: any) => {console.log("valores: "+values) }} >
                   <Form autoComplete="off">
-                      <FormikSearch name="Tramites" data={DataName} autoFocus/>
+                      <FormikSearch name="Tramites" data={DataName} setValue={setSearchForm} autoFocus/>
                   </Form>
               </Formik></div>
             <LayoutSpacer/>
@@ -115,7 +120,7 @@ export const DA_Procedures_Forms_Home = () => {
         <br/>
         <Spinner color='secondary' size="3rem"/><br/>
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} />
+      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
       }
         </LayoutSection>
       </>);
@@ -137,16 +142,15 @@ interface TableProps {
   setFormToCheck:Function,
   setSeeOptions:Function,
   setDeleteForm:Function,
-  setFormToDelete:Function
+  setFormToDelete:Function,
+  setCopy:Function
 }
 
-const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, setDeleteForm, setFormToDelete }) => {
+const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, setDeleteForm, setFormToDelete, setCopy }) => {
   
 
   return (
-
     <TableWrapper>
-    <table style={{ marginTop:"15px", width:"100%" }}>
       <thead>
         <tr >
           <th>COD.F</th>
@@ -158,37 +162,32 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
       </thead>
       <tbody>
         {datos.map((item, index) => (
-          
           <tr key={index}>
             <td style={{ verticalAlign: 'middle'}}>{item.getCode()}</td>
             <td style={{ verticalAlign: 'middle'}}>{item.getTitle()}</td>
             <td style={{ verticalAlign: 'middle'}}>{item.getStatus()}</td>
             <td style={{ verticalAlign: 'middle', width:"auto"}}> 
-            
               <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"left"}}> 
-                
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
-                  
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
                   { item.getStatus() != "asd22f" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
-                  
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
                   < HiOutlinePencil/>
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>{setFormToDelete(item);setDeleteForm(true)} }>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setCopy(true); setFormToCheck(item) ; window.scrollTo({ top: 0, behavior: 'smooth' });}}>
+                  < HiDocumentDuplicate/>
+                </div>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>{setFormToDelete(item);setDeleteForm(true) ; window.scrollTo({ top: 0, behavior: 'smooth' });} }>
                   <BiTrash />
                 </div> 
                   </div>     
                 </div> 
-             
             </td>
-
             {/* Agrega más celdas según las propiedades del objeto */}
           </tr>
         ))}
       </tbody>
-    </table>
     </TableWrapper>
 
   );
