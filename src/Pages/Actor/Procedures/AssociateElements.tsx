@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Table } from "../../../Components/Elements/Table";
 import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../Components/Layout/StyledComponents";
 
@@ -61,10 +61,9 @@ export const DA_Procedures_Associate = () => {
   ],[]);
   const mdata = useMemo(()=>data,[])
 
-  const Fields: {[key: string]: ElementInstance<ElementSchemaTypes>} = {
-    Select_Procedure: new ElementInstance("Select_Procedure",new ElementSchema('SELECT',{label:'Seleccione un trámite',options:[{
-      value: "NombreTramite1",
-      label: 'Nombre del tramite 1'
+  const [Fields, setFields] = useState({
+    Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
+      value: "NombreTramite1", label: 'Nombre del tramite 1'
     },{
       value: "NombreTramite2",
       label: 'Nombre del tramite 2'
@@ -72,8 +71,7 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTramite3",
       label: 'Nombre del tramite 3'
     }]},["isRequired"]), "both"),
-
-    Select_Theme: new ElementInstance("Select_Theme",new ElementSchema('SELECT',{label:'Temáticas',options:[{
+    Select_Theme: new ElementInstance("Select_Theme", new ElementSchema('SELECT', { label: 'Temáticas' ,options:[{
       value: "NombreTemática1",
       label: 'Temática 1'
     },{
@@ -83,8 +81,7 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTemática2",
       label: 'Temática 3'
     }]},["isRequired"]), "both"),
-
-    Select_Form: new ElementInstance("Select_Form",new ElementSchema('SELECT',{label:'Seleccione de a uno los formularios',options:[{
+    Select_Form: new ElementInstance("Select_Form", new ElementSchema('SELECT', {label:'Seleccione de a uno los formularios',options:[{
       value: "NombreForm1",
       label: 'Formulario 1'
     },{
@@ -93,9 +90,10 @@ export const DA_Procedures_Associate = () => {
     },{
       value: "NombreForm3",
       label: 'Formulario 3'
-    }]},["isRequired"]), "both"),
-  }
-
+    }]},["isRequired"]), "both")
+    
+  });
+ 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   return(<>

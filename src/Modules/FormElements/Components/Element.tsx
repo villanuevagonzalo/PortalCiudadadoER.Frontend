@@ -144,7 +144,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
             {EI.properties.options && EI.properties.options.map((option: any) => (
               <option key={option} value={option.value}>
-                {option}
+                {option.label}
               </option>
             ))}
           </select>
