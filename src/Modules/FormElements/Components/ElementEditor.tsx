@@ -142,6 +142,11 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
 
 
+  const parseStringToList = (lista: string): { label: string }[] => {
+    const values = lista.split(';'); // Dividir el string por punto y coma
+    const parsedList = values.map((value) => ({ label: value.trim() })); // Mapear cada valor al objeto con la propiedad label
+    return parsedList;
+  };
 
   const Guardar = () => {
   
@@ -153,7 +158,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     length_max: hasLengthMaxCondition ? maxLength : 10,
     value_min: hasValueMin ? valueMin : 0,
     value_max: hasValueMax ? valueMax : 0,
-    options: hasOptions ? lista.split(";") : '',
+    options: hasOptions ? parseStringToList(lista) : '',
     value_default: "",
     value_regex: "",
     childrens: ""
@@ -350,4 +355,3 @@ const Checkbox: React.FC<CheckboxProps> = ({ label, state, setCheck }) => {
     </div>
   );
 };
-

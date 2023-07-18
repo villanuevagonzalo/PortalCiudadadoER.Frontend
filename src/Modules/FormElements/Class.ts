@@ -140,10 +140,12 @@ export class FormInstance<T extends ElementSchemaTypes>  {
 
 export class ProcedureInstance<T extends ElementSchemaTypes>  {
   
+  procedureName:string;
   forms: FormInstance<ElementSchemaTypes>[];
 
-  constructor(forms:FormInstance<T>[] ) {
+  constructor(procedurName:string, forms:FormInstance<T>[] ) {
 
+    this.procedureName=procedurName;
     this.forms=forms; 
 
   }

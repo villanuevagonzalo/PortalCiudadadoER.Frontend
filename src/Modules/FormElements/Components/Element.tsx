@@ -143,9 +143,9 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
           <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
             {EI.properties.options && EI.properties.options.map((option: any) => (
-              <option key={option} value={option.value}>
-                {option}
-              </option>
+             <option key={option.label} value={option.value}>
+             {option.label}
+           </option>
             ))}
           </select>
           <div className="select-arrow"></div>
@@ -189,25 +189,30 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           </div>
         )
       case "input-radio-lista": EI = instance as ElementInstance<"RADIO-LISTA">;
+      console.log("Instance: "+JSON.stringify(EI))
           return(
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto",   margin:"-0.25rem 0 0rem 0"}}>
                 <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
                 <div style={{ display: 'flex', flexDirection:"column", gap: '8px', marginTop:"8px" }}>
-                {EI.properties.options&& EI.properties.options.map((option:any) => (
-                  <div key={option} style={{display:"flex", flexDirection:"row"}}>
-                    <input 
-                      type="radio" 
-                      autoFocus={props.autoFocus} 
-                      {...field} 
-                      onFocus={handleFocus} 
-                      onBlur={handleFocus}  
-                      value={option}
-                      checked={selectedValue === option}
-                      onChange={handleRadioChange}/>
-                      
-                    <label style={{ marginLeft: '8px'}} className="text">{option}</label>
-                  </div>
-                ))} 
+                {
+                  EI.properties.options &&
+                  EI.properties.options.map((option: any) => (
+                    <div key={option.label} style={{ display: "flex", flexDirection: "row" }}>
+                      <input
+                        type="radio"
+                        autoFocus={props.autoFocus}
+                        {...field}
+                        onFocus={handleFocus}
+                        onBlur={handleFocus}
+                        value={option.label} // Aquí debes usar option.label en lugar de option.lable
+                        checked={selectedValue === option.label}
+                        onChange={handleRadioChange}
+                      />
+
+                      <label style={{ marginLeft: '8px' }} className="text">{option.label}</label> {/* Aquí también debes usar option.label */}
+                    </div>
+                  ))
+                }
                 </div>
             </div>
 
