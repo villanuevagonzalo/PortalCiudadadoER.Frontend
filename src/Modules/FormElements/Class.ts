@@ -201,7 +201,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     return this.attachments;
   }
   getJSON (){
-    const formData = {
+    const ProcedureData = {
       "name": this.name,
       "description": this.description,
       "state": this.state,
@@ -210,7 +210,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
       "attachments": JSON.stringify(this.attachments)
     };
     
-    return formData;
+    return ProcedureData;
   }
 
 }
