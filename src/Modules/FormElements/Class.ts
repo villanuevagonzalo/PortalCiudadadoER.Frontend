@@ -106,7 +106,7 @@ export class FormInstance<T extends ElementSchemaTypes>  {
       "elements": JSON.stringify(this.elements)
     };
     
-    const jsonData = JSON.stringify(formData);
+    //const jsonData = JSON.stringify(formData);
     return formData;
   }
 
@@ -140,16 +140,77 @@ export class FormInstance<T extends ElementSchemaTypes>  {
 
 export class ProcedureInstance<T extends ElementSchemaTypes>  {
   
-  forms: FormInstance<ElementSchemaTypes>[];
+  private name:string;
+  private description:string;
+  private state:string; //los estados pueden ser borrador, publicado, etc.
+  private theme:string; //temática
+  private forms: FormInstance<ElementSchemaTypes>[];
+  private attachments:string[]
 
-  constructor(forms:FormInstance<T>[] ) {
+  constructor(forms:FormInstance<T>[], name:string, description:string, state:string, theme:string, atthacments:string[] ) {
 
+    this.name=name;
+    this.description=description;
+    this.state=state; 
+    this.theme=theme;
     this.forms=forms; 
+    this.attachments=atthacments;
 
   }
 
   addForm(form: FormInstance<T>) {
     this.forms.push(form);
+  }
+  addName(name:string){
+    this.name=name;
+  }
+  addDescription(description:string){
+    this.description=description;
+  }
+  addState(state:string){
+    this.state=state;
+  }
+  addTheme(theme:string){
+    this.theme=theme;
+  }
+  addAttachments (attachments:string[]){
+    this.attachments=attachments
+  }
+  getForms() {
+    return this.forms;
+  }
+  getForm(index:number){
+    if (this.forms.length>=index)
+    return this.forms[index]
+    else 
+    return null
+  }
+  getName(){
+    return this.name;
+  }
+  getDescription(){
+    return this.description;
+  }
+  getState(){
+    return this.state;
+  }
+  getTheme(){
+    return this.theme;
+  }
+  getAttachments (){
+    return this.attachments;
+  }
+  getJSON (){
+    const formData = {
+      "name": this.name,
+      "description": this.description,
+      "state": this.state,
+      "theme": this.theme,
+      "forms": JSON.stringify(this.forms),
+      "attachments": JSON.stringify(this.attachments)
+    };
+    
+    return formData;
   }
 
 }
