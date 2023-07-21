@@ -137,19 +137,18 @@ export class FormInstance<T extends ElementSchemaTypes>  {
 }
 
 
-
 export class ProcedureInstance<T extends ElementSchemaTypes>  {
   
-  private name:string;
+  private title:string;
   private description:string;
   private state:string; //los estados pueden ser borrador, publicado, etc.
   private theme:string; //temática
   private forms: FormInstance<ElementSchemaTypes>[];
   private attachments:string[]
 
-  constructor(forms:FormInstance<T>[], name:string, description:string, state:string, theme:string, atthacments:string[] ) {
+  constructor(forms:FormInstance<T>[], title:string, description:string, state:string, theme:string, atthacments:string[] ) {
 
-    this.name=name;
+    this.title=title;
     this.description=description;
     this.state=state; 
     this.theme=theme;
@@ -161,8 +160,8 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   addForm(form: FormInstance<T>) {
     this.forms.push(form);
   }
-  addName(name:string){
-    this.name=name;
+  addName(title:string){
+    this.title=title;
   }
   addDescription(description:string){
     this.description=description;
@@ -185,8 +184,8 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     else 
     return null
   }
-  getName(){
-    return this.name;
+  getTitle(){
+    return this.title;
   }
   getDescription(){
     return this.description;
@@ -202,7 +201,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   }
   getJSON (){
     const ProcedureData = {
-      "name": this.name,
+      "title": this.title,
       "description": this.description,
       "state": this.state,
       "theme": this.theme,
