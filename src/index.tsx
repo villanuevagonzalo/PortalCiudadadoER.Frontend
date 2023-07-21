@@ -7,6 +7,7 @@ import './Styles/style.css';
 import NotificationsContextProvider from './Contexts/NotificationContext';
 import ScrollToTop from './Routes/ScrollTop';
 import FormContextProvider from './Contexts/FormContext';
+import ProcedureContext from './Contexts/ProcedureContext';
 
 const REACTENV = process.env
 
@@ -14,12 +15,14 @@ ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
       <NotificationsContextProvider>
-        <FormContextProvider>
-          <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
-            <App />
-            <ScrollToTop/>
-          </BrowserRouter>
-          </FormContextProvider>
+        <ProcedureContext>
+          <FormContextProvider>
+            <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
+              <App />
+              <ScrollToTop/>
+            </BrowserRouter>
+            </FormContextProvider>
+          </ProcedureContext>
       </NotificationsContextProvider>
     </AuthContextProvider>
   </React.StrictMode>,

@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Table } from "../../../Components/Elements/Table";
 import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../Components/Layout/StyledComponents";
 
@@ -17,6 +17,7 @@ import { FormikFieldDummy } from "../../../Components/Forms/FormikFieldDummy";
 import { FormikField } from "../../../Components/Forms/FormikField";
 import { FormikCheckbox } from "../../../Components/Forms/FormikCheckbox";
 import { MdOutlineCancel } from "react-icons/md";
+import { ProcedureContext } from "../../../Contexts/ProcedureContext";
 
 type Item = {
   title: string;
@@ -61,6 +62,9 @@ export const DA_Procedures_Associate = () => {
   ],[]);
   const mdata = useMemo(()=>data,[])
 
+
+  const { UpdateProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
+
   const [Fields, setFields] = useState({
     Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
       value: "NombreTramite1", label: 'Nombre del tramite 1'
@@ -93,6 +97,11 @@ export const DA_Procedures_Associate = () => {
     }]},["isRequired"]), "both")
     
   });
+
+  useEffect(()=>{
+    UpdateProcedures()
+  },[])
+
  
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 

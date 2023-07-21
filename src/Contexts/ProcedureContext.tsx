@@ -34,7 +34,7 @@ const ContextValues = () => {
     return false;
   }
 
-  const UpdateOneForm = async(procedure: any, setFormState: Function, title:string) => {
+  const  UpdateOneProcedure = async(procedure: any, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Update, procedure, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
@@ -54,7 +54,7 @@ const ContextValues = () => {
 
   }
 
-  const DeleteOneForm = async(title:string, setFormState: Function) => {
+  const DeleteOneProcedure = async(title:string, setFormState: Function) => {
     setIsLoading(true);
 
     const jsonObject = {
@@ -67,7 +67,7 @@ const ContextValues = () => {
   }
 
 
-  const UpdateForms = async() => {
+  const UpdateProcedures = async() => {
 
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
@@ -111,21 +111,21 @@ const ContextValues = () => {
     procedures,
     setProcedures,
     SaveProcedure, 
-    UpdateOneForm,
-    DeleteOneForm,
-    UpdateForms
+    UpdateOneProcedure,
+    DeleteOneProcedure,
+    UpdateProcedures
   }
 }
 
-export const FormContext = createContext({} as ReturnType<typeof ContextValues>);
+export const ProcedureContext = createContext({} as ReturnType<typeof ContextValues>);
 
-const FormContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
+const ProcedureContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
   return (
-    <FormContext.Provider value={ContextValues()}>
+    <ProcedureContext.Provider value={ContextValues()}>
       {props.children}
-    </FormContext.Provider>
+    </ProcedureContext.Provider>
   );
 }
 
-export default FormContextProvider;
+export default ProcedureContextProvider;
   
