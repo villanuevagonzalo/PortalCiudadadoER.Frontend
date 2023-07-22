@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Table } from "../../../Components/Elements/Table";
-import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../Components/Layout/StyledComponents";
+import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "../../../Components/Layout/StyledComponents";
 
 import { ColumnDef } from '@tanstack/react-table';
 import { FormikButton } from "../../../Components/Forms/FormikButton";
@@ -11,6 +11,8 @@ import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormWrapperInput } from "../../../Components/Forms/StyledComponents";
 import { TableFunctions } from "../../../Components/Elements/StyledComponents";
 import { GrFormView } from "react-icons/gr";
+import { Button } from "../../../Components/Forms/Button";
+import { Pages } from "../../../Routes/Pages";
 
 type Item = {
   title: string;
@@ -62,7 +64,9 @@ export const DA_Procedures_Config = () => {
       <LayoutStackedPanel>
       <LayoutSpacer/>
       <FormikButton color="secondary">Actualizar<RxUpdate/></FormikButton>
+      <Link to={Pages.DA_PROCEDURES_CONFIG_ASSOCIATE}>
         <FormikButton>Nuevo<AiOutlinePlus/></FormikButton>
+      </Link>
       </LayoutStackedPanel>
       <LayoutStackedPanel>
         Buscar:

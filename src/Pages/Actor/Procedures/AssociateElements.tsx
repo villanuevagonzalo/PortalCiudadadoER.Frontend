@@ -21,6 +21,7 @@ import { ProcedureContext } from "../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../Contexts/FormContext";
 import { Button } from "../../../Components/Forms/Button";
 import { FaPlus } from "react-icons/fa";
+import { HiTrash } from "react-icons/hi2";
 
 type Item = {
   title: string;
@@ -88,7 +89,7 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTemática2",
       label: 'Temática 2'
     },{
-      value: "NombreTemática2",
+      value: "NombreTemática3",
       label: 'Temática 3'
     }]},["isRequired"]), "both"),
       
@@ -110,21 +111,20 @@ export const DA_Procedures_Associate = () => {
 
   },[formularios])
 
-  console.log("formularios a elegir: "+JSON.stringify(forms[0]))
-
   const addNewForm = () =>{
     const updatedOptions = formularios.map((forms) => ({
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
     const Select_Form = new ElementInstance(forms.length.toString(), new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
-    //setForm (Select_Procedure);
     setForm(prevForms => [...prevForms, Select_Form]);
-
+  }
+  const deleteForm = (formToDelete: ElementInstance<ElementSchemaTypes>) => {
+    const updatedForms = forms.filter((form) => form !== formToDelete);
+    setForm(updatedForms);
   }
 
-  console.log("formularios: "+ JSON.stringify(formularios))
-  console.log("formularios titulos: "+JSON.stringify(forms))
+
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   return(<>
@@ -193,14 +193,17 @@ export const DA_Procedures_Associate = () => {
           validate={(values:any) => ValidateForm(values, Fields)}
         >
             <Form autoComplete="off">
-                <LayoutStackedPanel>
                 {forms && forms.map((form, index) => (
-                <div style={{display:"flex", flexDirection:"column", width:"100%", margin:"0px 0px 20px 0px"}}>  
-                <Element key={index} instance={form} className="flex-1" />
-                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => addNewForm()}>Agregar<FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
-                    </div>
+                  <div key={form.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
+                  <Element instance={form} className="flex-1" />
+                  <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                    <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => addNewForm()}>Agregar<FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+                    {index !== 0 && (
+                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteForm(form)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+                    )}
+                  </div>
+                </div>
                 ))}
-                </LayoutStackedPanel>
                 <p></p>
                 <LayoutStackedPanel className="mt-3">
                   <h1>Habilitar adjuntar archivos</h1>
