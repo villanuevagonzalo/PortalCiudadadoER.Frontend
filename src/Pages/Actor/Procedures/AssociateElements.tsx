@@ -82,7 +82,7 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTemática2",
       label: 'Temática 2'
     },{
-      value: "NombreTemática2",
+      value: "NombreTemática3",
       label: 'Temática 3'
     }]},["isRequired"]), "both"),
     Select_Form: new ElementInstance("Select_Form", new ElementSchema('SELECT', {label:'Seleccione de a uno los formularios',options:[{
