@@ -18,6 +18,9 @@ import { FormikField } from "../../../Components/Forms/FormikField";
 import { FormikCheckbox } from "../../../Components/Forms/FormikCheckbox";
 import { MdOutlineCancel } from "react-icons/md";
 import { ProcedureContext } from "../../../Contexts/ProcedureContext";
+import { FormContext } from "../../../Contexts/FormContext";
+import { Button } from "../../../Components/Forms/Button";
+import { FaPlus } from "react-icons/fa";
 
 type Item = {
   title: string;
@@ -64,6 +67,9 @@ export const DA_Procedures_Associate = () => {
 
 
   const { UpdateProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
+  const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+
+  const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
 
   const [Fields, setFields] = useState({
     Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
@@ -85,24 +91,40 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTemática2",
       label: 'Temática 3'
     }]},["isRequired"]), "both"),
-    Select_Form: new ElementInstance("Select_Form", new ElementSchema('SELECT', {label:'Seleccione de a uno los formularios',options:[{
-      value: "NombreForm1",
-      label: 'Formulario 1'
-    },{
-      value: "NombreForm2",
-      label: 'Formulario 2'
-    },{
-      value: "NombreForm3",
-      label: 'Formulario 3'
-    }]},["isRequired"]), "both")
-    
+      
   });
 
   useEffect(()=>{
     UpdateProcedures()
+    UpdateForms()
   },[])
 
- 
+  useEffect(()=>{
+    const updatedOptions = formularios.map((forms) => ({
+      value: forms.getCode()+" - "+forms.getTitle(),
+      label: forms.getCode()+" - "+forms.getTitle(), 
+    }));
+    const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
+    //setForm (Select_Procedure);
+    setForm(prevForms => [ Select_Form]);
+
+  },[formularios])
+
+  console.log("formularios a elegir: "+JSON.stringify(forms[0]))
+
+  const addNewForm = () =>{
+    const updatedOptions = formularios.map((forms) => ({
+      value: forms.getCode()+" - "+forms.getTitle(),
+      label: forms.getCode()+" - "+forms.getTitle(), 
+    }));
+    const Select_Form = new ElementInstance(forms.length.toString(), new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
+    //setForm (Select_Procedure);
+    setForm(prevForms => [...prevForms, Select_Form]);
+
+  }
+
+  console.log("formularios: "+ JSON.stringify(formularios))
+  console.log("formularios titulos: "+JSON.stringify(forms))
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   return(<>
@@ -125,7 +147,7 @@ export const DA_Procedures_Associate = () => {
         >
             <Form autoComplete="off">
                 <LayoutStackedPanel>
-                    <Element instance={Fields.Select_Procedure} className="flex-1"/>
+                  <Element instance={Fields.Select_Procedure} className="flex-1"/>
                 </LayoutStackedPanel>  
             </Form>
         </Formik>
@@ -172,7 +194,12 @@ export const DA_Procedures_Associate = () => {
         >
             <Form autoComplete="off">
                 <LayoutStackedPanel>
-                    <Element instance={Fields.Select_Form} className="flex-1"/>
+                {forms && forms.map((form, index) => (
+                <div style={{display:"flex", flexDirection:"column", width:"100%", margin:"0px 0px 20px 0px"}}>  
+                <Element key={index} instance={form} className="flex-1" />
+                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => addNewForm()}>Agregar<FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+                    </div>
+                ))}
                 </LayoutStackedPanel>
                 <p></p>
                 <LayoutStackedPanel className="mt-3">
@@ -191,12 +218,6 @@ export const DA_Procedures_Associate = () => {
                   <FormikCheckbox name="UploadFiles" />
                 </LayoutStackedPanel>
                 <p></p>
-                <LayoutStackedPanel className="mt-6">
-                    <Element instance={Fields.Select_Form} className="flex-1"/>
-                </LayoutStackedPanel>
-                <LayoutStackedPanel>
-                    <Element instance={Fields.Select_Form} className="flex-1"/>
-                </LayoutStackedPanel>
                 <LayoutStackedPanel>
                   <LayoutSpacer/>
                   <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
