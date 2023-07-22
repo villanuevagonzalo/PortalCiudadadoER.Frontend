@@ -108,7 +108,6 @@ export const DA_Procedures_Associate = () => {
     const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
     //setForm (Select_Procedure);
     setForm(prevForms => [ Select_Form]);
-
   },[formularios])
 
   const addNewForm = () =>{
@@ -119,6 +118,7 @@ export const DA_Procedures_Associate = () => {
     const Select_Form = new ElementInstance(forms.length.toString(), new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
     setForm(prevForms => [...prevForms, Select_Form]);
   }
+  
   const deleteForm = (formToDelete: ElementInstance<ElementSchemaTypes>) => {
     const updatedForms = forms.filter((form) => form !== formToDelete);
     setForm(updatedForms);
