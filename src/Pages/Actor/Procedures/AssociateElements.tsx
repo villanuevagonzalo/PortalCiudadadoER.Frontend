@@ -4,11 +4,11 @@ import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel } f
 
 import { ColumnDef } from '@tanstack/react-table';
 import { FormikButton } from "../../../Components/Forms/FormikButton";
-import { AiOutlineDelete, AiOutlinePlus, AiOutlineSave } from "react-icons/ai";
+import { AiOutlineCheckCircle, AiOutlineDelete, AiOutlinePlus, AiOutlineSave } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { RxUpdate } from "react-icons/rx";
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
-import { FormWrapperInput } from "../../../Components/Forms/StyledComponents";
+import { FormWrapperCheckbox, FormWrapperInput } from "../../../Components/Forms/StyledComponents";
 import { TableFunctions } from "../../../Components/Elements/StyledComponents";
 import { GrFormView } from "react-icons/gr";
 import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm } from "../../../Modules/FormElements";
@@ -71,6 +71,7 @@ export const DA_Procedures_Associate = () => {
   const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
+  const [attached, setAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
 
   const [Fields, setFields] = useState({
     Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
@@ -92,7 +93,8 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTemática3",
       label: 'Temática 3'
     }]},["isRequired"]), "both"),
-      
+    Title_Attached: new ElementInstance("TitleAttached",new ElementSchema('TEXT',{label:'Ingrese Título'},["isRequired"])),
+    Select_Attached: new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Habilitar subir archivos'}), false)
   });
 
   useEffect(()=>{
@@ -108,7 +110,8 @@ export const DA_Procedures_Associate = () => {
     const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
     //setForm (Select_Procedure);
     setForm(prevForms => [ Select_Form]);
-
+    const Select_Attached = new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Ingrese Título'}), false)
+    setAttached(prevAttached => [ Select_Attached]);
   },[formularios])
 
   const addNewForm = () =>{
@@ -124,12 +127,22 @@ export const DA_Procedures_Associate = () => {
     setForm(updatedForms);
   }
 
+  const addNewAttached = () =>{
+    const Select_Attached = new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Ingrese Título'}), false)
+    setAttached(prevAttached => [...prevAttached, Select_Attached]);
+  }
+
+  const deleteAttached = (AttachToDelete: ElementInstance<ElementSchemaTypes>) => {
+    const updatedAttached = attached.filter((attach) => attach !== AttachToDelete);
+    setAttached(updatedAttached);
+  }
+
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   return(<>
     <LayoutActorSection>
-      <p>Asociar elementeos al trámite</p>
+      <p>Asociar elementos al trámite</p>
       <h1>Buscar Trámites</h1>
       <Formik
           innerRef={ref}
@@ -209,19 +222,29 @@ export const DA_Procedures_Associate = () => {
                   <h1>Habilitar adjuntar archivos</h1>
                 </LayoutStackedPanel>
                 <LayoutStackedPanel className="mt-2" >
-                  <FormikField name="Title" className="flex-3"/>
-                  <FormikCheckbox name="UploadFiles" />
-                </LayoutStackedPanel>
-                <LayoutStackedPanel className="mt-2" >
-                  <FormikField name="Title" className="flex-3"/>
-                  <FormikCheckbox name="UploadFiles" />
-                </LayoutStackedPanel>
-                <LayoutStackedPanel className="mt-2" >
-                  <FormikField name="Title" className="flex-3"/>
-                  <FormikCheckbox name="UploadFiles" />
+                {attached && attached.map((attach, index) => (
+                  <div key={attach.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
+                    <Element instance={Fields.Title_Attached} className="flex-2"/>
+                    <Element instance={Fields.Select_Attached} className="flex-1" />
+                  <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                    <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => addNewAttached()}>Agregar<FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+                    {index !== 0 && (
+                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteAttached(attach)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+                    )}
+                  </div>
+                </div>
+                ))}
+                  {/* <FormikField name="Title" className="flex-3"/>
+                  <FormikCheckbox name="UploadFiles" /> */}
+                  {/* <FormWrapperCheckbox>
+                    <input type="checkbox" id="UploadFiles" name="UploadFiles" hidden/>
+                    <div className="CheckboxText">
+                      <div><AiOutlineCheckCircle /></div>
+                    </div>
+                  </FormWrapperCheckbox> */}
                 </LayoutStackedPanel>
                 <p></p>
-                <LayoutStackedPanel>
+                <LayoutStackedPanel className="mt-3">
                   <LayoutSpacer/>
                   <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
                   <FormikButton>Finalizar<AiOutlineSave/></FormikButton>
