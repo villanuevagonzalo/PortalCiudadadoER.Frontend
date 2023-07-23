@@ -323,6 +323,13 @@ export const FormFields:FieldProps = {
         validations: yup.boolean()
                         .required('El campo es obligatorio')
     },
+
+    Select_Procedure:{
+        type: 'string',
+        defaultvalue: '',
+        placeholder: 'Busca un trámite',
+        validations: yup.string()
+    },
 }
 
 // Funciones de Obtención de Información

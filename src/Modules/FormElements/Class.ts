@@ -106,7 +106,7 @@ export class FormInstance<T extends ElementSchemaTypes>  {
       "elements": JSON.stringify(this.elements)
     };
     
-    const jsonData = JSON.stringify(formData);
+    //const jsonData = JSON.stringify(formData);
     return formData;
   }
 
@@ -137,21 +137,79 @@ export class FormInstance<T extends ElementSchemaTypes>  {
 }
 
 
-
 export class ProcedureInstance<T extends ElementSchemaTypes>  {
   
-  procedureName:string;
-  forms: FormInstance<ElementSchemaTypes>[];
+  private title:string;
+  private description:string;
+  private state:string; //los estados pueden ser borrador, publicado, etc.
+  private theme:string; //temática
+  private forms: FormInstance<ElementSchemaTypes>[];
+  private attachments:string[]
 
-  constructor(procedurName:string, forms:FormInstance<T>[] ) {
+  constructor(forms:FormInstance<T>[], title:string, description:string, state:string, theme:string, atthacments:string[] ) {
 
-    this.procedureName=procedurName;
+    this.title=title;
+    this.description=description;
+    this.state=state; 
+    this.theme=theme;
     this.forms=forms; 
+    this.attachments=atthacments;
 
   }
 
   addForm(form: FormInstance<T>) {
     this.forms.push(form);
+  }
+  addName(title:string){
+    this.title=title;
+  }
+  addDescription(description:string){
+    this.description=description;
+  }
+  addState(state:string){
+    this.state=state;
+  }
+  addTheme(theme:string){
+    this.theme=theme;
+  }
+  addAttachments (attachments:string[]){
+    this.attachments=attachments
+  }
+  getForms() {
+    return this.forms;
+  }
+  getForm(index:number){
+    if (this.forms.length>=index)
+    return this.forms[index]
+    else 
+    return null
+  }
+  getTitle(){
+    return this.title;
+  }
+  getDescription(){
+    return this.description;
+  }
+  getState(){
+    return this.state;
+  }
+  getTheme(){
+    return this.theme;
+  }
+  getAttachments (){
+    return this.attachments;
+  }
+  getJSON (){
+    const ProcedureData = {
+      "title": this.title,
+      "description": this.description,
+      "state": this.state,
+      "theme": this.theme,
+      "forms": JSON.stringify(this.forms),
+      "attachments": JSON.stringify(this.attachments)
+    };
+    
+    return ProcedureData;
   }
 
 }

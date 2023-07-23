@@ -80,7 +80,11 @@ export const FormikSearch = ({...props}: Props) => {
   useEffect(() => {
     if(field.value!==''){
       setFocus(true);
+    }else{
+      props.setValue("");
+
     }
+
   }, [field.value])
   
   const seleccionar = (value:string) =>{

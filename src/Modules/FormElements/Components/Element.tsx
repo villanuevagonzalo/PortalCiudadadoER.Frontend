@@ -143,9 +143,9 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
           <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
             {EI.properties.options && EI.properties.options.map((option: any) => (
-             <option key={option.label} value={option.value}>
-             {option.label}
-           </option>
+              <option key={option.label} value={option.value}>
+                {option.label}
+              </option>
             ))}
           </select>
           <div className="select-arrow"></div>

@@ -34,11 +34,14 @@ export const DA_Procedures_Forms_Home = () => {
   const [seeOptions, setSeeOptions] = useState("home")
   const [formToCheck, setFormToCheck] = useState<FormInstance<ElementSchemaTypes>>()
   const [formToDelete, setFormToDelete] = useState<FormInstance<ElementSchemaTypes>>()
-  const [searchForm, setSearchForm] = useState<FormInstance<ElementSchemaTypes>>()
+  const [searchForm, setSearchForm] = useState<string>()
+  const [filteredForms, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+
   const [deleteForm, setDeleteForm] = useState(false)
   const [copy, setCopy] = useState(false)
   const [newCode, setNewCode] = useState("")
   const [errorCarga, setErrorCarga] = useState(false)
+
 
   useEffect(()=>{
     UpdateForms()
@@ -67,9 +70,22 @@ export const DA_Procedures_Forms_Home = () => {
     }
 
   }
-
+  useEffect(()=>{
+    if (searchForm !== undefined &&  searchForm != '') {
+      const filtered = formularios.filter(form => form.getTitle() === searchForm);
+      setFilteredForms(filtered);
+       
+      } else {
+        setFilteredForms(formularios)
+      }
+    
+   
+  },[searchForm])
  
-
+  useEffect(()=>{
+    setFilteredForms(formularios)
+  },[formularios])
+  
   const DataName = formularios.map((item:any)=>item.title)
   
   const renderElement = () => {
@@ -98,11 +114,10 @@ export const DA_Procedures_Forms_Home = () => {
                   validationSchema={formGetValidations(FormRequiredFields)}
                   onSubmit={async (values: any) => {console.log("valores: "+values) }} >
                   <Form autoComplete="off">
-                      <FormikSearch name="Tramites" data={DataName} setValue={setSearchForm} autoFocus/>
+                      <FormikSearch name="Tramites" label={"Filtra los formularios"} data={DataName} setValue={setSearchForm} autoFocus/>
                   </Form>
               </Formik></div>
             <LayoutSpacer/>
-            
             {/* Botones para crear o actualizar formularios */}
             <div style={{display:"flex", flexDirection:"row"}}>
               <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateForms()} >
@@ -120,7 +135,7 @@ export const DA_Procedures_Forms_Home = () => {
         <br/>
         <Spinner color='secondary' size="3rem"/><br/>
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-      </>:< TableForms datos={formularios} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
+      </>:< TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
       }
         </LayoutSection>
       </>);

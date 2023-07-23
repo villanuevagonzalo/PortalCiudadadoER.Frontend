@@ -197,7 +197,6 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             <div>
               <h2>Elementos</h2>
               <FormElementBasesMenu>{Object.entries(FormElementBases).map(([clave, element], index) => {
-              console.log("claves: "+clave)
                return(<div key={clave} onClick={()=>addItem(clave)}>
                   <span><element.icon/></span>
                   <ul>
