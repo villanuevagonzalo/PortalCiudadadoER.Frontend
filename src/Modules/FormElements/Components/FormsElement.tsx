@@ -26,7 +26,7 @@ interface Arguments {
             <LayoutSection>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
                 <h2 style={{textAlign:"center"}}> {form.getTitle()} </h2>
-                <h3>  {form.getSubtitle()} </h3>
+                <h2>  {form.getSubtitle()} </h2>
                 <h2> Descripción: {form.getDescription()} </h2>
                 <h2> Keywords:{form.getKeywords()} </h2>
              </LayoutSection>    
