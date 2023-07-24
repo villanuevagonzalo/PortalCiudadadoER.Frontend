@@ -17,6 +17,7 @@ const ContextValues = () => {
   const [errors, setErrors] = useState<string>("");
 
   const SaveForm = async (formulario: any, setFormState: Function, code:string, title:string) => {
+    setIsLoading(true)
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formulario, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
@@ -33,16 +34,20 @@ const ContextValues = () => {
         });
         const nuevoFormulario = new FormInstance(formulario.code, formulario.title,formulario.subtitle, formulario.description, formulario.keywords, formulario.status, newFields)
         setFormularios(prevState => ([...prevState, nuevoFormulario]));
+        setIsLoading(false)
         return true;
       }
       else{
+        setIsLoading(false)
         return false;
       }
     }
+    setIsLoading(false)
     return false;
   }
 
   const UpdateOneForm = async(formulario: any, setFormState: Function, code:string) => {
+    setIsLoading(true)
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.Update, formulario, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
@@ -59,12 +64,15 @@ const ContextValues = () => {
         });
         const nuevoFormulario = new FormInstance(formulario.code, formulario.title,formulario.subtitle, formulario.description, formulario.keywords, formulario.status, newFields)
         setFormularios(prevState => ([...prevState, nuevoFormulario])); //set the new form
+        setIsLoading(false)
         return true;
       }
       else{
+        setIsLoading(false)
         return false;
       }
     }
+    setIsLoading(false)
     return false;
 
   }

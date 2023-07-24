@@ -58,7 +58,7 @@ const ContextValues = () => {
     setIsLoading(true);
 
     const jsonObject = {
-      code: title
+      title: title
     };
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Delete, jsonObject, setFormState);
     setIsLoading(false);
@@ -80,6 +80,7 @@ const ContextValues = () => {
    if(responseAll && responseAll.status!==204) 
    {
     const FormData = responseAll.data.data;
+      console.log("aca puede estar el problema: "+FormData)
       const FormsObj = JSON.parse(FormData);
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 

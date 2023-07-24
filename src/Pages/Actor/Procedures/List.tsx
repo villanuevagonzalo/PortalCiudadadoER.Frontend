@@ -1,8 +1,9 @@
-import { useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { Table } from "../../../Components/Elements/Table";
 import { LayoutSection } from "../../../Components/Layout/StyledComponents";
 
 import { ColumnDef } from '@tanstack/react-table';
+import { ProcedureContext } from "../../../Contexts/ProcedureContext";
 
 type Item = {
   title: string;
@@ -18,9 +19,9 @@ const data = [
 
 
 
-//console.log(BaseFields.TEXT.validations)
-
 export const DA_Procedures_List = () => {
+
+  const { UpdateProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
 
   const mcolumns = useMemo<ColumnDef<Item>[]>(()=>[
     {
@@ -33,6 +34,10 @@ export const DA_Procedures_List = () => {
     }
   ],[]);
   const mdata = useMemo(()=>data,[])
+
+  useEffect(()=>{
+    UpdateProcedures()
+  },[])
 
   return(<>
     <LayoutSection>

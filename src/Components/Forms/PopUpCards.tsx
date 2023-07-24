@@ -1,6 +1,6 @@
 import { AiOutlineAlert, AiOutlineClose, AiOutlineNotification, AiOutlineStar, AiOutlineWarning } from "react-icons/ai"
-import { NotificationFullSizeWrapper } from "../Elements/StyledComponents"
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../Layout/StyledComponents"
+import { NotificationFullSizeWrapper, Spinner } from "../Elements/StyledComponents"
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents"
 import { Button } from "./Button"
 import { ElementEditor } from "../../Modules/FormElements/Components/ElementEditor"
 import { ElementInstance, FormInstance } from "../../Modules/FormElements/Class"
@@ -255,3 +255,18 @@ export const CopyFormPopUp: React.FC<CopyFormProps> = ({ formToCopy, handleCopyF
     </NotificationFullSizeWrapper>
 }
 
+export const LoadingFormPopUp: React.FC = ()  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
+        <><br /><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>
+        </div>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}

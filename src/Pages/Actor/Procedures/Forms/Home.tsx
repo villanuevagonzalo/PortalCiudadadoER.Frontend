@@ -185,7 +185,7 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
               <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"left"}}> 
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
-                  { item.getStatus() != "asd22f" ? <HiOutlineMagnifyingGlass/> : <></>}
+                  { item.getStatus() != "Borrador" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
                   < HiOutlinePencil/>
