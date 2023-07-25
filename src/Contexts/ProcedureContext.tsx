@@ -19,6 +19,7 @@ const ContextValues = () => {
 
   const SaveProcedure = async (procedure: any, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure, setFormState);
+
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
@@ -80,13 +81,12 @@ const ContextValues = () => {
    if(responseAll && responseAll.status!==204) 
    {
     const FormData = responseAll.data.data;
-      console.log("aca puede estar el problema: "+FormData)
       const FormsObj = JSON.parse(FormData);
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 
       const mappedArray = FormsObj.map((procedureInstance: any) => {
 
-        const Formulario = new ProcedureInstance(
+        const newProcedures = new ProcedureInstance(
           procedureInstance.forms,
           procedureInstance.title,
           procedureInstance.description,
@@ -94,7 +94,7 @@ const ContextValues = () => {
           procedureInstance.theme,
           procedureInstance.atthacments
         );
-        procedureAux.push(Formulario);
+        procedureAux.push(newProcedures);
 
       });   
       setProcedures(procedureAux);

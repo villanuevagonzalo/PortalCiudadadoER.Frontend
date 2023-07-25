@@ -14,11 +14,17 @@ export class ProcedureAPI {
   }
   
 
-  public Create(params: {
-    title: string;
-  }){
-    return this.baseService.post('/v0/admin/procedures', params)
+  Create = async (params: {
+    data:string
+  }) => {
+    return this.baseService.post('/v0/admin/procedures', params,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
+
+
 
   Update = async (params: {
     data:string

@@ -55,6 +55,10 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     instance.setValue(value);
   }
 
+  const setSelectValue = (value:any) => {
+    instance.setValue(value);
+  } 
+
   //this is just to radio or radio-list
   const [selectedValue, setSelectedValue] = useState(instance.value);
   const handleRadioChange = (e: { target: { value: SetStateAction<string>; }; }) => {
@@ -141,7 +145,9 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         <SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
         <div>
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-          <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
+          <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}
+          onChange={e => setSelectValue(e.currentTarget.value)}
+                >
             {EI.properties.options && EI.properties.options.map((option: any) => (
               <option key={option.label} value={option.value}>
                 {option.label}

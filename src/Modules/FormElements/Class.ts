@@ -144,9 +144,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   private state:string; //los estados pueden ser borrador, publicado, etc.
   private theme:string; //temática
   private forms: FormInstance<ElementSchemaTypes>[];
-  private attachments:string[]
+  private attachments:ElementInstance<ElementSchemaTypes>[]
 
-  constructor(forms:FormInstance<T>[], title:string, description:string, state:string, theme:string, atthacments:string[] ) {
+  constructor(forms:FormInstance<T>[], title:string, description:string, state:string, theme:string, atthacments:ElementInstance<ElementSchemaTypes>[] ) {
 
     this.title=title;
     this.description=description;
@@ -172,7 +172,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   addTheme(theme:string){
     this.theme=theme;
   }
-  addAttachments (attachments:string[]){
+  addAttachments (attachments:ElementInstance<ElementSchemaTypes>[]){
     this.attachments=attachments
   }
   getForms() {

@@ -11,7 +11,7 @@ import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { FormWrapperCheckbox, FormWrapperInput } from "../../../Components/Forms/StyledComponents";
 import { TableFunctions } from "../../../Components/Elements/StyledComponents";
 import { GrFormView } from "react-icons/gr";
-import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm } from "../../../Modules/FormElements";
+import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm, ProcedureInstance, FormInstance } from "../../../Modules/FormElements";
 import { Form, Formik } from "formik";
 import { FormikFieldDummy } from "../../../Components/Forms/FormikFieldDummy";
 import { FormikField } from "../../../Components/Forms/FormikField";
@@ -22,6 +22,10 @@ import { FormContext } from "../../../Contexts/FormContext";
 import { Button } from "../../../Components/Forms/Button";
 import { FaPlus } from "react-icons/fa";
 import { HiTrash } from "react-icons/hi2";
+import { AuthContext } from "../../../Contexts/AuthContext";
+import { IFormState } from "../../../Interfaces/Data";
+import { DefaultFormState } from "../../../Data/DefaultValues";
+import { forEach } from "lodash";
 
 type Item = {
   title: string;
@@ -72,6 +76,8 @@ export const DA_Procedures_Associate = () => {
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [attached, setAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
+  const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
+  const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
 
   const [Fields, setFields] = useState({
     Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
@@ -107,7 +113,7 @@ export const DA_Procedures_Associate = () => {
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
-    const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
+    const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]))
     //setForm (Select_Procedure);
     setForm(prevForms => [ Select_Form]);
     const Select_Attached = new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Ingrese Título'}), false)
@@ -138,6 +144,48 @@ export const DA_Procedures_Associate = () => {
     setAttached(updatedAttached);
   }
 
+  const createProcedure = async () =>{
+
+    forms.forEach((formsAux) => {
+      const formTitle = formsAux.getValue().split(" - ")[0];
+      const filtered = formularios.filter(form => form.getCode() === formTitle);
+      setFilteredForms(filtered);
+       
+    });
+   
+  }
+
+  useEffect(() => {
+    console.log("llego aqui"+formsToSends.length)
+    const sendData = async () => {
+      // Lógica que depende de formsToSends actualizado
+      if (formsToSends.length != 0) {
+        const newProcedureToBeSend = new ProcedureInstance(
+          formsToSends,
+          Fields.Select_Procedure.getValue(),
+          "Descripción",
+          "Estado",
+          Fields.Select_Theme.getValue(),
+          attached
+        );
+
+        const response = await SaveProcedure(newProcedureToBeSend.getJSON(), setFormState, "hola");
+        console.log("Procedure " + JSON.stringify(newProcedureToBeSend.getJSON()));
+  
+        if (response) {
+          console.log("SE ENVIÓ");
+          setFilteredForms([]);
+        } else {
+          console.log("NO SE ENVIÓ" + response);
+          setFilteredForms([]);
+
+        }
+      }
+    };
+  
+    sendData();
+  }, [formsToSends]);
+  
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
@@ -222,7 +270,6 @@ export const DA_Procedures_Associate = () => {
                 <LayoutStackedPanel className="mt-3">
                   <h1>Habilitar adjuntar archivos</h1>
                 </LayoutStackedPanel>
-                <LayoutStackedPanel className="mt-2" >
                 {attached && attached.map((attach, index) => (
                   <div key={attach.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
                     <Element instance={Fields.Title_Attached} className="flex-2"/>
@@ -243,12 +290,11 @@ export const DA_Procedures_Associate = () => {
                       <div><AiOutlineCheckCircle /></div>
                     </div>
                   </FormWrapperCheckbox> */}
-                </LayoutStackedPanel>
                 <p></p>
                 <LayoutStackedPanel className="mt-3">
                   <LayoutSpacer/>
                   <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
-                  <FormikButton>Finalizar<AiOutlineSave/></FormikButton>
+                  <FormikButton onClick={ ()=> createProcedure()} >Finalizar<AiOutlineSave/></FormikButton>
                 </LayoutStackedPanel>
             </Form>
         </Formik>
