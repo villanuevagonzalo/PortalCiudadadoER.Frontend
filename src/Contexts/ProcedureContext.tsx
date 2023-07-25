@@ -9,6 +9,7 @@ import { ProcedureAPI } from "../Services/ProcedureAPI";
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
 
+export type FieldsElementType = ElementInstance<ElementSchemaTypes>[];
 
 const ContextValues = () => {
 
@@ -85,14 +86,44 @@ const ContextValues = () => {
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 
       const mappedArray = FormsObj.map((procedureInstance: any) => {
+    /*    const FormsObj = JSON.parse(procedureInstance.FORMS )
+        //const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
 
+        const mappedArray = FormsObj.map((formInstance: any) => {
+
+          let fields: FieldsElementType = [];
+          //console.log("veamos el por que: "+formInstance.elements)
+          //let componentes= JSON.parse(formInstance.elements)
+          formInstance.elements.map((componente: any, index:number)=> {
+
+            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+            aux.update((componente.properties))
+            fields.push(aux);
+
+
+          });
+
+          const Formulario = new FormInstance(
+            formInstance.code,
+            formInstance.title,
+            formInstance.subtitle,
+            formInstance.description,
+            formInstance.keywords,
+            formInstance.status,
+            fields
+          );
+          formulariosAux.push(Formulario);
+
+        });  */
+
+        console.log("attachments: "+procedureInstance.ATTACHMENTS)
         const newProcedures = new ProcedureInstance(
-          procedureInstance.forms,
-          procedureInstance.title,
-          procedureInstance.description,
-          procedureInstance.state,
-          procedureInstance.theme,
-          procedureInstance.atthacments
+          procedureInstance.FORMS,
+          procedureInstance.TITLE,
+          procedureInstance.DESCRIPTION,
+          procedureInstance.STATE,
+          procedureInstance.THEME,
+          procedureInstance.ATTACHMENTS
         );
         procedureAux.push(newProcedures);
 

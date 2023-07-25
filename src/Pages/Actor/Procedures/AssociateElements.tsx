@@ -39,7 +39,10 @@ const data = [
   {title: 'Nombre del tramite', description: 'BORRADOR?'},
 ]
 
-
+interface DatosAdjuntos {
+  Title_Attached: ElementInstance<  ElementSchemaTypes>,
+  Select_Attached: ElementInstance< ElementSchemaTypes>,
+}
 
 //console.log(BaseFields.TEXT.validations)
 
@@ -75,9 +78,11 @@ export const DA_Procedures_Associate = () => {
   const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
-  const [attached, setAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
+  const [proceduresAttached, setProcedureAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+  const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
+  const [estadoProcedure, setEstadoProcedure] = useState<string>('Borrador');
 
   const [Fields, setFields] = useState({
     Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
@@ -99,8 +104,6 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTemática3",
       label: 'Temática 3'
     }]},["isRequired"]), "both"),
-    Title_Attached: new ElementInstance("TitleAttached",new ElementSchema('TEXT',{label:'Ingrese Título'},["isRequired"])),
-    Select_Attached: new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Habilitar subir archivos'}), false)
   });
 
   useEffect(()=>{
@@ -108,16 +111,28 @@ export const DA_Procedures_Associate = () => {
     UpdateForms()
   },[])
 
+
   useEffect(()=>{
     const updatedOptions = formularios.map((forms) => ({
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
     const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]))
-    //setForm (Select_Procedure);
     setForm(prevForms => [ Select_Form]);
-    const Select_Attached = new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Ingrese Título'}), false)
-    setAttached(prevAttached => [ Select_Attached]);
+
+    /*const Select_Attached = new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Ingrese Título'}), false)
+    setAttached(prevAttached => [ Select_Attached]);*/
+
+    const Title_Attached= new ElementInstance("TitleAttached",new ElementSchema('TEXT',{label:'Ingrese Título'},["isRequired"]))
+    const Select_Attached= new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Habilitar subir archivos'}), false)
+    const nuevoDatoAdjunto: DatosAdjuntos = {
+      Title_Attached: Title_Attached,
+      Select_Attached: Select_Attached,
+    };
+    
+    // Agregar el nuevo objeto al estado datosAdjuntos
+    setDatosAdjuntos([ nuevoDatoAdjunto]);
+
   },[formularios])
 
   const addNewForm = () =>{
@@ -135,43 +150,96 @@ export const DA_Procedures_Associate = () => {
   }
 
   const addNewAttached = () =>{
-    const Select_Attached = new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Ingrese Título'}), false)
-    setAttached(prevAttached => [...prevAttached, Select_Attached]);
+   // const Select_Attached = new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Ingrese Título'}), false)
+    //setAttached(prevAttached => [...prevAttached, Select_Attached]);
+  
+    const Title_Attached= new ElementInstance(datosAdjuntos.length.toString(),new ElementSchema('TEXT',{label:'Ingrese Título'},["isRequired"]))
+    const Select_Attached= new ElementInstance(datosAdjuntos.length.toString(), new ElementSchema('CHECKBOX', { label: 'Habilitar subir archivos'}), false)
+    const nuevoDatoAdjunto: DatosAdjuntos = {
+      Title_Attached: Title_Attached,
+      Select_Attached: Select_Attached,
+    };
+    
+    // Agregar el nuevo objeto al estado datosAdjuntos
+    setDatosAdjuntos([...datosAdjuntos, nuevoDatoAdjunto]);
   }
 
-  const deleteAttached = (AttachToDelete: ElementInstance<ElementSchemaTypes>) => {
-    const updatedAttached = attached.filter((attach) => attach !== AttachToDelete);
-    setAttached(updatedAttached);
+  const deleteAttached = (index:number) => {
+    //const updatedAttached = attached.filter((attach) => attach !== AttachToDelete);
+    setDatosAdjuntos(prevDatosAdjuntos => prevDatosAdjuntos.filter((_, i) => i !== index));
+
+  // setAttached(updatedAttached);
   }
 
   const createProcedure = async () =>{
 
-    forms.forEach((formsAux) => {
+    /*forms.forEach((formsAux) => {
       const formTitle = formsAux.getValue().split(" - ")[0];
       const filtered = formularios.filter(form => form.getCode() === formTitle);
       setFilteredForms(filtered);
        
-    });
+    });*/
    
-  }
+    if (forms.length != 0) {
+      const titleAttachedValues: string[] = [];
+      const listaFormularios: string[] = [];
 
+      // Recorrer el array datosAdjuntos y obtener los valores de Title_Attached
+      datosAdjuntos.forEach((dato) => {
+        titleAttachedValues.push(dato.Title_Attached.getValue());
+      });
+
+      forms.forEach((dato) => {
+        listaFormularios.push(dato.getValue().split(" - ")[0]);
+      });
+
+
+      // Crear un objeto JSON con los valores de Title_Attached
+      const jsonObject: any = {};
+      jsonObject.Title_Attached = titleAttachedValues;
+      const newProcedureToBeSend = new ProcedureInstance(
+        listaFormularios,
+        Fields.Select_Procedure.getValue(),
+        "Descripción",
+        estadoProcedure,
+        Fields.Select_Theme.getValue(),
+        titleAttachedValues
+      );
+      const response = await SaveProcedure(newProcedureToBeSend.getJSON(), setFormState, "hola");
+      if (response) {
+        console.log("SE ENVIÓ");
+        setFilteredForms([]);
+      } else {
+        console.log("NO SE ENVIÓ" + response);
+        setFilteredForms([]);
+
+      }
+    }
+  }
+/*
   useEffect(() => {
-    console.log("llego aqui"+formsToSends.length)
     const sendData = async () => {
       // Lógica que depende de formsToSends actualizado
       if (formsToSends.length != 0) {
+        const titleAttachedValues: string[] = [];
+
+        // Recorrer el array datosAdjuntos y obtener los valores de Title_Attached
+        datosAdjuntos.forEach((dato) => {
+          titleAttachedValues.push(dato.Title_Attached.getValue());
+        });
+
+        // Crear un objeto JSON con los valores de Title_Attached
+        const jsonObject: any = {};
+        jsonObject.Title_Attached = titleAttachedValues;
         const newProcedureToBeSend = new ProcedureInstance(
           formsToSends,
           Fields.Select_Procedure.getValue(),
           "Descripción",
           "Estado",
           Fields.Select_Theme.getValue(),
-          attached
+          titleAttachedValues
         );
-
         const response = await SaveProcedure(newProcedureToBeSend.getJSON(), setFormState, "hola");
-        console.log("Procedure " + JSON.stringify(newProcedureToBeSend.getJSON()));
-  
         if (response) {
           console.log("SE ENVIÓ");
           setFilteredForms([]);
@@ -183,9 +251,10 @@ export const DA_Procedures_Associate = () => {
       }
     };
   
+    
     sendData();
   }, [formsToSends]);
-  
+  */
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
@@ -270,14 +339,14 @@ export const DA_Procedures_Associate = () => {
                 <LayoutStackedPanel className="mt-3">
                   <h1>Habilitar adjuntar archivos</h1>
                 </LayoutStackedPanel>
-                {attached && attached.map((attach, index) => (
-                  <div key={attach.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
-                    <Element instance={Fields.Title_Attached} className="flex-2"/>
-                    <Element instance={Fields.Select_Attached} className="flex-1" />
+                {datosAdjuntos && datosAdjuntos.map((attach, index) => (
+                  <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
+                    <Element instance={attach.Title_Attached} className="flex-2"/>
+                    <Element instance={attach.Select_Attached} className="flex-1" />
                   <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
                     <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => addNewAttached()}>Agregar<FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
                     {index !== 0 && (
-                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteAttached(attach)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteAttached(index)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
                     )}
                   </div>
                 </div>
@@ -291,6 +360,15 @@ export const DA_Procedures_Associate = () => {
                     </div>
                   </FormWrapperCheckbox> */}
                 <p></p>
+                <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
+                  <label>Estado</label>
+                    <select value={estadoProcedure} 
+                      onInput={(e) => setEstadoProcedure((e.target as HTMLInputElement).value)} 
+                      >
+                      <option value="Borrador">Borrador</option>
+                      <option value="Publicado">Publicado</option>
+                    </select>
+                  </div>
                 <LayoutStackedPanel className="mt-3">
                   <LayoutSpacer/>
                   <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
