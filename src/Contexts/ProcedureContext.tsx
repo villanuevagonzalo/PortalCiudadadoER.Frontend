@@ -118,12 +118,12 @@ const ContextValues = () => {
 
         console.log("attachments: "+procedureInstance.ATTACHMENTS)
         const newProcedures = new ProcedureInstance(
-          procedureInstance.FORMS,
+          JSON.parse(procedureInstance.FORMS),
           procedureInstance.TITLE,
           procedureInstance.DESCRIPTION,
           procedureInstance.STATE,
           procedureInstance.THEME,
-          procedureInstance.ATTACHMENTS
+          JSON.parse(procedureInstance.ATTACHMENTS)
         );
         procedureAux.push(newProcedures);
 
