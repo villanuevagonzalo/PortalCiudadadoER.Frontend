@@ -40,4 +40,8 @@ export class ProcedureAPI {
     return this.baseService.post('/v0/admin/procedures/delete', params)
   }
 
+  GetCategories = async () => {
+    return this.baseService.get('/v0/admin/procedures/categories')
+  }
+
 }

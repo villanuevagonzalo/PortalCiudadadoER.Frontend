@@ -22,6 +22,9 @@ import { ProcedureElementShow } from "../../../../Modules/FormElements/Component
 import { Button } from "../../../../Components/Forms/Button";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { UpdateProcedure } from "./UpdateProcedures";
+import { DeleteProcedurePopUp } from "../../../../Components/Forms/PopUpCards";
+import { IFormState } from "../../../../Interfaces/Data";
+import { DefaultFormState } from "../../../../Data/DefaultValues";
 
 
 
@@ -29,11 +32,14 @@ import { UpdateProcedure } from "./UpdateProcedures";
 
 export const DA_Procedures_Config = () => {
 
-  const { UpdateProcedures, SaveProcedure, setProcedures, procedures , isLoading} = useContext(ProcedureContext);
+  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, setProcedures, procedures , isLoading} = useContext(ProcedureContext);
   const { UpdateForms} = useContext(FormContext);
+
+  const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
   const [procedureToCheck, setProcedureToCheck] = useState<ProcedureInstance<ElementSchemaTypes>>()
   const [procedureToDelete, setProcedureToDelete] = useState<ProcedureInstance<ElementSchemaTypes>>()
+  
   const [seeOptions, setSeeOptions] = useState("home")
   const [deleteProcedure, setDeleteProcedure] = useState(false)
   const [copy, setCopy] = useState(false)
@@ -42,6 +48,14 @@ export const DA_Procedures_Config = () => {
     UpdateProcedures()
     UpdateForms()
   },[])
+
+  const handleDeleteProcedure = async (id:number)=> {
+    const response = await DeleteOneProcedure(id,setFormState);
+    if (response){
+      setProcedures(prevProcedures => prevProcedures.filter(procedure => procedure.getId() !== id));
+    }
+    setDeleteProcedure(false)
+  }
 
 
   const renderElement = () => {
@@ -62,6 +76,7 @@ export const DA_Procedures_Config = () => {
       )
     }else{
       return(<>
+      {deleteProcedure && (<DeleteProcedurePopUp procedureToDelete={procedureToDelete!} handleDeleteForm={handleDeleteProcedure} close={setDeleteProcedure}   /> )}
         <LayoutActorSection>
         <p> Configurador de trámites</p>
           En esta sección buscamos el trámite y relacionamos los formularios y adjuntos que el ciudadano 

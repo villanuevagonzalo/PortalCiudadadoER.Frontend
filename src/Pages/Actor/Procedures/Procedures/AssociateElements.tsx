@@ -27,7 +27,7 @@ import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { forEach } from "lodash";
 import { Pages } from "../../../../Routes/Pages";
-import { GenericAlertPopUp } from "../../../../Components/Forms/PopUpCards";
+import { CreateProcedurePopUp, GenericAlertPopUp } from "../../../../Components/Forms/PopUpCards";
 
 type Item = {
   title: string;
@@ -45,7 +45,7 @@ interface DatosAdjuntos {
 export const DA_Procedures_Associate = () => {
     const ref:any = useRef(null);
 
-  const { UpdateProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
+  const { UpdateProcedures, SaveProcedure, GetProcedureCategories, categories,setProcedures, procedures } = useContext(ProcedureContext);
   const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
@@ -54,10 +54,12 @@ export const DA_Procedures_Associate = () => {
   const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [estadoProcedure, setEstadoProcedure] = useState<string>('Borrador');
+  const [theme, setTheme] = useState <ElementInstance<ElementSchemaTypes>>()
 
   const [alertMessage, setAlertMessage] = useState("")
   const [showAlert, setShowAlert] = useState(false)
-  
+  const [crear, setCrear] = useState(false)
+
   const [Fields, setFields] = useState({
     Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
       value: "NombreTramite1", label: 'Nombre del tramite 1'
@@ -68,31 +70,23 @@ export const DA_Procedures_Associate = () => {
       value: "NombreTramite3",
       label: 'Nombre del tramite 3'
     }]},["isRequired"]), "both"),
-    Select_Theme: new ElementInstance("Select_Theme", new ElementSchema('SELECT', { label: 'Temáticas' ,options:[{
-      value: "NombreTemática1",
-      label: 'Temática 1'
-    },{
-      value: "NombreTemática2",
-      label: 'Temática 2'
-    },{
-      value: "NombreTemática3",
-      label: 'Temática 3'
-    }]},["isRequired"]), "both"),
   });
 
   useEffect(()=>{
     UpdateProcedures()
     UpdateForms()
+    GetProcedureCategories()
   },[])
 
 
   useEffect(()=>{
-   /* const updatedOptions = formularios.map((forms) => ({
-      value: forms.getCode()+" - "+forms.getTitle(),
-      label: forms.getCode()+" - "+forms.getTitle(), 
+
+    const updatedOptions = categories.map((forms) => ({
+      value: forms,
+      label: forms, 
     }));
-    const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]))
-    setForm(prevForms => [ Select_Form]);
+    const Select_Theme = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Temáticas', options: updatedOptions },["isRequired"]))
+    setTheme( Select_Theme);
 
     /*const Title_Attached= new ElementInstance("TitleAttached",new ElementSchema('TEXT',{label:'Ingrese Título'},["isRequired"]))
     const Select_Attached= new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Habilitar subir archivos'}), false)
@@ -172,7 +166,7 @@ export const DA_Procedures_Associate = () => {
         Fields.Select_Procedure.getValue(),
         "Descripción",
         estadoProcedure,
-        Fields.Select_Theme.getValue(),
+        theme!.getValue(),
         titleAttachedValues
       );
       const response = await SaveProcedure(newProcedureToBeSend.getJSON(), setFormState, "hola");
@@ -235,9 +229,32 @@ export const DA_Procedures_Associate = () => {
 
   return(<>
     {showAlert && (<GenericAlertPopUp genericMessage={alertMessage} close={setShowAlert}  />)}
+    {crear && (<CreateProcedurePopUp procedureTitle={Fields.Select_Procedure.getValue()} create={createProcedure} close={setCrear}  />)}
     <LayoutActorSection>
       <p>Asociar elementos al trámite</p>
       <h1>Buscar Trámites</h1>
+
+      <Formik
+          innerRef={ref}
+          validateOnBlur={false}
+          validateOnChange={false}
+          enableReinitialize={true}
+          initialValues={initialValues}
+          onSubmit={async(values:any)=>{
+            const test = {
+              Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
+            };
+            console.log(test)
+          }}
+          validate={(values:any) => ValidateForm(values, Fields)}
+        >
+            <Form autoComplete="off">
+                <LayoutStackedPanel>
+                    {theme&&<Element instance={theme!} className="flex-1"/>}
+                </LayoutStackedPanel>
+            </Form>
+        </Formik>
+
       <Formik
           innerRef={ref}
           validateOnBlur={false}
@@ -258,6 +275,8 @@ export const DA_Procedures_Associate = () => {
                 </LayoutStackedPanel>  
             </Form>
         </Formik>
+
+        
     </LayoutActorSection>
     <LayoutActorSection>
 
@@ -265,26 +284,7 @@ export const DA_Procedures_Associate = () => {
       En esta sección armamos los elementos del trámite online, para que el ciudadano complete e inicie el trámite.
         
       <FormikFieldDummy name="Título" value="Título de trámite seleccionado"className="flex-1"/>
-      <Formik
-          innerRef={ref}
-          validateOnBlur={false}
-          validateOnChange={false}
-          enableReinitialize={true}
-          initialValues={initialValues}
-          onSubmit={async(values:any)=>{
-            const test = {
-              Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
-            };
-            console.log(test)
-          }}
-          validate={(values:any) => ValidateForm(values, Fields)}
-        >
-            <Form autoComplete="off">
-                <LayoutStackedPanel>
-                    <Element instance={Fields.Select_Theme} className="flex-1"/>
-                </LayoutStackedPanel>
-            </Form>
-        </Formik>
+    
 
 
         <h1><MdAssignment /> Formularios asociados al trámite</h1>
@@ -387,8 +387,7 @@ export const DA_Procedures_Associate = () => {
                   <Link to={Pages.DA_Procedures_Config} style={{ textDecoration: 'none' }}>
                     <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
                     </Link>
-
-                  <FormikButton onClick={ ()=> createProcedure()} >Finalizar<AiOutlineSave/></FormikButton>
+                  <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} >Finalizar<AiOutlineSave/></FormikButton>
                 </LayoutStackedPanel>
             </Form>
         </Formik>

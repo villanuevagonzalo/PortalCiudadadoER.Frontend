@@ -113,8 +113,6 @@ export const DA_Procedures_Forms_Create = () => {
         setAlertMessage("Código de referencia no debe contener espacios, comas o guiones")
 
       }
-
-      
   }
 }
 

@@ -17,6 +17,7 @@ const ContextValues = () => {
   const [procedures, setProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
+  const [categories, setCategories]= useState<string []>([])
 
   const SaveProcedure = async (procedure: any, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure, setFormState);
@@ -56,11 +57,11 @@ const ContextValues = () => {
 
   }
 
-  const DeleteOneProcedure = async(title:string, setFormState: Function) => {
+  const DeleteOneProcedure = async(id:number, setFormState: Function) => {
     setIsLoading(true);
 
     const jsonObject = {
-      title: title
+      id: id
     };
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Delete, jsonObject, setFormState);
     setIsLoading(false);
@@ -136,6 +137,22 @@ const ContextValues = () => {
     setIsLoading(false); 
   }
 
+  const GetProcedureCategories = async() => {
+
+    setIsLoading(true)
+    let responseAll:AxiosResponse | ResponseError | null = null;
+    
+    try { responseAll = await AxiosProcedureAPI.GetCategories(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    if(responseAll && responseAll.status==200) {
+      const dataArray = JSON.parse(responseAll.data.data);
+      const descriptions = dataArray.map((item: any) => item.Descripción);
+      setCategories(descriptions)
+    }else{
+      setIsLoading(false)
+
+    }
+  }
+
   const UserClearData = () => {
     setProcedures([]);
   }
@@ -143,11 +160,13 @@ const ContextValues = () => {
   return {
     isLoading,
     procedures,
+    categories,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,
     DeleteOneProcedure,
-    UpdateProcedures
+    UpdateProcedures,
+    GetProcedureCategories
   }
 }
 
