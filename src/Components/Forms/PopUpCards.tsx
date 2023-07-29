@@ -332,7 +332,6 @@ export const CreateProcedurePopUp: React.FC<createProcedureProps> = ({ procedure
     </NotificationFullSizeWrapper>
 }
 
-
 interface procedureCreateErrorProps{
   procedureTitle: string,  
   close:Function
