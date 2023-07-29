@@ -27,6 +27,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const [focus, setFocus] = useState(false);
   const [empty, setEmpty] = useState(field.value==='');
 
+  const [instanceValue, setInstanceValue] = useState<any> (instance.getValue())
 
   const handleFocus = () => {
     setFocus(!focus)            
@@ -53,10 +54,12 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
   const changeValue = (value:any) => {
     instance.setValue(value);
+    setInstanceValue(value)
   }
 
   const setSelectValue = (value:any) => {
     instance.setValue(value);
+    setInstanceValue(value)
   } 
 
   //this is just to radio or radio-list
@@ -64,12 +67,14 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const handleRadioChange = (e: { target: { value: SetStateAction<string>; }; }) => {
     setSelectedValue(e.target.value);
     instance.setValue(e.target.value);
+    setInstanceValue(e.target.value)
 
   };
 
   const handleSliderChange= (e: { target: { value: SetStateAction<string>; }; })=> {
       instance.setValue(e.target.value);
       setSelectedValue(e.target.value);
+      setInstanceValue(e.target.value)
 
   }
 
@@ -141,14 +146,21 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         </div></InputWrapper>);
 
       case "select": EI = instance as ElementInstance<"SELECT">;
-      console.log("VEAMOS EL SELECT :"+ JSON.stringify)
+      console.log("VEAMOS EL SELECT :"+ EI.properties.label+" valor: "+EI.getValue())
+      console.log("instance: "+JSON.stringify(EI))
+      console.log("-----------------------------")
+
       return (
         <SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
         <div>
           <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
           <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}
           onChange={e => setSelectValue(e.currentTarget.value)}
+          value={instanceValue}
                 >
+             <option value="" disabled>
+                {EI.properties.label}
+              </option>
             {EI.properties.options && EI.properties.options.map((option: any) => (
               <option key={option.label} value={option.value}>
                 {option.label}
@@ -160,9 +172,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       </SelectWrapper>
       );
       
-
       case "checkbox": EI = instance as ElementInstance<"CHECKBOX">;
-      
         return (<CheckboxWrapper error={thiserror?true:false} focus={focus || !empty} checked={field.value}><div>
           <input 
             type="checkbox" 

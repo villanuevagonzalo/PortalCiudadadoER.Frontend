@@ -76,7 +76,6 @@ interface FormCreatedProps {
   close: Function
 }
 
-
 export const FormCreatedPopUp: React.FC<FormCreatedProps> = ({ formTitle, close }) => {
   
   return (<NotificationFullSizeWrapper>
@@ -332,6 +331,31 @@ export const CreateProcedurePopUp: React.FC<createProcedureProps> = ({ procedure
     </NotificationFullSizeWrapper>
 }
 
+export const UpdateProcedurePopUp: React.FC<createProcedureProps> = ({ procedureTitle, create, close})  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "row", alignItems: "left", justifyContent: "left", textAlign:"left", margin:" 15px 0px 15px 0px" }}>
+          <AiOutlineAlert fontSize={"2rem"} color="red" style={{margin:"0px 10px 0px 0px"}} />
+          <h2 >¿Está seguro de modificar el trámite?</h2>
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <Button onClick={()=>close()}><BiArrowBack/>Volver</Button>
+            <Button onClick={()=>create()}>Guardar <BiSave/></Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}
+
 interface procedureCreateErrorProps{
   procedureTitle: string,  
   close:Function
@@ -391,3 +415,33 @@ export const DeleteProcedurePopUp: React.FC<deleteProcedureProps> = ({ procedure
       <LayoutSpacer/>
     </NotificationFullSizeWrapper>
 }
+
+interface ProcedureCreatedProps {
+  title: string,
+  close: Function, 
+  link?:string,
+}
+export const ProcedureCreatedPopUp: React.FC<ProcedureCreatedProps> = ({ title, close, link }) => {
+  
+  return (<NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close(false)}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "row", alignItems: "left", justifyContent: "left", textAlign:"left", margin:" 15px 0px 15px 0px" }}>
+          <AiOutlineStar fontSize={"2rem"} color="#efb810" style={{margin:"0px 10px 0px 0px"}}/>
+          <h2>Trámite cargado correctamente</h2>      
+        </div>
+
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <Link to={Pages.DA_Procedures_Config} className="button notifications">
+                <Button style={{ width: '150px', height: '40px' }} onClick={()=>close(false)} >OK</Button>
+          </Link>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>);
+};

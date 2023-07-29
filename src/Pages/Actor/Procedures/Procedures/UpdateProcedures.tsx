@@ -1,31 +1,19 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
-import { Table } from "../../../../Components/Elements/Table";
 import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
-
-import { ColumnDef } from '@tanstack/react-table';
 import { FormikButton } from "../../../../Components/Forms/FormikButton";
 import { AiOutlineCheckCircle, AiOutlineDelete, AiOutlinePlus, AiOutlineSave } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { RxUpdate } from "react-icons/rx";
-import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
-import { FormWrapperCheckbox, FormWrapperInput } from "../../../../Components/Forms/StyledComponents";
-import { TableFunctions } from "../../../../Components/Elements/StyledComponents";
-import { GrFormView } from "react-icons/gr";
 import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm, ProcedureInstance, FormInstance, SelectWrapper } from "../../../../Modules/FormElements";
 import { Form, Formik } from "formik";
-import { FormikFieldDummy } from "../../../../Components/Forms/FormikFieldDummy";
-import { FormikField } from "../../../../Components/Forms/FormikField";
-import { FormikCheckbox } from "../../../../Components/Forms/FormikCheckbox";
 import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Button } from "../../../../Components/Forms/Button";
 import { FaPlus } from "react-icons/fa";
 import { HiTrash } from "react-icons/hi2";
-import { AuthContext } from "../../../../Contexts/AuthContext";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
-import { forEach } from "lodash";
+import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp, UpdateProcedurePopUp } from "../../../../Components/Forms/PopUpCards";
 
 interface Arguments {
     procedure:ProcedureInstance<ElementSchemaTypes>;
@@ -35,8 +23,6 @@ interface DatosAdjuntos {
   Title_Attached: ElementInstance<  ElementSchemaTypes>,
   Select_Attached: ElementInstance< ElementSchemaTypes>,
 }
-
-//console.log(BaseFields.TEXT.validations)
 
 export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
     const ref:any = useRef(null);
@@ -55,31 +41,13 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   const [oldDatosAdjuntos, setOldDatosAdjuntos]= useState <string []> ([])
 
   const [estadoProcedure, setEstadoProcedure] = useState<string>('Borrador');
-
-  const [Fields, setFields] = useState({
-    Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
-      value: "NombreTramite1", label: 'Nombre del tramite 1'
-    },{
-      value: "NombreTramite2",
-      label: 'Nombre del tramite 2'
-    },{
-      value: "NombreTramite3",
-      label: 'Nombre del tramite 3'
-    }]},["isRequired"]), "both"),
-    Select_Theme: new ElementInstance("Select_Theme", new ElementSchema('SELECT', { label: 'Temáticas' ,options:[{
-      value: "NombreTemática1",
-      label: 'Temática 1'
-    },{
-      value: "NombreTemática2",
-      label: 'Temática 2'
-    },{
-      value: "NombreTemática3",
-      label: 'Temática 3'
-    }]},["isRequired"]), "both"),
-  });
-
+  const [alertMessage, setAlertMessage] = useState("")
+  const [showAlert, setShowAlert] = useState(false)
+  const [crear, setCrear] = useState(false)
+  const [errorCarga, setErrorCarga] = useState(false)
+  const [cargadoCorrectamente, setCargadoCorrectamente] = useState(false)
+  
   useEffect(() => {
-
     const listaFormularios: string [] = [];
     const listaAdjuntos: string [] = [];
     procedure.getForms().map((element, index: number) => {
@@ -93,22 +61,6 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
       listaAdjuntos.push(element)
     });
     setOldDatosAdjuntos(listaAdjuntos);
-
-   /* const updatedOptions = formularios.map((forms) => ({
-        value: forms.getCode()+" - "+forms.getTitle(),
-        label: forms.getCode()+" - "+forms.getTitle(), 
-      }));
-      const Select_Form = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]))
-      setForm(prevForms => [ Select_Form]);
-  
-      const Title_Attached= new ElementInstance("TitleAttached",new ElementSchema('TEXT',{label:'Ingrese Título'},["isRequired"]))
-      const Select_Attached= new ElementInstance("SendByEmail", new ElementSchema('CHECKBOX', { label: 'Habilitar subir archivos'}), false)
-      const nuevoDatoAdjunto: DatosAdjuntos = {
-        Title_Attached: Title_Attached,
-        Select_Attached: Select_Attached,
-      };
-      setDatosAdjuntos([ nuevoDatoAdjunto]);*/
-
   }, []);
   
 
@@ -117,7 +69,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
-    const Select_Form = new ElementInstance(forms.length.toString(), new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]), "both")
+    const Select_Form = new ElementInstance(forms.length.toString(), new ElementSchema('SELECT', { label: 'Seleccione un formulario', options: updatedOptions },["isRequired"]))
     setForm(prevForms => [...prevForms, Select_Form]);
   }
   
@@ -157,7 +109,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
 
     if (oldForms.length !=0){
         oldForms.forEach((dato) => {
-            listaFormularios.push(dato);
+            listaFormularios.push(dato.split(" - ")[0]);
           });
     }
     if (oldDatosAdjuntos.length !=0 ){
@@ -178,33 +130,42 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
           });
      } 
 
-     
-      const jsonObject: any = {};
-      jsonObject.Title_Attached = titleAttachedValues;
-      const newProcedureToBeSend = new ProcedureInstance(
-        listaFormularios,
-        Fields.Select_Procedure.getValue(),
-        "Descripción",
-        estadoProcedure,
-        Fields.Select_Theme.getValue(),
-        titleAttachedValues,
-        procedure.getId()
-      );
-      const response = await UpdateOneProcedure(newProcedureToBeSend.getJSON(), setFormState, "hola");
-      if (response) {
-        console.log("SE ENVIÓ");
-        setFilteredForms([]);
-      } else {
-        console.log("NO SE ENVIÓ" + response);
-        setFilteredForms([]);
-
-      }
+     if (listaFormularios.length==0){
+        setShowAlert(true)
+        setAlertMessage("Debe asociar al menos un formulario al trámite")
+        setCrear(false)
+     }else{
+        const jsonObject: any = {};
+        jsonObject.Title_Attached = titleAttachedValues;
+        const newProcedureToBeSend = new ProcedureInstance(
+            listaFormularios,
+            procedure.getTitle(),
+            "Descripción",
+            estadoProcedure,
+            procedure.getTheme(),
+            titleAttachedValues,
+            procedure.getId()
+        );
+        const response = await UpdateOneProcedure(newProcedureToBeSend, setFormState, procedure.getTitle());
+        if (response) {
+            setCrear(false)
+            setCargadoCorrectamente(true)
+        } else {
+            setErrorCarga(true)
+        }
+     }
+      
     
   }
 
-  const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
+  const initialValues = Object.entries(oldForms).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj }), {});
 
   return(<>
+   {showAlert && (<GenericAlertPopUp genericMessage={alertMessage} close={setShowAlert}  />)}
+    {crear && (<UpdateProcedurePopUp procedureTitle={procedure.getTitle()} create={updateProcedure} close={setCrear}  />)}
+    {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={procedure.getTitle()} close={setErrorCarga}  /> )}
+    {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
+
     <LayoutActorSection style={{margin:"10px 0px 10px 0px"}}>
       <h1><MdOutlineNewLabel />Datos generales del Trámite</h1>
       <h2>Título del trámite: {procedure.getTitle()} </h2>
@@ -229,7 +190,6 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             };
             console.log(test)
           }}
-          validate={(values:any) => ValidateForm(values, Fields)}
         >
             <Form autoComplete="off">
 
@@ -343,7 +303,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                 <LayoutStackedPanel className="mt-3">
                   <LayoutSpacer/>
                   <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
-                  <FormikButton onClick={ ()=> updateProcedure()} >Finalizar<AiOutlineSave/></FormikButton>
+                  <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Finalizar<AiOutlineSave/></FormikButton>
                 </LayoutStackedPanel>
             </Form>
         </Formik>

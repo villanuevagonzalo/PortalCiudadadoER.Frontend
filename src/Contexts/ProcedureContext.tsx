@@ -19,15 +19,16 @@ const ContextValues = () => {
   const [errors, setErrors] = useState<string>("");
   const [categories, setCategories]= useState<string []>([])
 
-  const SaveProcedure = async (procedure: any, setFormState: Function, title:string) => {
-    const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure, setFormState);
+  const SaveProcedure = async (procedure: ProcedureInstance<ElementSchemaTypes>, setFormState: Function, title:string) => {
+    const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure.getJSON(), setFormState);
 
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const titleResponse = responseData[0].TITLE
       if (status && titleResponse == title) {
-        setProcedures(prevState => ([...prevState, procedure]));
+        const newProcedure = new ProcedureInstance(procedure.getForms(),procedure.getTitle(), procedure.getDescription(), procedure.getState(), procedure.getTheme(), procedure.getAttachments())
+        setProcedures(prevState => ([...prevState, newProcedure]));
         return true;
       }
       else{
@@ -37,15 +38,15 @@ const ContextValues = () => {
     return false;
   }
 
-  const  UpdateOneProcedure = async(procedure: any, setFormState: Function, title:string) => {
-    const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Update, procedure, setFormState);
+  const  UpdateOneProcedure = async(procedure: ProcedureInstance<ElementSchemaTypes>, setFormState: Function, title:string) => {
+    const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Update, procedure.getJSON(), setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const titleResponse = responseData[0].TITLE;
+      console.log("aca estan los 2 titulos: "+title+" - "+responseData[0].TITLE)
       if (status && titleResponse == title ) {
         setProcedures(prevProcedure => prevProcedure.filter(procedure =>procedure.getTitle() !== title )); //delete the old form
-        
         setProcedures (prevState => ([...prevState, procedure])); //set the new form
         return true;
       }
