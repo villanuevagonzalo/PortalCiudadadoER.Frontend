@@ -49,7 +49,7 @@ export const validationFunctions:any = {
   (String(value).length>valueMax)
   ? 'El campo no debe exceder los ' + valueMax + ' caracteres'
   : null,
-  
+
 };
 
 export const getValidationFunctions = <T extends ElementSchemaTypes>(

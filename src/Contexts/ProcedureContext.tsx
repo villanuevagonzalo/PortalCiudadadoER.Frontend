@@ -123,8 +123,10 @@ const ContextValues = () => {
           procedureInstance.DESCRIPTION,
           procedureInstance.STATE,
           procedureInstance.THEME,
-          JSON.parse(procedureInstance.ATTACHMENTS)
+          JSON.parse(procedureInstance.ATTACHMENTS),
+          procedureInstance.ID
         );
+       
         procedureAux.push(newProcedures);
 
       });   

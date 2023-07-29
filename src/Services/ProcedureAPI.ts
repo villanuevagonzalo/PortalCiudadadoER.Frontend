@@ -24,12 +24,10 @@ export class ProcedureAPI {
     })
   }
 
-
-
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/procedure-units/update', params,{
+    return this.baseService.post('/v0/admin/procedures/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -39,7 +37,7 @@ export class ProcedureAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/procedure-units/delete', params)
+    return this.baseService.post('/v0/admin/procedures/delete', params)
   }
 
 }

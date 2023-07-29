@@ -139,6 +139,7 @@ export class FormInstance<T extends ElementSchemaTypes>  {
 
 export class ProcedureInstance<T extends ElementSchemaTypes>  {
   
+  private id?:number;
   private title:string;
   private description:string;
   private state:string; //los estados pueden ser borrador, publicado, etc.
@@ -146,17 +147,23 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   private forms: string [];
   private attachments:string []
 
-  constructor(forms:string [], title:string, description:string, state:string, theme:string, atthacments:string [] ) {
-
-    this.title=title;
-    this.description=description;
-    this.state=state; 
-    this.theme=theme;
-    this.forms=forms; 
-    this.attachments=atthacments;
-
+  constructor(forms: string[], title: string, description: string, state: string, theme: string, attachments: string[], id?: number) {
+    this.title = title;
+    this.description = description;
+    this.state = state;
+    this.theme = theme;
+    this.forms = forms;
+    this.attachments = attachments;
+  
+    // Asignar el valor del parámetro id solo si se proporciona
+    if (id !== undefined) {
+      this.id = id;
+    }
   }
 
+  addId(id:number){
+    this.id=id;
+  }
   addForm(form: string ) {
     this.forms.push(form);
   }
@@ -174,6 +181,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   }
   addAttachments (attachments:string []){
     this.attachments=attachments
+  }
+  getId(){
+    return this.id;
   }
   getForms() {
     return this.forms;
@@ -206,7 +216,8 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
       "state": this.state,
       "theme": this.theme,
       "forms": JSON.stringify(this.forms),
-      "attachments": JSON.stringify(this.attachments)
+      "attachments": JSON.stringify(this.attachments),
+      ...(this.id !== undefined && { "id": this.id })
     };
     
     return ProcedureData;

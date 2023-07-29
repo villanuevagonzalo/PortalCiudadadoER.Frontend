@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ChangeEvent, HTMLAttributes, useContext, useEffect, useState } from "react";
+import { ButtonHTMLAttributes, ChangeEvent, HTMLAttributes, SetStateAction, useContext, useEffect, useState } from "react";
 import { FormElement, FormElementInstance } from "../OLDTYPES";
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../Types";
 import { ElementWrapper, BaseWrapperInfo, InputWrapper, ElementError, SelectWrapper, FileWrapper, CheckboxWrapper } from "./StyledComponents";
@@ -13,10 +13,16 @@ import {Element} from './Element';
 import { Button } from "../../../Components/Forms/Button";
 import { FormContext } from "../../../Contexts/FormContext";
 import { FormElementShow } from "./FormsElement";
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 
 
 interface Arguments {
     procedure:ProcedureInstance<ElementSchemaTypes>;
+}
+
+interface FormGenericData {
+    code: string;
+    title:string;
   }
 
   export const ProcedureElementShow: React.FC<Arguments> = ({procedure}) => {
@@ -25,6 +31,8 @@ interface Arguments {
     
     const { UpdateForms, formularios, isLoading} = useContext(FormContext);
     const [form, setForm] = useState <FormInstance<ElementSchemaTypes>> ();
+    const [formData, setFormData]=useState <FormGenericData []> ([]);
+
     const [showForm, setShowForm] = useState(false)
 
     const checkForm = (formCode:string) => {
@@ -41,16 +49,36 @@ interface Arguments {
         }
     }
 
+    useEffect(()=>{
+        const formulariosAux: SetStateAction<FormGenericData[]> = [];
+
+        procedure.getForms().map((element, index: number) => {
+
+            const formularioEncontrado = formularios.find(
+                (formulario) => formulario.getCode() === element);
+
+            if (formularioEncontrado){
+                const formDataAux: FormGenericData = {
+                    code: formularioEncontrado.getCode(),
+                    title: formularioEncontrado.getTitle(),
+                  };
+                  formulariosAux.push(formDataAux)
+            }
+            
+            setFormData(formulariosAux)
+         })
+    },[])
 
     useEffect(()=>{
         if (form!=undefined){
             setShowForm(true)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }else{
             setShowForm(false)
         }
-
-
     },[form])
+
+    
     
 
     if (showForm){
@@ -86,11 +114,11 @@ interface Arguments {
     
                 <h2><MdOutlineDataset />Formularios del trámite</h2>
     
-                {procedure.getForms().map((element, index: number) => (
+                {formData.length>0&&formData.map((element, index: number) => (
                 <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                     <LayoutSection>
-                    <h1>{element}</h1>
-                    <Button onClick={ () => checkForm(element)} >Ver Formulario</Button>
+                    <h1>{element.code} - {element.title} </h1>
+                    <Button onClick={ () => checkForm(element.code)} > <HiOutlineMagnifyingGlass/>Ver Formulario</Button>
                     </LayoutSection>
                 </div>
                 ))}  
@@ -99,7 +127,9 @@ interface Arguments {
                     <LayoutSpacer/>
                         {procedure.getAttachments().map((element, index: number) => (
                         <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                            <LayoutSection>
                             <h1>{element}</h1>
+                            </LayoutSection>
                         </div>
                         ))}  
                 </Form>

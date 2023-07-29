@@ -270,3 +270,32 @@ export const LoadingFormPopUp: React.FC = ()  => {
       <LayoutSpacer/>
     </NotificationFullSizeWrapper>
 }
+
+
+interface GenericAlertProps{
+  genericMessage: string,  
+  close:Function
+}
+export const GenericAlertPopUp: React.FC<GenericAlertProps> = ({ genericMessage, close})  => {
+    
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
+          <AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />
+          <p>{genericMessage}</p>
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+            <Button onClick={()=>close()}>OK</Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+};

@@ -20,6 +20,8 @@ import { FormElementShow } from "../../../../Modules/FormElements/Components/For
 import { FormUpdate } from "./Update";
 import { CopyFormPopUp, DeleteFormPopUp, FormCreateErrorPopUp } from "../../../../Components/Forms/PopUpCards";
 import { BiTrash } from "react-icons/bi";
+import { AiOutlinePlus } from "react-icons/ai";
+import { RxUpdate } from "react-icons/rx";
 
 
 const FormRequiredFields = ["Tramites"];
@@ -121,10 +123,10 @@ export const DA_Procedures_Forms_Home = () => {
             {/* Botones para crear o actualizar formularios */}
             <div style={{display:"flex", flexDirection:"row"}}>
               <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateForms()} >
-                {FormState.loading ? <Spinner /> : "Actualizar"}
+                {FormState.loading ? <Spinner /> : "Actualizar"}<RxUpdate/>
               </Button>
               <Link to={Pages.DA_PROCEDURES_FORMS_NEW} style={{ textDecoration: 'none' }}>
-                <Button style={{ width: '150px', height: '40px' }}>Nuevo</Button>
+                <Button style={{ width: '150px', height: '40px' }}>Nuevo<AiOutlinePlus/></Button>
               </Link>
             </div>
     

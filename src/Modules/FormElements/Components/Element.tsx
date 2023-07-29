@@ -141,6 +141,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         </div></InputWrapper>);
 
       case "select": EI = instance as ElementInstance<"SELECT">;
+      console.log("VEAMOS EL SELECT :"+ JSON.stringify)
       return (
         <SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
         <div>
