@@ -139,14 +139,104 @@ export class FormInstance<T extends ElementSchemaTypes>  {
 
 export class ProcedureInstance<T extends ElementSchemaTypes>  {
   
+  private id?:number;
+  private title:string;
+  private description:string;
+  private state:string; //los estados pueden ser borrador, publicado, etc.
+  private theme:string; //temática
+  private forms: string [];
+  private attachments:string []
+
+  constructor(forms: string[], title: string, description: string, state: string, theme: string, attachments: string[], id?: number) {
+    this.title = title;
+    this.description = description;
+    this.state = state;
+    this.theme = theme;
+    this.forms = forms;
+    this.attachments = attachments;
+  
+    // Asignar el valor del parámetro id solo si se proporciona
+    if (id !== undefined) {
+      this.id = id;
+    }
+  }
+
+  addId(id:number){
+    this.id=id;
+  }
+  addForm(form: string ) {
+    this.forms.push(form);
+  }
+  addName(title:string){
+    this.title=title;
+  }
+  addDescription(description:string){
+    this.description=description;
+  }
+  addState(state:string){
+    this.state=state;
+  }
+  addTheme(theme:string){
+    this.theme=theme;
+  }
+  addAttachments (attachments:string []){
+    this.attachments=attachments
+  }
+  getId(){
+    return this.id;
+  }
+  getForms() {
+    return this.forms;
+  }
+  getForm(index:number){
+    if (this.forms.length>=index)
+    return this.forms[index]
+    else 
+    return null
+  }
+  getTitle(){
+    return this.title;
+  }
+  getDescription(){
+    return this.description;
+  }
+  getState(){
+    return this.state;
+  }
+  getTheme(){
+    return this.theme;
+  }
+  getAttachments (){
+    return this.attachments;
+  }
+  getJSON (){
+    const ProcedureData = {
+      "title": this.title,
+      "description": this.description,
+      "state": this.state,
+      "theme": this.theme,
+      "forms": JSON.stringify(this.forms),
+      "attachments": JSON.stringify(this.attachments),
+      ...(this.id !== undefined && { "id": this.id })
+    };
+    
+    return ProcedureData;
+  }
+
+}
+
+
+/*
+export class ProcedureInstance<T extends ElementSchemaTypes>  {
+  
   private title:string;
   private description:string;
   private state:string; //los estados pueden ser borrador, publicado, etc.
   private theme:string; //temática
   private forms: FormInstance<ElementSchemaTypes>[];
-  private attachments:string[]
+  private attachments:string []
 
-  constructor(forms:FormInstance<T>[], title:string, description:string, state:string, theme:string, atthacments:string[] ) {
+  constructor(forms:FormInstance<T>[], title:string, description:string, state:string, theme:string, atthacments:string [] ) {
 
     this.title=title;
     this.description=description;
@@ -172,7 +262,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   addTheme(theme:string){
     this.theme=theme;
   }
-  addAttachments (attachments:string[]){
+  addAttachments (attachments:string []){
     this.attachments=attachments
   }
   getForms() {
@@ -214,51 +304,4 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
 
 }
 
-/*
-export class ElementData<T extends ElementSchemaTypes> extends ElementInstance<T> {
-  public instance: ElementInstance<T>;
-  public data: string | undefined;
-  
-  constructor(elementInstance: ElementInstance<T>) {
-    super(elementInstance.name, elementInstance, elementInstance.value);
-    this.instance = elementInstance;
-    this.data = "";
-  }
-
-  update(properties: Partial<ElementPropsMap[T]>): void {
-
-    for (const prop in properties) {
-      
-      // Skip properties not found in the allowed properties
-      if (!Object.values(FormElementBases[this.type].properties).flat().includes(prop)) {
-        console.warn(`Invalid property "${prop}" for element type ${this.type}`);
-        continue;
-      }
-
-      // Skip properties with a value that doesn't match the type defined in the interface
-      const propType = typeof properties[prop];
-      const expectedType = typeof (FormElementInitialValues as ElementPropsMap[T])[prop];
-      if (propType !== expectedType) {
-        console.warn(`Invalid type "${propType}" for property "${prop}" in element type ${this.type}. Expected type: "${expectedType}".`);
-        continue;
-      }
-  
-      // Apply the update
-      Object.assign(this.properties, { [prop]: properties[prop] });
-    }
-}
-
-}
 */
-
-/*export class ElementInstance {
-  public name: string;
-  public schema: ElementSchema<ElementSchemaTypes>;
-  public value: any;
-
-  constructor(name:string, schema:ElementSchema<any>, defaultvalue: any = ""){
-    this.name = name;
-    this.schema = schema;
-    this.value = defaultvalue;
-  }
-}*/

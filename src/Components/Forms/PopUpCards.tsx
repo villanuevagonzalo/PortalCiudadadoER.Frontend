@@ -1,9 +1,9 @@
 import { AiOutlineAlert, AiOutlineClose, AiOutlineNotification, AiOutlineStar, AiOutlineWarning } from "react-icons/ai"
-import { NotificationFullSizeWrapper } from "../Elements/StyledComponents"
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../Layout/StyledComponents"
+import { NotificationFullSizeWrapper, Spinner } from "../Elements/StyledComponents"
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents"
 import { Button } from "./Button"
 import { ElementEditor } from "../../Modules/FormElements/Components/ElementEditor"
-import { ElementInstance, FormInstance } from "../../Modules/FormElements/Class"
+import { ElementInstance, FormInstance, ProcedureInstance } from "../../Modules/FormElements/Class"
 import { ElementSchemaTypes } from "../../Modules/FormElements/Types"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
@@ -255,3 +255,139 @@ export const CopyFormPopUp: React.FC<CopyFormProps> = ({ formToCopy, handleCopyF
     </NotificationFullSizeWrapper>
 }
 
+export const LoadingFormPopUp: React.FC = ()  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
+        <><br /><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>
+        </div>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}
+
+
+interface GenericAlertProps{
+  genericMessage: string,  
+  close:Function
+}
+export const GenericAlertPopUp: React.FC<GenericAlertProps> = ({ genericMessage, close})  => {
+    
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
+          <AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />
+          <p>{genericMessage}</p>
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+            <Button onClick={()=>close()}>OK</Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+};
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+interface createProcedureProps{
+  procedureTitle: string,  
+  create: Function, 
+  close:Function
+}
+export const CreateProcedurePopUp: React.FC<createProcedureProps> = ({ procedureTitle, create, close})  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "row", alignItems: "left", justifyContent: "left", textAlign:"left", margin:" 15px 0px 15px 0px" }}>
+          <AiOutlineAlert fontSize={"2rem"} color="red" style={{margin:"0px 10px 0px 0px"}} />
+          <h2 >¿Está seguro de crear el trámite?</h2>
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <Button onClick={()=>close()}><BiArrowBack/>Volver</Button>
+            <Button onClick={()=>create()}>Guardar <BiSave/></Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}
+
+interface procedureCreateErrorProps{
+  procedureTitle: string,  
+  close:Function
+}
+export const ProcedureCreateErrorPopUp: React.FC<procedureCreateErrorProps> = ({ procedureTitle, close})  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close(false)}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
+          <AiOutlineWarning fontSize={"2em"} color="red"/>
+          <h4 style={{textAlign:"center", margin:"10px 0px 10px 0px"}}>Error en la carga del tramite {procedureTitle}</h4>      
+          <p>Intente nuevamente más tarde o contacte con soporte</p>      
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+            <Button onClick={()=>close(false)}><BiArrowBack/>Volver</Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+};
+
+interface deleteProcedureProps{
+  procedureToDelete: ProcedureInstance<ElementSchemaTypes>,  
+  handleDeleteForm: Function, 
+  close:Function
+}
+export const DeleteProcedurePopUp: React.FC<deleteProcedureProps> = ({ procedureToDelete, handleDeleteForm, close})  => {
+             
+  return <NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
+          <AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />
+          <h1>Trámite: {procedureToDelete.getTitle()}</h1>
+          <h2 >¿Está seguro de borrar el trámite?</h2>
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+          <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <Button onClick={()=>close()}><BiArrowBack/>Volver</Button>
+            <Button onClick={()=>{handleDeleteForm(procedureToDelete.getId()); close(false)}}>SI</Button>
+          </div>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
+}

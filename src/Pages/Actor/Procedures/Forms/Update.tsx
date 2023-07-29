@@ -1,4 +1,4 @@
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { FormElement, GetJSONData } from "../../../../Modules/FormElements/OLDTYPES";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
@@ -12,11 +12,12 @@ import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormEl
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
-import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp } from "../../../../Components/Forms/PopUpCards";
+import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, LoadingFormPopUp } from "../../../../Components/Forms/PopUpCards";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FormContext } from "../../../../Contexts/FormContext";
+import { Spinner } from "../../../../Components/Elements/StyledComponents";
 
 
 interface Arguments {
@@ -25,7 +26,7 @@ interface Arguments {
 
 export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
 
-    const { UpdateOneForm , setFormularios } = useContext(FormContext);
+    const { UpdateOneForm , setFormularios, isLoading } = useContext(FormContext);
 
   const [edit, setEdit] = useState(false)
   const [ver, setVer] = useState(false)
@@ -58,6 +59,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
     formBasicData.Subtitle.setValue(formToUpdate?.getSubtitle())
     formBasicData.Description.setValue(formToUpdate?.getDescription())
     formBasicData.Keywords.setValue(formToUpdate?.getKeywords())
+    setEstadoFormulario(formToUpdate?.getStatus())
     setFields(formToUpdate.elements);
   },[])
 
@@ -120,6 +122,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
     }else{
       return(
       <>
+        {isLoading&& <LoadingFormPopUp />}
         {crear && (<CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} /> )}
         {cargadoCorrectamente && (<FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />)}
         {errorCarga && (<FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />)}
@@ -212,7 +215,6 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             <select value={estadoFormulario} 
               onInput={(e) => setEstadoFormulario((e.target as HTMLInputElement).value)} 
               >
-              
               <option value="Borrador">Borrador</option>
               <option value="Publicado">Publicado</option>
             </select>

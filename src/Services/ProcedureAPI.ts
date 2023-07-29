@@ -10,20 +10,24 @@ export class ProcedureAPI {
 
 
   GetAll = async () => {
-    return this.baseService.get('/v0/admin/procedure-units')
+    return this.baseService.get('/v0/admin/procedures')
   }
   
 
-  public Create(params: {
-    title: string;
-  }){
-    return this.baseService.post('/v0/admin/procedure-units/new', params)
+  Create = async (params: {
+    data:string
+  }) => {
+    return this.baseService.post('/v0/admin/procedures', params,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
 
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/procedure-units/update', params,{
+    return this.baseService.post('/v0/admin/procedures/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -33,7 +37,11 @@ export class ProcedureAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/procedure-units/delete', params)
+    return this.baseService.post('/v0/admin/procedures/delete', params)
+  }
+
+  GetCategories = async () => {
+    return this.baseService.get('/v0/admin/procedures/categories')
   }
 
 }

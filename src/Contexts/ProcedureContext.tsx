@@ -9,6 +9,7 @@ import { ProcedureAPI } from "../Services/ProcedureAPI";
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
 
+export type FieldsElementType = ElementInstance<ElementSchemaTypes>[];
 
 const ContextValues = () => {
 
@@ -16,9 +17,11 @@ const ContextValues = () => {
   const [procedures, setProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
+  const [categories, setCategories]= useState<string []>([])
 
   const SaveProcedure = async (procedure: any, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure, setFormState);
+
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
@@ -54,11 +57,11 @@ const ContextValues = () => {
 
   }
 
-  const DeleteOneProcedure = async(title:string, setFormState: Function) => {
+  const DeleteOneProcedure = async(id:number, setFormState: Function) => {
     setIsLoading(true);
 
     const jsonObject = {
-      code: title
+      id: id
     };
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Delete, jsonObject, setFormState);
     setIsLoading(false);
@@ -84,22 +87,70 @@ const ContextValues = () => {
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 
       const mappedArray = FormsObj.map((procedureInstance: any) => {
+    /*    const FormsObj = JSON.parse(procedureInstance.FORMS )
+        //const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
 
-        const Formulario = new ProcedureInstance(
-          procedureInstance.forms,
-          procedureInstance.title,
-          procedureInstance.description,
-          procedureInstance.state,
-          procedureInstance.theme,
-          procedureInstance.atthacments
+        const mappedArray = FormsObj.map((formInstance: any) => {
+
+          let fields: FieldsElementType = [];
+          //console.log("veamos el por que: "+formInstance.elements)
+          //let componentes= JSON.parse(formInstance.elements)
+          formInstance.elements.map((componente: any, index:number)=> {
+
+            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+            aux.update((componente.properties))
+            fields.push(aux);
+
+
+          });
+
+          const Formulario = new FormInstance(
+            formInstance.code,
+            formInstance.title,
+            formInstance.subtitle,
+            formInstance.description,
+            formInstance.keywords,
+            formInstance.status,
+            fields
+          );
+          formulariosAux.push(Formulario);
+
+        });  */
+
+        console.log("attachments: "+procedureInstance.ATTACHMENTS)
+        const newProcedures = new ProcedureInstance(
+          JSON.parse(procedureInstance.FORMS),
+          procedureInstance.TITLE,
+          procedureInstance.DESCRIPTION,
+          procedureInstance.STATE,
+          procedureInstance.THEME,
+          JSON.parse(procedureInstance.ATTACHMENTS),
+          procedureInstance.ID
         );
-        procedureAux.push(Formulario);
+       
+        procedureAux.push(newProcedures);
 
       });   
       setProcedures(procedureAux);
    }
    
     setIsLoading(false); 
+  }
+
+  const GetProcedureCategories = async() => {
+
+    setIsLoading(true)
+    let responseAll:AxiosResponse | ResponseError | null = null;
+    
+    try { responseAll = await AxiosProcedureAPI.GetCategories(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    if(responseAll && responseAll.status==200) {
+      const dataArray = JSON.parse(responseAll.data.data);
+      const descriptions = dataArray.map((item: any) => item.Descripción);
+      setCategories(descriptions)
+    }else{
+      setIsLoading(false)
+
+    }
   }
 
   const UserClearData = () => {
@@ -109,11 +160,13 @@ const ContextValues = () => {
   return {
     isLoading,
     procedures,
+    categories,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,
     DeleteOneProcedure,
-    UpdateProcedures
+    UpdateProcedures,
+    GetProcedureCategories
   }
 }
 

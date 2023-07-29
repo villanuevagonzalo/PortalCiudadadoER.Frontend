@@ -16,7 +16,7 @@ import { FormElementShow } from "../../../../Modules/FormElements/Components/For
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FieldsType, FormContext } from "../../../../Contexts/FormContext";
-import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp } from "../../../../Components/Forms/PopUpCards";
+import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, GenericAlertPopUp } from "../../../../Components/Forms/PopUpCards";
 
 export const DA_Procedures_Forms_Create = () => {
 
@@ -34,6 +34,7 @@ export const DA_Procedures_Forms_Create = () => {
   const [jsona2, setJsona2] = useState<string>('[]');
   const [estadoFormulario, setEstadoFormulario] = useState<string>('Borrador');
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
+
   const [formBasicData, setFormBasicData] = useState({
     Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired"])),
     Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
@@ -41,6 +42,9 @@ export const DA_Procedures_Forms_Create = () => {
     Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
     Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
   });
+  const [alertMessage, setAlertMessage] = useState("")
+  const [showAlert, setShowAlert] = useState(false)
+
   const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
 
@@ -71,6 +75,12 @@ export const DA_Procedures_Forms_Create = () => {
     setFields(prevFields => prevFields.filter((_, i) => i !== indice));
   }
 
+  const isValidCode = (value: string): boolean => {
+    // Expresión regular que verifica si hay espacios " " o comas "," en la cadena
+    const regex = /[ ,]/g;
+    return !regex.test(value); // Retorna true si no hay coincidencias (es válido), false si hay coincidencias (no es válido)
+  };
+
   const guardarFormulario = async () => {
     const codeFieldEmpty = formBasicData.Code.value === "" || formBasicData.Code.value === undefined || formBasicData.Code.value === null;
     const titleFieldEmpty = formBasicData.Title.value === "" || formBasicData.Title.value === undefined || formBasicData.Title.value === null;
@@ -80,21 +90,28 @@ export const DA_Procedures_Forms_Create = () => {
     if (codeFieldEmpty || titleFieldEmpty || subtitleFieldEmpty || descriptionFieldEmpty || keywordsFieldEmpty) {
       setCompletarCampos(true)
     } else {
-      const nuevoFormularioToBeSend = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
-      const response = await SaveForm(nuevoFormularioToBeSend.getJSON(), setFormState, formBasicData.Code.value, formBasicData.Title.value);
-      if (response){
-        setFields([])
-          setFormBasicData({
-            Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired"])),
-            Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
-            Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
-            Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
-            Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
-          })
-          setCargadoCorrectamente(true)
-          setCrear(false)
+      if (isValidCode(formBasicData.Code.value)){
+        const nuevoFormularioToBeSend = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
+        const response = await SaveForm(nuevoFormularioToBeSend.getJSON(), setFormState, formBasicData.Code.value, formBasicData.Title.value);
+        if (response){
+          setFields([])
+            setFormBasicData({
+              Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired","containsSpacesOrCommas"])),
+              Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
+              Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
+              Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
+              Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
+            })
+            setCargadoCorrectamente(true)
+            setCrear(false)
+        }else{
+          setErrorCarga(true)
+        }
       }else{
-        setErrorCarga(true)
+        setCrear(false)
+        setShowAlert(true)
+        setAlertMessage("Código de referencia no debe contener espacios, comas o guiones")
+
       }
   }
 }
@@ -119,6 +136,7 @@ export const DA_Procedures_Forms_Create = () => {
     } else {
       return (
         <>
+          {showAlert && (<GenericAlertPopUp genericMessage={alertMessage} close={setShowAlert}  />)}
           {crear && (<CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} />)}
           {cargadoCorrectamente && (<FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />)}
           {errorCarga && (<FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} /> )}

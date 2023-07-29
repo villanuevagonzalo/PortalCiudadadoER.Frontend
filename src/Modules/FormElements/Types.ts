@@ -12,7 +12,7 @@ import { FormElement } from "./OLDTYPES";
 // Defining all props in the project
 //export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'PARAGRAPH' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
 //export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
-export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'RADIO-LISTA' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE';
+export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'RADIO-LISTA' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE' ;
 
 
 export const HelpToken:string = "HELP";

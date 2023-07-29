@@ -23,12 +23,12 @@ import { TramitesOnlinePage } from "../Pages/Ciudadano/Procedures/TramitesOnline
 import { DC_UserValidate } from "../Pages/Ciudadano/Configurations/UserValidate";
 import { DA_Procedures_Forms_Home } from "../Pages/Actor/Procedures/Forms/Home";
 import { DA_Procedures_Forms_Create } from "../Pages/Actor/Procedures/Forms/Create";
-import { DA_Procedures_List } from "../Pages/Actor/Procedures/List";
+import { DA_Procedures_List } from "../Pages/Actor/Procedures/Procedures/List";
 import { Auth_Redirect } from "../Pages/Auth/Redirect";
 import { DA_Notifications_Create } from "../Pages/Actor/Notifications/Create";
 import { DA_PRESENTIAL } from "../Pages/Actor/Presential";
-import { DA_Procedures_Config } from "../Pages/Actor/Procedures/ProceduresConfigurator";
-import { DA_Procedures_Associate } from "../Pages/Actor/Procedures/AssociateElements";
+import { DA_Procedures_Config } from "../Pages/Actor/Procedures/Procedures/ProceduresConfigurator";
+import { DA_Procedures_Associate } from "../Pages/Actor/Procedures/Procedures/AssociateElements";
 
 const REACTENV = process.env
 
