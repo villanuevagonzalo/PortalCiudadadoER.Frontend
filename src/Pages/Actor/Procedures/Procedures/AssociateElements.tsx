@@ -13,11 +13,12 @@ import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Button } from "../../../../Components/Forms/Button";
 import { FaPlus } from "react-icons/fa";
-import { HiTrash } from "react-icons/hi2";
+import { HiOutlineMagnifyingGlass, HiTrash } from "react-icons/hi2";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Pages } from "../../../../Routes/Pages";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp } from "../../../../Components/Forms/PopUpCards";
+import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 
 type Item = {
   title: string;
@@ -48,6 +49,9 @@ export const DA_Procedures_Associate = () => {
   const [crear, setCrear] = useState(false)
   const [errorCarga, setErrorCarga] = useState(false)
   const [cargadoCorrectamente, setCargadoCorrectamente] = useState(false)
+
+  const [formToCheck, setFormToCheck] = useState<FormInstance<ElementSchemaTypes>>()
+  const [seeOptions, setSeeOptions] = useState("home")
 
   const [Fields, setFields] = useState({
     Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
@@ -157,165 +161,196 @@ export const DA_Procedures_Associate = () => {
     }
   }
 
+  const handleSeeForm = (formToSee:string) => {
+
+    const codigoBuscado = formToSee.split("-")[0].trim().toUpperCase(); // Limpiar espacios y convertir a mayúsculas.
+    const formularioEncontrado = formularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
+    if (formularioEncontrado){
+      setSeeOptions("seeForm"); 
+      setFormToCheck(formularioEncontrado);
+    }
+
+  }
+
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
-  return(<>
-    {showAlert && (<GenericAlertPopUp genericMessage={alertMessage} close={setShowAlert}  />)}
-    {crear && (<CreateProcedurePopUp procedureTitle={Fields.Select_Procedure.getValue()} create={createProcedure} close={setCrear}  />)}
-    {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={Fields.Select_Procedure.getValue()} close={setErrorCarga}  /> )}
-    {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
+  if (seeOptions=="seeForm") {
+    return (
+      <>
+        <FormElementShow form={formToCheck!}  />
+        <div style={{margin:"10px 0px 15px 0px"}}>
+        <Button onClick={() => setSeeOptions("home")}>Volver a Gestor de Trámite</Button>
+        </div>
+      </>
+    )
+  }else{
 
-    <LayoutActorSection>
-      <p>Asociar elementos al trámite</p>
-      <h1>Buscar Trámites</h1>
-      <Formik
-          innerRef={ref}
-          validateOnBlur={false}
-          validateOnChange={false}
-          enableReinitialize={true}
-          initialValues={initialValues}
-          onSubmit={async(values:any)=>{
-            const test = {
-              Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
-            };
-            console.log(test)
-          }}
-          validate={(values:any) => ValidateForm(values, Fields)}
-        >
+    return(<>
+      {showAlert && (<GenericAlertPopUp genericMessage={alertMessage} close={setShowAlert}  />)}
+      {crear && (<CreateProcedurePopUp procedureTitle={Fields.Select_Procedure.getValue()} create={createProcedure} close={setCrear}  />)}
+      {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={Fields.Select_Procedure.getValue()} close={setErrorCarga}  /> )}
+      {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
+  
+      <LayoutActorSection>
+        <p>Asociar elementos al trámite</p>
+        <h1>Buscar Trámites</h1>
+        <Formik
+            innerRef={ref}
+            validateOnBlur={false}
+            validateOnChange={false}
+            enableReinitialize={true}
+            initialValues={initialValues}
+            onSubmit={async(values:any)=>{
+              const test = {
+                Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
+              };
+              console.log(test)
+            }}
+            validate={(values:any) => ValidateForm(values, Fields)}
+          >
+              <Form autoComplete="off">
+                  <LayoutStackedPanel>
+                      {theme&&<Element instance={theme!} className="flex-1"/>}
+                  </LayoutStackedPanel>
+              </Form>
+          </Formik>
+        <Formik
+            innerRef={ref}
+            validateOnBlur={false}
+            validateOnChange={false}
+            enableReinitialize={true}
+            initialValues={initialValues}
+            onSubmit={async(values:any)=>{
+              const test = {
+                Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
+              };
+              console.log(test)
+            }}
+            validate={(values:any) => ValidateForm(values, Fields)}
+          >
             <Form autoComplete="off">
-                <LayoutStackedPanel>
-                    {theme&&<Element instance={theme!} className="flex-1"/>}
-                </LayoutStackedPanel>
+              <LayoutStackedPanel>
+                <Element instance={Fields.Select_Procedure} className="flex-1"/>
+              </LayoutStackedPanel>  
             </Form>
         </Formik>
-      <Formik
-          innerRef={ref}
-          validateOnBlur={false}
-          validateOnChange={false}
-          enableReinitialize={true}
-          initialValues={initialValues}
-          onSubmit={async(values:any)=>{
-            const test = {
-              Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
-            };
-            console.log(test)
-          }}
-          validate={(values:any) => ValidateForm(values, Fields)}
+      </LayoutActorSection>
+      <LayoutActorSection>
+        <h1><MdOutlineDataset />Cuerpo del trámite</h1>
+        En esta sección armamos los elementos del trámite online, para que el ciudadano complete e inicie el trámite.
+      
+        <h1><MdAssignment /> Formularios asociados al trámite</h1>
+        <h2>Asociar con el/los formularios que sean requerido para este trámite</h2>
+  
+        <Formik
+            innerRef={ref}
+            validateOnBlur={false}
+            validateOnChange={false}
+            enableReinitialize={true}
+            initialValues={initialValues}
+            onSubmit={async(values:any)=>{
+              const test = {
+                Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
+              };
+              console.log(test)
+            }}
+            validate={(values:any) => ValidateForm(values, Fields)}
         >
           <Form autoComplete="off">
-            <LayoutStackedPanel>
-              <Element instance={Fields.Select_Procedure} className="flex-1"/>
-            </LayoutStackedPanel>  
-          </Form>
-      </Formik>
-    </LayoutActorSection>
-    <LayoutActorSection>
-      <h1><MdOutlineDataset />Cuerpo del trámite</h1>
-      En esta sección armamos los elementos del trámite online, para que el ciudadano complete e inicie el trámite.
-    
-      <h1><MdAssignment /> Formularios asociados al trámite</h1>
-      <h2>Asociar con el/los formularios que sean requerido para este trámite</h2>
-
-      <Formik
-          innerRef={ref}
-          validateOnBlur={false}
-          validateOnChange={false}
-          enableReinitialize={true}
-          initialValues={initialValues}
-          onSubmit={async(values:any)=>{
-            const test = {
-              Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
-            };
-            console.log(test)
-          }}
-          validate={(values:any) => ValidateForm(values, Fields)}
-      >
-        <Form autoComplete="off">
-          {forms && forms.map((form, index) => (
-            <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
-              <LayoutSection style={{ margin: "0px 0px 10px 0px" }}>
-                <p>Anexar formulario</p>
-                <div key={form.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "15px 0px 5px 0px" }}>  
-                  <Element instance={form} className="flex-1" />
-                  <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                    <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteForm(form)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+            {forms && forms.map((form, index) => (
+              <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
+                <LayoutSection style={{ margin: "0px 0px 10px 0px" }}>
+                  <p>Anexar formulario</p>
+                  <div key={form.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "15px 0px 5px 0px" }}>  
+                    <Element instance={form} className="flex-1" />
+                    
+                    <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', textAlign: "right" }}>
+                        <HiOutlineMagnifyingGlass fontSize={"1.5rem"} onClick={() => { handleSeeForm(form.getValue())  }} />
+                        <HiTrash fontSize={"1.5rem"} style={{ margin: "0px 2px 0px 0px" }} onClick={() => deleteForm(form)} />
+                      </div>
+  {/*
+                    <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteForm(form)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
+            </div>*/}
                   </div>
-                </div>
-              </LayoutSection>
-                    {index === forms.length - 1 && (
+                </LayoutSection>
+                      {index === forms.length - 1 && (
+                        <Button style={{ width: "200px", height: "40px", marginRight: "10px" }} onClick={() => addNewForm()}>
+                          Agregar Formulario
+                          <FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} />
+                          </Button>
+                      )}
+                    </div>
+                  ))} 
+                  {forms.length==0 && (
+                    <div  style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
                       <Button style={{ width: "200px", height: "40px", marginRight: "10px" }} onClick={() => addNewForm()}>
                         Agregar Formulario
                         <FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} />
-                        </Button>
-                    )}
-                  </div>
-                ))} 
-                {forms.length==0 && (
-                  <div  style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
-                    <Button style={{ width: "200px", height: "40px", marginRight: "10px" }} onClick={() => addNewForm()}>
-                      Agregar Formulario
-                      <FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} />
-                    </Button>
+                      </Button>
+                      </div>
+                      ) }
+                  <p></p>
+                  <LayoutStackedPanel className="mt-3">
+                  <h1><MdDrafts /> Habilitar adjuntar archivos</h1>
+                  </LayoutStackedPanel>
+                  {datosAdjuntos.length>0 && datosAdjuntos.map((attach, index) => (
+                    <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
+                    <LayoutSection style={{ margin: "0px 0px 10px 0px" }}>
+                    <p>Dato a adjuntar en trámite</p>
+                    <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
+                      <Element instance={attach.Title_Attached} className="flex-2"/>
+                      <Element instance={attach.Select_Attached} className="flex-1" />
+                    <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+                        <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteAttached(index)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
                     </div>
-                    ) }
-                <p></p>
-                <LayoutStackedPanel className="mt-3">
-                <h1><MdDrafts /> Habilitar adjuntar archivos</h1>
-                </LayoutStackedPanel>
-                {datosAdjuntos.length>0 && datosAdjuntos.map((attach, index) => (
-                  <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
-                  <LayoutSection style={{ margin: "0px 0px 10px 0px" }}>
-                  <p>Dato a adjuntar en trámite</p>
-                  <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
-                    <Element instance={attach.Title_Attached} className="flex-2"/>
-                    <Element instance={attach.Select_Attached} className="flex-1" />
-                  <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteAttached(index)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
                   </div>
-                </div>
-                </LayoutSection>
-                    {index === datosAdjuntos.length - 1 && (
-                        <Button style={{ width: "200px", height: "40px", marginRight: "10px" }} onClick={() => addNewAttached()}>
-                        Agregar Adjuntos
-                        <FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} />
-                    </Button>
-                    )}
+                  </LayoutSection>
+                      {index === datosAdjuntos.length - 1 && (
+                          <Button style={{ width: "200px", height: "40px", marginRight: "10px" }} onClick={() => addNewAttached()}>
+                          Agregar Adjuntos
+                          <FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} />
+                      </Button>
+                      )}
+                      </div>
+                  ))}
+                  { datosAdjuntos.length==0 && (  
+                    <div  style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
+                    <Button style={{ width: "200px", height: "40px", margin: "15px 0px 10px 0px" }} onClick={() => addNewAttached()}>
+                          Agregar Adjuntos
+                          <FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} />
+                      </Button>
+                      </div>  
+                    )
+                  }
+                  <p></p>
+                  <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
+                  <h1><MdMore /> Estado</h1>
+                    <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
+                      <select value={estadoProcedure} 
+                        onInput={(e) => setEstadoProcedure((e.target as HTMLInputElement).value)} 
+                        >
+                          <option value="" disabled>
+                            Seleccione el estado
+                          </option>
+                        <option value="Borrador">Borrador</option>
+                        <option value="Publicado">Publicado</option>
+                      </select>
+                      </SelectWrapper >
+  
                     </div>
-                ))}
-                { datosAdjuntos.length==0 && (  
-                  <div  style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
-                  <Button style={{ width: "200px", height: "40px", margin: "15px 0px 10px 0px" }} onClick={() => addNewAttached()}>
-                        Agregar Adjuntos
-                        <FaPlus fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} />
-                    </Button>
-                    </div>  
-                  )
-                }
-                <p></p>
-                <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
-                <h1><MdMore /> Estado</h1>
-                  <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
-                    <select value={estadoProcedure} 
-                      onInput={(e) => setEstadoProcedure((e.target as HTMLInputElement).value)} 
-                      >
-                        <option value="" disabled>
-                          Seleccione el estado
-                        </option>
-                      <option value="Borrador">Borrador</option>
-                      <option value="Publicado">Publicado</option>
-                    </select>
-                    </SelectWrapper >
+                  <LayoutStackedPanel className="mt-3">
+                    <LayoutSpacer/>
+                    <Link to={Pages.DA_Procedures_Config} style={{ textDecoration: 'none' }}>
+                      <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
+                      </Link>
+                    <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} >Finalizar<AiOutlineSave/></FormikButton>
+                  </LayoutStackedPanel>
+              </Form>
+          </Formik>
+      </LayoutActorSection>
+    </>);
 
-                  </div>
-                <LayoutStackedPanel className="mt-3">
-                  <LayoutSpacer/>
-                  <Link to={Pages.DA_Procedures_Config} style={{ textDecoration: 'none' }}>
-                    <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
-                    </Link>
-                  <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} >Finalizar<AiOutlineSave/></FormikButton>
-                </LayoutStackedPanel>
-            </Form>
-        </Formik>
-    </LayoutActorSection>
-  </>);
+  }
+ 
 }
