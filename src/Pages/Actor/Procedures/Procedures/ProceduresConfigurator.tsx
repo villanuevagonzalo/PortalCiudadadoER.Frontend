@@ -25,10 +25,12 @@ import { UpdateProcedure } from "./UpdateProcedures";
 import { DeleteProcedurePopUp } from "../../../../Components/Forms/PopUpCards";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
+import { Form, Formik } from "formik";
+import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
 
 
 
-//console.log(BaseFields.TEXT.validations)
+const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Config = () => {
 
@@ -43,11 +45,24 @@ export const DA_Procedures_Config = () => {
   const [seeOptions, setSeeOptions] = useState("home")
   const [deleteProcedure, setDeleteProcedure] = useState(false)
   const [copy, setCopy] = useState(false)
+  const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
+  const [searchProcedure, setSearchProcedure] = useState<string>()
+  const [filteredProcedure, setFilteredProcedure] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
 
   useEffect(()=>{
     UpdateProcedures()
     UpdateForms()
   },[])
+
+  useEffect(()=>{
+    if (searchProcedure !== undefined &&  searchProcedure != '') {
+      const filtered = procedures.filter(procedures => procedures.getTitle() === searchProcedure);
+      setFilteredProcedure(filtered);
+       
+      } else {
+        setFilteredProcedure(procedures)
+      }
+  },[searchProcedure])
 
   const handleDeleteProcedure = async (id:number)=> {
     const response = await DeleteOneProcedure(id,setFormState);
@@ -57,6 +72,7 @@ export const DA_Procedures_Config = () => {
     setDeleteProcedure(false)
   }
 
+  const DataName = procedures.map((item:any)=>item.title)
 
   const renderElement = () => {
 
@@ -83,39 +99,35 @@ export const DA_Procedures_Config = () => {
           deberá completar para iniciar su trámite on line.
           <LayoutStackedPanel>
           <LayoutSpacer/>
-          {/* Botones para crear o actualizar formularios */}
+          <div>
+              <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
+                  initialValues={FieldValues}
+                  validationSchema={formGetValidations(FormRequiredFields)}
+                  onSubmit={async (values: any) => {console.log("valores: "+values) }} >
+                  <Form autoComplete="off">
+                      <FormikSearch name="Tramites" label={"Filtra los trámites"} data={DataName} setValue={setSearchProcedure} autoFocus/>
+                  </Form>
+              </Formik></div>
+            {/* Botones para crear o actualizar formularios */}
+            <div style={{display:"flex", flexDirection:"row"}}>
+                <Button  color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateProcedures()} >Actualizar<RxUpdate/></Button>
+                <Link to={Pages.DA_PROCEDURES_CONFIG_ASSOCIATE} style={{ textDecoration: 'none' }}>
+                  <Button style={{ width: '150px', height: '40px' }}>Nuevo<AiOutlinePlus/></Button>
+                </Link>
+            </div>
+          </LayoutStackedPanel>
          
-
-          <div style={{display:"flex", flexDirection:"row"}}>
-              <Button  color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateProcedures()} >Actualizar<RxUpdate/></Button>
-              <Link to={Pages.DA_PROCEDURES_CONFIG_ASSOCIATE} style={{ textDecoration: 'none' }}>
-                <Button style={{ width: '150px', height: '40px' }}>Nuevo<AiOutlinePlus/></Button>
-              </Link>
-            </div>
-
-          
-
-          </LayoutStackedPanel>
-          <LayoutStackedPanel>
-            Buscar:
-            <FormWrapperInput>
-            <div>
-              <input type="text"/>
-              <div className="FormIcon"></div>
-            </div>
-          </FormWrapperInput>
-          </LayoutStackedPanel>
           Lista de tramites creados
           {isLoading?<>
             <br/>
             <Spinner color='secondary' size="3rem"/><br/>
             <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
             </>:
-            < TableForms datos={procedures} setFormToCheck={setProcedureToCheck} setSeeOptions={setSeeOptions} setDeleteProcedure={setDeleteProcedure} setProcedureToDelete={setProcedureToDelete} setCopy={setCopy} />
+            < TableForms datos={filteredProcedure} setFormToCheck={setProcedureToCheck} setSeeOptions={setSeeOptions} setDeleteProcedure={setDeleteProcedure} setProcedureToDelete={setProcedureToDelete} setCopy={setCopy} />
           }
         </LayoutActorSection>
       </>);
-    }
+    } 
   };
 
   return (
@@ -162,9 +174,6 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
                   < HiOutlinePencil/>
-                </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setCopy(true); setFormToCheck(item) ; window.scrollTo({ top: 0, behavior: 'smooth' });}}>
-                  < HiDocumentDuplicate/>
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>{setProcedureToDelete(item);setDeleteProcedure(true) ; window.scrollTo({ top: 0, behavior: 'smooth' });} }>
                   <BiTrash />
