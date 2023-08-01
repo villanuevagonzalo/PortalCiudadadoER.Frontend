@@ -15,7 +15,7 @@ import { LogoER } from '../../Components/Images/LogoEntreRios';
 
 export const Auth_Redirect = () =>{
 
-  const SearchParams = GetParams(["dni","token","redirect_path","data"]);
+  const SearchParams = GetParams(["dni","token","redirect_path","data", "secretaria"]);
   const navigate = useNavigate();
 
   const { userData, userRol, Redirect, ContextLoaded } = useContext(AuthContext);
@@ -42,9 +42,9 @@ export const Auth_Redirect = () =>{
     if(SearchParams.status){ 
       const response = await Redirect({
         'dni': SearchParams.values.dni,
+        'secretaria': SearchParams.values.secretaria,
         'token':SearchParams.values.token,
         'data': actionData(SearchParams.values.data)
-        
       }, setFormState);
 
       if(response) continueLogin()
