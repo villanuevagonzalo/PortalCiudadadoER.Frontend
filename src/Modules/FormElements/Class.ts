@@ -142,14 +142,16 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   private id?:number;
   private title:string;
   private description:string;
+  private secretary:string;
   private state:string; //los estados pueden ser borrador, publicado, etc.
   private theme:string; //temática
   private forms: string [];
   private attachments:string []
 
-  constructor(forms: string[], title: string, description: string, state: string, theme: string, attachments: string[], id?: number) {
+  constructor(forms: string[], title: string, description: string, secretary:string, state: string, theme: string, attachments: string[], id?: number) {
     this.title = title;
     this.description = description;
+    this.secretary = secretary;
     this.state = state;
     this.theme = theme;
     this.forms = forms;
@@ -172,6 +174,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   }
   addDescription(description:string){
     this.description=description;
+  }
+  addSecretary(secretary:string){
+    this.secretary=secretary;
   }
   addState(state:string){
     this.state=state;
@@ -200,6 +205,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   getDescription(){
     return this.description;
   }
+  getSecretary(){
+    return this.secretary;
+  }
   getState(){
     return this.state;
   }
@@ -213,6 +221,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     const ProcedureData = {
       "title": this.title,
       "description": this.description,
+      "secretary":this.secretary,
       "state": this.state,
       "theme": this.theme,
       "forms": JSON.stringify(this.forms),
