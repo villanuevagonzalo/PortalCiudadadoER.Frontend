@@ -146,6 +146,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             listaFormularios,
             procedure.getTitle(),
             "Descripción",
+            procedure.getSecretary(),
             estadoProcedure,
             procedure.getTheme(),
             titleAttachedValues,

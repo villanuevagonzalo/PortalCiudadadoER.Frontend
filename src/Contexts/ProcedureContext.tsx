@@ -27,7 +27,7 @@ const ContextValues = () => {
       const responseData = JSON.parse(response.data.data);
       const titleResponse = responseData[0].TITLE
       if (status && titleResponse == title) {
-        const newProcedure = new ProcedureInstance(procedure.getForms(),procedure.getTitle(), procedure.getDescription(), procedure.getState(), procedure.getTheme(), procedure.getAttachments())
+        const newProcedure = new ProcedureInstance(procedure.getForms(),procedure.getTitle(), procedure.getDescription(), procedure.getSecretary(), procedure.getState(), procedure.getTheme(), procedure.getAttachments())
         setProcedures(prevState => ([...prevState, newProcedure]));
         return true;
       }
@@ -44,7 +44,6 @@ const ContextValues = () => {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const titleResponse = responseData[0].TITLE;
-      console.log("aca estan los 2 titulos: "+title+" - "+responseData[0].TITLE)
       if (status && titleResponse == title ) {
         setProcedures(prevProcedure => prevProcedure.filter(procedure =>procedure.getTitle() !== title )); //delete the old form
         setProcedures (prevState => ([...prevState, procedure])); //set the new form
@@ -118,11 +117,11 @@ const ContextValues = () => {
 
         });  */
 
-        console.log("attachments: "+procedureInstance.ATTACHMENTS)
         const newProcedures = new ProcedureInstance(
           JSON.parse(procedureInstance.FORMS),
           procedureInstance.TITLE,
           procedureInstance.DESCRIPTION,
+          procedureInstance.SECRETARY,
           procedureInstance.STATE,
           procedureInstance.THEME,
           JSON.parse(procedureInstance.ATTACHMENTS),

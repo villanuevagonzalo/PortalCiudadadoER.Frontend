@@ -19,6 +19,7 @@ import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Pages } from "../../../../Routes/Pages";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp } from "../../../../Components/Forms/PopUpCards";
 import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
+import { AuthContext } from "../../../../Contexts/AuthContext";
 
 type Item = {
   title: string;
@@ -35,6 +36,7 @@ export const DA_Procedures_Associate = () => {
 
   const { UpdateProcedures, SaveProcedure, GetProcedureCategories, categories,setProcedures, procedures } = useContext(ProcedureContext);
   const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const {secretaria } = useContext(AuthContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [proceduresAttached, setProcedureAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
@@ -141,6 +143,7 @@ export const DA_Procedures_Associate = () => {
         listaFormularios,
         Fields.Select_Procedure.getValue(),
         "Descripción",
+        secretaria,
         estadoProcedure,
         theme!.getValue(),
         titleAttachedValues
