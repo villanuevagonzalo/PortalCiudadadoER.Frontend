@@ -27,6 +27,7 @@ const ContextValues = () => {
   const [userContact, setUserContact] = useState<IUserContact>(DefaultUserContact);
   const [userRol, setUserRol] = useState<IUserRol[]>(DefaultUserRol);
   const [actorActions, setActorActions] = useState<any[]>([]);
+  const [secretaria, setSecretaria] = useState("")
 
   const SaveToken = (token:string, isactor?:boolean) => {
 
@@ -83,6 +84,7 @@ const ContextValues = () => {
     delLSData("UserContact");
     delLSData("UserRol");
     delLSData("ActorActions");
+    setSecretaria("")
   }
 
   const Logout2 = () => {
@@ -126,6 +128,7 @@ const ContextValues = () => {
       setLSData("UserData", NewUserData);
       setLSData("UserContact", NewUserContact || DefaultUserContact);
       setLSData("ActorActions", data.data || []);
+      setSecretaria(data.data.data.secretaria)
 
     } else{ Logout2(); }
     return response;
@@ -214,7 +217,7 @@ const ContextValues = () => {
   
 
   return {
-    isLoading, isLogged, authToken, userData, userContact, userRol, 
+    isLoading, isLogged, authToken, userData, userContact, userRol, secretaria,
     Signup, Login, Logout, CheckToken, SaveToken, Redirect, Logout2,
     UserGetData, SaveData, UserNameChange, actorActions,
     PasswordReset, PasswordUpdate,
