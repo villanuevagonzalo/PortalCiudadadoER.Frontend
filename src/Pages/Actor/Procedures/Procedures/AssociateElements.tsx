@@ -81,7 +81,7 @@ export const DA_Procedures_Associate = () => {
     }));
     const Select_Theme = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione una Temática', options: updatedOptions },["isRequired"]))
     setTheme( Select_Theme);
-  },[formularios])
+  },[categories])
 
   const addNewForm = () =>{
     const updatedOptions = formularios.map((forms) => ({
