@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import { Spinner, TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
+import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { IFormState } from "../../../../Interfaces/Data";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
@@ -106,8 +106,11 @@ export const DA_Procedures_Forms_Home = () => {
         {deleteForm && (<DeleteFormPopUp formToDelete={formToDelete!} handleDeleteForm={handleDeleteForm} close={setDeleteForm}  /> )}
         {copy&&(<CopyFormPopUp formToCopy={formToCheck!} handleCopyForm={handleCopyForm} close={setCopy} /> )}
         {errorCarga && (<FormCreateErrorPopUp formTitle={""} close={setErrorCarga} />)}
-        <LayoutSection>
+        <LayoutActorSection>
+        <p> Configurador de formularios</p>
+          En esta sección generamos, modificamos y damos de baja los formularios que serán utilizados en los trámites  
           <LayoutStackedPanel>
+          <LayoutSpacer/>
             <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
                   initialValues={FieldValues}
@@ -137,7 +140,7 @@ export const DA_Procedures_Forms_Home = () => {
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
       </>:< TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
       }
-        </LayoutSection>
+        </LayoutActorSection>
       </>);
     }
   };
