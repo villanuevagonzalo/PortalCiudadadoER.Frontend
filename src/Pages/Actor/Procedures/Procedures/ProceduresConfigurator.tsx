@@ -64,6 +64,11 @@ export const DA_Procedures_Config = () => {
       }
   },[searchProcedure])
 
+
+  useEffect(()=>{
+    setFilteredProcedure(procedures)
+  },[procedures])
+
   const handleDeleteProcedure = async (id:number)=> {
     const response = await DeleteOneProcedure(id,setFormState);
     if (response){

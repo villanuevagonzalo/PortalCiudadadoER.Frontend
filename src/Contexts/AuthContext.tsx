@@ -113,8 +113,7 @@ const ContextValues = () => {
 
     const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserRedirect, data, setFormState);
     if(response.data){
-      console.log("ESTA DATA TENGO EL EN REDIRECT: "+JSON.stringify(data))
-      console.log("ESTA DATA TENGO EL EN REDIRECT: "+data.secretaria)
+    
       const NewUserData = response.data.data.user_data.user;
       const NewUserContact = response.data.data.user_data.user_contact;
 
