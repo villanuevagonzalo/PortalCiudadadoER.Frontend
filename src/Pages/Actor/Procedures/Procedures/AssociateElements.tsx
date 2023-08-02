@@ -344,7 +344,7 @@ export const DA_Procedures_Associate = () => {
                     </div>
                   <LayoutStackedPanel className="mt-3">
                     <LayoutSpacer/>
-                    <Link to={Pages.DA_Procedures_Config} style={{ textDecoration: 'none' }}>
+                    <Link to={Pages.DA_PROCEDURES_CONFIG} style={{ textDecoration: 'none' }}>
                       <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
                       </Link>
                     <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} >Finalizar<AiOutlineSave/></FormikButton>

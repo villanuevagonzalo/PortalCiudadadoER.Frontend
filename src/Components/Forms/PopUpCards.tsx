@@ -437,7 +437,7 @@ export const ProcedureCreatedPopUp: React.FC<ProcedureCreatedProps> = ({ title, 
 
         <LayoutStackedPanel className="mt-2">
           <LayoutSpacer/>
-          <Link to={Pages.DA_Procedures_Config} className="button notifications">
+          <Link to={Pages.DA_PROCEDURES_CONFIG} className="button notifications">
                 <Button style={{ width: '150px', height: '40px' }} onClick={()=>close(false)} >OK</Button>
           </Link>
         </LayoutStackedPanel>
