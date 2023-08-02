@@ -83,6 +83,7 @@ const ContextValues = () => {
    if(responseAll && responseAll.status!==204) 
    {
     const FormData = responseAll.data.data;
+    console.log("viene de aca: "+FormData)
       const FormsObj = JSON.parse(FormData);
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 
@@ -116,6 +117,8 @@ const ContextValues = () => {
           formulariosAux.push(Formulario);
 
         });  */
+
+        console.log("entonces veamos desde aca: "+ JSON.stringify(procedureInstance))
 
         const newProcedures = new ProcedureInstance(
           JSON.parse(procedureInstance.FORMS),

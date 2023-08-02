@@ -56,9 +56,18 @@ export const DA_Procedures_Config = () => {
 
   useEffect(()=>{
     if (searchProcedure !== undefined &&  searchProcedure != '') {
-      const filtered = procedures.filter(procedures => procedures.getTitle() === searchProcedure);
-      setFilteredProcedure(filtered);
-       
+      const cleanedSearchProcedure = searchProcedure.replace(/\s+\((título|temática)\)$/, '');
+      const filtered = procedures.filter(procedures => procedures.getTitle() === cleanedSearchProcedure);
+        if (filtered.length>0){
+          setFilteredProcedure(filtered);
+        }else{
+          const filtered = procedures.filter(procedures => procedures.getTheme() === cleanedSearchProcedure);
+          if (filtered.length>0){
+            setFilteredProcedure(filtered);
+          }else{
+            setFilteredProcedure(procedures)
+          }
+        } 
       } else {
         setFilteredProcedure(procedures)
       }
@@ -77,7 +86,9 @@ export const DA_Procedures_Config = () => {
     setDeleteProcedure(false)
   }
 
-  const DataName = procedures.map((item:any)=>item.title)
+  const DataTitle = useMemo(() => procedures.map((item:any) => item.title+" (título)"), [procedures]);
+  const DataTheme = useMemo(() => procedures.map((item:any) => item.theme+" (temática)").flat(), [procedures]);
+  const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme]);
 
   const renderElement = () => {
 
@@ -110,7 +121,7 @@ export const DA_Procedures_Config = () => {
                   validationSchema={formGetValidations(FormRequiredFields)}
                   onSubmit={async (values: any) => {console.log("valores: "+values) }} >
                   <Form autoComplete="off">
-                      <FormikSearch name="Tramites" label={"Filtra los trámites"} data={DataName} setValue={setSearchProcedure} autoFocus/>
+                      <FormikSearch name="Tramites" label={"Filtra los trámites"} data={ResultArray} setValue={setSearchProcedure} autoFocus/>
                   </Form>
               </Formik></div>
             {/* Botones para crear o actualizar formularios */}
@@ -142,8 +153,6 @@ export const DA_Procedures_Config = () => {
   );
     
 }
-
-
 
 interface TableProps {
   datos: ProcedureInstance<ElementSchemaTypes>[];

@@ -74,20 +74,45 @@ export const DA_Procedures_Forms_Home = () => {
   }
   useEffect(()=>{
     if (searchForm !== undefined &&  searchForm != '') {
-      const filtered = formularios.filter(form => form.getTitle() === searchForm);
-      setFilteredForms(filtered);
-       
-      } else {
-        setFilteredForms(formularios)
+      const cleanedSearchForm = searchForm.replace(/\s+\((título|keyword|COD.F)\)$/, '');
+      const filtered = formularios.filter(form => form.getTitle() == cleanedSearchForm);
+      if (filtered.length>0){
+        setFilteredForms(filtered);
+      }else{
+        const filtered = formularios.filter(form => form.getKeywords() == cleanedSearchForm);
+        if (filtered.length>0){
+          setFilteredForms(filtered);
+        }else{
+          const filtered = formularios.filter(form => form.getCode() == cleanedSearchForm);
+          if (filtered.length>0){
+            setFilteredForms(filtered);  
+          }else{
+            setFilteredForms(formularios)
+          }
+        }
       }
+    } else {
+      setFilteredForms(formularios)
+    }
   },[searchForm])
  
   useEffect(()=>{
     setFilteredForms(formularios)
   },[formularios])
+
   
-  const DataName = formularios.map((item:any)=>item.title)
+  const DataTitle = useMemo(() => formularios.map((item:any) => item.title + " (título)"), [formularios]);
+  const DataKeywords = useMemo(() => {
+    return formularios.flatMap((item:any) => {
+      const keywordsArray = item.keywords.split(" ");
+      return keywordsArray.map((keyword:string) => keyword + " (keyword)");
+    });
+  }, [formularios]);
+  const DataCode = useMemo(() => formularios.map((item:any) => item.code + " (COD.F)"), [formularios]);
   
+  const ResultArray = useMemo(() => DataTitle.concat(DataKeywords, DataCode), [DataTitle, DataKeywords, DataCode]);
+
+
   const renderElement = () => {
     if (seeOptions=="seeForm") {
       return (
@@ -117,7 +142,7 @@ export const DA_Procedures_Forms_Home = () => {
                   validationSchema={formGetValidations(FormRequiredFields)}
                   onSubmit={async (values: any) => {console.log("valores: "+values) }} >
                   <Form autoComplete="off">
-                      <FormikSearch name="Tramites" label={"Filtra los formularios"} data={DataName} setValue={setSearchForm} autoFocus/>
+                      <FormikSearch name="Tramites" label={"Filtra los formularios"} data={ResultArray} setValue={setSearchForm} autoFocus/>
                   </Form>
               </Formik></div>
             <LayoutSpacer/>
