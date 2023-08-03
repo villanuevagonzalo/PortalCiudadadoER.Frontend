@@ -221,7 +221,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     const ProcedureData = {
       "title": this.title,
       "description": this.description,
-      "secretary":this.secretary,
+      "secretary": this.secretary,
       "state": this.state,
       "theme": this.theme,
       "forms": JSON.stringify(this.forms),

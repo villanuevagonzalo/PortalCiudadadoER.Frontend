@@ -30,7 +30,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
     const ref:any = useRef(null);
 
   const { UpdateOneProcedure, setProcedures, procedures } = useContext(ProcedureContext);
-  const { UpdateForms , formularios} = useContext(FormContext);
+  const { UpdateForms , formularios, UpdatePublishedForms, publishedFormularios} = useContext(FormContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [oldForms, setOldForms] = useState <string []> ([])
@@ -53,6 +53,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   const [seeOptions, setSeeOptions] = useState("home")
 
   useEffect(() => {
+    UpdatePublishedForms()
     const listaFormularios: string [] = [];
     const listaAdjuntos: string [] = [];
     procedure.getForms().map((element, index: number) => {
@@ -70,7 +71,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   
 
   const addNewForm = () =>{
-    const updatedOptions = formularios.map((forms) => ({
+    const updatedOptions = publishedFormularios.map((forms) => ({
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
@@ -108,10 +109,8 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   }
 
   const updateProcedure = async () =>{
-
     const titleAttachedValues: string[] = [];
     const listaFormularios: string[] = [];
-
     if (oldForms.length !=0){
         oldForms.forEach((dato) => {
             listaFormularios.push(dato.split(" - ")[0]);
@@ -160,20 +159,16 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             setErrorCarga(true)
         }
      }
-      
-    
   }
 
 
   const handleSeeForm = (formToSee:string) => {
-
     const codigoBuscado = formToSee.split("-")[0].trim().toUpperCase(); // Limpiar espacios y convertir a mayúsculas.
     const formularioEncontrado = formularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
     if (formularioEncontrado){
       setSeeOptions("seeForm"); 
       setFormToCheck(formularioEncontrado);
     }
-
   }
 
 
@@ -196,11 +191,24 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
        {crear && (<UpdateProcedurePopUp procedureTitle={procedure.getTitle()} create={updateProcedure} close={setCrear}  />)}
        {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={procedure.getTitle()} close={setErrorCarga}  /> )}
        {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
-   
        <LayoutActorSection style={{margin:"10px 0px 10px 0px"}}>
          <h1><MdOutlineNewLabel />Datos generales del Trámite</h1>
-         <h2>Título del trámite: {procedure.getTitle()} </h2>
-         <h2>Temática del trámite: {procedure.getTheme()} </h2>
+         <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Título</h1>
+            <p>{procedure.getTitle()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Temática</h1>
+            <p>{procedure.getTheme()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Descripción</h1>
+            <p>{procedure.getDescription()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Organismo</h1>
+            <p>{procedure.getSecretary()}</p>
+          </LayoutSection>
        </LayoutActorSection>
    
        <LayoutActorSection style={{margin:"10px 0px 10px 0px"}}>

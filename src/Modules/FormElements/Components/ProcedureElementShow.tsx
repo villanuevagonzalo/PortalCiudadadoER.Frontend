@@ -28,7 +28,6 @@ interface FormGenericData {
   export const ProcedureElementShow: React.FC<Arguments> = ({procedure}) => {
     
     const initialValues = Object.entries(procedure.getForms()).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.valueOf }), {});
-    
     const { UpdateForms, formularios, isLoading} = useContext(FormContext);
     const [form, setForm] = useState <FormInstance<ElementSchemaTypes>> ();
     const [formData, setFormData]=useState <FormGenericData []> ([]);
@@ -51,12 +50,9 @@ interface FormGenericData {
 
     useEffect(()=>{
         const formulariosAux: SetStateAction<FormGenericData[]> = [];
-
         procedure.getForms().map((element, index: number) => {
-
             const formularioEncontrado = formularios.find(
                 (formulario) => formulario.getCode() === element);
-
             if (formularioEncontrado){
                 const formDataAux: FormGenericData = {
                     code: formularioEncontrado.getCode(),
@@ -64,7 +60,6 @@ interface FormGenericData {
                   };
                   formulariosAux.push(formDataAux)
             }
-            
             setFormData(formulariosAux)
          })
     },[])
@@ -78,8 +73,6 @@ interface FormGenericData {
         }
     },[form])
 
-    
-    
 
     if (showForm){
         return (
@@ -93,9 +86,28 @@ interface FormGenericData {
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
                 <LayoutSection>
                     <h1><MdOutlineNewLabel />Datos Generales del Trámite</h1>
-                    <h2 style={{textAlign:"center"}}> {procedure.getTitle()} </h2>
-                    <h2> Temática: {procedure.getTheme()} </h2>
-                    <h2> Descripción:{procedure.getDescription()} </h2>
+                    {/*<h2 style={{textAlign:"center"}}> {procedure.getTitle()} </h2>
+                    <h2> Temática:v{procedure.getTheme()} </h2>
+                    <h2> Descripción:v{procedure.getDescription()} </h2>
+                    <h2> Organismo: {procedure.getSecretary()} </h2>*/}
+
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1>Título</h1>
+                        <p>{procedure.getTitle()}</p>
+                    </LayoutSection>
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1>Temática</h1>
+                        <p>{procedure.getTheme()}</p>
+                    </LayoutSection>
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1>Descripción</h1>
+                        <p>{procedure.getDescription()}</p>
+                    </LayoutSection>
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1>Organismo</h1>
+                        <p>{procedure.getSecretary()}</p>
+                    </LayoutSection>
+               
                  </LayoutSection>    
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
                 <LayoutSection>

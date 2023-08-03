@@ -13,9 +13,11 @@ const ContextValues = () => {
 
   const AxiosFormAPI = new FormAPI();
   const [formularios, setFormularios] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+  const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
+  //create a form
   const SaveForm = async (formulario: any, setFormState: Function, code:string, title:string) => {
     setIsLoading(true)
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formulario, setFormState);
@@ -46,6 +48,7 @@ const ContextValues = () => {
     return false;
   }
 
+  //update a form
   const UpdateOneForm = async(formulario: any, setFormState: Function, code:string) => {
     setIsLoading(true)
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.Update, formulario, setFormState);
@@ -77,9 +80,9 @@ const ContextValues = () => {
 
   }
 
+  //delete a form
   const DeleteOneForm = async(code:string, setFormState: Function) => {
     setIsLoading(true);
-
     const jsonObject = {
       code: code
     };
@@ -89,55 +92,72 @@ const ContextValues = () => {
     return response;
   }
 
-
+  //get complete forms list
   const UpdateForms = async() => {
-
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
-    
     try { responseAll = await AxiosFormAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    //let forms=responseAll!.data.data; 
-   // response_without_backslashes = json.loads(response.replace('\\', ''))
-    
-   //let FormData = "[]";
-   if(responseAll && responseAll.status!==204) 
-   {
-    const FormData = responseAll.data.data;
+
+    if(responseAll && responseAll.status!==204) 
+    {
+      const FormData = responseAll.data.data;
       const FormsObj = JSON.parse(FormData);
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
-
       const mappedArray = FormsObj.map((formInstance: any) => {
-        // Procesar cada elemento del arreglo aquí y retornar el resultado
-        // Puedes hacer cualquier operación o transformación en formInstance
-
         let fields: FieldsType = [];
-
         let componentes= JSON.parse(formInstance.STATUS)
         componentes.map((componente: any, index:number)=> {
-
           const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
           aux.update((componente.properties))
           fields.push(aux);
-
-
-        });
-
+          });
         const Formulario = new FormInstance(
-          formInstance.CODE,
-          formInstance.TITLE,
-          formInstance.SUBTITLE,
-          formInstance.DESCRIPTION,
-          formInstance.ELEMENTS,
-          formInstance.KEYWORDS,
-          fields
+            formInstance.CODE,
+            formInstance.TITLE,
+            formInstance.SUBTITLE,
+            formInstance.DESCRIPTION,
+            formInstance.ELEMENTS,
+            formInstance.KEYWORDS,
+            fields
         );
         formulariosAux.push(Formulario);
-
       });   
       setFormularios(formulariosAux);
-   }
-   
-    
+    }
+    setIsLoading(false); 
+  }
+
+  //get complete published forms
+  const UpdatePublishedForms = async() => {
+    setIsLoading(true)
+    let responseAll:AxiosResponse | ResponseError | null = null;
+    try { responseAll = await AxiosFormAPI.GetPublishedAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    if(responseAll && responseAll.status!==204) 
+    {
+      const FormData = responseAll.data.data;
+      const FormsObj = JSON.parse(FormData);
+      const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
+      const mappedArray = FormsObj.map((formInstance: any) => {
+        let fields: FieldsType = [];
+        let componentes= JSON.parse(formInstance.STATUS)
+        componentes.map((componente: any, index:number)=> {
+          const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+          aux.update((componente.properties))
+          fields.push(aux);
+          });
+        const Formulario = new FormInstance(
+            formInstance.CODE,
+            formInstance.TITLE,
+            formInstance.SUBTITLE,
+            formInstance.DESCRIPTION,
+            formInstance.ELEMENTS,
+            formInstance.KEYWORDS,
+            fields
+        );
+        formulariosAux.push(Formulario);
+      });   
+      setPublishedFormularios(formulariosAux);
+    }
     setIsLoading(false); 
   }
 
@@ -148,11 +168,13 @@ const ContextValues = () => {
   return {
     isLoading,
     formularios,
+    publishedFormularios,
     setFormularios,
     SaveForm, 
     UpdateOneForm,
     DeleteOneForm,
-    UpdateForms
+    UpdateForms,
+    UpdatePublishedForms
   }
 }
 

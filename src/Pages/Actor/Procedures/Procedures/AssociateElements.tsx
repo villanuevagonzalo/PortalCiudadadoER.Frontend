@@ -35,7 +35,7 @@ export const DA_Procedures_Associate = () => {
     const ref:any = useRef(null);
 
   const { UpdateProcedures, SaveProcedure, GetProcedureCategories, categories,setProcedures, procedures } = useContext(ProcedureContext);
-  const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const { SaveForm, UpdatePublishedForms, publishedFormularios, isLoading, DeleteOneForm} = useContext(FormContext);
   const {secretaria } = useContext(AuthContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
@@ -69,10 +69,10 @@ export const DA_Procedures_Associate = () => {
 
   useEffect(()=>{
     UpdateProcedures()
-    UpdateForms()
+    //UpdateForms()
+    UpdatePublishedForms()
     GetProcedureCategories()
   },[])
-
 
   useEffect(()=>{
     const updatedOptions = categories.map((forms) => ({
@@ -84,7 +84,7 @@ export const DA_Procedures_Associate = () => {
   },[categories])
 
   const addNewForm = () =>{
-    const updatedOptions = formularios.map((forms) => ({
+    const updatedOptions = publishedFormularios.map((forms) => ({
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
@@ -165,9 +165,8 @@ export const DA_Procedures_Associate = () => {
   }
 
   const handleSeeForm = (formToSee:string) => {
-
     const codigoBuscado = formToSee.split("-")[0].trim().toUpperCase(); // Limpiar espacios y convertir a mayúsculas.
-    const formularioEncontrado = formularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
+    const formularioEncontrado = publishedFormularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
     if (formularioEncontrado){
       setSeeOptions("seeForm"); 
       setFormToCheck(formularioEncontrado);
@@ -266,7 +265,6 @@ export const DA_Procedures_Associate = () => {
                   <p>Anexar formulario</p>
                   <div key={form.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "15px 0px 5px 0px" }}>  
                     <Element instance={form} className="flex-1" />
-                    
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', textAlign: "right" }}>
                         <HiOutlineMagnifyingGlass fontSize={"1.5rem"} onClick={() => { handleSeeForm(form.getValue())  }} />
                         <HiTrash fontSize={"1.5rem"} style={{ margin: "0px 2px 0px 0px" }} onClick={() => deleteForm(form)} />

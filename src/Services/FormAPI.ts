@@ -22,6 +22,9 @@ export class FormAPI {
     return this.baseService.get('/v0/admin/form-units')
   }
   
+  GetPublishedAll = async () => {
+    return this.baseService.get('/v0/admin/form-units/published')
+  }
 
   Update = async (params: {
     data:string
