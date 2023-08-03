@@ -37,7 +37,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
 
   const [proceduresAttached, setProcedureAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
-  const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+  //const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
 
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [oldDatosAdjuntos, setOldDatosAdjuntos]= useState <string []> ([])
@@ -170,8 +170,6 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
       setFormToCheck(formularioEncontrado);
     }
   }
-
-
 
   const initialValues = Object.entries(oldForms).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj }), {});
 
