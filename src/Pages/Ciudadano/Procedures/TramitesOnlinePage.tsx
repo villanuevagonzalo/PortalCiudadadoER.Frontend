@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { NuevosTramites } from '../../../Components/Elements/NuevosTramites';
 import { NavigatorSpacer, Spinner } from '../../../Components/Elements/StyledComponents';
 import { Button } from '../../../Components/Forms/Button';
@@ -8,6 +8,7 @@ import { LayoutColumns, LayoutSection, LayoutTitle, LayoutColumn } from '../../.
 import { DefaultFormState } from '../../../Data/DefaultValues';
 import { IFormState } from '../../../Interfaces/Data';
 import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';
+import { ProcedureContext } from '../../../Contexts/ProcedureContext';
 
 const data = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -17,16 +18,21 @@ const data = [
     {title: 'Rectificaión de datos por cambio de género', description:'Este trámite te permite modificar los datos de nombre y género registrados en tu DNI. ...'},
 ];
 
-
-
 const DataName = data.map((item:any)=>item.title);
 
 const FormRequiredFields = ["Tramites"];
 
 export const TramitesOnlinePage = () => {
 
+  const { UpdateProcedures, procedures , isLoading} = useContext(ProcedureContext);
+
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
+  const [searchProcedure, setSearchProcedure] = useState<string>()
+
+  useEffect(()=>{
+    UpdateProcedures()
+  },[])
 
   return(<><LayoutColumns className='gap-8 FlexSwitchMobile'>
     <LayoutColumn>
@@ -42,7 +48,8 @@ export const TramitesOnlinePage = () => {
               }}
           >
               <Form autoComplete="off">
-                  <FormikSearch name="Tramites" data={DataName} autoFocus/>
+                  <FormikSearch name="Tramites" label={"Filtra los trámites"} data={DataName} setValue={setSearchProcedure} autoFocus/>
+
                   <Button disabled={FormState.loading} type="submit">
                       {FormState.loading ? <Spinner /> : "Ir al Trámite"}
                   </Button>
@@ -58,6 +65,16 @@ export const TramitesOnlinePage = () => {
               <Button color="secondary" fullwidth={false}>Iniciar</Button>
           </div>
       </LayoutSection>)}
+      {procedures.map((item, index) => <LayoutSection key={index}>
+          <h1>{item.getTitle()}</h1>
+          <p>{item.getDescription()}</p>
+          <div className="text-right flex gap-4">
+          <NavigatorSpacer/> 
+              <Button color="gray" fullwidth={false}>+Información</Button>
+              <Button color="secondary" fullwidth={false}>Iniciar</Button>
+          </div>
+      </LayoutSection>)
+      }
     </LayoutColumn>
     <LayoutColumn>
     <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>

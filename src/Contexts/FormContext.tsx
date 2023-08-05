@@ -18,24 +18,16 @@ const ContextValues = () => {
   const [errors, setErrors] = useState<string>("");
 
   //create a form
-  const SaveForm = async (formulario: any, setFormState: Function, code:string, title:string) => {
+  const SaveForm = async (newFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string, title:string) => {
     setIsLoading(true)
-    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, formulario, setFormState);
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Create, newFormulario.getJSON(), setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const codeResponse = responseData[0].CODE;
       const titleResponse = responseData[0].TITLE
       if (status && codeResponse == code && titleResponse == title) {
-        const elements=JSON.parse(formulario.elements)
-        let newFields: FieldsType = [];
-        elements.map((componente: any, index: number) => {
-          const aux = new ElementInstance((index + 1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-          aux.update((componente.properties))
-          newFields.push(aux);
-        });
-        const nuevoFormulario = new FormInstance(formulario.code, formulario.title,formulario.subtitle, formulario.description, formulario.keywords, formulario.status, newFields)
-        setFormularios(prevState => ([...prevState, nuevoFormulario]));
+        setFormularios(prevState => ([...prevState, newFormulario]));
         setIsLoading(false)
         return true;
       }
@@ -49,24 +41,24 @@ const ContextValues = () => {
   }
 
   //update a form
-  const UpdateOneForm = async(formulario: any, setFormState: Function, code:string) => {
+  const UpdateOneForm = async(updateFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string) => {
     setIsLoading(true)
-    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Update, formulario, setFormState);
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.Update, updateFormulario.getJSON(), setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const codeResponse = responseData[0].CODE;
       if (status && codeResponse == code ) {
         setFormularios(prevFormularios => prevFormularios.filter(formulario =>formulario.getCode() !== code )); //delete the old form
-        const elements=JSON.parse(formulario.elements)
+       /* const elements=JSON.parse(formulario.elements)
         let newFields: FieldsType = [];
         elements.map((componente: any, index: number) => {
           const aux = new ElementInstance((index + 1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
           aux.update((componente.properties))
           newFields.push(aux);
         });
-        const nuevoFormulario = new FormInstance(formulario.code, formulario.title,formulario.subtitle, formulario.description, formulario.keywords, formulario.status, newFields)
-        setFormularios(prevState => ([...prevState, nuevoFormulario])); //set the new form
+        const nuevoFormulario = new FormInstance(formulario.code, formulario.title,formulario.subtitle, formulario.description, formulario.keywords, formulario.status, newFields)*/
+        setFormularios(prevState => ([...prevState, updateFormulario])); //set the new form
         setIsLoading(false)
         return true;
       }

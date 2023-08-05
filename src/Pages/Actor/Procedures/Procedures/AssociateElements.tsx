@@ -197,18 +197,18 @@ export const DA_Procedures_Associate = () => {
         <p>Asociar elementos al trámite</p>
         <h1>Buscar Trámites</h1>
         <Formik
-            innerRef={ref}
-            validateOnBlur={false}
-            validateOnChange={false}
-            enableReinitialize={true}
-            initialValues={initialValues}
-            onSubmit={async(values:any)=>{
+          innerRef={ref}
+          validateOnBlur={false}
+          validateOnChange={false}
+          enableReinitialize={true}
+          initialValues={initialValues}
+          onSubmit={async(values:any)=>{
               const test = {
                 Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
-              };
+            };
               console.log(test)
             }}
-            validate={(values:any) => ValidateForm(values, Fields)}
+          validate={(values:any) => ValidateForm(values, Fields)}
           >
               <Form autoComplete="off">
                   <LayoutStackedPanel>
@@ -237,9 +237,9 @@ export const DA_Procedures_Associate = () => {
             </Form>
         </Formik>
       </LayoutActorSection>
-      <LayoutActorSection>
+      <LayoutActorSection style={{margin:"5px 0px 15px 0px"}}>
         <h1><MdOutlineDataset />Cuerpo del trámite</h1>
-        En esta sección armamos los elementos del trámite online, para que el ciudadano complete e inicie el trámite.
+        <p>En esta sección armamos los elementos del trámite online, para que el ciudadano complete e inicie el trámite.</p>
       
         <h1><MdAssignment /> Formularios asociados al trámite</h1>
         <h2>Asociar con el/los formularios que sean requerido para este trámite</h2>

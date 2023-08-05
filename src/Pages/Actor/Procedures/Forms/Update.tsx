@@ -92,7 +92,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
 
   const guardarFormulario=async ()=> {
    const nuevoFormulario = new FormInstance(formBasicData.Code.getValue(), formBasicData.Title.getValue(), formBasicData.Subtitle.getValue(), formBasicData.Description.getValue(), formBasicData.Keywords.getValue(), estadoFormulario, fields)
-   const response = await UpdateOneForm(nuevoFormulario.getJSON(), setFormState, formBasicData.Code.value);
+   const response = await UpdateOneForm(nuevoFormulario, setFormState, formBasicData.Code.value);
    if (response){
     setCargadoCorrectamente(true)
     setCrear(false)

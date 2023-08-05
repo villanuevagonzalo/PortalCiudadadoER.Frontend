@@ -189,7 +189,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
        {crear && (<UpdateProcedurePopUp procedureTitle={procedure.getTitle()} create={updateProcedure} close={setCrear}  />)}
        {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={procedure.getTitle()} close={setErrorCarga}  /> )}
        {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
-       <LayoutActorSection style={{margin:"10px 0px 10px 0px"}}>
+       <LayoutActorSection style={{margin:"10px 0px 20px 0px"}}>
          <h1><MdOutlineNewLabel />Datos generales del Trámite</h1>
          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
             <h1>Título</h1>

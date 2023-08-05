@@ -60,18 +60,18 @@ export const DA_Procedures_Forms_Home = () => {
   const handleCopyForm = async (code:string)=> {
     if (code!=""){
       formToCheck!.setCode(code)
-      const response = await SaveForm(formToCheck!.getJSON(), setFormState, code, formToCheck?.getTitle()!);
+      const response = await SaveForm(formToCheck!, setFormState, code, formToCheck?.getTitle()!);
       if (response){
         setFormToCheck(undefined)
-          setCopy(false)
-          setNewCode("")
+        setCopy(false)
+        setNewCode("")
+        UpdateForms()
       }else{
         setErrorCarga(true)
       }
-
     }
-
   }
+
   useEffect(()=>{
     if (searchForm !== undefined &&  searchForm != '') {
       const cleanedSearchForm = searchForm.replace(/\s+\((título|keyword|COD.F)\)$/, '');
@@ -97,6 +97,7 @@ export const DA_Procedures_Forms_Home = () => {
   },[searchForm])
  
   useEffect(()=>{
+    console.log("veamos acá los filtered forms: "+JSON.stringify(formularios))
     setFilteredForms(formularios)
   },[formularios])
 

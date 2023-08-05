@@ -92,7 +92,7 @@ export const DA_Procedures_Forms_Create = () => {
     } else {
       if (isValidCode(formBasicData.Code.value)){
         const nuevoFormularioToBeSend = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
-        const response = await SaveForm(nuevoFormularioToBeSend.getJSON(), setFormState, formBasicData.Code.value, formBasicData.Title.value);
+        const response = await SaveForm(nuevoFormularioToBeSend, setFormState, formBasicData.Code.value, formBasicData.Title.value);
         if (response){
           setFields([])
             setFormBasicData({
