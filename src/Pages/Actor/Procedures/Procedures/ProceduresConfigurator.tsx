@@ -18,7 +18,6 @@ import { ProcedureInstance } from "../../../../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { BiTrash } from "react-icons/bi";
-import { ProcedureElementShow } from "../../../../Modules/FormElements/Components/ProcedureElementShow";
 import { Button } from "../../../../Components/Forms/Button";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { UpdateProcedure } from "./UpdateProcedures";
@@ -27,6 +26,7 @@ import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Form, Formik } from "formik";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
+import { BackOfficesProcedureElement } from "../../../../Modules/Actor/ProcedureElement";
 
 
 
@@ -95,7 +95,7 @@ export const DA_Procedures_Config = () => {
     if (seeOptions=="seeForm") {
       return (
         <>
-          <ProcedureElementShow procedure={procedureToCheck!}  />
+          <BackOfficesProcedureElement procedure={procedureToCheck!}  />
           <Button onClick={() => setSeeOptions("home")}>Volver a Configurador</Button>
         </>
       )

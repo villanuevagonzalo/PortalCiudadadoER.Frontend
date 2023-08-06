@@ -10,7 +10,7 @@ import { IFormState } from '../../../Interfaces/Data';
 import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';
 import { ProcedureContext } from '../../../Contexts/ProcedureContext';
 
-const data = [
+const dummyData = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
     {title: 'Reemplazo de Libreta Cívica o Libreta de Enrolamiento por nuevo DNI Tarjeta', description:'Es el trámite que te permite reemplazar la Libreta de Enrolamiento o Libreta Cívica por el nuevo DNI Digital en formato tarjeta (Documento Nacional de Identidad). este nuevo DNI Digital conserva el mismo número que tu libreta anterior. ...'},
     {title: 'Solicitud de un nuevo ejemplar de DNI por extravío, robo o deterioro', description: 'Es el trámite que te permite solicitar un nuevo ejemplar de DNI (Documento Nacional de Identidad) en formato tarjeta ante el extravío, robo o deterioro. El nuveo DNI que obtengas conservará el mismo número que el anterior. ...'},
@@ -18,7 +18,7 @@ const data = [
     {title: 'Rectificaión de datos por cambio de género', description:'Este trámite te permite modificar los datos de nombre y género registrados en tu DNI. ...'},
 ];
 
-const DataName = data.map((item:any)=>item.title);
+const DataName = dummyData.map((item:any)=>item.title);
 
 const FormRequiredFields = ["Tramites"];
 
@@ -56,7 +56,7 @@ export const TramitesOnlinePage = () => {
               </Form>
           </Formik>
       </LayoutSection>
-      {data.map((item, index) => <LayoutSection key={index}>
+      {dummyData.map((item, index) => <LayoutSection key={index}>
           <h1>{item.title}</h1>
           <p>{item.description}</p>
           <div className="text-right flex gap-4">

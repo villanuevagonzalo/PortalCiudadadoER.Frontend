@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { FormElement } from "../OLDTYPES";
-import { ElementPropsMap, ElementSchemaTypes, FormElementBases } from "../Types";
-import { CheckboxWrapper, ElementWrapper, InputWrapper } from "./StyledComponents";
-import { ElementInstance } from "../Class";
-import { Button } from "../../../Components/Forms/Button";
-import { FormikField } from "../../../Components/Forms/FormikField";
+import { FormElement } from "../FormElements/OLDTYPES";
+import { ElementPropsMap, ElementSchemaTypes, FormElementBases } from "../FormElements/Types";
+import { CheckboxWrapper, ElementWrapper, InputWrapper } from "../FormElements/Components/StyledComponents";
+import { ElementInstance } from "../FormElements/Class";
+import { Button } from "../../Components/Forms/Button";
+import { FormikField } from "../../Components/Forms/FormikField";
 
 interface Props{
   instance: ElementInstance<ElementSchemaTypes>,

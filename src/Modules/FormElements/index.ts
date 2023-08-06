@@ -1,5 +1,4 @@
 export * from './Class';
-export * from './Components/BaseElementEditor';
 export * from './Components/Element';
 export * from './Components/RenderTypes/Input';
 export * from './Components/StyledComponents';

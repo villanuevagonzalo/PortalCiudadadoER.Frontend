@@ -18,8 +18,8 @@ import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Pages } from "../../../../Routes/Pages";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp } from "../../../../Components/Forms/PopUpCards";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { AuthContext } from "../../../../Contexts/AuthContext";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 type Item = {
   title: string;
@@ -179,7 +179,7 @@ export const DA_Procedures_Associate = () => {
   if (seeOptions=="seeForm") {
     return (
       <>
-        <FormElementShow form={formToCheck!}  />
+        <BackOfficesFormElement form={formToCheck!}  />
         <div style={{margin:"10px 0px 15px 0px"}}>
         <Button onClick={() => setSeeOptions("home")}>Volver a Gestor de Trámite</Button>
         </div>

@@ -14,8 +14,7 @@ import { HiOutlineMagnifyingGlass, HiTrash } from "react-icons/hi2";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp, UpdateProcedurePopUp } from "../../../../Components/Forms/PopUpCards";
-import { ProcedureElementShow } from "../../../../Modules/FormElements/Components/ProcedureElementShow";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 interface Arguments {
     procedure:ProcedureInstance<ElementSchemaTypes>;
@@ -176,7 +175,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   if (seeOptions=="seeForm") {
     return (
       <>
-        <FormElementShow form={formToCheck!}  />
+        <BackOfficesFormElement form={formToCheck!}  />
         <div style={{margin:"10px 0px 15px 0px"}}>
         <Button onClick={() => setSeeOptions("home")}>Volver a Modificar Trámite</Button>
         </div>

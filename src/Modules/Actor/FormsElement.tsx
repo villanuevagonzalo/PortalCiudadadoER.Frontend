@@ -1,16 +1,16 @@
-import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../Types";
-import { ElementInstance, ElementSchema, FormInstance } from "../Class";
+import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../FormElements/Types";
+import { ElementInstance, ElementSchema, FormInstance } from "../FormElements/Class";
 import { ErrorMessage, Form, Formik, getIn, useField, useFormikContext } from "formik";
 import { MdOutlineDataset, MdOutlineNewLabel, MdRadioButtonUnchecked } from "react-icons/md";
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../Components/Layout/StyledComponents";
-import {Element} from './Element';
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
+import {Element} from './../FormElements/Components/Element';
 
 
 interface Arguments {
     form:FormInstance<ElementSchemaTypes>;
   }
 
-  export const FormElementShow: React.FC<Arguments> = ({form}) => {
+  export const BackOfficesFormElement: React.FC<Arguments> = ({form}) => {
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     return (
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>

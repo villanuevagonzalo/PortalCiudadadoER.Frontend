@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { FormElement, FormElementInstance } from "../OLDTYPES";
-import { ElementPropsMap, FormElementBases } from "../Types";
-import { ElementWrapper } from "./StyledComponents";
-import { FormWrapperInput } from "../../../Components/Forms/StyledComponents";
+import { FormElement, FormElementInstance } from "../FormElements/OLDTYPES";
+import { ElementPropsMap, FormElementBases } from "../FormElements/Types";
+import { FormWrapperInput } from "../../Components/Forms/StyledComponents";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
+import { ElementWrapper } from "../FormElements/Components/StyledComponents";
 
 interface Props{
   element: FormElement<keyof ElementPropsMap>;
@@ -14,16 +14,8 @@ export const ElementInstance: React.FC<Props> = ({ element }) => {
   const basetype = FormElementBases[element.type]
   const instance = new FormElementInstance(element.type, element.properties)
 
-  //const test = basetype.
-
-  //console.log((Object.hasOwn(basetype,"format")?basetype.format:null))
-
-  /*<label htmlFor={'test'}>{'label' in instance.properties?instance.properties.label:"test"}</label>*/
-  return (<>
-  
-  <FormWrapperInput>
-        <div>
-          
+  return (<><FormWrapperInput>
+        <div>        
           <input type="text"/>
           <div className="FormIcon"><basetype.icon /></div>
         </div>

@@ -11,7 +11,7 @@ export class FormAPI {
   Create = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/form-units', params,{
+    return this.baseService.post('/v0/backoffice/forms', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -19,17 +19,17 @@ export class FormAPI {
   }
 
   GetAll = async () => {
-    return this.baseService.get('/v0/admin/form-units')
+    return this.baseService.get('/v0/backoffice/forms')
   }
   
   GetPublishedAll = async () => {
-    return this.baseService.get('/v0/admin/form-units/published')
+    return this.baseService.get('/v0/backoffice/forms/published')
   }
 
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/form-units/update', params,{
+    return this.baseService.post('/v0/backoffice/forms/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -39,7 +39,7 @@ export class FormAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/form-units/delete', params)
+    return this.baseService.post('/v0/backoffice/forms/delete', params)
   }
   
 }

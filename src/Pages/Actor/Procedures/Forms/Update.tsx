@@ -11,13 +11,13 @@ import { BiBullseye, BiSave } from "react-icons/bi";
 import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
-import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
+import { ElementEditor } from "../../../../Modules/Actor/ElementEditor";
 import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, LoadingFormPopUp } from "../../../../Components/Forms/PopUpCards";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Spinner } from "../../../../Components/Elements/StyledComponents";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 
 interface Arguments {
@@ -106,7 +106,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
     const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
     return ( 
       <>
-        <FormElementShow form={nuevoFormulario}  />
+        <BackOfficesFormElement form={nuevoFormulario}  />
         <Button onClick={() => setVer(false)}>Volver a sección editar </Button>
       </>
     )

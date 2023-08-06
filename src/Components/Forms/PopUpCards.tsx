@@ -2,7 +2,7 @@ import { AiOutlineAlert, AiOutlineClose, AiOutlineNotification, AiOutlineStar, A
 import { NotificationFullSizeWrapper, Spinner } from "../Elements/StyledComponents"
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents"
 import { Button } from "./Button"
-import { ElementEditor } from "../../Modules/FormElements/Components/ElementEditor"
+import { ElementEditor } from "../../Modules/Actor/ElementEditor"
 import { ElementInstance, FormInstance, ProcedureInstance } from "../../Modules/FormElements/Class"
 import { ElementSchemaTypes } from "../../Modules/FormElements/Types"
 import { useEffect, useState } from "react"

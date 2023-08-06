@@ -16,12 +16,12 @@ import { FormContext } from "../../../../Contexts/FormContext";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { FormInstance } from "../../../../Modules/FormElements/Class";
 import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { FormUpdate } from "./Update";
 import { CopyFormPopUp, DeleteFormPopUp, FormCreateErrorPopUp } from "../../../../Components/Forms/PopUpCards";
 import { BiTrash } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxUpdate } from "react-icons/rx";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 
 const FormRequiredFields = ["Tramites"];
@@ -118,7 +118,7 @@ export const DA_Procedures_Forms_Home = () => {
     if (seeOptions=="seeForm") {
       return (
         <>
-          <FormElementShow form={formToCheck!}  />
+          <BackOfficesFormElement form={formToCheck!}  />
           <Button onClick={() => setSeeOptions("home")}>Volver</Button>
         </>
       )

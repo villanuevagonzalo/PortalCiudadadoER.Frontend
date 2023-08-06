@@ -1,18 +1,16 @@
 import { ButtonHTMLAttributes, ChangeEvent, HTMLAttributes, SetStateAction, useContext, useEffect, useState } from "react";
-import { FormElement, FormElementInstance } from "../OLDTYPES";
-import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../Types";
-import { ElementWrapper, BaseWrapperInfo, InputWrapper, ElementError, SelectWrapper, FileWrapper, CheckboxWrapper } from "./StyledComponents";
-import { FormWrapperInput } from "../../../Components/Forms/StyledComponents";
+import { FormElement, FormElementInstance } from "../FormElements/OLDTYPES";
+import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../FormElements/Types";
+import { FormWrapperInput } from "../../Components/Forms/StyledComponents";
 import { AiOutlineCheckCircle, AiOutlineEyeInvisible } from "react-icons/ai";
-import { ElementInstance, ElementSchema, FormInstance, ProcedureInstance } from "../Class";
+import { ElementInstance, ElementSchema, FormInstance, ProcedureInstance } from "../FormElements/Class";
 import { ErrorMessage, Form, Formik, getIn, useField, useFormikContext } from "formik";
-import { validationFunctions } from "../Validators";
+import { validationFunctions } from "../FormElements/Validators";
 import { MdOutlineDataset, MdOutlineNewLabel, MdRadioButtonUnchecked } from "react-icons/md";
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../Components/Layout/StyledComponents";
-import {Element} from './Element';
-import { Button } from "../../../Components/Forms/Button";
-import { FormContext } from "../../../Contexts/FormContext";
-import { FormElementShow } from "./FormsElement";
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
+import { Button } from "../../Components/Forms/Button";
+import { FormContext } from "../../Contexts/FormContext";
+import { BackOfficesFormElement } from "./FormsElement";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 
 
@@ -25,7 +23,7 @@ interface FormGenericData {
     title:string;
   }
 
-  export const ProcedureElementShow: React.FC<Arguments> = ({procedure}) => {
+  export const BackOfficesProcedureElement: React.FC<Arguments> = ({procedure}) => {
     
     const initialValues = Object.entries(procedure.getForms()).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.valueOf }), {});
     const { UpdateForms, formularios, isLoading} = useContext(FormContext);
@@ -77,7 +75,7 @@ interface FormGenericData {
     if (showForm){
         return (
             <>
-              <FormElementShow form={form!}  />
+              <BackOfficesFormElement form={form!}  />
               <Button style={{margin:"25px 0px 25px 0px"}} onClick={() => setShowForm(false)}>Volver a Tramite</Button>
             </>
           )
