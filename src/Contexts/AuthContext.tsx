@@ -53,6 +53,7 @@ const ContextValues = () => {
     const CurrentUserContact:IUserContact = getLSData('UserContact');
     const CurrentUserRol:IUserRol[] = getLSData('UserRol');
     const CurrentActorActions:any[] = getLSData('ActorActions');
+    const Secretaria:string = getLSData('Secretary')
     //console.log('CHECKTOKEN ',CurrentToken)
     if(CurrentToken?.token){
       let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
@@ -63,6 +64,7 @@ const ContextValues = () => {
         setUserContact(CurrentUserContact);
         setUserRol(CurrentUserRol);
         setActorActions(CurrentActorActions);
+        setSecretaria(Secretaria)
       } else{
         Logout();
       }
@@ -84,6 +86,7 @@ const ContextValues = () => {
     delLSData("UserContact");
     delLSData("UserRol");
     delLSData("ActorActions");
+    delLSData("Secretary");
     setSecretaria("")
   }
 
@@ -102,6 +105,7 @@ const ContextValues = () => {
     delLSData("UserContact");
     delLSData("UserRol");
     delLSData("ActorActions");
+    delLSData("Secretary");
 
     const location = REACTENV.REACT_APP_PROJECT_ADMIN+"/" ;
     window.location.href = location;
@@ -128,6 +132,7 @@ const ContextValues = () => {
       setLSData("UserData", NewUserData);
       setLSData("UserContact", NewUserContact || DefaultUserContact);
       setLSData("ActorActions", data.data || []);
+      setLSData("Secretary", data.secretaria)
       setSecretaria(data.secretaria)
 
     } else{ Logout2(); }
