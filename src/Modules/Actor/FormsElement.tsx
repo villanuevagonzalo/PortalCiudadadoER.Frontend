@@ -14,7 +14,7 @@ interface Arguments {
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     return (
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
-            <LayoutSection>
+            <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
                 {/*<h2 style={{textAlign:"center"}}> {form.getTitle()} </h2>
                 <h2>  {form.getSubtitle()} </h2>
@@ -39,7 +39,7 @@ interface Arguments {
 
             </LayoutSection>    
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
-                <LayoutSection>
+                <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineDataset />Campos de formulario</h1>
                     <Formik
                         validateOnBlur={false}

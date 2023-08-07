@@ -27,7 +27,7 @@ export class ProcedureAPI {
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/procedures/backoffice/update', params,{
+    return this.baseService.post('/v0/backoffice/procedures/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -37,11 +37,11 @@ export class ProcedureAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/procedures/backoffice/delete', params)
+    return this.baseService.post('/v0/backoffice/procedures/delete', params)
   }
 
   GetCategories = async () => {
-    return this.baseService.get('/v0/procedures/backoffice/categories')
+    return this.baseService.get('/v0/backoffice/procedures/categories')
   }
 
 }

@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import { FormikFieldDummy } from "../../../../Components/Forms/FormikFieldDummy";
 import { FormikField } from "../../../../Components/Forms/FormikField";
 import { FormikCheckbox } from "../../../../Components/Forms/FormikCheckbox";
-import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset } from "react-icons/md";
+import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdVerifiedUser } from "react-icons/md";
 import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Button } from "../../../../Components/Forms/Button";
@@ -44,6 +44,7 @@ export const DA_Procedures_Associate = () => {
   const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [estadoProcedure, setEstadoProcedure] = useState<string>('');
+  const [userLevel, setUserLevel]= useState<string>('level_3');
   const [theme, setTheme] = useState <ElementInstance<ElementSchemaTypes>>()
 
   const [alertMessage, setAlertMessage] = useState("")
@@ -112,6 +113,7 @@ export const DA_Procedures_Associate = () => {
   }
 
   const createProcedure = async () =>{
+    console.log("secretarìa_ "+secretaria)
     if(estadoProcedure==''){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un estado inicial al trámite")
@@ -146,7 +148,8 @@ export const DA_Procedures_Associate = () => {
         secretaria,
         estadoProcedure,
         theme!.getValue(),
-        titleAttachedValues
+        titleAttachedValues,
+        userLevel
       );
       const response = await SaveProcedure(newProcedureToBeSend, setFormState, Fields.Select_Procedure.getValue());
       if (response) {
@@ -326,6 +329,19 @@ export const DA_Procedures_Associate = () => {
                   }
                   <p></p>
                   <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
+                  <h1><MdVerifiedUser />Nivel de ciudadano</h1>
+                  <h4>Nivel de ciudadano requerido para realizar este trámite</h4>
+                    <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
+                      <select value={userLevel} 
+                        onInput={(e) => setUserLevel((e.target as HTMLInputElement).value)} 
+                        >
+                        <option value="level_3">Nivel 3</option>
+                        <option value="level_2">Nivel 2</option>
+                      </select>
+                      </SelectWrapper >
+                    </div>
+                  <p></p>
+                  <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
                   <h1><MdMore /> Estado</h1>
                     <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
                       <select value={estadoProcedure} 
@@ -338,7 +354,6 @@ export const DA_Procedures_Associate = () => {
                         <option value="Publicado">Publicado</option>
                       </select>
                       </SelectWrapper >
-  
                     </div>
                   <LayoutStackedPanel className="mt-3">
                     <LayoutSpacer/>

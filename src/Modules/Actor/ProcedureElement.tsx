@@ -6,7 +6,7 @@ import { AiOutlineCheckCircle, AiOutlineEyeInvisible } from "react-icons/ai";
 import { ElementInstance, ElementSchema, FormInstance, ProcedureInstance } from "../FormElements/Class";
 import { ErrorMessage, Form, Formik, getIn, useField, useFormikContext } from "formik";
 import { validationFunctions } from "../FormElements/Validators";
-import { MdOutlineDataset, MdOutlineNewLabel, MdRadioButtonUnchecked } from "react-icons/md";
+import { MdCheck, MdOutlineDataset, MdOutlineNewLabel, MdRadioButtonUnchecked, MdVerifiedUser } from "react-icons/md";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
 import { Button } from "../../Components/Forms/Button";
 import { FormContext } from "../../Contexts/FormContext";
@@ -82,7 +82,7 @@ interface FormGenericData {
     }else{
         return (
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
-                <LayoutSection>
+                <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineNewLabel />Datos Generales del Trámite</h1>
                     {/*<h2 style={{textAlign:"center"}}> {procedure.getTitle()} </h2>
                     <h2> Temática:v{procedure.getTheme()} </h2>
@@ -108,7 +108,7 @@ interface FormGenericData {
                
                  </LayoutSection>    
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
-                <LayoutSection>
+                <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineDataset />Campos del trámite</h1>
     
                     <Formik
@@ -148,10 +148,36 @@ interface FormGenericData {
                 </div>
                 
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
-    
+                <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
+                    <h1><MdVerifiedUser />Datos de estado del Trámite</h1>
+              
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1><MdCheck />Estado del tŕamite</h1>
+                        <p>{procedure.getState()}</p>
+                    </LayoutSection>
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1><MdCheck />Nivel de ciudadano</h1>
+                        <p>Nivel de ciudadano requerido para realizar este trámite</p>
+                        <p>{traducirNivel(procedure.getCitizenLevel())}</p>
+                    </LayoutSection>
+                                   
+                 </LayoutSection>
                 </div>
             </div>
         )
     }
     
+  }
+
+  function traducirNivel(nivel: string|undefined): string {
+    console.log("veamos el nivel: "+nivel)
+    switch (nivel) {
+      case 'level_2':
+        return 'Nivel 2';
+      case 'level_3':
+        return 'Nivel 3';
+      // Puedes agregar más casos según tus necesidades
+      default:
+        return 'Error'; // Devuelve el mismo valor si no coincide con 'level_2' o 'level_3'
+    }
   }

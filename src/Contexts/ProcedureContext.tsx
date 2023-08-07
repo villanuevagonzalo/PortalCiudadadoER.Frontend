@@ -3,8 +3,8 @@ import { ElementInstance, ElementSchema, FormInstance, ProcedureInstance } from 
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import axios, { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
-import { FormAPI } from "../Services/FormAPI";
-import { ProcedureAPI } from "../Services/ProcedureAPI";
+import { FormAPI } from "../Services/ActorFormAPI";
+import { ProcedureAPI } from "../Services/ActorProcedureAPI";
 
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
@@ -87,14 +87,16 @@ const ContextValues = () => {
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 
       const mappedArray = FormsObj.map((procedureInstance: any) => {
+        console.log("ASDF: "+JSON.stringify(procedureInstance))
         const newProcedures = new ProcedureInstance(
           JSON.parse(procedureInstance.FORMS),
           procedureInstance.TITLE,
-          procedureInstance.SECRETARY,
           procedureInstance.DESCRIPTION,
+          procedureInstance.SECRETARY,
           procedureInstance.STATE,
           procedureInstance.THEME,
           JSON.parse(procedureInstance.ATTACHMENTS),
+          procedureInstance.CITIZEN_LEVEL,
           procedureInstance.ID
         );
        

@@ -146,9 +146,10 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   private state:string; //los estados pueden ser borrador, publicado, etc.
   private theme:string; //temática
   private forms: string [];
-  private attachments:string []
+  private attachments:string [];
+  private citizenLevel?: string;
 
-  constructor(forms: string[], title: string, description: string, secretary:string, state: string, theme: string, attachments: string[], id?: number) {
+  constructor(forms: string[], title: string, description: string, secretary:string, state: string, theme: string, attachments: string[], citizenLevel?: string, id?: number) {
     this.title = title;
     this.description = description;
     this.secretary = secretary;
@@ -160,6 +161,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     // Asignar el valor del parámetro id solo si se proporciona
     if (id !== undefined) {
       this.id = id;
+    }
+    if(citizenLevel !== undefined){
+      this.citizenLevel=citizenLevel;
     }
   }
 
@@ -186,6 +190,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   }
   addAttachments (attachments:string []){
     this.attachments=attachments
+  }
+  addCitizenLevel (citizenLevel:string){
+    this.citizenLevel=citizenLevel;
   }
   getId(){
     return this.id;
@@ -217,6 +224,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   getAttachments (){
     return this.attachments;
   }
+  getCitizenLevel(){
+    return this.citizenLevel;
+  }
   getJSON (){
     const ProcedureData = {
       "title": this.title,
@@ -226,6 +236,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
       "theme": this.theme,
       "forms": JSON.stringify(this.forms),
       "attachments": JSON.stringify(this.attachments),
+      "citizen_level": this.citizenLevel,
       ...(this.id !== undefined && { "id": this.id })
     };
     

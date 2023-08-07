@@ -5,7 +5,7 @@ import { AiOutlineCheckCircle, AiOutlineDelete, AiOutlinePlus, AiOutlineSave } f
 import { Link } from "react-router-dom";
 import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm, ProcedureInstance, FormInstance, SelectWrapper } from "../../../../Modules/FormElements";
 import { Form, Formik } from "formik";
-import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
+import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel, MdVerifiedUser } from "react-icons/md";
 import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Button } from "../../../../Components/Forms/Button";
@@ -42,6 +42,8 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   const [oldDatosAdjuntos, setOldDatosAdjuntos]= useState <string []> ([])
 
   const [estadoProcedure, setEstadoProcedure] = useState<string>('Borrador');
+  const [userLevel, setUserLevel]= useState<string>('level_3');
+
   const [alertMessage, setAlertMessage] = useState("")
   const [showAlert, setShowAlert] = useState(false)
   const [crear, setCrear] = useState(false)
@@ -66,6 +68,9 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
       listaAdjuntos.push(element)
     });
     setOldDatosAdjuntos(listaAdjuntos);
+    setUserLevel(procedure.getCitizenLevel()!)
+    setEstadoProcedure(procedure.getState())
+
   }, []);
   
 
@@ -148,6 +153,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             estadoProcedure,
             procedure.getTheme(),
             titleAttachedValues,
+            userLevel,
             procedure.getId()
         );
         const response = await UpdateOneProcedure(newProcedureToBeSend, setFormState, procedure.getTitle());
@@ -323,7 +329,20 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                    </div>
                    )}
    
-                   <p></p>
+                  <p></p>
+                  <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
+                  <h1><MdVerifiedUser />Nivel de ciudadano</h1>
+                  <h4>Nivel de ciudadano requerido para realizar este trámite</h4>
+                    <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
+                      <select value={userLevel} 
+                        onInput={(e) => setUserLevel((e.target as HTMLInputElement).value)} 
+                        >
+                        <option value="level_3">Nivel 3</option>
+                        <option value="level_2">Nivel 2</option>
+                      </select>
+                      </SelectWrapper >
+                    </div>
+                  <p></p>
                    <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
                      <h1><MdMore /> Estado</h1>
                      <SelectWrapper >
