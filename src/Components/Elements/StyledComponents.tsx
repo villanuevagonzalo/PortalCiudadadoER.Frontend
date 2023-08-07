@@ -394,6 +394,23 @@ DivOutlined.defaultProps = {
   open: true
 };
 
+export const DivOutlined2 = styled.div<{ open?: boolean }>`
+  align-items:center;
+  border-radius:0.5rem;
+  color: var(--${props => (props.color ? props.color : 'error')});
+  cursor:pointer;
+  display:${props => props.open?'flex':'none'};
+  font-size: 1rem;
+  justify-content:center;
+  padding:1rem;
+  text-align:center;
+  width:100%;
+`
+
+DivOutlined2.defaultProps = {
+  open: true
+};
+
 
 export const Container = styled.div`
   align-items: center;
