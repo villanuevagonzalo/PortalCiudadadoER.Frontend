@@ -89,17 +89,17 @@ const ContextValues = () => {
   }
 
   const GetScopeByID = async (notification_id:number, setFormState:Function) => {
-    setFormState(true);
+    //setFormState(true);
     try {
     const response:AxiosResponse = await AxiosNotificationAPI.GetScopeByID({ notification_id });
     if(response.data){
       //setUserNotifications(prevState => ([...prevState, data]));
     }
-    setFormState(false);
+    //setFormState(false);
     return response;
 
   } catch (error) {
-    setFormState(false);
+   // setFormState(false);
     console.error('Error al obtener los datos:', error);
     //throw error;
   }

@@ -40,7 +40,7 @@ export const DA_Notifications_Create = () =>{
   const [ Deparments, setDeparments ] = useState<any[]>([]);
   const [ Localities, setLocalities ] = useState<any[]>([]);
 
-  const Fields: {[key: string]: ElementInstance<ElementSchemaTypes>} = {
+  const [Fields, setFields] = useState( {
     Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título'},["isRequired"])),
     Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_max:100},["isRequired"])),
     StartDate: new ElementInstance("StartDate",new ElementSchema('DATE',{label:'Fecha desde'},["isRequired"]),null),
@@ -61,7 +61,7 @@ export const DA_Notifications_Create = () =>{
     AgeTo: new ElementInstance("AgeTo",new ElementSchema('NUMBER',{label:'Edad hasta',value_min:1, value_max:120})),
     Department: new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
     Locality: new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
-  }
+  })
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 

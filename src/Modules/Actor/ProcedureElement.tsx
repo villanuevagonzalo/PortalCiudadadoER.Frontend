@@ -84,11 +84,6 @@ interface FormGenericData {
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineNewLabel />Datos Generales del Trámite</h1>
-                    {/*<h2 style={{textAlign:"center"}}> {procedure.getTitle()} </h2>
-                    <h2> Temática:v{procedure.getTheme()} </h2>
-                    <h2> Descripción:v{procedure.getDescription()} </h2>
-                    <h2> Organismo: {procedure.getSecretary()} </h2>*/}
-
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                         <h1>Título</h1>
                         <p>{procedure.getTitle()}</p>

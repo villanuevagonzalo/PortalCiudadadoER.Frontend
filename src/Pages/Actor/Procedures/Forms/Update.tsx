@@ -127,7 +127,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
         {cargadoCorrectamente && (<FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />)}
         {errorCarga && (<FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />)}
         {completarCampos && (<FormCreateCompleteFieldsPopUp close={setCompletarCampos} crear={setCrear} /> )}
-        <LayoutSection>
+        <LayoutSection  style={{margin:"5px 0px 15px 0px"}}>
           <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
           <Formik
             validateOnBlur={false}
@@ -151,7 +151,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
           </Form>
           </Formik>
         </LayoutSection>
-        <LayoutSection>
+        <LayoutSection  style={{margin:"5px 0px 15px 0px"}}>
           <h1><MdOutlineDataset />Administrador de Campos</h1>
           <LayoutStackedPanel>
             <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>

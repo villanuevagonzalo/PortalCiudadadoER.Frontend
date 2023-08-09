@@ -9,6 +9,9 @@ import { DefaultFormState } from '../../../Data/DefaultValues';
 import { IFormState } from '../../../Interfaces/Data';
 import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';
 import { ProcedureContext } from '../../../Contexts/ProcedureContext';
+import { ProcedureInstance } from '../../../Modules/FormElements/Class';
+import { ElementSchemaTypes } from '../../../Modules/FormElements/Types';
+import { CiudadanoProcedureElement } from '../../../Modules/Ciudadano/ProcedureElement';
 
 const dummyData = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -29,59 +32,83 @@ export const TramitesOnlinePage = () => {
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
   const [searchProcedure, setSearchProcedure] = useState<string>()
+  const [procedureInstance, setProcedureInstance] = useState<ProcedureInstance<ElementSchemaTypes>>();
+  const [render, setRender] = useState("home")
 
   useEffect(()=>{
     UpdateProcedures()
   },[])
 
-  return(<><LayoutColumns className='gap-8 FlexSwitchMobile'>
-    <LayoutColumn>
-      <LayoutTitle>
-          Trámites on line
-      </LayoutTitle>
-      <LayoutSection>
-          <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
-              initialValues={FieldValues}
-              validationSchema={formGetValidations(FormRequiredFields)}
-              onSubmit={async (values: any) => {
-              
-              }}
-          >
-              <Form autoComplete="off">
-                  <FormikSearch name="Tramites" label={"Filtra los trámites"} data={DataName} setValue={setSearchProcedure} autoFocus/>
+  useEffect(()=>{
+    if (procedureInstance!=null && procedureInstance!=undefined){
+        setRender("procedure")
+    }
+  },[procedureInstance])
 
-                  <Button disabled={FormState.loading} type="submit">
-                      {FormState.loading ? <Spinner /> : "Ir al Trámite"}
-                  </Button>
-              </Form>
-          </Formik>
-      </LayoutSection>
-      {dummyData.map((item, index) => <LayoutSection key={index}>
-          <h1>{item.title}</h1>
-          <p>{item.description}</p>
-          <div className="text-right flex gap-4">
-          <NavigatorSpacer/> 
-              <Button color="gray" fullwidth={false}>+Información</Button>
-              <Button color="secondary" fullwidth={false}>Iniciar</Button>
-          </div>
-      </LayoutSection>)}
-      {procedures.map((item, index) => <LayoutSection key={index}>
-          <h1>{item.getTitle()}</h1>
-          <p>{item.getDescription()}</p>
-          <div className="text-right flex gap-4">
-          <NavigatorSpacer/> 
-              <Button color="gray" fullwidth={false}>+Información</Button>
-              <Button color="secondary" fullwidth={false}>Iniciar</Button>
-          </div>
-      </LayoutSection>)
-      }
-    </LayoutColumn>
-    <LayoutColumn>
-    <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
-      <LayoutTitle className="mt-4 mb-2">
-          Nuevos Tramites
-      </LayoutTitle>
-    <NuevosTramites />
-    </LayoutColumn>
-  </LayoutColumns></>);
+  const seeProcedure = (idBuscado:number) =>{
+    const foundProcedure = procedures.find(procedure => procedure.getId() === idBuscado);
+    setProcedureInstance(foundProcedure)
+  }
+
+  if (render=="procedure"){
+
+    return (
+        <CiudadanoProcedureElement procedureInstance={procedureInstance!} procedureData={procedureInstance!} />
+    )
+
+  }else{ 
+
+    return(<><LayoutColumns className='gap-8 FlexSwitchMobile'>
+        <LayoutColumn>
+        <LayoutTitle>
+            Trámites on line
+        </LayoutTitle>
+        <LayoutSection>
+            <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
+                initialValues={FieldValues}
+                validationSchema={formGetValidations(FormRequiredFields)}
+                onSubmit={async (values: any) => {
+                
+                }}
+            >
+                <Form autoComplete="off">
+                    <FormikSearch name="Tramites" label={"Filtra los trámites"} data={DataName} setValue={setSearchProcedure} autoFocus/>
+
+                    <Button disabled={FormState.loading} type="submit">
+                        {FormState.loading ? <Spinner /> : "Ir al Trámite"}
+                    </Button>
+                </Form>
+            </Formik>
+        </LayoutSection>
+        {dummyData.map((item, index) => <LayoutSection key={index}>
+            <h1>{item.title}</h1>
+            <p>{item.description}</p>
+            <div className="text-right flex gap-4">
+            <NavigatorSpacer/> 
+                <Button color="gray" fullwidth={false}>+Información</Button>
+                <Button color="secondary" fullwidth={false}>Iniciar</Button>
+            </div>
+        </LayoutSection>)}
+        {procedures.map((item, index) => <LayoutSection key={index}>
+            <h1>{item.getTitle()}</h1>
+            <p>{item.getDescription()}</p>
+            <div className="text-right flex gap-4">
+            <NavigatorSpacer/> 
+                <Button color="gray" fullwidth={false}>+Información</Button>
+                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
+            </div>
+        </LayoutSection>)
+        }
+        </LayoutColumn>
+        <LayoutColumn>
+        <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
+        <LayoutTitle className="mt-4 mb-2">
+            Nuevos Tramites
+        </LayoutTitle>
+        <NuevosTramites />
+        </LayoutColumn>
+    </LayoutColumns></>);
+    }
 }
+
+
