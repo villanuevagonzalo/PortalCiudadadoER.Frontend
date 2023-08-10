@@ -97,7 +97,6 @@ export const DA_Procedures_Forms_Home = () => {
   },[searchForm])
  
   useEffect(()=>{
-    console.log("veamos acá los filtered forms: "+JSON.stringify(formularios))
     setFilteredForms(formularios)
   },[formularios])
 

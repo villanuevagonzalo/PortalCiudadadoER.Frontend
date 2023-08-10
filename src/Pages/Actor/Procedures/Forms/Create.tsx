@@ -81,39 +81,80 @@ export const DA_Procedures_Forms_Create = () => {
     return !regex.test(value); // Retorna true si no hay coincidencias (es válido), false si hay coincidencias (no es válido)
   };
 
-  const guardarFormulario = async () => {
-    const codeFieldEmpty = formBasicData.Code.value === "" || formBasicData.Code.value === undefined || formBasicData.Code.value === null;
-    const titleFieldEmpty = formBasicData.Title.value === "" || formBasicData.Title.value === undefined || formBasicData.Title.value === null;
-    const subtitleFieldEmpty = formBasicData.Subtitle.value === "" || formBasicData.Subtitle.value === undefined || formBasicData.Subtitle.value === null;
-    const descriptionFieldEmpty = formBasicData.Description.value === "" || formBasicData.Description.value === undefined || formBasicData.Description.value === null;
-    const keywordsFieldEmpty = formBasicData.Keywords.value === "" || formBasicData.Keywords.value === undefined || formBasicData.Keywords.value === null;
-    if (codeFieldEmpty || titleFieldEmpty || subtitleFieldEmpty || descriptionFieldEmpty || keywordsFieldEmpty) {
-      setCompletarCampos(true)
-    } else {
-      if (isValidCode(formBasicData.Code.value)){
-        const nuevoFormularioToBeSend = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
-        const response = await SaveForm(nuevoFormularioToBeSend, setFormState, formBasicData.Code.value, formBasicData.Title.value);
-        if (response){
-          setFields([])
-            setFormBasicData({
-              Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired","containsSpacesOrCommas"])),
-              Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
-              Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
-              Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
-              Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
-            })
-            setCargadoCorrectamente(true)
-            setCrear(false)
-        }else{
-          setErrorCarga(true)
+  //check if all elements has a label
+  const checkElementsNames = (fields: ElementInstance<ElementSchemaTypes>[]): boolean => {
+    const hasInvalidLabel = fields.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+        const jsonString = JSON.stringify(element.properties);
+        if (element.properties.label === "" || element.properties.label === "Ingresá el Título") {
+            setShowAlert(true);
+            setAlertMessage("Debe ingresar un título a todos los campos del formulario");
+            return true; // Elemento inválido encontrado, retornar true
         }
-      }else{
-        setCrear(false)
-        setShowAlert(true)
-        setAlertMessage("Código de referencia no debe contener espacios, comas o guiones")
+        return false; // Elemento válido, retornar false
+    });
+    return !hasInvalidLabel; // Retorna false si se encontró un elemento inválido, true si todos son válidos
+  };
 
+  const setDefaultValuesToElements = (fields: ElementInstance<ElementSchemaTypes>[]) => {
+    fields.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+        element.setValue(""); // Establecer el valor del elemento a una cadena vacía
+    });
+};
+
+  const processForm = async () => {
+    setDefaultValuesToElements(fields);
+    const nuevoFormularioToBeSend = new FormInstance(
+        formBasicData.Code.value,
+        formBasicData.Title.value,
+        formBasicData.Subtitle.value,
+        formBasicData.Description.value,
+        formBasicData.Keywords.value,
+        estadoFormulario,
+        fields
+    );
+    return nuevoFormularioToBeSend; // Devolver la instancia de nuevoFormularioToBeSend
+  };
+
+
+
+  const guardarFormulario = async () => {
+    const elementsName = checkElementsNames(fields)
+    if (elementsName){
+      const codeFieldEmpty = formBasicData.Code.value === "" || formBasicData.Code.value === undefined || formBasicData.Code.value === null;
+      const titleFieldEmpty = formBasicData.Title.value === "" || formBasicData.Title.value === undefined || formBasicData.Title.value === null;
+      const subtitleFieldEmpty = formBasicData.Subtitle.value === "" || formBasicData.Subtitle.value === undefined || formBasicData.Subtitle.value === null;
+      const descriptionFieldEmpty = formBasicData.Description.value === "" || formBasicData.Description.value === undefined || formBasicData.Description.value === null;
+      const keywordsFieldEmpty = formBasicData.Keywords.value === "" || formBasicData.Keywords.value === undefined || formBasicData.Keywords.value === null;
+      if (codeFieldEmpty || titleFieldEmpty || subtitleFieldEmpty || descriptionFieldEmpty || keywordsFieldEmpty) {
+        setCompletarCampos(true)
+      } else {
+        if (isValidCode(formBasicData.Code.value)){
+          setDefaultValuesToElements(fields)
+          const nuevoFormularioToBeSend = await processForm(); // Esperar a que processForm() termine y obtener el valor de nuevoFormularioToBeSend
+          const response = await SaveForm(nuevoFormularioToBeSend, setFormState, formBasicData.Code.value, formBasicData.Title.value);
+          if (response){
+            setFields([])
+              setFormBasicData({
+                Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired","containsSpacesOrCommas"])),
+                Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
+                Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
+                Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
+                Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
+              })
+              setCargadoCorrectamente(true)
+              setCrear(false)
+          }else{
+            setErrorCarga(true)
+          }
+        }else{
+          setCrear(false)
+          setShowAlert(true)
+          setAlertMessage("Código de referencia no debe contener espacios, comas o guiones")
+        }
       }
-  }
+    }else{
+      setCrear(false)
+    }   
 }
 
   if (ver) {
