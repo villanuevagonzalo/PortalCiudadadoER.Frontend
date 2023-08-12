@@ -47,7 +47,8 @@ interface createFormProps{
   close:Function
 }
 export const CreateFormPopUp: React.FC<createFormProps> = ({ formTitle, create, close})  => {
-             
+  
+  const [spinner, setSpinner] = useState(false)
   return <NotificationFullSizeWrapper>
       <LayoutSection className="content">
         <div className="header">
@@ -59,11 +60,12 @@ export const CreateFormPopUp: React.FC<createFormProps> = ({ formTitle, create, 
           <AiOutlineAlert fontSize={"2rem"} color="red" style={{margin:"0px 10px 0px 0px"}} />
           <h2 >¿Está seguro de crear el formulario?</h2>
         </div>
+        {spinner&& <><br /><Spinner color='secondary' size="3rem" /><br /></>}
         <LayoutStackedPanel className="mt-2">
           <LayoutSpacer/>
           <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
             <Button onClick={()=>close()}><BiArrowBack/>Volver</Button>
-            <Button onClick={()=>create()}>Guardar <BiSave/></Button>
+            <Button onClick={()=>{create(); setSpinner(true)}}>Guardar <BiSave/></Button>
           </div>
         </LayoutStackedPanel>
       </LayoutSection>

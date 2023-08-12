@@ -144,8 +144,6 @@ const ContextValues = () => {
   const GetScope = async (data:any, setFormState:Function) => await handleResponse(AxiosNotificationAPI.GetScope, data, setFormState);
 
 
-
-
   const GetAttachments = async (data:any, setFormState:Function) => {
 
     setFormState(true);

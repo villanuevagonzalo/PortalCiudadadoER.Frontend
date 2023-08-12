@@ -8,14 +8,19 @@ export class ProcedureAPI {
     this.baseService = axiosBase;
   }
 
+   //Get published procedures
+  GetPublished = async () => {
+    return this.baseService.get('/v0/dashboard/procedures/published')
+  }
 
+  //get all user procedures, the procedures that are in process
   GetAll = async () => {
     return this.baseService.get('/v0/dashboard/procedures')
   }
   
-
+  //create a new procedure
   Create = async (params: {
-    data:string
+    procedure_unit_id:number
   }) => {
     return this.baseService.post('/v0/dashboard/procedures', params,{
       headers: {
@@ -37,7 +42,7 @@ export class ProcedureAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/procedures/backoffice/delete', params)
+    return this.baseService.post('/v0/dashboard/procedures/delete', params)
   }
 
 

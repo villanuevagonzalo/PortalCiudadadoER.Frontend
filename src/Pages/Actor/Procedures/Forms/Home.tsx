@@ -100,7 +100,6 @@ export const DA_Procedures_Forms_Home = () => {
     setFilteredForms(formularios)
   },[formularios])
 
-  
   const DataTitle = useMemo(() => formularios.map((item:any) => item.title + " (título)"), [formularios]);
   const DataKeywords = useMemo(() => {
     return formularios.flatMap((item:any) => {
