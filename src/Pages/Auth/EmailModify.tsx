@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { AiOutlineArrowLeft, AiOutlineMail } from 'react-icons/ai';
 import moment from 'moment';
@@ -21,9 +21,11 @@ const FormRequiredFields = [
 
 export const Auth_EmailModify = () => {
 
-  const { EmailChange, userData } = useContext(AuthContext);
+  const { UserEmailChange, userData } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
+  const location = useLocation();
+  const cuilFromURL = new URLSearchParams(location.search).get('cuil');
 
   let errors = FormState.error.split(' | ');
 
@@ -46,8 +48,8 @@ export const Auth_EmailModify = () => {
           initialValues={FieldValues}
           validationSchema={formGetValidations(FormRequiredFields)}
           onSubmit={(values:any) => {
-            EmailChange({
-              cuil: userData.cuil,
+            UserEmailChange({
+              cuil: cuilFromURL,
               new_email: values.Email
             }, setFormState)
           }}

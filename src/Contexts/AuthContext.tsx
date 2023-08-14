@@ -136,8 +136,7 @@ const ContextValues = () => {
 
   const Login = async (data: any, setFormState:Function) => {
 
-    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserLogin, data, setFormState);
-
+    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserLogin, data, setFormState);  
     if(response.data){
       const NewUserData = response.data.data.user_data.user;
       const NewUserContact = response.data.data.user_data.user_contact;
@@ -197,6 +196,8 @@ const ContextValues = () => {
     return response;
   }
 
+  const UserEmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserEmailChange, data, setFormState);
+
   const PasswordReset = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordReset, data, setFormState);
   const PasswordUpdate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordSave, data, setFormState);
 
@@ -220,6 +221,7 @@ const ContextValues = () => {
     isLoading, isLogged, authToken, userData, userContact, userRol, secretaria,
     Signup, Login, Logout, CheckToken, SaveToken, Redirect, Logout2,
     UserGetData, SaveData, UserNameChange, actorActions,
+    UserEmailChange,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
     AFIP_getURL, AFIP_checkToken,

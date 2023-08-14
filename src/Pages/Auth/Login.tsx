@@ -19,6 +19,7 @@ export const Auth_Login = () => {
   const { Login } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
+  const [cuilValue, setCuilValue] = useState('');
 
   return (<>
     <DivTitle className="mt-5">Iniciar Sesión</DivTitle>
@@ -37,6 +38,7 @@ export const Auth_Login = () => {
           password: values.Password,
           captcha: values.Captcha,
         }, setFormState);
+        setCuilValue(values.CUIL);
       }}
     >
       <Form autoComplete="off">
@@ -53,7 +55,7 @@ export const Auth_Login = () => {
         {FormState.error}
       </DivOutlined>
       <DivOutlined2 open={FormState.error ? true : false}>
-        <Link to={Pages.AUTH_EMAILMODIFY}><Button disabled={FormState.loading} color="gray">
+        <Link to={`${Pages.AUTH_EMAILMODIFY}?cuil=${cuilValue}`}><Button disabled={FormState.loading} color="gray">
             Modificar mi correo electrónico
         </Button></Link>
       </DivOutlined2>
