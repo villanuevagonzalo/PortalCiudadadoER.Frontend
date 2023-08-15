@@ -1,6 +1,6 @@
 import { axiosBase } from "../Config/Axios";
 
-export class CiudadanoProcedureAPI {
+export class CiudadanoFormAPI {
 
   private baseService;
 
@@ -8,21 +8,15 @@ export class CiudadanoProcedureAPI {
     this.baseService = axiosBase;
   }
 
-   //Get published procedures
-  GetPublished = async () => {
-    return this.baseService.get('/v0/dashboard/procedures/published')
-  }
-
-  //get all user procedures, the procedures that are in process
-  GetAll = async () => {
-    return this.baseService.get('/v0/dashboard/procedures')
-  }
   
   //create a new procedure
   Create = async (params: {
-    procedure_unit_id:number
+    procedure_data_id: number,
+    form_unit_code:string,
+    form_data: string,
+    attachments?: File
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures', params,{
+    return this.baseService.post('dashboard/procedures/forms', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }

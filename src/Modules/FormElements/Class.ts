@@ -106,7 +106,6 @@ export class FormInstance<T extends ElementSchemaTypes>  {
       "elements": JSON.stringify(this.elements)
     };
     
-    //const jsonData = JSON.stringify(formData);
     return formData;
   }
 

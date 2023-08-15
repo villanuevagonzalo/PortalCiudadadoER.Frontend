@@ -5,13 +5,21 @@ import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
 import {Element} from './../FormElements/Components/Element';
 import { Button } from "../../Components/Forms/Button";
+import { CitizenFormCompleteAllFiles } from "../../Components/Forms/PopUpCards";
+import { useState } from "react";
 
 interface Arguments {
+    procedureID:number,
     form:FormInstance<ElementSchemaTypes>;
+    close:Function
   }
 
-  export const CiudadanoFormElement: React.FC<Arguments> = ({form}) => {
+  type FieldsType = ElementInstance<ElementSchemaTypes>[];
+
+  export const CiudadanoFormElement: React.FC<Arguments> = ({procedureID, form, close}) => {
     
+    const [showAlertCompleteElements, setShowAlertCompleteElements] = useState(false); 
+    const [elementToComplete, setElementToComplete] = useState <string> ()
    
     const checkValues = () => {
         form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => {
@@ -19,14 +27,43 @@ interface Arguments {
             const propertiesObj = JSON.parse(jsonString);
             const value = element.getValue()
             if (propertiesObj.required==true && value=="" ){
+                setElementToComplete(element.properties.label)
+                setShowAlertCompleteElements(true)
                 console.log ("debe completar el campo: "+ element.properties.label)
+            }else{
+                enviar()
             } 
         });
+    };
+
+    const enviar = () => {
+
+        let elements_common: FieldsType = [];
+        let elements_files: FieldsType = [];
+
+        form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+            if (element.type === "FILE") {
+                elements_files.push(element);
+            } else {
+                elements_common.push(element);
+            }
+
+        });
+
+        const data = {
+            procedure_data_id: procedureID,
+            form_unit_code:form.getCode(),
+            form_data: elements_common,
+            attachments: elements_files
+          };
+
+     
     };
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     return (
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
+            {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
             <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
              
@@ -71,7 +108,8 @@ interface Arguments {
             </div>
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
             <Button onClick={ () => checkValues()} >ENVIAR</Button>
-
+            <Button onClick={ () => close("home")} >VOLVER</Button>
+            
             </div>
         </div>
     )

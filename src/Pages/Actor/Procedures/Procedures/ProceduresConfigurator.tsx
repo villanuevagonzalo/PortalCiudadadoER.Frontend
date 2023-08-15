@@ -110,10 +110,11 @@ export const DA_Procedures_Config = () => {
       return(<>
       {deleteProcedure && (<DeleteProcedurePopUp procedureToDelete={procedureToDelete!} handleDeleteForm={handleDeleteProcedure} close={setDeleteProcedure}   /> )}
         <LayoutActorSection>
-        <p> Configurador de trámites</p>
+        <h1> Configurador de trámites</h1>
+        <hr/>
           En esta sección buscamos el trámite y relacionamos los formularios y adjuntos que el ciudadano 
           deberá completar para iniciar su trámite on line.
-          <LayoutStackedPanel>
+          <LayoutStackedPanel style={{marginTop:"15px"}}>
           <LayoutSpacer/>
           <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
@@ -133,7 +134,7 @@ export const DA_Procedures_Config = () => {
             </div>
           </LayoutStackedPanel>
          
-          Lista de tramites creados
+          <h4>Lista de tramites creados</h4>
           {isLoading?<>
             <br/>
             <Spinner color='secondary' size="3rem"/><br/>

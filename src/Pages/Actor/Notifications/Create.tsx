@@ -136,9 +136,7 @@ export const DA_Notifications_Create = () =>{
               send_by_email: values.SendByEmail?true:false,
             };
 
-              console.log(test)
             const response = await CreateNotification(test, setFormState);
-            console.log(response)
           }}
           validate={(values:any) => ValidateForm(values, Fields)}
         >

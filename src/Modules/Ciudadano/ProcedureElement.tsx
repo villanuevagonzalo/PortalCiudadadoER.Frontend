@@ -49,14 +49,13 @@ interface FormGenericData {
     useEffect(()=>{
         if (formToComplete!=undefined){
             setRender("form")
-
         }
     },[formToComplete])
 
     if (render=="form"){
 
         return (
-            <CiudadanoFormElement form={formToComplete!} />
+            <CiudadanoFormElement form={formToComplete!} procedureID={procedureInstance.getId()!} close={setRender} />
         )
 
     }else{

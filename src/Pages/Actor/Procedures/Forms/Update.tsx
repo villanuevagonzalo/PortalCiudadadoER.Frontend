@@ -12,7 +12,7 @@ import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormEl
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/Actor/ElementEditor";
-import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, LoadingFormPopUp } from "../../../../Components/Forms/PopUpCards";
+import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, LoadingFormPopUp, UpdateFormPopUp } from "../../../../Components/Forms/PopUpCards";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FormContext } from "../../../../Contexts/FormContext";
@@ -123,7 +123,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
       return(
       <>
         {isLoading&& <LoadingFormPopUp />}
-        {crear && (<CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} /> )}
+        {crear && (<UpdateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} /> )}
         {cargadoCorrectamente && (<FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />)}
         {errorCarga && (<FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />)}
         {completarCampos && (<FormCreateCompleteFieldsPopUp close={setCompletarCampos} crear={setCrear} /> )}
@@ -220,7 +220,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             </select>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <Button type="submit" onClick={() => {guardarFormulario(); window.scrollTo({ top: 0, behavior: 'smooth' });}}>Guardar <BiSave/></Button>
+            <Button type="submit" onClick={() => {setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' });}}>Guardar <BiSave/></Button>
             <Button onClick={() => setVer(true)}>Ver<BiBullseye/></Button>
           </div>
         </LayoutSection>
