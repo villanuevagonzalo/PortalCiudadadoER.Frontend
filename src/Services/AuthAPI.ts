@@ -75,6 +75,13 @@ export class AuthAPI {
     return this.baseService.post("/v0/user/password/reset", params);
   }
 
+  UserEmailChange = async (params: {
+    cuil: number;
+    new_email: string;
+  }) => {
+    return this.baseService.post("/v0/user/change/email/level1", params);
+  }
+
   EmailValidate = async (params: {
     token: string;
   }) => {

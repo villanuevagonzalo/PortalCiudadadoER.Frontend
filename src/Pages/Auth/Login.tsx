@@ -4,7 +4,7 @@ import { DefaultFormState } from "../../Data/DefaultValues";
 import { formGetInitialValues, formGetValidations } from "../../Interfaces/FormFields";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
-import { DivOutlined, DivLabel, Spinner, DivSubtitle, DivTitle } from "../../Components/Elements/StyledComponents";
+import { DivOutlined, DivLabel, Spinner, DivSubtitle, DivTitle, DivOutlined2 } from "../../Components/Elements/StyledComponents";
 import { Button } from "../../Components/Forms/Button";
 import { Formik, Form } from "formik";
 import { FormikField } from "../../Components/Forms/FormikField";
@@ -19,6 +19,7 @@ export const Auth_Login = () => {
   const { Login } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ FieldValues, setFieldValues ] = useState(formGetInitialValues(FormRequiredFields));
+  const [cuilValue, setCuilValue] = useState('');
 
   return (<>
     <DivTitle className="mt-5">Iniciar Sesión</DivTitle>
@@ -37,6 +38,7 @@ export const Auth_Login = () => {
           password: values.Password,
           captcha: values.Captcha,
         }, setFormState);
+        setCuilValue(values.CUIL);
       }}
     >
       <Form autoComplete="off">
@@ -52,6 +54,11 @@ export const Auth_Login = () => {
       <DivOutlined open={FormState.error ? true : false}>
         {FormState.error}
       </DivOutlined>
+      <DivOutlined2 open={FormState.error ? true : false}>
+        <Link to={`${Pages.AUTH_EMAILMODIFY}?cuil=${cuilValue}`}><Button disabled={FormState.loading} color="gray">
+            Modificar mi correo electrónico
+        </Button></Link>
+      </DivOutlined2>
       <DivLabel color="secondary" className="mt-2">¿Sos nuevo en Ciudadano Digital?</DivLabel>
       <Link to={Pages.AUTH_SIGNUP}><Button disabled={FormState.loading} color="secondary">
           Crear una cuenta

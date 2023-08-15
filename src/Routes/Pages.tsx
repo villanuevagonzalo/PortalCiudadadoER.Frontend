@@ -29,6 +29,7 @@ import { DA_Notifications_Create } from "../Pages/Actor/Notifications/Create";
 import { DA_PRESENTIAL } from "../Pages/Actor/Presential";
 import { DA_Procedures_Config } from "../Pages/Actor/Procedures/Procedures/ProceduresConfigurator";
 import { DA_Procedures_Associate } from "../Pages/Actor/Procedures/Procedures/AssociateElements";
+import { Auth_EmailModify } from "../Pages/Auth/EmailModify";
 
 const REACTENV = process.env
 
@@ -118,7 +119,12 @@ export const RawPages:RawPagesProps = {
             element: <DC_UserValidate type="Mi Argentina" />
           },
         }
-      }
+      },
+      EMAILMODIFY:{
+        path: "email/modify",
+        label: "Modificar Email",
+        element: <Auth_EmailModify />
+      },
     }
   },
 
