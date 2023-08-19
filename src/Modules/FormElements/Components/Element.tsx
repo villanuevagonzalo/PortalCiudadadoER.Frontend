@@ -36,7 +36,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
   const handleFileChange = (event: any) => {
     const file = Array.from(event.target.files)
-    console.log(file)
     setFieldValue(HelpToken+instance.name,file)
   }
     
@@ -146,9 +145,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         </div></InputWrapper>);
 
       case "select": EI = instance as ElementInstance<"SELECT">;
-      console.log("VEAMOS EL SELECT :"+ EI.properties.label+" valor: "+EI.getValue())
-      console.log("instance: "+JSON.stringify(EI))
-      console.log("-----------------------------")
 
       return (
         <SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
@@ -206,7 +202,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           </div>
         )
       case "input-radio-lista": EI = instance as ElementInstance<"RADIO-LISTA">;
-      console.log("Instance: "+JSON.stringify(EI))
           return(
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto",   margin:"-0.25rem 0 0rem 0"}}>
                 <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
@@ -252,7 +247,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
           </div></InputWrapper>
         )              
       default:
-        console.log(basetype.type)
         return "TYPE IS NOT DEFINED";
 
     }

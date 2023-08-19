@@ -3,8 +3,8 @@ import { ElementInstance, ElementSchema, FormInstance, ProcedureInstance } from 
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import axios, { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
-import { FormAPI } from "../Services/FormAPI";
-import { ProcedureAPI } from "../Services/ProcedureAPI";
+import { FormAPI } from "../Services/ActorFormAPI";
+import { ProcedureAPI } from "../Services/ActorProcedureAPI";
 
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
@@ -87,36 +87,6 @@ const ContextValues = () => {
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 
       const mappedArray = FormsObj.map((procedureInstance: any) => {
-    /*    const FormsObj = JSON.parse(procedureInstance.FORMS )
-        //const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
-
-        const mappedArray = FormsObj.map((formInstance: any) => {
-
-          let fields: FieldsElementType = [];
-          //console.log("veamos el por que: "+formInstance.elements)
-          //let componentes= JSON.parse(formInstance.elements)
-          formInstance.elements.map((componente: any, index:number)=> {
-
-            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-            aux.update((componente.properties))
-            fields.push(aux);
-
-
-          });
-
-          const Formulario = new FormInstance(
-            formInstance.code,
-            formInstance.title,
-            formInstance.subtitle,
-            formInstance.description,
-            formInstance.keywords,
-            formInstance.status,
-            fields
-          );
-          formulariosAux.push(Formulario);
-
-        });  */
-
         const newProcedures = new ProcedureInstance(
           JSON.parse(procedureInstance.FORMS),
           procedureInstance.TITLE,
@@ -125,6 +95,7 @@ const ContextValues = () => {
           procedureInstance.STATE,
           procedureInstance.THEME,
           JSON.parse(procedureInstance.ATTACHMENTS),
+          procedureInstance.CITIZEN_LEVEL,
           procedureInstance.ID
         );
        

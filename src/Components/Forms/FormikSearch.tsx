@@ -34,19 +34,23 @@ export const FormikSearch = ({...props}: Props) => {
   }
 
   const listMatch = (value:string) => {
-    setListDataIndex(0);
-    setListData(value===""?[]:props.data.filter((a:string) => a.toLocaleLowerCase().startsWith(value.toString().toLocaleLowerCase())));
+    if (value!=undefined){
+      setListDataIndex(0);
+      setListData(value===""?[]:props.data.filter((a:string) => a.toLocaleLowerCase().startsWith(value.toString().toLocaleLowerCase())));
+    }
+    
   }
 
   const handleChange = (e:any) => {
-    listMatch(e.target.value)
+      listMatch(e.target.value)
   }
 
   const handleClick = (item:string) => {
     setFieldValue(props.name, item)
     listMatch("");
-    if (props.setValue)
-    props.setValue(item);
+    if (props.setValue){
+        props.setValue(item);
+    }
 
   }
 
@@ -59,9 +63,9 @@ export const FormikSearch = ({...props}: Props) => {
     }
     else if(e.key==="Enter"){
       setFieldValue(props.name, ListData[ListDataIndex]);
+      props.setValue(ListData[ListDataIndex]); //this is the last added and can generate erros
       e.preventDefault();
       listMatch("");
-      
     }
   }
 
@@ -82,7 +86,6 @@ export const FormikSearch = ({...props}: Props) => {
       setFocus(true);
     }else{
       props.setValue("");
-
     }
 
   }, [field.value])

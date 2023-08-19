@@ -1,5 +1,5 @@
 import { InputHTMLAttributes, useRef } from "react";
-
+/*
 interface Props extends InputHTMLAttributes<HTMLInputElement>{
   name: string;
 }
@@ -19,4 +19,4 @@ export const FileUploader: React.FC<Props> = ({ name, ...props }) => {
       /> 
     </>
   );
-};
+};*/

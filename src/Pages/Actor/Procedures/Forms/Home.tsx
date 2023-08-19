@@ -16,12 +16,12 @@ import { FormContext } from "../../../../Contexts/FormContext";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { FormInstance } from "../../../../Modules/FormElements/Class";
 import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { FormUpdate } from "./Update";
 import { CopyFormPopUp, DeleteFormPopUp, FormCreateErrorPopUp } from "../../../../Components/Forms/PopUpCards";
 import { BiTrash } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxUpdate } from "react-icons/rx";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 
 const FormRequiredFields = ["Tramites"];
@@ -60,39 +60,63 @@ export const DA_Procedures_Forms_Home = () => {
   const handleCopyForm = async (code:string)=> {
     if (code!=""){
       formToCheck!.setCode(code)
-      const response = await SaveForm(formToCheck!.getJSON(), setFormState, code, formToCheck?.getTitle()!);
+      const response = await SaveForm(formToCheck!, setFormState, code, formToCheck?.getTitle()!);
       if (response){
         setFormToCheck(undefined)
-          setCopy(false)
-          setNewCode("")
+        setCopy(false)
+        setNewCode("")
+        UpdateForms()
       }else{
         setErrorCarga(true)
       }
-
     }
-
   }
+
   useEffect(()=>{
     if (searchForm !== undefined &&  searchForm != '') {
-      const filtered = formularios.filter(form => form.getTitle() === searchForm);
-      setFilteredForms(filtered);
-       
-      } else {
-        setFilteredForms(formularios)
+      const cleanedSearchForm = searchForm.replace(/\s+\((título|keyword|COD.F)\)$/, '');
+      const filtered = formularios.filter(form => form.getTitle() == cleanedSearchForm);
+      if (filtered.length>0){
+        setFilteredForms(filtered);
+      }else{
+        const filtered = formularios.filter(form => form.getKeywords() == cleanedSearchForm);
+        if (filtered.length>0){
+          setFilteredForms(filtered);
+        }else{
+          const filtered = formularios.filter(form => form.getCode() == cleanedSearchForm);
+          if (filtered.length>0){
+            setFilteredForms(filtered);  
+          }else{
+            setFilteredForms(formularios)
+          }
+        }
       }
+    } else {
+      setFilteredForms(formularios)
+    }
   },[searchForm])
  
   useEffect(()=>{
     setFilteredForms(formularios)
   },[formularios])
+
+  const DataTitle = useMemo(() => formularios.map((item:any) => item.title + " (título)"), [formularios]);
+  const DataKeywords = useMemo(() => {
+    return formularios.flatMap((item:any) => {
+      const keywordsArray = item.keywords.split(" ");
+      return keywordsArray.map((keyword:string) => keyword + " (keyword)");
+    });
+  }, [formularios]);
+  const DataCode = useMemo(() => formularios.map((item:any) => item.code + " (COD.F)"), [formularios]);
   
-  const DataName = formularios.map((item:any)=>item.title)
-  
+  const ResultArray = useMemo(() => DataTitle.concat(DataKeywords, DataCode), [DataTitle, DataKeywords, DataCode]);
+
+
   const renderElement = () => {
     if (seeOptions=="seeForm") {
       return (
         <>
-          <FormElementShow form={formToCheck!}  />
+          <BackOfficesFormElement form={formToCheck!}  />
           <Button onClick={() => setSeeOptions("home")}>Volver</Button>
         </>
       )
@@ -107,9 +131,10 @@ export const DA_Procedures_Forms_Home = () => {
         {copy&&(<CopyFormPopUp formToCopy={formToCheck!} handleCopyForm={handleCopyForm} close={setCopy} /> )}
         {errorCarga && (<FormCreateErrorPopUp formTitle={""} close={setErrorCarga} />)}
         <LayoutActorSection>
-        <p> Configurador de formularios</p>
+        <h1> Configurador de formularios</h1>
+        <hr/>
           En esta sección generamos, modificamos y damos de baja los formularios que serán utilizados en los trámites  
-          <LayoutStackedPanel>
+          <LayoutStackedPanel style={{marginTop:"15px"}}>
           <LayoutSpacer/>
             <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
@@ -117,10 +142,9 @@ export const DA_Procedures_Forms_Home = () => {
                   validationSchema={formGetValidations(FormRequiredFields)}
                   onSubmit={async (values: any) => {console.log("valores: "+values) }} >
                   <Form autoComplete="off">
-                      <FormikSearch name="Tramites" label={"Filtra los formularios"} data={DataName} setValue={setSearchForm} autoFocus/>
+                      <FormikSearch name="Tramites" label={"Filtra los formularios"} data={ResultArray} setValue={setSearchForm} autoFocus/>
                   </Form>
               </Formik></div>
-            <LayoutSpacer/>
             {/* Botones para crear o actualizar formularios */}
             <div style={{display:"flex", flexDirection:"row"}}>
               <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateForms()} >
@@ -130,7 +154,6 @@ export const DA_Procedures_Forms_Home = () => {
                 <Button style={{ width: '150px', height: '40px' }}>Nuevo<AiOutlinePlus/></Button>
               </Link>
             </div>
-    
           </LayoutStackedPanel>
           
         {/*  <Table columns={mcolumns} data={mdata} />*/}

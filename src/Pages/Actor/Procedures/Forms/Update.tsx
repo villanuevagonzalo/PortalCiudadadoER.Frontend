@@ -11,13 +11,13 @@ import { BiBullseye, BiSave } from "react-icons/bi";
 import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
-import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
-import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, LoadingFormPopUp } from "../../../../Components/Forms/PopUpCards";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
+import { ElementEditor } from "../../../../Modules/Actor/ElementEditor";
+import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, LoadingFormPopUp, UpdateFormPopUp } from "../../../../Components/Forms/PopUpCards";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Spinner } from "../../../../Components/Elements/StyledComponents";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 
 interface Arguments {
@@ -92,7 +92,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
 
   const guardarFormulario=async ()=> {
    const nuevoFormulario = new FormInstance(formBasicData.Code.getValue(), formBasicData.Title.getValue(), formBasicData.Subtitle.getValue(), formBasicData.Description.getValue(), formBasicData.Keywords.getValue(), estadoFormulario, fields)
-   const response = await UpdateOneForm(nuevoFormulario.getJSON(), setFormState, formBasicData.Code.value);
+   const response = await UpdateOneForm(nuevoFormulario, setFormState, formBasicData.Code.value);
    if (response){
     setCargadoCorrectamente(true)
     setCrear(false)
@@ -106,7 +106,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
     const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
     return ( 
       <>
-        <FormElementShow form={nuevoFormulario}  />
+        <BackOfficesFormElement form={nuevoFormulario}  />
         <Button onClick={() => setVer(false)}>Volver a sección editar </Button>
       </>
     )
@@ -123,11 +123,11 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
       return(
       <>
         {isLoading&& <LoadingFormPopUp />}
-        {crear && (<CreateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} /> )}
+        {crear && (<UpdateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} /> )}
         {cargadoCorrectamente && (<FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />)}
         {errorCarga && (<FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />)}
         {completarCampos && (<FormCreateCompleteFieldsPopUp close={setCompletarCampos} crear={setCrear} /> )}
-        <LayoutSection>
+        <LayoutSection  style={{margin:"5px 0px 15px 0px"}}>
           <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
           <Formik
             validateOnBlur={false}
@@ -151,7 +151,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
           </Form>
           </Formik>
         </LayoutSection>
-        <LayoutSection>
+        <LayoutSection  style={{margin:"5px 0px 15px 0px"}}>
           <h1><MdOutlineDataset />Administrador de Campos</h1>
           <LayoutStackedPanel>
             <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>
@@ -220,7 +220,7 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             </select>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <Button type="submit" onClick={() => {guardarFormulario(); window.scrollTo({ top: 0, behavior: 'smooth' });}}>Guardar <BiSave/></Button>
+            <Button type="submit" onClick={() => {setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' });}}>Guardar <BiSave/></Button>
             <Button onClick={() => setVer(true)}>Ver<BiBullseye/></Button>
           </div>
         </LayoutSection>

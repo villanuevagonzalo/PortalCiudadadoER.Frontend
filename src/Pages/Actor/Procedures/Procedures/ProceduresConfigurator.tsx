@@ -18,7 +18,6 @@ import { ProcedureInstance } from "../../../../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { BiTrash } from "react-icons/bi";
-import { ProcedureElementShow } from "../../../../Modules/FormElements/Components/ProcedureElementShow";
 import { Button } from "../../../../Components/Forms/Button";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { UpdateProcedure } from "./UpdateProcedures";
@@ -27,6 +26,7 @@ import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Form, Formik } from "formik";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
+import { BackOfficesProcedureElement } from "../../../../Modules/Actor/ProcedureElement";
 
 
 
@@ -56,9 +56,18 @@ export const DA_Procedures_Config = () => {
 
   useEffect(()=>{
     if (searchProcedure !== undefined &&  searchProcedure != '') {
-      const filtered = procedures.filter(procedures => procedures.getTitle() === searchProcedure);
-      setFilteredProcedure(filtered);
-       
+      const cleanedSearchProcedure = searchProcedure.replace(/\s+\((título|temática)\)$/, '');
+      const filtered = procedures.filter(procedures => procedures.getTitle() === cleanedSearchProcedure);
+        if (filtered.length>0){
+          setFilteredProcedure(filtered);
+        }else{
+          const filtered = procedures.filter(procedures => procedures.getTheme() === cleanedSearchProcedure);
+          if (filtered.length>0){
+            setFilteredProcedure(filtered);
+          }else{
+            setFilteredProcedure(procedures)
+          }
+        } 
       } else {
         setFilteredProcedure(procedures)
       }
@@ -77,14 +86,16 @@ export const DA_Procedures_Config = () => {
     setDeleteProcedure(false)
   }
 
-  const DataName = procedures.map((item:any)=>item.title)
+  const DataTitle = useMemo(() => procedures.map((item:any) => item.title+" (título)"), [procedures]);
+  const DataTheme = useMemo(() => procedures.map((item:any) => item.theme+" (temática)").flat(), [procedures]);
+  const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme]);
 
   const renderElement = () => {
 
     if (seeOptions=="seeForm") {
       return (
         <>
-          <ProcedureElementShow procedure={procedureToCheck!}  />
+          <BackOfficesProcedureElement procedure={procedureToCheck!}  />
           <Button onClick={() => setSeeOptions("home")}>Volver a Configurador</Button>
         </>
       )
@@ -99,10 +110,11 @@ export const DA_Procedures_Config = () => {
       return(<>
       {deleteProcedure && (<DeleteProcedurePopUp procedureToDelete={procedureToDelete!} handleDeleteForm={handleDeleteProcedure} close={setDeleteProcedure}   /> )}
         <LayoutActorSection>
-        <p> Configurador de trámites</p>
+        <h1> Configurador de trámites</h1>
+        <hr/>
           En esta sección buscamos el trámite y relacionamos los formularios y adjuntos que el ciudadano 
           deberá completar para iniciar su trámite on line.
-          <LayoutStackedPanel>
+          <LayoutStackedPanel style={{marginTop:"15px"}}>
           <LayoutSpacer/>
           <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
@@ -110,7 +122,7 @@ export const DA_Procedures_Config = () => {
                   validationSchema={formGetValidations(FormRequiredFields)}
                   onSubmit={async (values: any) => {console.log("valores: "+values) }} >
                   <Form autoComplete="off">
-                      <FormikSearch name="Tramites" label={"Filtra los trámites"} data={DataName} setValue={setSearchProcedure} autoFocus/>
+                      <FormikSearch name="Tramites" label={"Filtra los trámites"} data={ResultArray} setValue={setSearchProcedure} autoFocus/>
                   </Form>
               </Formik></div>
             {/* Botones para crear o actualizar formularios */}
@@ -122,7 +134,7 @@ export const DA_Procedures_Config = () => {
             </div>
           </LayoutStackedPanel>
          
-          Lista de tramites creados
+          <h4>Lista de tramites creados</h4>
           {isLoading?<>
             <br/>
             <Spinner color='secondary' size="3rem"/><br/>
@@ -142,8 +154,6 @@ export const DA_Procedures_Config = () => {
   );
     
 }
-
-
 
 interface TableProps {
   datos: ProcedureInstance<ElementSchemaTypes>[];

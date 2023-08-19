@@ -53,6 +53,7 @@ const ContextValues = () => {
     const CurrentUserContact:IUserContact = getLSData('UserContact');
     const CurrentUserRol:IUserRol[] = getLSData('UserRol');
     const CurrentActorActions:any[] = getLSData('ActorActions');
+    const Secretaria:string = getLSData('Secretary')
     //console.log('CHECKTOKEN ',CurrentToken)
     if(CurrentToken?.token){
       let remainingTime = (Date.parse(moment(CurrentToken.expiration).toString())- Date.now())/(1000*60*60*24)
@@ -63,6 +64,7 @@ const ContextValues = () => {
         setUserContact(CurrentUserContact);
         setUserRol(CurrentUserRol);
         setActorActions(CurrentActorActions);
+        setSecretaria(Secretaria)
       } else{
         Logout();
       }
@@ -84,6 +86,7 @@ const ContextValues = () => {
     delLSData("UserContact");
     delLSData("UserRol");
     delLSData("ActorActions");
+    delLSData("Secretary");
     setSecretaria("")
   }
 
@@ -102,6 +105,7 @@ const ContextValues = () => {
     delLSData("UserContact");
     delLSData("UserRol");
     delLSData("ActorActions");
+    delLSData("Secretary");
 
     const location = REACTENV.REACT_APP_PROJECT_ADMIN+"/" ;
     window.location.href = location;
@@ -128,6 +132,7 @@ const ContextValues = () => {
       setLSData("UserData", NewUserData);
       setLSData("UserContact", NewUserContact || DefaultUserContact);
       setLSData("ActorActions", data.data || []);
+      setLSData("Secretary", data.secretaria)
       setSecretaria(data.secretaria)
 
     } else{ Logout2(); }
@@ -136,8 +141,7 @@ const ContextValues = () => {
 
   const Login = async (data: any, setFormState:Function) => {
 
-    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserLogin, data, setFormState);
-
+    const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserLogin, data, setFormState);  
     if(response.data){
       const NewUserData = response.data.data.user_data.user;
       const NewUserContact = response.data.data.user_data.user_contact;
@@ -197,6 +201,8 @@ const ContextValues = () => {
     return response;
   }
 
+  const UserEmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserEmailChange, data, setFormState);
+
   const PasswordReset = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordReset, data, setFormState);
   const PasswordUpdate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordSave, data, setFormState);
 
@@ -220,6 +226,7 @@ const ContextValues = () => {
     isLoading, isLogged, authToken, userData, userContact, userRol, secretaria,
     Signup, Login, Logout, CheckToken, SaveToken, Redirect, Logout2,
     UserGetData, SaveData, UserNameChange, actorActions,
+    UserEmailChange,
     PasswordReset, PasswordUpdate,
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
     AFIP_getURL, AFIP_checkToken,

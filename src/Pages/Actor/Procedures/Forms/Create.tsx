@@ -11,12 +11,12 @@ import { BiBullseye, BiSave } from "react-icons/bi";
 import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
 import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
-import { ElementEditor } from "../../../../Modules/FormElements/Components/ElementEditor";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
+import { ElementEditor } from "../../../../Modules/Actor/ElementEditor";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FieldsType, FormContext } from "../../../../Contexts/FormContext";
 import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, GenericAlertPopUp } from "../../../../Components/Forms/PopUpCards";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 export const DA_Procedures_Forms_Create = () => {
 
@@ -30,7 +30,7 @@ export const DA_Procedures_Forms_Create = () => {
   const [fields, setFields] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
   const [instance, setIntance] = useState<ElementInstance<ElementSchemaTypes>>()
   const [index, setIndex] = useState<number>(0);
-  const [jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
+  //const [jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
   const [jsona2, setJsona2] = useState<string>('[]');
   const [estadoFormulario, setEstadoFormulario] = useState<string>('Borrador');
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -53,17 +53,17 @@ export const DA_Procedures_Forms_Create = () => {
     setFields((prev: any) => [...prev, newfield])
   }
 
-  const handleEstadoFormulario = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  /*const handleEstadoFormulario = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setEstadoFormulario(event.target.value);
-  };
+  };*/
 
-  const handleIndexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  /*const handleIndexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIndex(+event.target.value);
-  }
+  }*/
 
-  const handleJsonPropiertiesChanges = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  /*const handleJsonPropiertiesChanges = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setJsonproperties(event.target.value);
-  }
+  }*/
 
   const editarComponente = (schema: ElementInstance<ElementSchemaTypes>, indice: number) => {
     setIntance(schema)
@@ -81,46 +81,108 @@ export const DA_Procedures_Forms_Create = () => {
     return !regex.test(value); // Retorna true si no hay coincidencias (es válido), false si hay coincidencias (no es válido)
   };
 
-  const guardarFormulario = async () => {
-    const codeFieldEmpty = formBasicData.Code.value === "" || formBasicData.Code.value === undefined || formBasicData.Code.value === null;
-    const titleFieldEmpty = formBasicData.Title.value === "" || formBasicData.Title.value === undefined || formBasicData.Title.value === null;
-    const subtitleFieldEmpty = formBasicData.Subtitle.value === "" || formBasicData.Subtitle.value === undefined || formBasicData.Subtitle.value === null;
-    const descriptionFieldEmpty = formBasicData.Description.value === "" || formBasicData.Description.value === undefined || formBasicData.Description.value === null;
-    const keywordsFieldEmpty = formBasicData.Keywords.value === "" || formBasicData.Keywords.value === undefined || formBasicData.Keywords.value === null;
-    if (codeFieldEmpty || titleFieldEmpty || subtitleFieldEmpty || descriptionFieldEmpty || keywordsFieldEmpty) {
-      setCompletarCampos(true)
-    } else {
-      if (isValidCode(formBasicData.Code.value)){
-        const nuevoFormularioToBeSend = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
-        const response = await SaveForm(nuevoFormularioToBeSend.getJSON(), setFormState, formBasicData.Code.value, formBasicData.Title.value);
-        if (response){
-          setFields([])
-            setFormBasicData({
-              Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired","containsSpacesOrCommas"])),
-              Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
-              Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
-              Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
-              Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
-            })
-            setCargadoCorrectamente(true)
-            setCrear(false)
-        }else{
-          setErrorCarga(true)
+  //check if all elements has a label
+  const checkElementsNames = (fields: ElementInstance<ElementSchemaTypes>[]): boolean => {
+    const hasInvalidLabel = fields.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+        const jsonString = JSON.stringify(element.properties);
+        if (element.properties.label === "" || element.properties.label === "Ingresá el Título") {
+            setShowAlert(true);
+            setAlertMessage("Debe ingresar un título a todos los campos del formulario");
+            return true; // Elemento inválido encontrado, retornar true
         }
-      }else{
-        setCrear(false)
-        setShowAlert(true)
-        setAlertMessage("Código de referencia no debe contener espacios, comas o guiones")
+        return false; // Elemento válido, retornar false
+    });
+    return !hasInvalidLabel; // Retorna false si se encontró un elemento inválido, true si todos son válidos
+  };
 
+  const setDefaultValuesToElements = (fields: ElementInstance<ElementSchemaTypes>[]) => {
+    fields.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+        element.setValue(""); // Establecer el valor del elemento a una cadena vacía
+    });
+};
+
+  const checkExistingCodes = (newCode:String):boolean => {
+
+    const hasInvalidCode = formularios.some((forms, index: number) => {
+      
+      if (forms.getCode()==newCode) {
+          return true; // Elemento inválido encontrado, retornar true
       }
+      return false; // Elemento válido, retornar false
+  });
+
+    return !hasInvalidCode;
+
   }
+
+  const processForm = async () => {
+    setDefaultValuesToElements(fields);
+    const nuevoFormularioToBeSend = new FormInstance(
+        formBasicData.Code.value,
+        formBasicData.Title.value,
+        formBasicData.Subtitle.value,
+        formBasicData.Description.value,
+        formBasicData.Keywords.value,
+        estadoFormulario,
+        fields
+    );
+    return nuevoFormularioToBeSend; // Devolver la instancia de nuevoFormularioToBeSend
+  };
+
+
+  const guardarFormulario = async () => {
+    const elementsName = checkElementsNames(fields)
+    if (elementsName){
+      const codeFieldEmpty = formBasicData.Code.value === "" || formBasicData.Code.value === undefined || formBasicData.Code.value === null;
+      const titleFieldEmpty = formBasicData.Title.value === "" || formBasicData.Title.value === undefined || formBasicData.Title.value === null;
+      const subtitleFieldEmpty = formBasicData.Subtitle.value === "" || formBasicData.Subtitle.value === undefined || formBasicData.Subtitle.value === null;
+      const descriptionFieldEmpty = formBasicData.Description.value === "" || formBasicData.Description.value === undefined || formBasicData.Description.value === null;
+      const keywordsFieldEmpty = formBasicData.Keywords.value === "" || formBasicData.Keywords.value === undefined || formBasicData.Keywords.value === null;
+      if (codeFieldEmpty || titleFieldEmpty || subtitleFieldEmpty || descriptionFieldEmpty || keywordsFieldEmpty) {
+        setCompletarCampos(true)
+      } else {
+        if (isValidCode(formBasicData.Code.value)){
+          if (checkExistingCodes(formBasicData.Code.value)){
+            setDefaultValuesToElements(fields)
+            const nuevoFormularioToBeSend = await processForm(); // Esperar a que processForm() termine y obtener el valor de nuevoFormularioToBeSend
+            const response = await SaveForm(nuevoFormularioToBeSend, setFormState, formBasicData.Code.value, formBasicData.Title.value);
+            if (response){
+              setFields([])
+                setFormBasicData({
+                  Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired","containsSpacesOrCommas"])),
+                  Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
+                  Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
+                  Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
+                  Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
+                })
+                setCargadoCorrectamente(true)
+                setCrear(false)
+            }else{
+              setErrorCarga(true)
+            }
+
+          }else{
+            setCrear(false)
+            setShowAlert(true)
+            setAlertMessage("Código de formulario ya existente");
+          }
+            
+        }else{
+          setCrear(false)
+          setShowAlert(true)
+          setAlertMessage("Código de referencia no debe contener espacios, comas o guiones")
+        }
+      }
+    }else{
+      setCrear(false)
+    }   
 }
 
   if (ver) {
     const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
     return (
       <>
-        <FormElementShow form={nuevoFormulario} />
+        <BackOfficesFormElement form={nuevoFormulario} />
         <Button onClick={() => setVer(false)}>Volver a sección editar </Button>
       </>
     )
@@ -245,63 +307,3 @@ export const DA_Procedures_Forms_Create = () => {
   }
 }
 
-
-
-
-
-/*
-
-
-
-        <Element instance={Fields.Prueba1}/>
-        <Element instance={Fields.Prueba2}/>
-        <Element instance={Fields.Prueba3}/>
-
-
-<Element name="Prueba" schema={schematest3}/>
-      <Element name="Prueba2" schema={schematest4}/>
-      <Element name="Prueba3" schema={schematest5}/>
-
-
-<hr/>
-      <ElementInstance element={new FormElement('NUMBER',{label:'Ingresá un titulo',value_max:2})}/>
-      <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Subtítulo',required:true})}/>
-      <ElementInstance element={new FormElement('TEXTAREA',{label:'Descripción',required:false})}/>
-      <ElementInstance element={new FormElement('MAIL',{label:'mail',required:true})}/>
-    <LayoutSection>
-      <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-      <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Título',required:true})}/>
-      <ElementInstance element={new FormElement('TEXT',{label:'Ingresá el Subtítulo',required:true})}/>
-      <ElementInstance element={new FormElement('TEXTAREA',{label:'Descripción',required:false})}/>
-      <ElementInstance element={new FormElement('TEXT',{label:'Palabras Claves',required:true})}/>
-    </LayoutSection>
-    <LayoutSection>
-      <h1><MdOutlineDataset />Administrador de Campos</h1>
-      <LayoutStackedPanel>
-        <div className="flex-1 gap-1" style={{display:'flex', flexDirection:'column'}}>
-          <h2 onClick={update}>Actualizar</h2>
-          <input value={jsona0} type="number" onChange={handleChange0}/>
-          <textarea value={jsona} onChange={handleChange} style={{width:'100%', height:'100px'}} />
-          <h2>Formulario Generado - EDICION</h2>
-          {fields.map((element:FormElement<any>) => <BaseElementEditor key={element.id} element={element} />)}
-          <hr/>
-          <h2>Formulario Generado - CARGA DE DATOS</h2>
-          {fields.map((element:FormElement<any>) => <ElementInstance key={element.id} element={element}/>)}
-          <h2>Exportacion</h2>
-          <textarea value={jsona2} style={{width:'100%', height:'100px'}} />
-        </div>
-        <div>
-          <h2>Elementos</h2>
-          <FormElementBasesMenu>{Object.entries(FormElementBases).map(([clave, element], index) => {
-            return(<div key={clave} onClick={()=>addItem(clave)}>
-              <span><element.icon/></span>
-              <ul>
-                <li className="title"><p>{element.description}</p></li>
-              </ul>
-            </div>)
-          })}</FormElementBasesMenu>
-        </div>
-      </LayoutStackedPanel>
-    </LayoutSection>
-
-*/

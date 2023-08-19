@@ -8,7 +8,7 @@ import { Form, Formik } from "formik";
 import { FormikFieldDummy } from "../../../../Components/Forms/FormikFieldDummy";
 import { FormikField } from "../../../../Components/Forms/FormikField";
 import { FormikCheckbox } from "../../../../Components/Forms/FormikCheckbox";
-import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset } from "react-icons/md";
+import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdVerifiedUser } from "react-icons/md";
 import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Button } from "../../../../Components/Forms/Button";
@@ -18,8 +18,8 @@ import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Pages } from "../../../../Routes/Pages";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp } from "../../../../Components/Forms/PopUpCards";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
 import { AuthContext } from "../../../../Contexts/AuthContext";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 type Item = {
   title: string;
@@ -35,7 +35,7 @@ export const DA_Procedures_Associate = () => {
     const ref:any = useRef(null);
 
   const { UpdateProcedures, SaveProcedure, GetProcedureCategories, categories,setProcedures, procedures } = useContext(ProcedureContext);
-  const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const { SaveForm, UpdatePublishedForms, publishedFormularios, isLoading, DeleteOneForm} = useContext(FormContext);
   const {secretaria } = useContext(AuthContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
@@ -44,6 +44,7 @@ export const DA_Procedures_Associate = () => {
   const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [estadoProcedure, setEstadoProcedure] = useState<string>('');
+  const [userLevel, setUserLevel]= useState<string>('level_3');
   const [theme, setTheme] = useState <ElementInstance<ElementSchemaTypes>>()
 
   const [alertMessage, setAlertMessage] = useState("")
@@ -69,10 +70,10 @@ export const DA_Procedures_Associate = () => {
 
   useEffect(()=>{
     UpdateProcedures()
-    UpdateForms()
+    //UpdateForms()
+    UpdatePublishedForms()
     GetProcedureCategories()
   },[])
-
 
   useEffect(()=>{
     const updatedOptions = categories.map((forms) => ({
@@ -81,10 +82,10 @@ export const DA_Procedures_Associate = () => {
     }));
     const Select_Theme = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione una Temática', options: updatedOptions },["isRequired"]))
     setTheme( Select_Theme);
-  },[formularios])
+  },[categories])
 
   const addNewForm = () =>{
-    const updatedOptions = formularios.map((forms) => ({
+    const updatedOptions = publishedFormularios.map((forms) => ({
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
@@ -112,6 +113,7 @@ export const DA_Procedures_Associate = () => {
   }
 
   const createProcedure = async () =>{
+    console.log("secretarìa_ "+secretaria)
     if(estadoProcedure==''){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un estado inicial al trámite")
@@ -146,7 +148,8 @@ export const DA_Procedures_Associate = () => {
         secretaria,
         estadoProcedure,
         theme!.getValue(),
-        titleAttachedValues
+        titleAttachedValues,
+        userLevel
       );
       const response = await SaveProcedure(newProcedureToBeSend, setFormState, Fields.Select_Procedure.getValue());
       if (response) {
@@ -165,9 +168,8 @@ export const DA_Procedures_Associate = () => {
   }
 
   const handleSeeForm = (formToSee:string) => {
-
     const codigoBuscado = formToSee.split("-")[0].trim().toUpperCase(); // Limpiar espacios y convertir a mayúsculas.
-    const formularioEncontrado = formularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
+    const formularioEncontrado = publishedFormularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
     if (formularioEncontrado){
       setSeeOptions("seeForm"); 
       setFormToCheck(formularioEncontrado);
@@ -180,7 +182,7 @@ export const DA_Procedures_Associate = () => {
   if (seeOptions=="seeForm") {
     return (
       <>
-        <FormElementShow form={formToCheck!}  />
+        <BackOfficesFormElement form={formToCheck!}  />
         <div style={{margin:"10px 0px 15px 0px"}}>
         <Button onClick={() => setSeeOptions("home")}>Volver a Gestor de Trámite</Button>
         </div>
@@ -198,18 +200,18 @@ export const DA_Procedures_Associate = () => {
         <p>Asociar elementos al trámite</p>
         <h1>Buscar Trámites</h1>
         <Formik
-            innerRef={ref}
-            validateOnBlur={false}
-            validateOnChange={false}
-            enableReinitialize={true}
-            initialValues={initialValues}
-            onSubmit={async(values:any)=>{
+          innerRef={ref}
+          validateOnBlur={false}
+          validateOnChange={false}
+          enableReinitialize={true}
+          initialValues={initialValues}
+          onSubmit={async(values:any)=>{
               const test = {
                 Select_Procedure: values.Recipients, //ojo, cambiar esto por el nombre del campo
-              };
+            };
               console.log(test)
             }}
-            validate={(values:any) => ValidateForm(values, Fields)}
+          validate={(values:any) => ValidateForm(values, Fields)}
           >
               <Form autoComplete="off">
                   <LayoutStackedPanel>
@@ -238,9 +240,9 @@ export const DA_Procedures_Associate = () => {
             </Form>
         </Formik>
       </LayoutActorSection>
-      <LayoutActorSection>
+      <LayoutActorSection style={{margin:"5px 0px 15px 0px"}}>
         <h1><MdOutlineDataset />Cuerpo del trámite</h1>
-        En esta sección armamos los elementos del trámite online, para que el ciudadano complete e inicie el trámite.
+        <p>En esta sección armamos los elementos del trámite online, para que el ciudadano complete e inicie el trámite.</p>
       
         <h1><MdAssignment /> Formularios asociados al trámite</h1>
         <h2>Asociar con el/los formularios que sean requerido para este trámite</h2>
@@ -266,7 +268,6 @@ export const DA_Procedures_Associate = () => {
                   <p>Anexar formulario</p>
                   <div key={form.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "15px 0px 5px 0px" }}>  
                     <Element instance={form} className="flex-1" />
-                    
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', textAlign: "right" }}>
                         <HiOutlineMagnifyingGlass fontSize={"1.5rem"} onClick={() => { handleSeeForm(form.getValue())  }} />
                         <HiTrash fontSize={"1.5rem"} style={{ margin: "0px 2px 0px 0px" }} onClick={() => deleteForm(form)} />
@@ -328,6 +329,19 @@ export const DA_Procedures_Associate = () => {
                   }
                   <p></p>
                   <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
+                  <h1><MdVerifiedUser />Nivel de ciudadano</h1>
+                  <h4>Nivel de ciudadano requerido para realizar este trámite</h4>
+                    <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
+                      <select value={userLevel} 
+                        onInput={(e) => setUserLevel((e.target as HTMLInputElement).value)} 
+                        >
+                        <option value="level_3">Nivel 3</option>
+                        <option value="level_2">Nivel 2</option>
+                      </select>
+                      </SelectWrapper >
+                    </div>
+                  <p></p>
+                  <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
                   <h1><MdMore /> Estado</h1>
                     <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
                       <select value={estadoProcedure} 
@@ -340,11 +354,10 @@ export const DA_Procedures_Associate = () => {
                         <option value="Publicado">Publicado</option>
                       </select>
                       </SelectWrapper >
-  
                     </div>
                   <LayoutStackedPanel className="mt-3">
                     <LayoutSpacer/>
-                    <Link to={Pages.DA_Procedures_Config} style={{ textDecoration: 'none' }}>
+                    <Link to={Pages.DA_PROCEDURES_CONFIG} style={{ textDecoration: 'none' }}>
                       <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
                       </Link>
                     <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }} >Finalizar<AiOutlineSave/></FormikButton>

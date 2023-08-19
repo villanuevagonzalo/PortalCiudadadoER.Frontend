@@ -36,6 +36,7 @@ export const DC_Configurations = () => {
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ LocationsValues, setLocationsValues ] = useState< ILocation[]>([]);
   const [ FieldValues, setFieldValues ] = useState<any>(null);
+  const [locations, setLocations] = useState<string>()
 
   useEffect(() => {
     if(userContact){
@@ -116,7 +117,7 @@ export const DC_Configurations = () => {
       ><Form autoComplete="off">
         <FormikField name="Cellphone" disabled={FormState.loading}/>
         <h2 className="mt-4">Datos de Ubicación</h2>
-        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length===0} data={LocationsFullPath(LocationsValues)}/>
+        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length===0} data={LocationsFullPath(LocationsValues)} setValue={setLocations} />
         <LayoutStackedPanel>
           <FormikField name="AddressStreet" disabled={FormState.loading} className="flex-3"/>
           <FormikField name="AddressNumber" disabled={FormState.loading}/>

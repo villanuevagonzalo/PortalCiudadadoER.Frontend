@@ -1,6 +1,6 @@
 import { axiosBase } from "../Config/Axios";
 
-export class ProcedureAPI {
+export class FormAPI {
 
   private baseService;
 
@@ -8,26 +8,28 @@ export class ProcedureAPI {
     this.baseService = axiosBase;
   }
 
-
-  GetAll = async () => {
-    return this.baseService.get('/v0/admin/procedures')
-  }
-  
-
   Create = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/procedures', params,{
+    return this.baseService.post('/v0/backoffice/forms', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
   }
 
+  GetAll = async () => {
+    return this.baseService.get('/v0/backoffice/forms')
+  }
+  
+  GetPublishedAll = async () => {
+    return this.baseService.get('/v0/backoffice/forms/published')
+  }
+
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/procedures/update', params,{
+    return this.baseService.post('/v0/backoffice/forms/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -37,11 +39,7 @@ export class ProcedureAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/admin/procedures/delete', params)
+    return this.baseService.post('/v0/backoffice/forms/delete', params)
   }
-
-  GetCategories = async () => {
-    return this.baseService.get('/v0/admin/procedures/categories')
-  }
-
+  
 }

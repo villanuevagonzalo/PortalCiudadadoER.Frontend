@@ -5,7 +5,7 @@ import { AiOutlineCheckCircle, AiOutlineDelete, AiOutlinePlus, AiOutlineSave } f
 import { Link } from "react-router-dom";
 import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm, ProcedureInstance, FormInstance, SelectWrapper } from "../../../../Modules/FormElements";
 import { Form, Formik } from "formik";
-import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
+import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel, MdVerifiedUser } from "react-icons/md";
 import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Button } from "../../../../Components/Forms/Button";
@@ -14,8 +14,7 @@ import { HiOutlineMagnifyingGlass, HiTrash } from "react-icons/hi2";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp, UpdateProcedurePopUp } from "../../../../Components/Forms/PopUpCards";
-import { ProcedureElementShow } from "../../../../Modules/FormElements/Components/ProcedureElementShow";
-import { FormElementShow } from "../../../../Modules/FormElements/Components/FormsElement";
+import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
 interface Arguments {
     procedure:ProcedureInstance<ElementSchemaTypes>;
@@ -30,19 +29,21 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
     const ref:any = useRef(null);
 
   const { UpdateOneProcedure, setProcedures, procedures } = useContext(ProcedureContext);
-  const { UpdateForms , formularios} = useContext(FormContext);
+  const { UpdateForms , formularios, UpdatePublishedForms, publishedFormularios} = useContext(FormContext);
 
   const [forms, setForm] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [oldForms, setOldForms] = useState <string []> ([])
 
   const [proceduresAttached, setProcedureAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
-  const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+  //const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
 
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [oldDatosAdjuntos, setOldDatosAdjuntos]= useState <string []> ([])
 
   const [estadoProcedure, setEstadoProcedure] = useState<string>('Borrador');
+  const [userLevel, setUserLevel]= useState<string>('level_3');
+
   const [alertMessage, setAlertMessage] = useState("")
   const [showAlert, setShowAlert] = useState(false)
   const [crear, setCrear] = useState(false)
@@ -53,6 +54,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   const [seeOptions, setSeeOptions] = useState("home")
 
   useEffect(() => {
+    UpdatePublishedForms()
     const listaFormularios: string [] = [];
     const listaAdjuntos: string [] = [];
     procedure.getForms().map((element, index: number) => {
@@ -66,11 +68,14 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
       listaAdjuntos.push(element)
     });
     setOldDatosAdjuntos(listaAdjuntos);
+    setUserLevel(procedure.getCitizenLevel()!)
+    setEstadoProcedure(procedure.getState())
+
   }, []);
   
 
   const addNewForm = () =>{
-    const updatedOptions = formularios.map((forms) => ({
+    const updatedOptions = publishedFormularios.map((forms) => ({
       value: forms.getCode()+" - "+forms.getTitle(),
       label: forms.getCode()+" - "+forms.getTitle(), 
     }));
@@ -108,10 +113,8 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   }
 
   const updateProcedure = async () =>{
-
     const titleAttachedValues: string[] = [];
     const listaFormularios: string[] = [];
-
     if (oldForms.length !=0){
         oldForms.forEach((dato) => {
             listaFormularios.push(dato.split(" - ")[0]);
@@ -150,6 +153,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             estadoProcedure,
             procedure.getTheme(),
             titleAttachedValues,
+            userLevel,
             procedure.getId()
         );
         const response = await UpdateOneProcedure(newProcedureToBeSend, setFormState, procedure.getTitle());
@@ -160,30 +164,24 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             setErrorCarga(true)
         }
      }
-      
-    
   }
 
 
   const handleSeeForm = (formToSee:string) => {
-
     const codigoBuscado = formToSee.split("-")[0].trim().toUpperCase(); // Limpiar espacios y convertir a mayúsculas.
     const formularioEncontrado = formularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
     if (formularioEncontrado){
       setSeeOptions("seeForm"); 
       setFormToCheck(formularioEncontrado);
     }
-
   }
-
-
 
   const initialValues = Object.entries(oldForms).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj }), {});
 
   if (seeOptions=="seeForm") {
     return (
       <>
-        <FormElementShow form={formToCheck!}  />
+        <BackOfficesFormElement form={formToCheck!}  />
         <div style={{margin:"10px 0px 15px 0px"}}>
         <Button onClick={() => setSeeOptions("home")}>Volver a Modificar Trámite</Button>
         </div>
@@ -196,11 +194,24 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
        {crear && (<UpdateProcedurePopUp procedureTitle={procedure.getTitle()} create={updateProcedure} close={setCrear}  />)}
        {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={procedure.getTitle()} close={setErrorCarga}  /> )}
        {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
-   
-       <LayoutActorSection style={{margin:"10px 0px 10px 0px"}}>
+       <LayoutActorSection style={{margin:"10px 0px 20px 0px"}}>
          <h1><MdOutlineNewLabel />Datos generales del Trámite</h1>
-         <h2>Título del trámite: {procedure.getTitle()} </h2>
-         <h2>Temática del trámite: {procedure.getTheme()} </h2>
+         <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Título</h1>
+            <p>{procedure.getTitle()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Temática</h1>
+            <p>{procedure.getTheme()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Descripción</h1>
+            <p>{procedure.getDescription()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Organismo</h1>
+            <p>{procedure.getSecretary()}</p>
+          </LayoutSection>
        </LayoutActorSection>
    
        <LayoutActorSection style={{margin:"10px 0px 10px 0px"}}>
@@ -318,7 +329,20 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                    </div>
                    )}
    
-                   <p></p>
+                  <p></p>
+                  <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
+                  <h1><MdVerifiedUser />Nivel de ciudadano</h1>
+                  <h4>Nivel de ciudadano requerido para realizar este trámite</h4>
+                    <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
+                      <select value={userLevel} 
+                        onInput={(e) => setUserLevel((e.target as HTMLInputElement).value)} 
+                        >
+                        <option value="level_3">Nivel 3</option>
+                        <option value="level_2">Nivel 2</option>
+                      </select>
+                      </SelectWrapper >
+                    </div>
+                  <p></p>
                    <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 15px 0px"}}>
                      <h1><MdMore /> Estado</h1>
                      <SelectWrapper >

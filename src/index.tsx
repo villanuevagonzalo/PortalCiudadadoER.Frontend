@@ -8,6 +8,8 @@ import NotificationsContextProvider from './Contexts/NotificationContext';
 import ScrollToTop from './Routes/ScrollTop';
 import FormContextProvider from './Contexts/FormContext';
 import ProcedureContext from './Contexts/ProcedureContext';
+import CiudadanoFormContextProvider from './Contexts/CiudadanoFormContext';
+import CiudadanoProcedureContextProvider from './Contexts/CiudadanoProcedureContext';
 
 const REACTENV = process.env
 
@@ -17,10 +19,14 @@ ReactDOM.render(
       <NotificationsContextProvider>
         <ProcedureContext>
           <FormContextProvider>
-            <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
-              <App />
-              <ScrollToTop/>
-            </BrowserRouter>
+            <CiudadanoProcedureContextProvider>
+              <CiudadanoFormContextProvider>
+                <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
+                  <App />
+                  <ScrollToTop/>
+                </BrowserRouter>
+                </CiudadanoFormContextProvider>
+              </CiudadanoProcedureContextProvider>
             </FormContextProvider>
           </ProcedureContext>
       </NotificationsContextProvider>
