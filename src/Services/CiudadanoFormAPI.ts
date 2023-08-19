@@ -8,7 +8,10 @@ export class CiudadanoFormAPI {
     this.baseService = axiosBase;
   }
 
-  
+  GetAll = async () => {
+    return this.baseService.get('/v0/dashboard/forms')
+  }
+
   //create a new procedure
   Create = async (params: {
     procedure_data_id: number,
@@ -16,7 +19,7 @@ export class CiudadanoFormAPI {
     form_data: string,
     attachments?: File
   }) => {
-    return this.baseService.post('dashboard/procedures/forms', params,{
+    return this.baseService.post('/v0/dashboard/procedures/forms', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }

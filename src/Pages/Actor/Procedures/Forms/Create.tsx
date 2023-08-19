@@ -30,7 +30,7 @@ export const DA_Procedures_Forms_Create = () => {
   const [fields, setFields] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
   const [instance, setIntance] = useState<ElementInstance<ElementSchemaTypes>>()
   const [index, setIndex] = useState<number>(0);
-  const [jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
+  //const [jsonproperties, setJsonproperties] = useState<string>('{ "label": "Prueba", "required": true, "disabled": true, "length_min": 0, "length_max": 10, "value_min": 0, "value_max": 100, "value_default": "", "value_regex": "", "childrens": ""}');
   const [jsona2, setJsona2] = useState<string>('[]');
   const [estadoFormulario, setEstadoFormulario] = useState<string>('Borrador');
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -53,17 +53,17 @@ export const DA_Procedures_Forms_Create = () => {
     setFields((prev: any) => [...prev, newfield])
   }
 
-  const handleEstadoFormulario = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  /*const handleEstadoFormulario = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setEstadoFormulario(event.target.value);
-  };
+  };*/
 
-  const handleIndexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  /*const handleIndexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIndex(+event.target.value);
-  }
+  }*/
 
-  const handleJsonPropiertiesChanges = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  /*const handleJsonPropiertiesChanges = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setJsonproperties(event.target.value);
-  }
+  }*/
 
   const editarComponente = (schema: ElementInstance<ElementSchemaTypes>, indice: number) => {
     setIntance(schema)
@@ -101,6 +101,20 @@ export const DA_Procedures_Forms_Create = () => {
     });
 };
 
+  const checkExistingCodes = (newCode:String):boolean => {
+
+    const hasInvalidCode = formularios.some((forms, index: number) => {
+      
+      if (forms.getCode()==newCode) {
+          return true; // Elemento inválido encontrado, retornar true
+      }
+      return false; // Elemento válido, retornar false
+  });
+
+    return !hasInvalidCode;
+
+  }
+
   const processForm = async () => {
     setDefaultValuesToElements(fields);
     const nuevoFormularioToBeSend = new FormInstance(
@@ -116,7 +130,6 @@ export const DA_Procedures_Forms_Create = () => {
   };
 
 
-
   const guardarFormulario = async () => {
     const elementsName = checkElementsNames(fields)
     if (elementsName){
@@ -129,23 +142,31 @@ export const DA_Procedures_Forms_Create = () => {
         setCompletarCampos(true)
       } else {
         if (isValidCode(formBasicData.Code.value)){
-          setDefaultValuesToElements(fields)
-          const nuevoFormularioToBeSend = await processForm(); // Esperar a que processForm() termine y obtener el valor de nuevoFormularioToBeSend
-          const response = await SaveForm(nuevoFormularioToBeSend, setFormState, formBasicData.Code.value, formBasicData.Title.value);
-          if (response){
-            setFields([])
-              setFormBasicData({
-                Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired","containsSpacesOrCommas"])),
-                Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
-                Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
-                Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
-                Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
-              })
-              setCargadoCorrectamente(true)
-              setCrear(false)
+          if (checkExistingCodes(formBasicData.Code.value)){
+            setDefaultValuesToElements(fields)
+            const nuevoFormularioToBeSend = await processForm(); // Esperar a que processForm() termine y obtener el valor de nuevoFormularioToBeSend
+            const response = await SaveForm(nuevoFormularioToBeSend, setFormState, formBasicData.Code.value, formBasicData.Title.value);
+            if (response){
+              setFields([])
+                setFormBasicData({
+                  Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired","containsSpacesOrCommas"])),
+                  Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
+                  Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
+                  Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
+                  Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
+                })
+                setCargadoCorrectamente(true)
+                setCrear(false)
+            }else{
+              setErrorCarga(true)
+            }
+
           }else{
-            setErrorCarga(true)
+            setCrear(false)
+            setShowAlert(true)
+            setAlertMessage("Código de formulario ya existente");
           }
+            
         }else{
           setCrear(false)
           setShowAlert(true)

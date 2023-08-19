@@ -3,10 +3,14 @@ import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Component
 import { ElementInstance, FormInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
-import {Element} from './../FormElements/Components/Element';
+import {Element} from '../FormElements/Components/Element';
 import { Button } from "../../Components/Forms/Button";
 import { CitizenFormCompleteAllFiles } from "../../Components/Forms/PopUpCards";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { BiArrowBack, BiSend } from "react-icons/bi";
+import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
+import { IFormState } from "../../Interfaces/Data";
+import { DefaultFormState } from "../../Data/DefaultValues";
 
 interface Arguments {
     procedureID:number,
@@ -18,6 +22,9 @@ interface Arguments {
 
   export const CiudadanoFormElement: React.FC<Arguments> = ({procedureID, form, close}) => {
     
+    const { SaveForm } = useContext(CiudadanoFormContext);
+    const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
+
     const [showAlertCompleteElements, setShowAlertCompleteElements] = useState(false); 
     const [elementToComplete, setElementToComplete] = useState <string> ()
    
@@ -36,7 +43,7 @@ interface Arguments {
         });
     };
 
-    const enviar = () => {
+    const enviar = async () => {
 
         let elements_common: FieldsType = [];
         let elements_files: FieldsType = [];
@@ -53,9 +60,10 @@ interface Arguments {
         const data = {
             procedure_data_id: procedureID,
             form_unit_code:form.getCode(),
-            form_data: elements_common,
+            form_data: JSON.stringify(elements_common),
             attachments: elements_files
           };
+          const response = await SaveForm(data, setFormState);
 
      
     };
@@ -106,10 +114,9 @@ interface Arguments {
                     </Formik>
                 </LayoutSection> 
             </div>
-            <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
-            <Button onClick={ () => checkValues()} >ENVIAR</Button>
-            <Button onClick={ () => close("home")} >VOLVER</Button>
-            
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
+                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >CARGAR<BiSend/> </Button>
             </div>
         </div>
     )

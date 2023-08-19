@@ -244,83 +244,50 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
 
 }
 
+export class ProcedureData {
 
-/*
-export class ProcedureInstance<T extends ElementSchemaTypes>  {
+  private procedure_data_id:number; 
+  private procedure_unit_id:number;
+  private reason:string;
+  private forms: string [];
+  private attachments?: string [];
+  private status:string;
+  private created_at?:string;
+  private updated_at?:string;
+  private date_approved?:string;
+
+  constructor(procedure_data_id: number, procedure_unit_id: number, reason: string, status: string, forms:string [], attachments?: string[],  created_at?: string, updated_at?:string,date_approved?:string ) {
+
+    this.procedure_data_id=procedure_data_id;
+    this.procedure_unit_id=procedure_unit_id;
+    this.reason=reason;
+    this.forms=forms;
+    this.attachments=attachments;
+    this.status=status;
+    this.created_at=created_at;
+    this.updated_at=updated_at;
+    this.date_approved=date_approved;
+
+  }
+
+  getId(){
+    return this.procedure_data_id;
+  }
   
-  private title:string;
-  private description:string;
-  private state:string; //los estados pueden ser borrador, publicado, etc.
-  private theme:string; //temática
-  private forms: FormInstance<ElementSchemaTypes>[];
-  private attachments:string []
-
-  constructor(forms:FormInstance<T>[], title:string, description:string, state:string, theme:string, atthacments:string [] ) {
-
-    this.title=title;
-    this.description=description;
-    this.state=state; 
-    this.theme=theme;
-    this.forms=forms; 
-    this.attachments=atthacments;
-
-  }
-
-  addForm(form: FormInstance<T>) {
-    this.forms.push(form);
-  }
-  addName(title:string){
-    this.title=title;
-  }
-  addDescription(description:string){
-    this.description=description;
-  }
-  addState(state:string){
-    this.state=state;
-  }
-  addTheme(theme:string){
-    this.theme=theme;
-  }
-  addAttachments (attachments:string []){
-    this.attachments=attachments
-  }
-  getForms() {
-    return this.forms;
-  }
-  getForm(index:number){
-    if (this.forms.length>=index)
-    return this.forms[index]
-    else 
-    return null
-  }
-  getTitle(){
-    return this.title;
-  }
-  getDescription(){
-    return this.description;
-  }
-  getState(){
-    return this.state;
-  }
-  getTheme(){
-    return this.theme;
-  }
-  getAttachments (){
-    return this.attachments;
-  }
   getJSON (){
+
     const ProcedureData = {
-      "title": this.title,
-      "description": this.description,
-      "state": this.state,
-      "theme": this.theme,
+      "procedure_data_id": this.procedure_data_id,
+      "procedure_unit_id": this.procedure_unit_id,
+      "reason": this.reason,
       "forms": JSON.stringify(this.forms),
-      "attachments": JSON.stringify(this.attachments)
-    };
-    
+      "attachments":JSON.stringify(this.attachments),
+      "status": this.status,
+      "created_at": this.created_at,
+      "updated_at": this.updated_at,
+      "date_approved": this.date_approved,
+    }
     return ProcedureData;
+
   }
-
 }
-
-*/

@@ -6,7 +6,7 @@ import { Button } from "../../Components/Forms/Button";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useContext, useEffect, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
-import { CiudadanoFormElement } from "./FormElement";
+import { CiudadanoFormElement } from "./FormDataElement";
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -18,7 +18,7 @@ interface FormGenericData {
     title:string;
   }
 
-  export const CiudadanoProcedureElement: React.FC<Arguments> = ({procedureInstance, procedureData}) => {
+  export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, procedureData}) => {
 
    
     const {formularios, UpdateForms} = useContext(FormContext);

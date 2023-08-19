@@ -9,9 +9,11 @@ import { DefaultFormState } from '../../../Data/DefaultValues';
 import { IFormState } from '../../../Interfaces/Data';
 import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';
 import { ProcedureContext } from '../../../Contexts/ProcedureContext';
+import { CiudadanoProcedureContext } from '../../../Contexts/CiudadanoProcedureContext';
+
 import { ProcedureInstance } from '../../../Modules/FormElements/Class';
 import { ElementSchemaTypes } from '../../../Modules/FormElements/Types';
-import { CiudadanoProcedureElement } from '../../../Modules/Ciudadano/ProcedureElement';
+import { CiudadanoProcedureData } from '../../../Modules/Ciudadano/ProcedureDataElement';
 
 const dummyData = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -28,32 +30,52 @@ const FormRequiredFields = ["Tramites"];
 export const TramitesOnlinePage = () => {
 
   const { UpdateProcedures, procedures , isLoading} = useContext(ProcedureContext);
+  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
   const [searchProcedure, setSearchProcedure] = useState<string>()
   const [procedureInstance, setProcedureInstance] = useState<ProcedureInstance<ElementSchemaTypes>>();
   const [render, setRender] = useState("home")
+  const [showNetworkError,setShowNetworkError] = useState(true)
 
   useEffect(()=>{
     UpdateProcedures()
+    UpdateCiudadanoProcedures()
   },[])
 
+  useEffect(()=>{
+    console.log("Procedures del ciudadano: "+JSON.stringify(ciudadanoProcedures))
+  },[ciudadanoProcedures])
+  
   useEffect(()=>{
     if (procedureInstance!=null && procedureInstance!=undefined){
         setRender("procedure")
     }
   },[procedureInstance])
 
-  const seeProcedure = (idBuscado:number) =>{
+
+  const seeProcedure = (idBuscado: number) => {
     const foundProcedure = procedures.find(procedure => procedure.getId() === idBuscado);
-    setProcedureInstance(foundProcedure)
-  }
+    if (foundProcedure) {
+        CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
+            .then(response => {
+                if (response) {
+                    setProcedureInstance(foundProcedure);
+                }else{
+                    setShowNetworkError(true)
+                }
+            })
+            .catch(error => {
+                // Handle errors here
+            });
+    }
+};
 
   if (render=="procedure"){
 
     return (
-        <CiudadanoProcedureElement procedureInstance={procedureInstance!} procedureData={procedureInstance!} />
+        <CiudadanoProcedureData procedureInstance={procedureInstance!} procedureData={procedureInstance!} />
     )
 
   }else{ 
@@ -80,6 +102,7 @@ export const TramitesOnlinePage = () => {
                 </Form>
             </Formik>
         </LayoutSection>
+        {showNetworkError&&<h2>Error de red, intente nuevamente</h2>}
         {dummyData.map((item, index) => <LayoutSection key={index}>
             <h1>{item.title}</h1>
             <p>{item.description}</p>

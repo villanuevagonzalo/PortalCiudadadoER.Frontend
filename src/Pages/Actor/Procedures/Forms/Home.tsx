@@ -131,9 +131,10 @@ export const DA_Procedures_Forms_Home = () => {
         {copy&&(<CopyFormPopUp formToCopy={formToCheck!} handleCopyForm={handleCopyForm} close={setCopy} /> )}
         {errorCarga && (<FormCreateErrorPopUp formTitle={""} close={setErrorCarga} />)}
         <LayoutActorSection>
-        <p> Configurador de formularios</p>
+        <h1> Configurador de formularios</h1>
+        <hr/>
           En esta sección generamos, modificamos y damos de baja los formularios que serán utilizados en los trámites  
-          <LayoutStackedPanel>
+          <LayoutStackedPanel style={{marginTop:"15px"}}>
           <LayoutSpacer/>
             <div>
               <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
@@ -144,7 +145,6 @@ export const DA_Procedures_Forms_Home = () => {
                       <FormikSearch name="Tramites" label={"Filtra los formularios"} data={ResultArray} setValue={setSearchForm} autoFocus/>
                   </Form>
               </Formik></div>
-            <LayoutSpacer/>
             {/* Botones para crear o actualizar formularios */}
             <div style={{display:"flex", flexDirection:"row"}}>
               <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateForms()} >
@@ -154,7 +154,6 @@ export const DA_Procedures_Forms_Home = () => {
                 <Button style={{ width: '150px', height: '40px' }}>Nuevo<AiOutlinePlus/></Button>
               </Link>
             </div>
-    
           </LayoutStackedPanel>
           
         {/*  <Table columns={mcolumns} data={mdata} />*/}

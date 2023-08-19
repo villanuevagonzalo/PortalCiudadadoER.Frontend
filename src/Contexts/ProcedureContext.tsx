@@ -87,7 +87,6 @@ const ContextValues = () => {
       const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
 
       const mappedArray = FormsObj.map((procedureInstance: any) => {
-        console.log("ASDF: "+JSON.stringify(procedureInstance))
         const newProcedures = new ProcedureInstance(
           JSON.parse(procedureInstance.FORMS),
           procedureInstance.TITLE,
