@@ -19,7 +19,7 @@ export class CiudadanoFormAPI {
     form_data: string,
     attachments?: File
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures/forms', params,{
+    return this.baseService.post('/v0/dashboard/forms', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -29,7 +29,7 @@ export class CiudadanoFormAPI {
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures/update', params,{
+    return this.baseService.post('/v0/dashboard/forms/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -39,7 +39,7 @@ export class CiudadanoFormAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures/delete', params)
+    return this.baseService.post('/v0/dashboard/forms/delete', params)
   }
 
 

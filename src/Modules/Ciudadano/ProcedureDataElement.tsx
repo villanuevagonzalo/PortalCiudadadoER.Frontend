@@ -1,16 +1,16 @@
 import { MdCheck, MdOutlineDataset, MdOutlineNewLabel, MdVerifiedUser } from "react-icons/md";
 import { LayoutSection, LayoutSpacer } from "../../Components/Layout/StyledComponents";
-import { FormInstance, ProcedureInstance } from "../FormElements/Class";
+import { FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Button } from "../../Components/Forms/Button";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useContext, useEffect, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
+import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
-    procedureData:ProcedureInstance<ElementSchemaTypes>;
 }
 
 interface FormGenericData {
@@ -18,11 +18,15 @@ interface FormGenericData {
     title:string;
   }
 
-  export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, procedureData}) => {
+  export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance}) => {
 
    
     const {formularios, UpdateForms} = useContext(FormContext);
-    const [form, setForm] = useState <FormInstance<ElementSchemaTypes>[]> ([]);
+    const { ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+
+    const [formsOfGenericProcedure, setFormsOfGenericProcedure] = useState <FormInstance<ElementSchemaTypes>[]> ([]);
+    const [procedureData, setProcedureData] = useState <ProcedureData > ();
+
     const [formToComplete, setFormToComplete] = useState <FormInstance<ElementSchemaTypes>> ();
     const [render, setRender] = useState("home")
 
@@ -38,25 +42,56 @@ interface FormGenericData {
         UpdateForms()
     },[])
 
+    //se busca formularios del tramite como se definió por el actor
     useEffect(()=>{
         const formulariosProcedureInstance = procedureInstance.getForms();
         const formulariosFiltrados = formularios.filter(formulario =>
             formulariosProcedureInstance.some(procFormulario => procFormulario === formulario.getCode())
         );
-        setForm(formulariosFiltrados)
+        setFormsOfGenericProcedure(formulariosFiltrados)
     },[formularios])
 
+
     useEffect(()=>{
-        if (formToComplete!=undefined){
+        
+        console.log("esto es lo que tengo en ciudadanoProcedures: "+JSON.stringify(ciudadanoProcedures))
+        const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
+        console.log("asdf "+JSON.stringify(filteredProcedure))
+        setProcedureData(filteredProcedure);
+
+    },[ciudadanoProcedures])
+
+    
+    useEffect(()=>{
+        
+        console.log("el procedure formsOfGenericProcedure id es: "+JSON.stringify(formsOfGenericProcedure))
+        
+    },[formsOfGenericProcedure])
+    
+
+    useEffect(()=>{
+        console.log("entoces veamos"+JSON.stringify(formToComplete))
+        console.log("entoces veamos"+JSON.stringify(procedureData))
+
+        if (formToComplete!=undefined && procedureData!=undefined){
+
             setRender("form")
         }
     },[formToComplete])
 
-    if (render=="form"){
 
-        return (
-            <CiudadanoFormElement form={formToComplete!} procedureID={procedureInstance.getId()!} close={setRender} />
-        )
+    const renderFormComponent = () => {
+        console.log("este es el procedureData id: "+procedureData?.getId())
+        if (formToComplete && procedureData) {
+            return (
+                <CiudadanoFormElement form={formToComplete} procedureID={procedureData.getId()} close={setRender} />
+            );
+        }
+        return null;
+    };
+
+    if (render==="form"){
+        return renderFormComponent();
 
     }else{
 
@@ -86,17 +121,17 @@ interface FormGenericData {
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                   <h1><MdOutlineDataset />Campos del trámite</h1>
                   <h2><MdOutlineDataset />Formularios del trámite</h2>
-                  {procedureInstance.getForms().length>0&&form.map((forms:any, index: number) => (
+                  {procedureInstance.getForms().length>0&&formsOfGenericProcedure.map((forms:any, index: number) => (
                   <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                       <LayoutSection>
                       <h1>{forms.getTitle()} </h1>
-                      {forms.getCode().includes(procedureData.getForms()) ? (
-                      <><h1><MdCheck />Formulario completado</h1>
-                      <Button onClick={() => completarForm(forms)}> <HiOutlineMagnifyingGlass />Completar Formulario</Button></>
+                     {procedureData && procedureData.getForms().includes(forms.getCode().toString()) ? (
+                            <><h1><MdCheck />Formulario completado</h1></>
+                        ) : (
+                            <Button onClick={() => completarForm(forms)}> <HiOutlineMagnifyingGlass />Completar Formulario</Button>
+                        )}
 
-                      ) : (
-                        <Button onClick={ () => completarForm(forms)} > <HiOutlineMagnifyingGlass/>Completar Formulario</Button>
-                      ) }
+
                       </LayoutSection>
                   </div>
                   ))}  
@@ -110,7 +145,7 @@ interface FormGenericData {
                         <div key={index} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
                             <LayoutSection>
                                 <h1>{attachment} </h1>
-                                {attachment.includes(procedureData.getAttachments()) ? (
+                                {attachment.includes(procedureData!.getAttachments()) ? (
                                     <h1><MdCheck />Adjunto completado</h1>
                                 ) : (
                                     <Button onClick={() => completarAdjunto(attachment)}><HiOutlineMagnifyingGlass />Completar Formulario</Button>

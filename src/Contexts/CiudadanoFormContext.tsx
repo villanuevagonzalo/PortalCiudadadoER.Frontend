@@ -20,7 +20,7 @@ export type FormData = {
 const ContextValues = () => {
 
   const AxiosCiudadanoFormAPI = new CiudadanoFormAPI();
-  const [formularios, setFormularios] = useState<FormInstance<ElementSchemaTypes>[]>([]);
+  const [ciudadanoFormularios, setCiudadanoFormularios] = useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
@@ -29,11 +29,11 @@ const ContextValues = () => {
   const SaveForm = async (newFormularioData: any, setFormState: Function) => {
     setIsLoading(true)
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.Create, newFormularioData, setFormState);
+    console.log("esto es lo que devuelve: "+response.data.data)
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
-      const codeResponse = responseData[0].CODE;
-      const titleResponse = responseData[0].TITLE
+    
       if (status) {
         //setFormularios(prevState => ([...prevState, newFormulario]));
         //setIsLoading(false)
@@ -57,8 +57,8 @@ const ContextValues = () => {
       const responseData = JSON.parse(response.data.data);
       const codeResponse = responseData[0].CODE;
       if (status && codeResponse == code ) {
-        setFormularios(prevFormularios => prevFormularios.filter(formulario =>formulario.getCode() !== code )); //delete the old form
-        setFormularios(prevState => ([...prevState, updateFormulario])); //set the new form
+        setCiudadanoFormularios(prevFormularios => prevFormularios.filter(formulario =>formulario.getCode() !== code )); //delete the old form
+        setCiudadanoFormularios(prevState => ([...prevState, updateFormulario])); //set the new form
         setIsLoading(false)
         return true;
       }
@@ -114,20 +114,20 @@ const ContextValues = () => {
         );
         formulariosAux.push(Formulario);
       });   
-      setFormularios(formulariosAux);
+      setCiudadanoFormularios(formulariosAux);
     }
     setIsLoading(false); 
   }
 
   const UserClearData = () => {
-    setFormularios([]);
+    setCiudadanoFormularios([]);
   }
 
   return {
     isLoading,
-    formularios,
+    ciudadanoFormularios,
     publishedFormularios,
-    setFormularios,
+    setCiudadanoFormularios,
     SaveForm, 
     UpdateOneForm,
     DeleteOneForm,

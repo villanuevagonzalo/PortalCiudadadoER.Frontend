@@ -44,10 +44,12 @@ export const TramitesOnlinePage = () => {
     UpdateCiudadanoProcedures()
   },[])
 
+  //solo de prueba
   useEffect(()=>{
     console.log("Procedures del ciudadano: "+JSON.stringify(ciudadanoProcedures))
   },[ciudadanoProcedures])
-  
+  //solo de prueba
+
   useEffect(()=>{
     if (procedureInstance!=null && procedureInstance!=undefined){
         setRender("procedure")
@@ -56,10 +58,14 @@ export const TramitesOnlinePage = () => {
 
 
   const seeProcedure = (idBuscado: number) => {
+    console.log("este es el id buscado: "+idBuscado)
     const foundProcedure = procedures.find(procedure => procedure.getId() === idBuscado);
+    console.log("este es el foundProcedure buscado: "+JSON.stringify(foundProcedure))
+
     if (foundProcedure) {
         CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
             .then(response => {
+                console.log("respuesta: "+response)
                 if (response) {
                     setProcedureInstance(foundProcedure);
                 }else{
@@ -67,18 +73,21 @@ export const TramitesOnlinePage = () => {
                 }
             })
             .catch(error => {
-                // Handle errors here
+                console.log("error: "+error)
             });
     }
 };
 
-  if (render=="procedure"){
 
-    return (
-        <CiudadanoProcedureData procedureInstance={procedureInstance!} procedureData={procedureInstance!} />
-    )
+useEffect(()=>{
+    console.log("ciudadanoProcedures"+JSON.stringify(ciudadanoProcedures))
+},[ciudadanoProcedures])
 
-  }else{ 
+
+    if (render === "procedure" && procedureInstance) {
+        return <CiudadanoProcedureData procedureInstance={procedureInstance} />;
+    } 
+    else{ 
 
     return(<><LayoutColumns className='gap-8 FlexSwitchMobile'>
         <LayoutColumn>

@@ -6,7 +6,7 @@ import { Form, Formik } from "formik";
 import {Element} from '../FormElements/Components/Element';
 import { Button } from "../../Components/Forms/Button";
 import { CitizenFormCompleteAllFiles } from "../../Components/Forms/PopUpCards";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { BiArrowBack, BiSend } from "react-icons/bi";
 import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
 import { IFormState } from "../../Interfaces/Data";
@@ -22,6 +22,7 @@ interface Arguments {
 
   export const CiudadanoFormElement: React.FC<Arguments> = ({procedureID, form, close}) => {
     
+    console.log("el procedure id es: "+procedureID)
     const { SaveForm } = useContext(CiudadanoFormContext);
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
@@ -36,7 +37,6 @@ interface Arguments {
             if (propertiesObj.required==true && value=="" ){
                 setElementToComplete(element.properties.label)
                 setShowAlertCompleteElements(true)
-                console.log ("debe completar el campo: "+ element.properties.label)
             }else{
                 enviar()
             } 
@@ -58,15 +58,23 @@ interface Arguments {
         });
 
         const data = {
-            procedure_data_id: procedureID,
+            procedure_data_id: Number(procedureID),
             form_unit_code:form.getCode(),
             form_data: JSON.stringify(elements_common),
             attachments: elements_files
           };
           const response = await SaveForm(data, setFormState);
 
-     
+          console.log("form data output: "+response)
     };
+    useEffect(()=>{
+        
+        console.log("procedureID"+procedureID)
+
+
+    },[procedureID])
+
+
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     return (

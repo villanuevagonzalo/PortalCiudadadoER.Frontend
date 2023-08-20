@@ -274,8 +274,23 @@ export class ProcedureData {
     return this.procedure_data_id;
   }
   
+  getProcedureUnitId(){
+
+    return this.procedure_unit_id;
+  }
+
+  getForms (){
+
+    return this.forms;
+  }
+
+  getAttachments(){
+    return this.attachments;
+  }
+
   getJSON (){
 
+    console.log("esto envio: "+this.procedure_data_id+" - "+ this.procedure_unit_id)
     const ProcedureData = {
       "procedure_data_id": this.procedure_data_id,
       "procedure_unit_id": this.procedure_unit_id,

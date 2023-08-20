@@ -17,6 +17,10 @@ const ContextValues = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
+  useEffect(()=>{
+    console.log("esto es lo que me da: "+JSON.stringify(ciudadanoProcedures))
+},[ciudadanoProcedures])
+
   const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
     
     const data = {procedure_unit_id:procedure_id}
@@ -25,10 +29,38 @@ const ContextValues = () => {
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
-      const titleResponse = responseData[0].TITLE
+      console.log("estatus: "+status)
       if (status) {
-      //  const newProcedure = new ProcedureInstance(procedure.getForms(),procedure.getTitle(), procedure.getDescription(), procedure.getSecretary(), procedure.getState(), procedure.getTheme(), procedure.getAttachments())
-     //   setCiudadanoProcedures(prevState => ([...prevState, newProcedure]));
+        let parsedForms:any=[]
+        let parsedAttachments=[]
+        console.log("responseData"+JSON.stringify(responseData))
+
+        console.log("responseData.FORMS"+(responseData.FORMS))
+
+        if (responseData.FORMS!="" && responseData.FORMS!=undefined){
+          parsedForms = responseData.FORMS.split(",");
+        }
+        if (responseData.ATTACHMENTS!=""&&responseData.ATTACHMENTS!=undefined){
+          parsedAttachments = responseData.ATTACHMENTS.split(",");
+        }
+
+        const newProceduresData = new ProcedureData(
+          responseData.ID,
+          responseData.PROCEDURE_UNITS_ID,
+          responseData.REASON,
+          responseData.STATUS,
+            parsedForms,
+            parsedAttachments,
+            responseData.CREATED_AT,
+            responseData.UPDATED_AT,
+            responseData.DATE_APPROVED
+        );
+        setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
+      /*if(ciudadanoProcedures.length==0){
+        setCiudadanoProcedures([newProceduresData])
+      }else{
+        setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
+      }*/
         return true;
       }
       else{
@@ -83,17 +115,16 @@ const ContextValues = () => {
 
             const FormsObj = JSON.parse(FormData);
             const mappedArray = FormsObj.map((procedureInstance: any) => {
-                console.log("PROCEDURE DATE: " + JSON.stringify(procedureInstance));
-
                 try {
 
-                    let parsedForms=[]
+                    let parsedForms:any=[]
                     let parsedAttachments=[]
                     if (procedureInstance.FORMS!=""){
-                      parsedForms = JSON.parse(procedureInstance.FORMS);
+                      parsedForms = procedureInstance.FORMS.split(",");
+
                     }
                     if (procedureInstance.ATTACHMENTS!=""){
-                      parsedAttachments = JSON.parse(procedureInstance.ATTACHMENTS);
+                      parsedAttachments = procedureInstance.ATTACHMENTS.split(",");
                     }
 
                     const newProceduresData = new ProcedureData(
