@@ -5,7 +5,7 @@ import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel, La
 import { ColumnDef } from '@tanstack/react-table';
 import { FormikButton } from "../../../../Components/Forms/FormikButton";
 import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RxUpdate } from "react-icons/rx";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
 import { FormWrapperInput } from "../../../../Components/Forms/StyledComponents";
@@ -17,7 +17,7 @@ import { TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { ProcedureInstance } from "../../../../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
-import { BiTrash } from "react-icons/bi";
+import { BiArrowBack, BiTrash } from "react-icons/bi";
 import { Button } from "../../../../Components/Forms/Button";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { UpdateProcedure } from "./UpdateProcedures";
@@ -52,6 +52,16 @@ export const DA_Procedures_Config = () => {
   useEffect(()=>{
     UpdateProcedures()
     UpdateForms()
+
+    const handlePopState = () => {
+      setSeeOptions("home");
+      setProcedureToCheck(undefined)
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+
   },[])
 
   useEffect(()=>{
@@ -96,14 +106,14 @@ export const DA_Procedures_Config = () => {
       return (
         <>
           <BackOfficesProcedureElement procedure={procedureToCheck!}  />
-          <Button onClick={() => setSeeOptions("home")}>Volver a Configurador</Button>
+          <Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver a Configurador</Button>
         </>
       )
     }else if (seeOptions=="modify"){
       return (
         <>
           <UpdateProcedure procedure={procedureToCheck!}  />
-          <Button onClick={() => setSeeOptions("home")}>Volver a Configurador</Button>
+          <Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver a Configurador</Button>
         </>
       )
     }else{
@@ -166,6 +176,8 @@ interface TableProps {
 
 const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, setDeleteProcedure, setProcedureToDelete, setCopy }) => {
   
+  const navigate = useNavigate();
+
   return (
     <TableWrapper>
       <thead>
@@ -184,10 +196,10 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
             <td style={{ verticalAlign: 'middle', width:"auto"}}> 
               <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"left"}}> 
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); navigate("/actor/procedures/config/") }}>
                   { item.getState() != "Borrador" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item); navigate("/actor/procedures/config/") }}>
                   < HiOutlinePencil/>
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>{setProcedureToDelete(item);setDeleteProcedure(true) ; window.scrollTo({ top: 0, behavior: 'smooth' });} }>

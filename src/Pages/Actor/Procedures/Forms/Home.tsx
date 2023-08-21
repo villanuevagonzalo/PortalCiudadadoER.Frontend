@@ -8,7 +8,7 @@ import { formGetInitialValues, formGetValidations } from "../../../../Interfaces
 import { Button } from "../../../../Components/Forms/Button";
 
 import { DefaultFormState } from '../../../../Data/DefaultValues';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Pages } from "../../../../Routes/Pages";
 import { Table } from "../../../../Components/Elements/Table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -18,7 +18,7 @@ import { FormInstance } from "../../../../Modules/FormElements/Class";
 import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormUpdate } from "./Update";
 import { CopyFormPopUp, DeleteFormPopUp, FormCreateErrorPopUp } from "../../../../Components/Forms/PopUpCards";
-import { BiTrash } from "react-icons/bi";
+import { BiArrowBack, BiTrash } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxUpdate } from "react-icons/rx";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
@@ -44,11 +44,19 @@ export const DA_Procedures_Forms_Home = () => {
   const [newCode, setNewCode] = useState("")
   const [errorCarga, setErrorCarga] = useState(false)
 
-
+  
   useEffect(()=>{
+    
     UpdateForms()
 
-    
+    const handlePopState = () => {
+      setSeeOptions("home");
+      setFormToCheck(undefined)
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
 
   },[])
 
@@ -120,13 +128,13 @@ export const DA_Procedures_Forms_Home = () => {
       return (
         <>
           <BackOfficesFormElement form={formToCheck!}  />
-          <Button onClick={() => setSeeOptions("home")}>Volver</Button>
+          <Button onClick={() => {setSeeOptions("home")}}><BiArrowBack/>Volver</Button>
         </>
       )
     } else if (seeOptions=="modify") {
       return <div>
           <FormUpdate formToUpdate= {formToCheck!} />
-          <Button onClick={() => setSeeOptions("home")}>Volver</Button>
+          <Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver</Button>
         </div>;
     }else {
       return(<>
@@ -192,6 +200,7 @@ interface TableProps {
 
 const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, setDeleteForm, setFormToDelete, setCopy }) => {
   
+  const navigate = useNavigate();
 
   return (
     <TableWrapper>
@@ -213,10 +222,10 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
             <td style={{ verticalAlign: 'middle', width:"auto"}}> 
               <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"left"}}> 
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); navigate("/actor/procedures/forms");}}>
                   { item.getStatus() != "Borrador" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item);navigate("/actor/procedures/forms"); }}>
                   < HiOutlinePencil/>
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setCopy(true); setFormToCheck(item) ; window.scrollTo({ top: 0, behavior: 'smooth' });}}>

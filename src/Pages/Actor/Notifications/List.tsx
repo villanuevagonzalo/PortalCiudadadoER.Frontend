@@ -32,10 +32,15 @@ export const DA_Notifications = () =>{
   const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
 
-  const handleLocations = async() => {
-    const response = await RawLocations();
-    setLocation(response)
+  const handleLocations = async () => {
+    try {
+      const response = await RawLocations();
+      setLocation(response);
+    } catch (error) {
+      console.error("Error en handleLocations:", error);
+    }
   }
+
   const [ FullSizeNotification, setFullSizeNotification ] = useState<ActorNotification | null>(null);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState); 
   const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
@@ -52,12 +57,10 @@ export const DA_Notifications = () =>{
     GetAllNotifications()
   },[])
 
+
   useEffect(()=>{
     if(Location.length>0 && actorNotifications.length>0){
-      
-      //actorNotifications[3].AGE_FROM = 5
-      //actorNotifications[3].DEPARTMENT = 258
-
+  
     const newdata:ActorTableNotification[] = actorNotifications.map((N:ActorNotification)=>{
       return ({
       Title: stringPreview(N.MESSAGE_TITLE,30),
@@ -162,4 +165,3 @@ export const DA_Notifications = () =>{
   </>)
 }
 
-/**/

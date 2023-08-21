@@ -22,7 +22,6 @@ interface Arguments {
 
   export const CiudadanoFormElement: React.FC<Arguments> = ({procedureID, form, close}) => {
     
-    console.log("el procedure id es: "+procedureID)
     const { SaveForm } = useContext(CiudadanoFormContext);
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 

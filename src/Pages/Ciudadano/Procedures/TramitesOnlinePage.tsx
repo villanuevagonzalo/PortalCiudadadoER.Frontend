@@ -32,7 +32,8 @@ const DataName = dummyData.map((item:any)=>item.title);
 const FormRequiredFields = ["Tramites"];
 
 export const TramitesOnlinePage = () => {
-    const navigate = useNavigate();
+    
+  const navigate = useNavigate();
 
   const { UpdateProcedures, procedures , isLoading} = useContext(ProcedureContext);
   const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
@@ -68,7 +69,6 @@ export const TramitesOnlinePage = () => {
   useEffect(()=>{
     if (procedureInstance!=null && procedureInstance!=undefined){
         navigate("/dashboard/procedures/"); // Cambiar "/procedure" a la ruta real de tu procedimiento
-
         setRender("procedure")
     }
   },[procedureInstance])

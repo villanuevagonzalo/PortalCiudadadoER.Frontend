@@ -15,6 +15,7 @@ import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp, UpdateProcedurePopUp } from "../../../../Components/Forms/PopUpCards";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
+import { BiArrowBack } from "react-icons/bi";
 
 interface Arguments {
     procedure:ProcedureInstance<ElementSchemaTypes>;
@@ -26,7 +27,8 @@ interface DatosAdjuntos {
 }
 
 export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
-    const ref:any = useRef(null);
+  
+  const ref:any = useRef(null);
 
   const { UpdateOneProcedure, setProcedures, procedures } = useContext(ProcedureContext);
   const { UpdateForms , formularios, UpdatePublishedForms, publishedFormularios} = useContext(FormContext);
@@ -36,7 +38,6 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
 
   const [proceduresAttached, setProcedureAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
-  //const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
 
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [oldDatosAdjuntos, setOldDatosAdjuntos]= useState <string []> ([])
@@ -172,6 +173,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
     const formularioEncontrado = formularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
     if (formularioEncontrado){
       setSeeOptions("seeForm"); 
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       setFormToCheck(formularioEncontrado);
     }
   }
@@ -183,7 +185,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
       <>
         <BackOfficesFormElement form={formToCheck!}  />
         <div style={{margin:"10px 0px 15px 0px"}}>
-        <Button onClick={() => setSeeOptions("home")}>Volver a Modificar Trámite</Button>
+        <Button color="secondary" onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver a Modificar Trámite</Button>
         </div>
       </>
     )
@@ -357,7 +359,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                      </div>
                    <LayoutStackedPanel className="mt-3">
                      <LayoutSpacer/>
-                     <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
+                     {/*<FormikButton color="secondary" onClick={{close("home")}} >Cancelar<MdOutlineCancel/></FormikButton>*/}
                      <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Finalizar<AiOutlineSave/></FormikButton>
                    </LayoutStackedPanel>
                </Form>
