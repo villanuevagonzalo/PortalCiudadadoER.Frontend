@@ -29,14 +29,10 @@ const ContextValues = () => {
   const SaveForm = async (newFormularioData: any, setFormState: Function) => {
     setIsLoading(true)
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.Create, newFormularioData, setFormState);
-    console.log("esto es lo que devuelve: "+response.data.data)
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
-    
       if (status) {
-        //setFormularios(prevState => ([...prevState, newFormulario]));
-        //setIsLoading(false)
         return true;
       }
       else{

@@ -1,5 +1,5 @@
 import { MdCheck, MdOutlineDataset, MdOutlineNewLabel, MdVerifiedUser } from "react-icons/md";
-import { LayoutSection, LayoutSpacer } from "../../Components/Layout/StyledComponents";
+import { LayoutSection, LayoutSectionProcedureTitle, LayoutSpacer } from "../../Components/Layout/StyledComponents";
 import { FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Button } from "../../Components/Forms/Button";
@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
+import { BiArrowBack } from "react-icons/bi";
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -70,8 +71,6 @@ interface FormGenericData {
     
 
     useEffect(()=>{
-        console.log("entoces veamos"+JSON.stringify(formToComplete))
-        console.log("entoces veamos"+JSON.stringify(procedureData))
 
         if (formToComplete!=undefined && procedureData!=undefined){
 
@@ -97,14 +96,16 @@ interface FormGenericData {
 
         return (
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
+                
+                <Button style={{width:"200px", margin:"0px 0px 15px 0px"}} > <BiArrowBack/>Volver a trámites</Button>
+
+                <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"column", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
+                    <h1 style={{textAlign:"center"}} >{procedureInstance.getTitle()}</h1>
+                </LayoutSectionProcedureTitle>
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineNewLabel />Datos Generales del Trámite</h1>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                        <h1>Título</h1>
-                        <p>{procedureInstance.getTitle()}</p>
-                    </LayoutSection>
-                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                        <h1>Temática</h1>
+                        <h1>Categoría</h1>
                         <p>{procedureInstance.getTheme()}</p>
                     </LayoutSection>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
@@ -145,10 +146,11 @@ interface FormGenericData {
                         <div key={index} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
                             <LayoutSection>
                                 <h1>{attachment} </h1>
-                                {attachment.includes(procedureData!.getAttachments()) ? (
+                                {procedureData && procedureData.getAttachments() && procedureData.getAttachments()!.includes(attachment) ? (
                                     <h1><MdCheck />Adjunto completado</h1>
                                 ) : (
-                                    <Button onClick={() => completarAdjunto(attachment)}><HiOutlineMagnifyingGlass />Completar Formulario</Button>
+                                    <Button onClick={() => completarAdjunto(attachment)}>
+                                        <HiOutlineMagnifyingGlass />Adjuntar Documento</Button>
                                 )}
                             </LayoutSection>
                         </div>

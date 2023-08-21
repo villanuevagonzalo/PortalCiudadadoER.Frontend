@@ -290,7 +290,6 @@ export class ProcedureData {
 
   getJSON (){
 
-    console.log("esto envio: "+this.procedure_data_id+" - "+ this.procedure_unit_id)
     const ProcedureData = {
       "procedure_data_id": this.procedure_data_id,
       "procedure_unit_id": this.procedure_unit_id,

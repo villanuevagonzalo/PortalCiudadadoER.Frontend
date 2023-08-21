@@ -18,7 +18,7 @@ const ContextValues = () => {
   const [errors, setErrors] = useState<string>("");
 
   useEffect(()=>{
-    console.log("esto es lo que me da: "+JSON.stringify(ciudadanoProcedures))
+    console.log("esto es lo que tiene ciudadanoProcedures: "+JSON.stringify(ciudadanoProcedures))
 },[ciudadanoProcedures])
 
   const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
@@ -119,6 +119,7 @@ const ContextValues = () => {
 
                     let parsedForms:any=[]
                     let parsedAttachments=[]
+                    
                     if (procedureInstance.FORMS!=""){
                       parsedForms = procedureInstance.FORMS.split(",");
 

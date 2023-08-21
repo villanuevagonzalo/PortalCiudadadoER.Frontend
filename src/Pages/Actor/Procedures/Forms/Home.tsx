@@ -47,6 +47,9 @@ export const DA_Procedures_Forms_Home = () => {
 
   useEffect(()=>{
     UpdateForms()
+
+    
+
   },[])
 
   const handleDeleteForm = async (code:string)=> {

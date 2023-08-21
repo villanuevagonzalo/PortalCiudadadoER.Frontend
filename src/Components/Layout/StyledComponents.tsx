@@ -727,6 +727,42 @@ export const LayoutSection = styled.div<{ }>`
   }
 `;
 
+export const LayoutSectionProcedureTitle = styled.div<{ }>`
+  background: var(--maincolor);
+  border-radius:0.5rem;
+  border: 1px solid var(--disabled);
+  width:100%;
+  padding:2rem;
+  color: var(--maincolor_text);
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-self: top;
+  gap:0.75rem;
+
+  & h1{
+    display: flex;
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    font-weight:600;
+  }
+
+  & h1 svg{
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
+    &.small{
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.75rem;
+    }
+  }
+`;
+
 export const LayoutActorSection = styled.div<{ }>`
   background: var(--maincolor);
   border-radius:0.5rem;

@@ -6,7 +6,7 @@ import { Button } from '../../../Components/Forms/Button';
 import { FormikSearch } from '../../../Components/Forms/FormikSearch';
 import { LayoutColumns, LayoutSection, LayoutTitle, LayoutColumn } from '../../../Components/Layout/StyledComponents';
 import { DefaultFormState } from '../../../Data/DefaultValues';
-import { IFormState } from '../../../Interfaces/Data';
+import { IFormState, IUserRol } from '../../../Interfaces/Data';
 import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';
 import { ProcedureContext } from '../../../Contexts/ProcedureContext';
 import { CiudadanoProcedureContext } from '../../../Contexts/CiudadanoProcedureContext';
@@ -14,6 +14,10 @@ import { CiudadanoProcedureContext } from '../../../Contexts/CiudadanoProcedureC
 import { ProcedureInstance } from '../../../Modules/FormElements/Class';
 import { ElementSchemaTypes } from '../../../Modules/FormElements/Types';
 import { CiudadanoProcedureData } from '../../../Modules/Ciudadano/ProcedureDataElement';
+import {UserContext} from '../../../Contexts/UserContext';
+import { getLSData } from '../../../Utils/General';
+import { CitizenProcedureLevelError, NetworkAlertPopUp } from '../../../Components/Forms/CitizenPopUpCards';
+import { useNavigate } from "react-router-dom";
 
 const dummyData = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -28,68 +32,93 @@ const DataName = dummyData.map((item:any)=>item.title);
 const FormRequiredFields = ["Tramites"];
 
 export const TramitesOnlinePage = () => {
+    const navigate = useNavigate();
 
   const { UpdateProcedures, procedures , isLoading} = useContext(ProcedureContext);
   const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+  const { userData} = useContext(UserContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
   const [searchProcedure, setSearchProcedure] = useState<string>()
   const [procedureInstance, setProcedureInstance] = useState<ProcedureInstance<ElementSchemaTypes>>();
   const [render, setRender] = useState("home")
-  const [showNetworkError,setShowNetworkError] = useState(true)
+  const [showNetworkError,setShowNetworkError] = useState(false)
+  const CurrentUserRol:IUserRol[] = getLSData('UserRol');
+  const [citizenLevelError, setCitizenLevelError] = useState(false)
 
+  
   useEffect(()=>{
     UpdateProcedures()
     UpdateCiudadanoProcedures()
-  },[])
 
-  //solo de prueba
-  useEffect(()=>{
-    console.log("Procedures del ciudadano: "+JSON.stringify(ciudadanoProcedures))
-  },[ciudadanoProcedures])
-  //solo de prueba
+    const handlePopState = () => {
+        setRender("home");
+        setProcedureInstance(undefined)
+      };
+  
+      window.addEventListener("popstate", handlePopState);
+  
+      return () => {
+        window.removeEventListener("popstate", handlePopState);
+      };
+
+  },[])
 
   useEffect(()=>{
     if (procedureInstance!=null && procedureInstance!=undefined){
+        navigate("/dashboard/procedures/"); // Cambiar "/procedure" a la ruta real de tu procedimiento
+
         setRender("procedure")
     }
   },[procedureInstance])
 
 
   const seeProcedure = (idBuscado: number) => {
-    console.log("este es el id buscado: "+idBuscado)
     const foundProcedure = procedures.find(procedure => procedure.getId() === idBuscado);
-    console.log("este es el foundProcedure buscado: "+JSON.stringify(foundProcedure))
 
     if (foundProcedure) {
-        CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
-            .then(response => {
-                console.log("respuesta: "+response)
-                if (response) {
-                    setProcedureInstance(foundProcedure);
-                }else{
+
+        const foundCiudadanoProcedure = ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === idBuscado);
+        
+        if (!foundCiudadanoProcedure){
+            if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
+                CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
+                .then(response => {
+                    if (response) {
+                        setProcedureInstance(foundProcedure);
+                    }else{
+                        setShowNetworkError(true)
+                    }
+                })
+                .catch(error => {
+                    console.log("error: "+error)
                     setShowNetworkError(true)
-                }
-            })
-            .catch(error => {
-                console.log("error: "+error)
-            });
+                });
+           }else{
+            setCitizenLevelError (true)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+           }
+        }else{
+            if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
+                setProcedureInstance(foundProcedure);
+            }else{
+                setCitizenLevelError (true)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+            }
+        }
     }
 };
-
-
-useEffect(()=>{
-    console.log("ciudadanoProcedures"+JSON.stringify(ciudadanoProcedures))
-},[ciudadanoProcedures])
-
 
     if (render === "procedure" && procedureInstance) {
         return <CiudadanoProcedureData procedureInstance={procedureInstance} />;
     } 
     else{ 
 
-    return(<><LayoutColumns className='gap-8 FlexSwitchMobile'>
+    return(<>
+    {citizenLevelError && procedureInstance && <CitizenProcedureLevelError procedureTitle={procedureInstance.getTitle()} userLevel={procedureInstance.getCitizenLevel()?.split("_")[1]!} close={setCitizenLevelError} />}
+    {showNetworkError &&  <NetworkAlertPopUp close={setShowNetworkError} />}
+    <LayoutColumns className='gap-8 FlexSwitchMobile'>
         <LayoutColumn>
         <LayoutTitle>
             Trámites on line
