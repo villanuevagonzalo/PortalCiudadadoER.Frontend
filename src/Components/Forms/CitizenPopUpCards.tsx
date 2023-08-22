@@ -54,11 +54,9 @@ interface NetworkAlertProps{
             <span className="flex-1"></span>
             <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
           </div>
-          
           <div style={{display: "flex", flexDirection:"column", justifyContent: "center", textAlign:"center", margin:" 15px 0px 15px 0px" }}>
-            
-          <h1 style={{ color: "primary" }}>Inconvenientes en el servicio</h1>
-          <h2>Disculpe las molestias</h2>
+            <h1 style={{ color: "primary" }}>Inconvenientes en el servicio</h1>
+            <h2>Disculpe las molestias</h2>
           </div>
           <LayoutStackedPanel className="mt-2">
             <LayoutSpacer/>
@@ -70,3 +68,61 @@ interface NetworkAlertProps{
         <LayoutSpacer/>
       </NotificationFullSizeWrapper>
   };
+
+  interface CitizeFormUploadedProps{
+    FormTitle:string,
+    close:Function,
+  }
+  export const CitizeFormUploadedProps: React.FC<CitizeFormUploadedProps> = ({FormTitle, close})  => {
+      
+    return <NotificationFullSizeWrapper>
+        <LayoutSection className="content">
+          <div className="header">
+            <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+            <span className="flex-1"></span>
+            <span className="close" onClick={()=>close("home")}><AiOutlineClose fontSize={"1rem"}/></span>
+          </div>
+          <div style={{display: "flex", flexDirection:"column", justifyContent: "center", textAlign:"center", margin:" 15px 0px 15px 0px" }}>
+            <h1 style={{ color: "primary" }}>Formulario "{FormTitle}" cargado correctamente!</h1>
+          </div>
+          <LayoutStackedPanel className="mt-2">
+            <LayoutSpacer/>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+              <Button onClick={()=>close("home")}>OK</Button>
+            </div>
+          </LayoutStackedPanel>
+        </LayoutSection>
+        <LayoutSpacer/>
+      </NotificationFullSizeWrapper>
+  };
+
+  interface CitizenGenerictAlertProps{
+    message:string,
+    message2:string,
+    close:Function,
+  }
+  export const CitizenGenericAlertPopUp: React.FC<CitizenGenerictAlertProps> = ({ message, message2, close})  => {
+      
+    return <NotificationFullSizeWrapper>
+        <LayoutSection className="content">
+          <div className="header">
+            <span className="title"><AiOutlineAlert />Servicios - Gobierno de Entre Ríos</span>
+            <span className="flex-1"></span>
+            <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+          </div>
+          <div style={{display: "flex", flexDirection:"column", justifyContent: "center", textAlign:"center", margin:" 15px 0px 5px 0px" }}>
+            <h1 style={{ color: "primary" }}> {message} </h1>
+            <h4 style={{ color: "primary" }}> {message2} </h4>
+          </div>
+          <LayoutStackedPanel className="mt-2">
+            <LayoutSpacer/>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+              <Button onClick={()=>close()}>OK</Button>
+            </div>
+          </LayoutStackedPanel>
+        </LayoutSection>
+        <LayoutSpacer/>
+      </NotificationFullSizeWrapper>
+  };
+
+

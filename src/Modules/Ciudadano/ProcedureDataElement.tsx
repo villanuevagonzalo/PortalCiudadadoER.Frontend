@@ -61,13 +61,6 @@ interface FormGenericData {
         setProcedureData(filteredProcedure);
 
     },[ciudadanoProcedures])
-
-    
-    useEffect(()=>{
-        
-        console.log("el procedure formsOfGenericProcedure id es: "+JSON.stringify(formsOfGenericProcedure))
-        
-    },[formsOfGenericProcedure])
     
 
     useEffect(()=>{
@@ -80,7 +73,6 @@ interface FormGenericData {
 
 
     const renderFormComponent = () => {
-        console.log("este es el procedureData id: "+procedureData?.getId())
         if (formToComplete && procedureData) {
             return (
                 <CiudadanoFormElement form={formToComplete} procedureID={procedureData.getId()} close={setRender} />
@@ -131,8 +123,6 @@ interface FormGenericData {
                         ) : (
                             <Button onClick={() => completarForm(forms)}> <HiOutlineMagnifyingGlass />Completar Formulario</Button>
                         )}
-
-
                       </LayoutSection>
                   </div>
                   ))}  

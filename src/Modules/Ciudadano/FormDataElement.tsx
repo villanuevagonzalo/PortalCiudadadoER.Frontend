@@ -11,6 +11,7 @@ import { BiArrowBack, BiSend } from "react-icons/bi";
 import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
+import { CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
 
 interface Arguments {
     procedureID:number,
@@ -27,7 +28,9 @@ interface Arguments {
 
     const [showAlertCompleteElements, setShowAlertCompleteElements] = useState(false); 
     const [elementToComplete, setElementToComplete] = useState <string> ()
-   
+    const [showFormCorrectedUploaded, setShowFormCorrectedUploaded] = useState(false)
+    const [showFormUploadError, setShowFormUploadError] = useState(false)
+
     const checkValues = () => {
         form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => {
             const jsonString = JSON.stringify(element.properties);
@@ -64,21 +67,22 @@ interface Arguments {
           };
           const response = await SaveForm(data, setFormState);
 
-          console.log("form data output: "+response)
+          if (response){
+            setShowFormCorrectedUploaded(true)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }else{
+            setShowFormUploadError(true)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }
+
     };
-    useEffect(()=>{
-        
-        console.log("procedureID"+procedureID)
-
-
-    },[procedureID])
-
-
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     return (
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
+            {showFormCorrectedUploaded && (<CitizeFormUploadedProps close={close} FormTitle={form.getTitle()} />)}
+            { showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
             <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
              
