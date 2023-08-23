@@ -59,19 +59,34 @@ export const DA_Notifications_Create = () =>{
     }]},["isRequired"]), "both"),
     AgeFrom: new ElementInstance("AgeFrom",new ElementSchema('NUMBER',{label:'Edad desde',value_min:1, value_max:120})),
     AgeTo: new ElementInstance("AgeTo",new ElementSchema('NUMBER',{label:'Edad hasta',value_min:1, value_max:120})),
-    Department: new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
-    Locality: new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
+   
   })
+  const [departmentFields, setDepartmentsFields] = useState( 
+    new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
+  )
+  const [localityFields, setLocalityFields]= useState( 
+    new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
+  )
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   const handleChange = (e:any) => {
     setLocalities(GetLocalitysByDeparment(Locations,e.target.value*1))
+    setLocalityFields( 
+      new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:GetLocalitysByDeparment(Locations,e.target.value*1)}))
+    )
   }
+
   const handleLocations = async() => {
     const response = await RawLocations();
     setLocations(response)
-    setDeparments(GetDepartments(response));
+    setLocalityFields( 
+      new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:response}))
+    )
+    setDepartmentsFields( 
+      new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:GetDepartments(response)})),
+    )
+    
   }
   const handleScope = async (e:any) => {
     e.preventDefault()
@@ -80,8 +95,8 @@ export const DA_Notifications_Create = () =>{
       recipients: values.Recipients,
       age_from: values.AgeFrom===""?1:values.AgeFrom,
       age_to: values.AgeTo===""?120:values.AgeTo,
-      department_id: values.Department || 0,
-      locality_id: values.Locality || 0,
+      department_id: departmentFields.getValue() || 0,
+      locality_id: localityFields.getValue() || 0,
       }, setScopeFormState);
     if(ScopeResponse?.data?.success){
       setScope(ScopeResponse.data.data.notification_scope)
@@ -128,8 +143,8 @@ export const DA_Notifications_Create = () =>{
               age_to: values.AgeTo===""?120:values.AgeTo,
               notification_date_from: moment(values.StartDate).format("DD/MM/YYYY"),  
               notification_date_to: moment(values.EndDate).format("DD/MM/YYYY"), 
-              department_id: values.Department || 0,
-              locality_id: values.Locality || 0,
+              department_id: departmentFields.getValue() || 0,
+              locality_id: localityFields.getValue() || 0,
               message_title: values.Title,
               message_body: values.Message,
               attachment: values.HELPAttachments,
@@ -156,8 +171,8 @@ export const DA_Notifications_Create = () =>{
             <Element instance={Fields.AgeTo} className="flex-1"/>
           </LayoutStackedPanel>
           <LayoutStackedPanel>
-            <Element instance={Fields.Department} className="flex-1" disabled={Deparments.length===0} onChange={handleChange}/>
-            <Element instance={Fields.Locality} className="flex-1" disabled={Localities.length===0}/>
+            <Element instance={departmentFields} className="flex-1" disabled={Deparments.length===0} onChange={handleChange}/>
+            <Element instance={localityFields} className="flex-1" disabled={Localities.length===0}/>
             <div><ButtonWrapper onClick={handleScope}>{ScopeFormState.loading ? <Spinner /> : "Ver Alcance"}<FaSearch/></ButtonWrapper></div>
             <div><ButtonWrapper disabled color="gray">{Scope>-1?Scope+" destinatarios":"?"}<MdOutlineAutoGraph/></ButtonWrapper></div>
           </LayoutStackedPanel>
