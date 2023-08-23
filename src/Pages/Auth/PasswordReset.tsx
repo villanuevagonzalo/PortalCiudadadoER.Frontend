@@ -67,15 +67,18 @@ export const Auth_PasswordReset = () => {
         </DivOutlined>
       </>}
       <br/>
-      <DivLabel color="gray_tint">
+      {/* <DivLabel color="gray_tint">
         ¿No quieres cambiar tu contraseña?
-      </DivLabel>
+      </DivLabel> */}
       {userData.cuil!==''?
-        <Link to={Pages.DC_CONFIGURATIONS} className="w-full">
-          <Button disabled={FormState.loading} color="gray" className="w-full">
-            Volver al Dashboard
-          </Button>
-        </Link>:<Link to={Pages.AUTH_LOGIN} className="w-full">
+        // <Link to={Pages.DC_CONFIGURATIONS} className="w-full">
+        //   <Button disabled={FormState.loading} color="gray" className="w-full">
+        //     Volver al Dashboard
+        //   </Button>
+        // </Link>
+        <></>
+        :
+        <Link to={Pages.AUTH_LOGIN} className="w-full">
           <Button disabled={FormState.loading} color="gray" className="w-full">
             Iniciar Sesión
           </Button>
