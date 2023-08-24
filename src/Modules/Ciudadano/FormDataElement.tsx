@@ -49,7 +49,7 @@ interface Arguments {
         });
     };
 
-    const enviar = async () => {
+   /* const enviar = async () => {
 
         let elements_common: FieldsType = [];
        // let elements_files: FieldsType = [];
@@ -99,9 +99,33 @@ interface Arguments {
                 window.scrollTo({ top: 0, behavior: 'smooth' })
               }
         }
-      
+    };*/
 
-    };
+    const enviar = async () => {
+        const elements_common: FieldsType = [];
+        const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+          if (element.type === "FILE") {
+            return true;
+          }
+          elements_common.push(element);
+          return false;
+        });
+      
+        const data = {
+          procedure_data_id: Number(procedureID),
+          form_unit_code: form.getCode(),
+          form_data: JSON.stringify(elements_common),
+          ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
+        };
+      
+        const response = await SaveForm(data, setFormState);
+        if (response) {
+          setShowFormCorrectedUploaded(true);
+        } else {
+          setShowFormUploadError(true);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
    return (
