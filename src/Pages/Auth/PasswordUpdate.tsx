@@ -94,12 +94,15 @@ export const Auth_PasswordUpdate = () => {
         </Button></Link>
       </>}
       <br/>
-      <DivLabel color="gray_tint">
+      {/* <DivLabel color="gray_tint">
         ¿No quieres cambiar tu contraseña?
-      </DivLabel>
-      {userData.cuil!==''?<Link to={Pages.DC_CONFIGURATIONS}><Button disabled={FormState.loading} color="gray">
-        Volver al Dashboard
-      </Button></Link>:<Link to={Pages.AUTH_LOGIN}><Button disabled={FormState.loading} color="gray">
+      </DivLabel> */}
+      {userData.cuil!==''?
+      // <Link to={Pages.DC_CONFIGURATIONS}><Button disabled={FormState.loading} color="gray">
+      //   Volver al Dashboard
+      // </Button></Link>
+      <></>
+      :<Link to={Pages.AUTH_LOGIN}><Button disabled={FormState.loading} color="gray">
         Iniciar Sesión
       </Button></Link>}
     </>}

@@ -84,7 +84,7 @@ export const DC_Configurations = () => {
       <LayoutStackedPanel>
         <LayoutSpacer/>
         {userRol[0].level===3?<></>:<Link to={Pages.DC_CONFIGURATIONS_NAMECHANGE}><FormikButton color="gray">Cambiar Nombre</FormikButton></Link>}
-        <Link to={Pages.AUTH_PASSWORDRESET}><FormikButton>Solicitar cambio de Contraseña <AiOutlineArrowRight/></FormikButton></Link>
+        <Link to={Pages.DC_CONFIGURATIONS_HOMEPASSWORDRESET}><FormikButton>Solicitar cambio de Contraseña <AiOutlineArrowRight/></FormikButton></Link>
       </LayoutStackedPanel>
 
       <h1 className="mt-4"><BiData/>Información Adicional</h1>

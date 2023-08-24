@@ -44,34 +44,41 @@ export const DC_Validation = () => {
       Niveles de Usuario
     </LayoutTitle>
     <LayoutSection>
-      <LayoutListItem color="gray" className="FlexSwitchMobile">
+      {/* <LayoutListItem color="gray" className="FlexSwitchMobile">
         <div className="ListItemIcon"><BsBookmarkCheck/></div>
         <div className="flex-1">
           <h1><b className="mr-2 ">Nivel 1 </b> Básico</h1>
           <h2>Usted ha validado su cuenta por medio de su correo electrónico.</h2>
         </div>
-      </LayoutListItem>
-      {userRol[0].level>1?<LayoutListItem color="gray" className="FlexSwitchMobile">
+      </LayoutListItem> */}
+      {
+      userRol[0].level>1?
+      <LayoutListItem color="gray" className="FlexSwitchMobile">
         <div className="ListItemIcon"><BsBookmarkPlus/></div>
         <div className="flex-1">
           <h1><b className="mr-2">Nivel 2</b> Intermedio</h1>
           <h2>Usted ha completado su información adicional.</h2>
         </div>
-      </LayoutListItem>:<LayoutListItem color="error" className="FlexSwitchMobile">
+      </LayoutListItem>
+      :
+      <LayoutListItem color="error" className="FlexSwitchMobile">
         <div className="ListItemIcon"><BsBookmarkX/></div>
         <div className="flex-1">
           <h1><b className="mr-2">Nivel 2</b> Datos Personales</h1>
           <h2>Usted no ha completado su información adicional.</h2>
         </div>
-      </LayoutListItem>}
-      {userRol[0].level>2?
+      </LayoutListItem>
+      }
+      {
+      userRol[0].level>2?
       <LayoutListItem color="secondary" className="FlexSwitchMobile">
         <div className="ListItemIcon"><BsBookmarkStar/></div>
         <div className="flex-1">
           <h1><b className="mr-2">Nivel 3</b> Por Aplicación</h1>
           <h2>Usted ha terminado de validar su indentidad.</h2>
         </div>
-      </LayoutListItem>:(userRol[0].level>1? <LayoutListItem color="error" className="flex-col">
+      </LayoutListItem>:(userRol[0].level>1 ? 
+      <LayoutListItem color="error" className="flex-col">
         <div className="flex FlexSwitchMobile gap-6">
           <div className="ListItemIcon"><BsBookmarkX/></div>
           <div className="flex-1">
@@ -88,14 +95,18 @@ export const DC_Validation = () => {
           <LogoButton onClick={()=>getValidationLink('AFIP')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoAfip} alt="Logo Afip"/>}</LogoButton>
           <LogoButton onClick={()=>getValidationLink('miargentina')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoMiArgentina} alt="logo Mi Argentina"/>}</LogoButton>
         </div></>:<></>}
-      </LayoutListItem>:<LayoutListItem color="disabled">
-        <div className="ListItemIcon"><BsBookmark/></div>
-        <div className="flex-1">
-          <h1><b className="mr-2">Nivel 3</b>. Por Aplicación</h1>
-          <h2>Usted no ha completado su información adicional.</h2>
-        </div>
-      </LayoutListItem>)}
-
+      </LayoutListItem>
+      :
+      <></>
+      // <LayoutListItem color="disabled">
+      //   <div className="ListItemIcon"><BsBookmark/></div>
+      //   <div className="flex-1">
+      //     <h1><b className="mr-2">Nivel 3</b>. Por Aplicación</h1>
+      //     <h2>Usted no ha completado su información adicional.</h2>
+      //   </div>
+      // </LayoutListItem>
+      )
+      }
       <LayoutListItem color="secondary" className="FlexSwitchMobile">
         <div className="ListItemIcon"><BsBookmarkStar/></div>
         <div className="flex-1">

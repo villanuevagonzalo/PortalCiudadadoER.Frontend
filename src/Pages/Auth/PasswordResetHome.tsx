@@ -4,7 +4,7 @@ import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../Contexts/AuthContext';
-import { DivLabel, Spinner, DivSubtitle, DivTitle, DivOutlined } from '../../Components/Elements/StyledComponents';
+import { DivLabel, Spinner, DivSubtitle, DivTitle, DivOutlined, NavigatorSpacer } from '../../Components/Elements/StyledComponents';
 import { Button } from '../../Components/Forms/Button';
 import { Formik, Form } from 'formik';
 import { FormikField } from '../../Components/Forms/FormikField';
@@ -12,13 +12,16 @@ import { CountDown } from '../../Components/Elements/CountDown';
 import moment from 'moment';
 import { FormikCaptcha } from '../../Components/Forms/FormikCaptcha';
 import { Pages } from '../../Routes/Pages';
+import { FieldGrid, LayoutSection, LayoutTitle } from '../../Components/Layout/StyledComponents';
+import { BsFillKeyFill } from 'react-icons/bs';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 
 const FormRequiredFields = [
   'CUIL',
   'Captcha'
 ]  
 
-export const Auth_PasswordReset = () => {
+export const DC_Configurations_HomePasswordReset = () => {
 
   const { userData, PasswordReset } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
@@ -30,16 +33,18 @@ export const Auth_PasswordReset = () => {
   let errors = FormState.error.split(' | ')
 
   return (<>
-      <DivTitle className="mt-5">Restablecer Contraseña</DivTitle>
-      {FormState.finish?<>
+    <LayoutTitle>
+      Mi Perfil
+    </LayoutTitle>
+    <LayoutSection>
+    <h1><BsFillKeyFill className='small'/>Cambiar Contraseña</h1>
+    {FormState.finish?<>
         <DivOutlined className="mt-4 flex-col" color="secondary">
           <b className='mb-2'>Se ha enviado un correo para reestablecer tu contraseña</b>
           <span className='text-sm'>Por favor aguarda <CountDown time={300} onFinish={()=>setFormState(prev=>({...prev, finish:false}))}/> minutos antes de solicitar un nuevo email</span>
         </DivOutlined>
       </>:<>
-        <DivSubtitle className="text-center pb-4">
-          Ingresá tu CUIL para restablecer tu contraseña en la plataforma.
-        </DivSubtitle>
+        <div className="-mt-2 text-sm mb-2">Ingresá tu CUIL para restablecer tu contraseña en la plataforma.</div>
         <Formik
           enableReinitialize={true}
           validateOnChange={false}
@@ -54,10 +59,15 @@ export const Auth_PasswordReset = () => {
           }}
         ><Form autoComplete="off">
           <FormikField name="CUIL" disabled={FormState.loading || errors.length>1} autoFocus/>
+          <FieldGrid className="FlexSwitchForms">
           <FormikCaptcha name="Captcha" state={FormState}/>
-          <Button disabled={FormState.loading || errors.length>1} type="submit">
-              {FormState.loading ? <Spinner/> : 'Restablecer contraseña'}                                
-          </Button>
+          </FieldGrid>
+          <FieldGrid className="FlexSwitchForms">
+            <NavigatorSpacer/>
+            <div><Button disabled={FormState.loading || errors.length>1} type="submit">
+              {FormState.loading ? <Spinner/> : 'Restablecer contraseña'}
+            </Button></div>
+          </FieldGrid>
         </Form></Formik>
         <DivOutlined open={FormState.error?true:false} className="mt-4 flex-col">
         {errors.length>1?<>
@@ -84,5 +94,13 @@ export const Auth_PasswordReset = () => {
           </Button>
         </Link>
       }
+      <hr className=''/>
+      <FieldGrid className="FlexSwitchForms">
+        <Link to={Pages.DC_CONFIGURATIONS}><Button disabled={FormState.loading || errors.length>1} color="gray">
+              <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Mi Perfil</b>                                
+          </Button></Link>
+        <NavigatorSpacer/>
+      </FieldGrid>
+    </LayoutSection>     
   </>);
 };
