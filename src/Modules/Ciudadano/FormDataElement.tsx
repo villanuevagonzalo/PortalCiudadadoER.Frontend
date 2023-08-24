@@ -12,6 +12,9 @@ import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
+import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
+import { FormikButton } from "../../Components/Forms/FormikButton";
+import { FilesContext } from "../../Contexts/FilesContext";
 
 interface Arguments {
     procedureID:number,
@@ -25,6 +28,7 @@ interface Arguments {
     
     const { SaveForm } = useContext(CiudadanoFormContext);
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
+    const {fileArray} = useContext(FilesContext)
 
     const [showAlertCompleteElements, setShowAlertCompleteElements] = useState(false); 
     const [elementToComplete, setElementToComplete] = useState <string> ()
@@ -48,37 +52,59 @@ interface Arguments {
     const enviar = async () => {
 
         let elements_common: FieldsType = [];
-        let elements_files: FieldsType = [];
+       // let elements_files: FieldsType = [];
+        let hasArray:boolean = false;
 
         form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+
+
             if (element.type === "FILE") {
-                elements_files.push(element);
+                hasArray=true;
+
             } else {
                 elements_common.push(element);
             }
 
         });
 
-        const data = {
-            procedure_data_id: Number(procedureID),
-            form_unit_code:form.getCode(),
-            form_data: JSON.stringify(elements_common),
-            attachments: elements_files
-          };
-          const response = await SaveForm(data, setFormState);
+        if (hasArray){
 
-          if (response){
-            setShowFormCorrectedUploaded(true)
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }else{
-            setShowFormUploadError(true)
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }
+            const data = {
+                procedure_data_id: Number(procedureID),
+                form_unit_code:form.getCode(),
+                form_data: JSON.stringify(elements_common),
+                attachments:fileArray
+              };
+              const response = await SaveForm(data, setFormState);
+              if (response){
+                setShowFormCorrectedUploaded(true)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }else{
+                setShowFormUploadError(true)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }
+        }else{
+
+            const data = {
+                procedure_data_id: Number(procedureID),
+                form_unit_code:form.getCode(),
+                form_data: JSON.stringify(elements_common)
+              };
+              const response = await SaveForm(data, setFormState);
+              if (response){
+                setShowFormCorrectedUploaded(true)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }else{
+                setShowFormUploadError(true)
+                window.scrollTo({ top: 0, behavior: 'smooth' })
+              }
+        }
+      
 
     };
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
-    return (
+   return (
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
             {showFormCorrectedUploaded && (<CitizeFormUploadedProps close={close} FormTitle={form.getTitle()} />)}
@@ -115,7 +141,7 @@ interface Arguments {
                         <Form autoComplete="off">
                             {form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
-                                <Element instance={element} />
+                                <Element instance={element} className="flex-2"/>
                             </div>
                             ))}  
                             <LayoutStackedPanel>
@@ -131,4 +157,6 @@ interface Arguments {
             </div>
         </div>
     )
+
+
   }

@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, ChangeEvent, HTMLAttributes, SetStateAction, useEffect, useState } from "react";
+import { ButtonHTMLAttributes, ChangeEvent, HTMLAttributes, SetStateAction, useContext, useEffect, useState } from "react";
 import { FormElement, FormElementInstance } from "../OLDTYPES";
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../Types";
 import { ElementWrapper, BaseWrapperInfo, InputWrapper, ElementError, SelectWrapper, FileWrapper, CheckboxWrapper } from "./StyledComponents";
@@ -9,6 +9,7 @@ import { ErrorMessage, getIn, useField, useFormikContext } from "formik";
 import { validationFunctions } from "../Validators";
 import { MdRadioButtonUnchecked } from "react-icons/md";
 import { IndexKind } from "typescript";
+import { FilesContext } from "../../../Contexts/FilesContext";
 
 interface Props extends HTMLAttributes<HTMLDivElement>{
   instance: ElementInstance<ElementSchemaTypes>;
@@ -22,6 +23,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const [ HelpField ] = useField(HelpToken+instance.name)
 
   const { errors, setFieldValue, values } = useFormikContext();
+  const {addFilesToContext, setFileArray} = useContext(FilesContext)
+  
   const thiserror = getIn(errors, instance.name)
   
   const [focus, setFocus] = useState(false);
@@ -34,11 +37,34 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     setEmpty(field.value==='')
   }
 
-  const handleFileChange = (event: any) => {
+  /*const handleFileChange = (event: any) => {
     const file = Array.from(event.target.files)
+    console.log("ahora veamos esto del event target: "+ JSON.stringify(event.target.files))
     setFieldValue(HelpToken+instance.name,file)
-  }
-    
+  }*/
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files; // Obtener la lista de archivos
+
+    if (fileList) {
+      const fileArray = Array.from(fileList); // Convertir la lista en un array
+
+      console.log("Selected files:", fileArray);
+
+      // Usar las funciones del contexto
+      setFieldValue(HelpToken + instance.name, fileArray);
+      addFilesToContext(fileArray);
+      instance.setValue(fileArray);
+
+    } else {
+      console.log("No files selected.");
+    }
+  };
+
+  useEffect(() => {
+  
+  }, [field.value])
+  
+
   useEffect(() => {
     if(field.value!==''){
       setFocus(true);

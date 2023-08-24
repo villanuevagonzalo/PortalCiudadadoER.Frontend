@@ -55,7 +55,6 @@ export class ElementInstance<T extends ElementSchemaTypes> extends ElementSchema
   }
 
   getValue():any {
-
     return this.value
   }
 

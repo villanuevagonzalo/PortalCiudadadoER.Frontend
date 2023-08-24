@@ -8,7 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
-import { BiArrowBack } from "react-icons/bi";
+import { BiArrowBack, BiSend } from "react-icons/bi";
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -55,9 +55,7 @@ interface FormGenericData {
 
     useEffect(()=>{
         
-        console.log("esto es lo que tengo en ciudadanoProcedures: "+JSON.stringify(ciudadanoProcedures))
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
-        console.log("asdf "+JSON.stringify(filteredProcedure))
         setProcedureData(filteredProcedure);
 
     },[ciudadanoProcedures])
@@ -89,8 +87,6 @@ interface FormGenericData {
         return (
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
                 
-                <Button style={{width:"200px", margin:"0px 0px 15px 0px"}} > <BiArrowBack/>Volver a trámites</Button>
-
                 <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"column", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
                     <h1 style={{textAlign:"center"}} >{procedureInstance.getTitle()}</h1>
                 </LayoutSectionProcedureTitle>
@@ -128,7 +124,7 @@ interface FormGenericData {
                   ))}  
                 </LayoutSection> 
                 
-                <LayoutSection> 
+                <LayoutSection style={{margin:"5px 0px 15px 0px"}}> 
                 {procedureInstance.getAttachments().length > 0 && (
                 <div>
                     <h2><MdOutlineDataset />Adjuntos</h2>
@@ -147,7 +143,15 @@ interface FormGenericData {
                     ))}
                 </div>
             )}
-                </LayoutSection> 
+                </LayoutSection>
+                <LayoutSection style={{margin:"5px 0px 15px 0px"}}> 
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <Button style={{width:"200px", margin:"0px 0px 15px 0px"}} > <BiArrowBack/>Volver</Button>
+                        <Button style={{width:"200px", margin:"0px 0px 15px 0px"}}  color={"secondary"} >Cargar<BiSend/> </Button>
+                    </div>
+
+                </LayoutSection>
+
                 </div>
                 
                 
