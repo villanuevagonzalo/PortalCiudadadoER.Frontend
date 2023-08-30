@@ -70,8 +70,17 @@ export const TramitesOnlinePage = () => {
     if (procedureInstance!=null && procedureInstance!=undefined){
         navigate("/dashboard/procedures/"); // Cambiar "/procedure" a la ruta real de tu procedimiento
         setRender("procedure")
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
     }
   },[procedureInstance])
+
+
+  useEffect(()=>{
+    if (render=="home"){
+        setProcedureInstance(undefined)
+    }
+  },[render])
 
 
   const seeProcedure = (idBuscado: number) => {
@@ -111,7 +120,7 @@ export const TramitesOnlinePage = () => {
 };
 
     if (render === "procedure" && procedureInstance) {
-        return <CiudadanoProcedureData procedureInstance={procedureInstance} />;
+        return <CiudadanoProcedureData procedureInstance={procedureInstance} backFunction={setRender} />;
     } 
     else{ 
 

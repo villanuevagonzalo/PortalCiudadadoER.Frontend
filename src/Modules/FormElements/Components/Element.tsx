@@ -61,11 +61,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   };
 
   useEffect(() => {
-  
-  }, [field.value])
-  
-
-  useEffect(() => {
     if(field.value!==''){
       setFocus(true);
     }
@@ -111,6 +106,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         switch (instance.type) {
           case "TEXT": EI = instance as ElementInstance<"TEXT">; break;
           case "NUMBER": EI = instance as ElementInstance<"NUMBER">; break;
+          case "MAIL": EI = instance as ElementInstance<"MAIL">; break;
+
           default: EI = instance as ElementInstance<"TEXT">; break;
         }
 
@@ -132,6 +129,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
             </div>);
           
           default:
+            console.log("se renderizó el default : "+EI.properties.label+" - focus: "+focus)
             return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
               <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
               <input 
