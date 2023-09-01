@@ -11,12 +11,26 @@ export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
 
 export type FieldsElementType = ElementInstance<ElementSchemaTypes>[];
 
+interface ProcedureByApiInterface {
+  ID: string;
+  Título: string;
+  Texto: string;
+  Costo: string;
+  C: string;
+  Contenido_ID: string;
+  ORF_ID: string;
+  Organismo: string;
+  URL_TRAMITE: string;
+}
+
 const ContextValues = () => {
 
   const AxiosProcedureAPI = new ProcedureAPI();
   const [procedures, setProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
+  const [proceduresByApi, setProceduresByApi]= useState<ProcedureByApiInterface []>([])
+
   const [categories, setCategories]= useState<string []>([])
 
   const SaveProcedure = async (procedure: ProcedureInstance<ElementSchemaTypes>, setFormState: Function, title:string) => {
@@ -108,6 +122,31 @@ const ContextValues = () => {
     setIsLoading(false); 
   }
 
+
+  
+  //get procedures title, description and deparment
+  const GetProceduresDataFromAPI = async() => {
+    setIsLoading(true)
+    let responseAll:AxiosResponse | ResponseError | null = null;
+    
+    try { responseAll = await AxiosProcedureAPI.GetProcedureFromAPI(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    if(responseAll && responseAll.status==200) {
+
+      const responseAllData = responseAll.data.data;
+      const regex = /\{[^}]*\}/g;
+      const jsonDataArray = responseAllData.match(regex);
+    
+      if (jsonDataArray) {
+        const parsedItems = jsonDataArray.map((jsonData: string) => JSON.parse(jsonData));
+        setProceduresByApi(parsedItems);
+      }
+    }else{
+      setIsLoading(false)
+
+    }
+  }
+
+
   const GetProcedureCategories = async() => {
 
     setIsLoading(true)
@@ -131,12 +170,14 @@ const ContextValues = () => {
   return {
     isLoading,
     procedures,
+    proceduresByApi,
     categories,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,
     DeleteOneProcedure,
     UpdateProcedures,
+    GetProceduresDataFromAPI,
     GetProcedureCategories
   }
 }

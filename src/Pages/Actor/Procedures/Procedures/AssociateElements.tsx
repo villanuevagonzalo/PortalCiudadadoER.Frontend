@@ -34,7 +34,7 @@ interface DatosAdjuntos {
 export const DA_Procedures_Associate = () => {
     const ref:any = useRef(null);
 
-  const { UpdateProcedures, SaveProcedure, GetProcedureCategories, categories,setProcedures, procedures } = useContext(ProcedureContext);
+  const { UpdateProcedures, SaveProcedure, GetProceduresDataFromAPI, proceduresByApi, GetProcedureCategories, categories,setProcedures, procedures } = useContext(ProcedureContext);
   const { SaveForm, UpdatePublishedForms, publishedFormularios, isLoading, DeleteOneForm} = useContext(FormContext);
   const {secretaria } = useContext(AuthContext);
 
@@ -45,6 +45,8 @@ export const DA_Procedures_Associate = () => {
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [estadoProcedure, setEstadoProcedure] = useState<string>('');
   const [userLevel, setUserLevel]= useState<string>('level_3');
+  const [procedureByAPI, setProcedureByAPI] = useState <ElementInstance<ElementSchemaTypes>>()
+
   const [theme, setTheme] = useState <ElementInstance<ElementSchemaTypes>>()
 
   const [alertMessage, setAlertMessage] = useState("")
@@ -72,17 +74,33 @@ export const DA_Procedures_Associate = () => {
     UpdateProcedures()
     //UpdateForms()
     UpdatePublishedForms()
-    GetProcedureCategories()
+    GetProceduresDataFromAPI()
+    //GetProcedureCategories()
   },[])
 
   useEffect(()=>{
+
+    const updatedOptions = proceduresByApi.map((procedures) => ({
+      value: procedures.ID,
+      label: procedures.Título, 
+    }));
+
+    console.log(updatedOptions)
+    const Select_Procedure = new ElementInstance("1", new ElementSchema('SELECT', { label: 'Seleccione un Trámite', options: updatedOptions },["isRequired"]))
+
+    setProcedureByAPI(Select_Procedure)
+    
+  },[proceduresByApi])
+  
+
+ /* useEffect(()=>{
     const updatedOptions = categories.map((forms) => ({
       value: forms,
       label: forms, 
     }));
     const Select_Theme = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione una Temática', options: updatedOptions },["isRequired"]))
     setTheme( Select_Theme);
-  },[categories])
+  },[categories])*/
 
   const addNewForm = () =>{
     const updatedOptions = publishedFormularios.map((forms) => ({
@@ -112,18 +130,23 @@ export const DA_Procedures_Associate = () => {
     setDatosAdjuntos(prevDatosAdjuntos => prevDatosAdjuntos.filter((_, i) => i !== index));
   }
 
+
+  
   const createProcedure = async () =>{
     console.log("secretarìa_ "+secretaria)
+    const selectedProcedure = proceduresByApi.find((procedure) => procedure.ID === procedureByAPI?.getValue());
+    console.log("asdf "+selectedProcedure?.Título)
+
     if(estadoProcedure==''){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un estado inicial al trámite")
       setCrear(false)
-    }else if (theme?.getValue()==""){
+    /*}else if (theme?.getValue()==""){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar una temática de trámite")
       setCrear(false)
-    }
-    else if (Fields.Select_Procedure.getValue()==""){
+    }*/
+    }else if (procedureByAPI?.getValue()==""){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un título al trámite")
       setCrear(false)
@@ -143,9 +166,9 @@ export const DA_Procedures_Associate = () => {
       jsonObject.Title_Attached = titleAttachedValues;
       const newProcedureToBeSend = new ProcedureInstance(
         listaFormularios,
-        Fields.Select_Procedure.getValue(),
-        "Descripción",
-        secretaria,
+        selectedProcedure?.Título!,
+        selectedProcedure?.Texto!,
+        selectedProcedure?.Organismo!,
         estadoProcedure,
         theme!.getValue(),
         titleAttachedValues,
@@ -235,7 +258,7 @@ export const DA_Procedures_Associate = () => {
           >
             <Form autoComplete="off">
               <LayoutStackedPanel>
-                <Element instance={Fields.Select_Procedure} className="flex-1"/>
+                {procedureByAPI&&<Element instance={procedureByAPI!} className="flex-1"/>}
               </LayoutStackedPanel>  
             </Form>
         </Formik>
