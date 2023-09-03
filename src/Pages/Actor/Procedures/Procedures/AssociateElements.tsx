@@ -58,17 +58,6 @@ export const DA_Procedures_Associate = () => {
   const [formToCheck, setFormToCheck] = useState<FormInstance<ElementSchemaTypes>>()
   const [seeOptions, setSeeOptions] = useState("home")
 
-  const [Fields, setFields] = useState({
-    Select_Procedure: new ElementInstance("Codigo de Select_Procedure", new ElementSchema('SELECT', { label: 'Seleccione un trámite', options:[{
-      value: "NombreTramite1", label: 'Nombre del tramite 1'
-    },{
-      value: "NombreTramite2",
-      label: 'Nombre del tramite 2'
-    },{
-      value: "NombreTramite3",
-      label: 'Nombre del tramite 3'
-    }]},["isRequired"])),
-  });
 
   useEffect(()=>{
     UpdateProcedures()
@@ -85,23 +74,12 @@ export const DA_Procedures_Associate = () => {
       label: procedures.Título, 
     }));
 
-    console.log(updatedOptions)
-    const Select_Procedure = new ElementInstance("1", new ElementSchema('SELECT', { label: 'Seleccione un Trámite', options: updatedOptions },["isRequired"]))
+    const Select_Procedure = new ElementInstance("ProceduresByWeb", new ElementSchema('SELECT', { label: 'Seleccione un Trámite', options: updatedOptions },["isRequired"]))
 
     setProcedureByAPI(Select_Procedure)
     
   },[proceduresByApi])
   
-
- /* useEffect(()=>{
-    const updatedOptions = categories.map((forms) => ({
-      value: forms,
-      label: forms, 
-    }));
-    const Select_Theme = new ElementInstance("0", new ElementSchema('SELECT', { label: 'Seleccione una Temática', options: updatedOptions },["isRequired"]))
-    setTheme( Select_Theme);
-  },[categories])*/
-
   const addNewForm = () =>{
     const updatedOptions = publishedFormularios.map((forms) => ({
       value: forms.getCode()+" - "+forms.getTitle(),
@@ -130,36 +108,36 @@ export const DA_Procedures_Associate = () => {
     setDatosAdjuntos(prevDatosAdjuntos => prevDatosAdjuntos.filter((_, i) => i !== index));
   }
 
+  function doesTitleExist(titleToCheck: string): boolean {
+    return procedures.some((procedure) => procedure.getTitle() === titleToCheck);
+  }
 
-  
   const createProcedure = async () =>{
-    console.log("secretarìa_ "+secretaria)
+
     const selectedProcedure = proceduresByApi.find((procedure) => procedure.ID === procedureByAPI?.getValue());
-    console.log("asdf "+selectedProcedure?.Título)
 
     if(estadoProcedure==''){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un estado inicial al trámite")
       setCrear(false)
-    /*}else if (theme?.getValue()==""){
-      setShowAlert(true)
-      setAlertMessage("Debe seleccionar una temática de trámite")
-      setCrear(false)
-    }*/
     }else if (procedureByAPI?.getValue()==""){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un título al trámite")
+      setCrear(false)
+    }else if(doesTitleExist(procedureByAPI?.getValue())){
+      setShowAlert(true)
+      setAlertMessage("Ya existe un trámite con el título seleccionado")
       setCrear(false)
     }
     else if (forms.length != 0) {
       const titleAttachedValues: string[] = [];
       const listaFormularios: string[] = [];
       if (datosAdjuntos.length !=0){
-        datosAdjuntos.forEach((dato) => {
+        datosAdjuntos.forEach((dato, index) => {
           titleAttachedValues.push(dato.Title_Attached.getValue());
         });
       }
-      forms.forEach((dato) => {
+      forms.forEach((dato, index) => {
         listaFormularios.push(dato.getValue().split(" - ")[0]);
       });
       const jsonObject: any = {};
@@ -170,11 +148,15 @@ export const DA_Procedures_Associate = () => {
         selectedProcedure?.Texto!,
         selectedProcedure?.Organismo!,
         estadoProcedure,
-        theme!.getValue(),
         titleAttachedValues,
-        userLevel
+        userLevel,
+        selectedProcedure?.Costo!,
+        selectedProcedure?.C!,
+        selectedProcedure?.Contenido_ID!,
+        selectedProcedure?.ORF_ID!,
+        selectedProcedure?.URL_TRAMITE!
       );
-      const response = await SaveProcedure(newProcedureToBeSend, setFormState, Fields.Select_Procedure.getValue());
+      const response = await SaveProcedure(newProcedureToBeSend, setFormState, selectedProcedure?.Título!);
       if (response) {
         setCrear(false)
         setCargadoCorrectamente(true)
@@ -200,7 +182,7 @@ export const DA_Procedures_Associate = () => {
 
   }
 
-  const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
+  const initialValues = Object.entries(proceduresByApi).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj }), {});
 
   if (seeOptions=="seeForm") {
     return (
@@ -215,8 +197,8 @@ export const DA_Procedures_Associate = () => {
 
     return(<>
       {showAlert && (<GenericAlertPopUp genericMessage={alertMessage} close={setShowAlert}  />)}
-      {crear && (<CreateProcedurePopUp procedureTitle={Fields.Select_Procedure.getValue()} create={createProcedure} close={setCrear}  />)}
-      {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={Fields.Select_Procedure.getValue()} close={setErrorCarga}  /> )}
+      {crear && (<CreateProcedurePopUp procedureTitle={procedureByAPI!.getValue()} create={createProcedure} close={setCrear}  />)}
+      {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={procedureByAPI!.getValue()} close={setErrorCarga}  /> )}
       {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
   
       <LayoutActorSection>
@@ -234,7 +216,7 @@ export const DA_Procedures_Associate = () => {
             };
               console.log(test)
             }}
-          validate={(values:any) => ValidateForm(values, Fields)}
+          
           >
               <Form autoComplete="off">
                   <LayoutStackedPanel>
@@ -254,7 +236,7 @@ export const DA_Procedures_Associate = () => {
               };
               console.log(test)
             }}
-            validate={(values:any) => ValidateForm(values, Fields)}
+            
           >
             <Form autoComplete="off">
               <LayoutStackedPanel>
@@ -282,23 +264,19 @@ export const DA_Procedures_Associate = () => {
               };
               console.log(test)
             }}
-            validate={(values:any) => ValidateForm(values, Fields)}
+            
         >
           <Form autoComplete="off">
             {forms && forms.map((form, index) => (
               <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
                 <LayoutSection style={{ margin: "0px 0px 10px 0px" }}>
                   <p>Anexar formulario</p>
-                  <div key={form.name} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "15px 0px 5px 0px" }}>  
+                  <div style={{ display: "flex", flexDirection: "column", width: "100%", margin: "15px 0px 5px 0px" }}>  
                     <Element instance={form} className="flex-1" />
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', textAlign: "right" }}>
                         <HiOutlineMagnifyingGlass fontSize={"1.5rem"} onClick={() => { handleSeeForm(form.getValue())  }} />
                         <HiTrash fontSize={"1.5rem"} style={{ margin: "0px 2px 0px 0px" }} onClick={() => deleteForm(form)} />
                       </div>
-  {/*
-                    <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                      <Button style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick={() => deleteForm(form)}>Borrar<HiTrash fontSize={"1rem"} style={{ margin: "0px 10px 0px 0px" }} /></Button>
-            </div>*/}
                   </div>
                 </LayoutSection>
                       {index === forms.length - 1 && (
@@ -325,7 +303,7 @@ export const DA_Procedures_Associate = () => {
                     <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 10px 0px" }}>
                     <LayoutSection style={{ margin: "0px 0px 10px 0px" }}>
                     <p>Dato a adjuntar en trámite</p>
-                    <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
+                    <div style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
                       <Element instance={attach.Title_Attached} className="flex-2"/>
                       <Element instance={attach.Select_Attached} className="flex-1" />
                     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>

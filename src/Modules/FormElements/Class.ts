@@ -142,13 +142,18 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   private description:string;
   private secretary:string;
   private state:string; //los estados pueden ser borrador, publicado, etc.
-  private theme:string; //temática
   private forms: string [];
   private attachments:string [];
   private citizenLevel?: string;
+  private theme?:string; //temática
+  private price?:string;
+  private c?:string;
+  private content_id?:string;
+  private orf_id?:string;
+  private url?:string;
+  
 
-  constructor(forms: string[], title: string, description: string, secretary:string, state: string, theme: string, attachments: string[], citizenLevel?: string, id?: number) {
-    this.title = title;
+  constructor(forms: string[], title: string, description: string, secretary:string, state: string, attachments: string[], citizenLevel?: string, price?:string, c?:string, content_id?:string,orf_id?:string, url?:string , id?: number, theme?: string) {    this.title = title;
     this.description = description;
     this.secretary = secretary;
     this.state = state;
@@ -163,6 +168,25 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     if(citizenLevel !== undefined){
       this.citizenLevel=citizenLevel;
     }
+    if (price!==undefined){
+      this.price=price
+
+    }
+    if (c!==undefined){
+      this.c=c
+    }
+    if (content_id!==undefined){
+      this.content_id=content_id
+
+    } if (orf_id!==undefined){
+      this.orf_id=orf_id
+
+    }
+    if (url!==undefined){
+      this.url=url
+
+    }
+    
   }
 
   addId(id:number){
@@ -225,6 +249,54 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   getCitizenLevel(){
     return this.citizenLevel;
   }
+  setPrice(price: string | undefined) {
+    this.price = price;
+  }
+
+  // Getter para 'price'
+  getPrice() {
+    return this.price;
+  }
+
+  // Setter para 'c'
+  setC(c: string | undefined) {
+    this.c = c;
+  }
+
+  // Getter para 'c'
+  getC() {
+    return this.c;
+  }
+
+  // Setter para 'content_id'
+  setContentId(contentId: string | undefined) {
+    this.content_id = contentId;
+  }
+
+  // Getter para 'content_id'
+  getContentId() {
+    return this.content_id;
+  }
+
+  // Setter para 'orf_id'
+  setOrfId(orfId: string | undefined) {
+    this.orf_id = orfId;
+  }
+
+  // Getter para 'orf_id'
+  getOrfId() {
+    return this.orf_id;
+  }
+
+  // Setter para 'url'
+  setUrl(url: string | undefined) {
+    this.url = url;
+  }
+
+  // Getter para 'url'
+  getUrl() {
+    return this.url;
+  }
   getJSON (){
     const ProcedureData = {
       "title": this.title,
@@ -235,7 +307,13 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
       "forms": JSON.stringify(this.forms),
       "attachments": JSON.stringify(this.attachments),
       "citizen_level": this.citizenLevel,
-      ...(this.id !== undefined && { "id": this.id })
+      ...(this.id !== undefined && { "id": this.id }),
+      "price":this.price,
+      "c" :this.c,
+      "content_id":this.content_id,
+      "orf_id" :this.orf_id,
+      "url":this.url,
+     
     };
     
     return ProcedureData;

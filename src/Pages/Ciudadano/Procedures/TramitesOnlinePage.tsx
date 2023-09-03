@@ -49,6 +49,7 @@ export const TramitesOnlinePage = () => {
   const [citizenLevelError, setCitizenLevelError] = useState(false)
 
   
+  console.log(JSON.stringify(procedures))
   useEffect(()=>{
     UpdateProcedures()
     UpdateCiudadanoProcedures()
@@ -164,7 +165,7 @@ export const TramitesOnlinePage = () => {
             <p>{item.getDescription()}</p>
             <div className="text-right flex gap-4">
             <NavigatorSpacer/> 
-                <Button color="gray" fullwidth={false}>+Información</Button>
+                <Button color="gray" fullwidth={false} href={item.getUrl()} >+Información</Button>
                 <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
             </div>
         </LayoutSection>)

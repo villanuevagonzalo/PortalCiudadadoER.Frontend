@@ -73,7 +73,9 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
     if (properties && Array.isArray(properties.required) && properties.required.includes("label")) {
       setHasLabelCondition(true);
-      setNombreCampo(EI.properties.label)
+      if (EI.properties.label!="Ingresá el Título"){
+        setNombreCampo(EI.properties.label)
+      }
     } else {
       setHasLabelCondition(false);
     }

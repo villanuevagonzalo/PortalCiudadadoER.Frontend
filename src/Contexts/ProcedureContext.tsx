@@ -41,7 +41,7 @@ const ContextValues = () => {
       const responseData = JSON.parse(response.data.data);
       const titleResponse = responseData[0].TITLE
       if (status && titleResponse == title) {
-        const newProcedure = new ProcedureInstance(procedure.getForms(),procedure.getTitle(), procedure.getDescription(), procedure.getSecretary(), procedure.getState(), procedure.getTheme(), procedure.getAttachments())
+        const newProcedure = new ProcedureInstance(procedure.getForms(),procedure.getTitle(), procedure.getDescription(), procedure.getSecretary(), procedure.getState(), procedure.getAttachments(), procedure.getCitizenLevel(), procedure.getPrice(),procedure.getC(), procedure.getContentId(),procedure.getOrfId(),procedure.getUrl())
         setProcedures(prevState => ([...prevState, newProcedure]));
         return true;
       }
@@ -107,10 +107,15 @@ const ContextValues = () => {
           procedureInstance.DESCRIPTION,
           procedureInstance.SECRETARY,
           procedureInstance.STATE,
-          procedureInstance.THEME,
           JSON.parse(procedureInstance.ATTACHMENTS),
           procedureInstance.CITIZEN_LEVEL,
-          procedureInstance.ID
+          procedureInstance.PRICE,
+          procedureInstance.C,
+          procedureInstance.CONTENT_ID,
+          procedureInstance.ORF_ID,
+          procedureInstance.URL_TRAMITE,
+          procedureInstance.ID,
+          procedureInstance.THEME
         );
        
         procedureAux.push(newProcedures);

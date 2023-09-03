@@ -33,7 +33,7 @@ interface Arguments {
                     <p>{form.getDescription()} </p>
                 </LayoutSection>
                 <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                    <h1>Keywords</h1>
+                    <h1>Palabras claves</h1>
                     <p>{form.getKeywords()} </p>
                 </LayoutSection>
 

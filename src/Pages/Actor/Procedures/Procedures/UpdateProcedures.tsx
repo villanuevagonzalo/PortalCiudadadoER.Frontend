@@ -147,16 +147,20 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
         const jsonObject: any = {};
         jsonObject.Title_Attached = titleAttachedValues;
         const newProcedureToBeSend = new ProcedureInstance(
-            listaFormularios,
-            procedure.getTitle(),
-            "Descripción",
-            procedure.getSecretary(),
-            estadoProcedure,
-            procedure.getTheme(),
-            titleAttachedValues,
-            userLevel,
-            procedure.getId()
-        );
+          listaFormularios,
+          procedure.getTitle(),
+          procedure.getDescription(),
+          procedure.getSecretary(),
+          estadoProcedure,
+          titleAttachedValues,
+          userLevel,
+          procedure.getPrice(),
+          procedure.getC(),
+          procedure.getContentId(),
+          procedure.getOrfId(),
+          procedure.getUrl(),
+          procedure.getId()
+      );
         const response = await UpdateOneProcedure(newProcedureToBeSend, setFormState, procedure.getTitle());
         if (response) {
             setCrear(false)
@@ -203,16 +207,16 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             <p>{procedure.getTitle()}</p>
           </LayoutSection>
           <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-            <h1>Temática</h1>
-            <p>{procedure.getTheme()}</p>
-          </LayoutSection>
-          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
             <h1>Descripción</h1>
-            <p>{procedure.getDescription()}</p>
+            {procedure.getDescription()}
           </LayoutSection>
           <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
             <h1>Organismo</h1>
             <p>{procedure.getSecretary()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Precio</h1>
+            {procedure.getPrice()}
           </LayoutSection>
        </LayoutActorSection>
    
@@ -238,7 +242,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                <Form autoComplete="off">
    
                    {oldForms.length>0 && oldForms.map((form, index) => (
-                     <LayoutSection style={{margin:"0px 0px 10px 0px"}}>
+                     <LayoutSection key={index}  style={{margin:"0px 0px 10px 0px"}}>
                      <p>Formulario cargado con anterioridad</p> 
                      <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 0px 0px" }}>  
                        <h2 >{form}</h2> 
@@ -287,7 +291,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                      <h1><MdDrafts /> Habilitar adjuntar archivos</h1>
                    </LayoutStackedPanel>
                    {oldDatosAdjuntos.length>0 && oldDatosAdjuntos.map((form, index) => (
-                     <LayoutSection style={{margin:"0px 0px 10px 0px"}}>
+                     <LayoutSection key={index}  style={{margin:"0px 0px 10px 0px"}}>
                       <p>Dato a adjuntar cargado con anterioridad</p> 
                      <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
                      <h2 >{form}</h2> 

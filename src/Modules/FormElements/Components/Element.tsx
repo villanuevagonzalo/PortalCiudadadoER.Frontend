@@ -129,7 +129,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
             </div>);
           
           default:
-            console.log("se renderizó el default : "+EI.properties.label+" - focus: "+focus)
             return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
               <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
               <input 
@@ -181,8 +180,8 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
              <option value="" disabled>
                 {EI.properties.label}
               </option>
-            {EI.properties.options && EI.properties.options.map((option: any) => (
-              <option key={option.label} value={option.value}>
+              {EI.properties.options && EI.properties.options.map((option: any, index: number) => (
+              <option key={`${option.label}_${option.value}_${index}`} value={option.value}>
                 {option.label}
               </option>
             ))}

@@ -165,16 +165,16 @@ interface FormGenericData {
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineNewLabel />Datos Generales del Trámite</h1>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                        <h1>Categoría</h1>
-                        <p>{procedureInstance.getTheme()}</p>
-                    </LayoutSection>
-                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                         <h1>Descripción</h1>
                         <p>{procedureInstance.getDescription()}</p>
                     </LayoutSection>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                         <h1>Organismo</h1>
                         <p>{procedureInstance.getSecretary()}</p>
+                    </LayoutSection>
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1>Precio</h1>
+                        <p>{procedureInstance.getPrice()}</p>
                     </LayoutSection>
                  </LayoutSection>    
       
