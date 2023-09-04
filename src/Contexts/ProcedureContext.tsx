@@ -5,6 +5,7 @@ import axios, { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/ActorFormAPI";
 import { ProcedureAPI } from "../Services/ActorProcedureAPI";
+import { removeHTMLTags } from "../Utils/General";
 
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
@@ -84,6 +85,7 @@ const ContextValues = () => {
   }
 
 
+
   const UpdateProcedures = async() => {
 
     setIsLoading(true)
@@ -97,31 +99,42 @@ const ContextValues = () => {
    if(responseAll && responseAll.status!==204) 
    {
     const FormData = responseAll.data.data;
-      const FormsObj = JSON.parse(FormData);
-      const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
+      
+      const jsonStringWithoutEscape =removeHTMLTags(FormData);
 
-      const mappedArray = FormsObj.map((procedureInstance: any) => {
-        const newProcedures = new ProcedureInstance(
-          JSON.parse(procedureInstance.FORMS),
-          procedureInstance.TITLE,
-          procedureInstance.DESCRIPTION,
-          procedureInstance.SECRETARY,
-          procedureInstance.STATE,
-          JSON.parse(procedureInstance.ATTACHMENTS),
-          procedureInstance.CITIZEN_LEVEL,
-          procedureInstance.PRICE,
-          procedureInstance.C,
-          procedureInstance.CONTENT_ID,
-          procedureInstance.ORF_ID,
-          procedureInstance.URL_TRAMITE,
-          procedureInstance.ID,
-          procedureInstance.THEME
-        );
-       
-        procedureAux.push(newProcedures);
-
-      });   
-      setProcedures(procedureAux);
+      try {
+        const FormsObj = JSON.parse(jsonStringWithoutEscape);
+        const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
+      
+            const mappedArray = FormsObj.map((procedureInstance: any) => {
+              const newProcedures = new ProcedureInstance(
+                JSON.parse(procedureInstance.FORMS),
+                procedureInstance.TITLE,
+                procedureInstance.DESCRIPTION,
+                procedureInstance.SECRETARY,
+                procedureInstance.STATE,
+                JSON.parse(procedureInstance.ATTACHMENTS),
+                procedureInstance.CITIZEN_LEVEL,
+                procedureInstance.PRICE,
+                procedureInstance.C,
+                procedureInstance.CONTENT_ID,
+                procedureInstance.ORF_ID,
+                procedureInstance.URL_TRAMITE,
+                procedureInstance.ID,
+                procedureInstance.THEME
+              );
+             
+              procedureAux.push(newProcedures);
+      
+            });   
+            setProcedures(procedureAux);
+      
+      } catch (error) {
+        // Maneja el error si no se puede analizar el JSON
+        console.error('Error al analizar el JSON:', error);
+        
+      }
+      
    }
    
     setIsLoading(false); 

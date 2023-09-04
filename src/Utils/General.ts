@@ -121,5 +121,8 @@ export const delLSData = (item:string) => {
 
 export const stringPreview = (text:string, len:number=100) => text.length>len?(text.slice(0,len)+"..."):text;
 
+export function removeHTMLTags(text:string) {
+  return text.replace(/<[^>]*>/g, '');
+}
 
 export const actionData = (data:string) => JSON.parse(atob(data));
