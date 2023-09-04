@@ -67,6 +67,7 @@ export const DA_Procedures_Associate = () => {
     //GetProcedureCategories()
   },[])
 
+
   useEffect(()=>{
 
     const updatedOptions = proceduresByApi.map((procedures) => ({
@@ -115,6 +116,8 @@ export const DA_Procedures_Associate = () => {
   const createProcedure = async () =>{
 
     const selectedProcedure = proceduresByApi.find((procedure) => procedure.ID === procedureByAPI?.getValue());
+
+    console.log("la secretaría de la persona es: "+secretaria+" / la secretaría del trámite es: "+selectedProcedure?.Organismo )
 
     if(estadoProcedure==''){
       setShowAlert(true)

@@ -1,5 +1,5 @@
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
-import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
+import { MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { FormElement, GetJSONData } from "../../../../Modules/FormElements/OLDTYPES";
 import { Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { Button } from "../../../../Components/Forms/Button";
@@ -18,13 +18,18 @@ import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Spinner } from "../../../../Components/Elements/StyledComponents";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { FormikButton } from "../../../../Components/Forms/FormikButton";
+import { Link } from "react-router-dom";
+import { Pages } from "../../../../Routes/Pages";
 
 
 interface Arguments {
     formToUpdate:FormInstance<ElementSchemaTypes>;
+    setVolver:Function,
   }
 
-export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
+export const FormUpdate: React.FC<Arguments> = ({formToUpdate, setVolver}) => {
 
     const { UpdateOneForm , setFormularios, isLoading } = useContext(FormContext);
 
@@ -220,8 +225,11 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate}) => {
             </select>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-            <Button type="submit" onClick={() => {setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' });}}>Guardar <BiSave/></Button>
-            <Button onClick={() => setVer(true)}>Ver<BiBullseye/></Button>
+            <FormikButton  onClick={() => setVer(true)}>Ver<HiOutlineMagnifyingGlass /></FormikButton>
+            <div style={{ display: 'flex', flexDirection:"row", justifyContent: 'right', width: '100%' }}>
+                <FormikButton style={{margin:"0px 15px 0px 0px"}} color="secondary"  onClick={() => { setVolver("home"); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Cancelar<MdOutlineCancel/></FormikButton>
+                <FormikButton style={{margin:"0px 0px 0px 15px"}} type="submit" onClick={() => { setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Guardar<BiSave /></FormikButton>
+            </div>
           </div>
         </LayoutSection>
       </>);

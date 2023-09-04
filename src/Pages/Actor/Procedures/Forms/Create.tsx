@@ -1,5 +1,5 @@
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
-import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
+import { MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { FormElement, GetJSONData } from "../../../../Modules/FormElements/OLDTYPES";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../../../../Components/Forms/Button";
@@ -17,6 +17,10 @@ import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { FieldsType, FormContext } from "../../../../Contexts/FormContext";
 import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, GenericAlertPopUp } from "../../../../Components/Forms/PopUpCards";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
+import { Pages } from "../../../../Routes/Pages";
+import { FormikButton } from "../../../../Components/Forms/FormikButton";
+import { Link } from "react-router-dom";
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
 
 export const DA_Procedures_Forms_Create = () => {
 
@@ -52,18 +56,6 @@ export const DA_Procedures_Forms_Create = () => {
     const newfield = new ElementInstance(fields.length.toString(), new ElementSchema(type, { label: 'Ingresá el Título' }, ["isRequired"]))
     setFields((prev: any) => [...prev, newfield])
   }
-
-  /*const handleEstadoFormulario = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setEstadoFormulario(event.target.value);
-  };*/
-
-  /*const handleIndexChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIndex(+event.target.value);
-  }*/
-
-  /*const handleJsonPropiertiesChanges = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setJsonproperties(event.target.value);
-  }*/
 
   const editarComponente = (schema: ElementInstance<ElementSchemaTypes>, indice: number) => {
     setIntance(schema)
@@ -296,10 +288,19 @@ export const DA_Procedures_Forms_Create = () => {
                 <option value="Publicado">Publicado</option>
               </select>
             </div>
+          
+
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-              <Button type="submit" onClick={() => { setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Guardar <BiSave /></Button>
-              <Button onClick={() => setVer(true)}>Ver <BiBullseye /></Button>
+                <FormikButton  onClick={() => setVer(true)}>Ver<HiOutlineMagnifyingGlass /></FormikButton>
+              <div style={{ display: 'flex', justifyContent: 'right', width: '100%' }}>
+
+                <Link to={Pages.DA_PROCEDURES_FORMS} style={{ textDecoration: 'none', marginRight:"15px" }}>
+                  <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
+                </Link>
+                <FormikButton type="submit" onClick={() => { setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Guardar<BiSave /></FormikButton>
+              </div>
             </div>
+
           </LayoutSection>
         </>
       );

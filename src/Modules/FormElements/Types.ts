@@ -10,7 +10,7 @@ import { AiOutlineCloudUpload, AiOutlineQrcode } from "react-icons/ai";
 import { FormElement } from "./OLDTYPES";
 
 
-export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'RADIO-LISTA' | 'SELECT' | 'FILE' | 'CAPTCHA' | 'RANGE' ;
+export type ElementSchemaTypes = 'SECTION' | 'TITLE' | 'SPACER' | 'TEXT' | 'TEXTAREA' | 'NUMBER' | 'PASSWORD' | 'MAIL' | 'DATE' | 'HOUR' | 'CHECKBOX' | 'RADIO' | 'RADIO-LISTA' | 'SELECT' | 'FILE' | 'RANGE' ;
 
 export const HelpToken:string = "HELP";
 
@@ -225,7 +225,7 @@ export const FormElementBases = {
     format: null,
     icon: AiOutlineCloudUpload
   },
-  "CAPTCHA": {
+  /*"CAPTCHA": {
     description: "Verificador CAPTCHA",
     properties:{
       required: ["label"] as const,
@@ -234,7 +234,7 @@ export const FormElementBases = {
     type: "input",
     format: "string",
     icon: AiOutlineQrcode
-  },
+  },*/
 };
 
 export type ElementPropsMap = {

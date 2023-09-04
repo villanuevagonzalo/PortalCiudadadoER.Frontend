@@ -133,8 +133,8 @@ export const DA_Procedures_Forms_Home = () => {
       )
     } else if (seeOptions=="modify") {
       return <div>
-          <FormUpdate formToUpdate= {formToCheck!} />
-          <Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver</Button>
+          <FormUpdate formToUpdate= {formToCheck!} setVolver={setSeeOptions} />
+          {/*<Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver</Button>*/}
         </div>;
     }else {
       return(<>
