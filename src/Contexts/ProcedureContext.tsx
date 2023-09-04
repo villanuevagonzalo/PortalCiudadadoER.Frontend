@@ -84,8 +84,6 @@ const ContextValues = () => {
     return response;
   }
 
-
-
   const UpdateProcedures = async() => {
 
     setIsLoading(true)
