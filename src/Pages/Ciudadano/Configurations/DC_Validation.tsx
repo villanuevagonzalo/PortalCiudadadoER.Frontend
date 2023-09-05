@@ -11,11 +11,13 @@ import { Pages } from "../../../Routes/Pages";
 import { AxiosResponse } from "axios";
 import logoAfip from "../../../Assets/LogoAfip.png"
 import logoMiArgentina from "../../../Assets/LogoMiargentina.png"
+import logoAnses from "../../../Assets/LogoAnses.png"
+import logoRenaper from "../../../Assets/LogoRenaper.png"
 import { LogoButton } from "../../../Components/Forms/LogoButton";
 
 export const DC_Validation = () => {
 
-  const { userData, userRol, AFIP_getURL, MIARGENTINA_getURL } = useContext(AuthContext);
+  const { userData, userRol, AFIP_getURL, MIARGENTINA_getURL, ANSES_getURL, RENAPER_getURL } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   const [ ValidationsTab, setValidationsTab ] = useState<boolean>(false);
 
@@ -29,8 +31,16 @@ export const DC_Validation = () => {
       response = await AFIP_getURL({
         cuil: userData.cuil
       }, setFormState);
-    } else{
+    } else if(type==='miargentina'){
       response = await MIARGENTINA_getURL({
+        cuil: userData.cuil
+      }, setFormState);
+    } else if(type==='anses') {
+      response = await ANSES_getURL({
+        cuil: userData.cuil
+      }, setFormState);
+    } else {
+      response = await RENAPER_getURL({
         cuil: userData.cuil
       }, setFormState);
     }
@@ -98,6 +108,8 @@ export const DC_Validation = () => {
         <div className="flex FlexSwitchMobile gap-6">
           <LogoButton onClick={()=>getValidationLink('AFIP')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoAfip} alt="Logo Afip"/>}</LogoButton>
           <LogoButton onClick={()=>getValidationLink('miargentina')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoMiArgentina} alt="logo Mi Argentina"/>}</LogoButton>
+          <LogoButton onClick={()=>getValidationLink('anses')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoAnses} alt="logo Anses"/>}</LogoButton>
+          <LogoButton onClick={()=>getValidationLink('renaper')} disabled={FormState.loading}>{FormState.loading ? <Spinner /> : <img src={logoRenaper} alt="logo Renaper"/>}</LogoButton>
         </div>
         </>:
         <></>
