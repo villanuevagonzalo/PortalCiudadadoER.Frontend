@@ -147,18 +147,20 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
         const jsonObject: any = {};
         jsonObject.Title_Attached = titleAttachedValues;
         const newProcedureToBeSend = new ProcedureInstance(
-          listaFormularios,
           procedure.getTitle(),
           procedure.getDescription(),
           procedure.getSecretary(),
           estadoProcedure,
+          listaFormularios,
           titleAttachedValues,
           userLevel,
           procedure.getPrice(),
+          procedure.getTheme(),
+          procedure.getUrl(),
+          undefined,
           procedure.getC(),
           procedure.getContentId(),
           procedure.getOrfId(),
-          procedure.getUrl(),
           procedure.getId()
       );
         const response = await UpdateOneProcedure(newProcedureToBeSend, setFormState, procedure.getTitle());
@@ -209,6 +211,10 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
           <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
             <h1>Descripción</h1>
             {procedure.getDescription()}
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Categoría</h1>
+            <p>{procedure.getTheme()}</p>
           </LayoutSection>
           <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
             <h1>Organismo</h1>

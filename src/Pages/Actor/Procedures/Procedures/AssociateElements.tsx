@@ -110,15 +110,21 @@ export const DA_Procedures_Associate = () => {
   }
 
   function doesTitleExist(titleToCheck: string): boolean {
-    return procedures.some((procedure) => procedure.getTitle() === titleToCheck);
+
+    const cleanedTitleToCheck = titleToCheck.replace(/\s+/g, '');
+
+    return procedures.some((procedure) => {
+      const cleanedProcedureTitle = procedure.getTitle().replace(/\s+/g, '');
+      return cleanedProcedureTitle === cleanedTitleToCheck;
+    });
   }
 
   const createProcedure = async () =>{
 
     const selectedProcedure = proceduresByApi.find((procedure) => procedure.ID === procedureByAPI?.getValue());
 
-    console.log("la secretaría de la persona es: "+secretaria+" / la secretaría del trámite es: "+selectedProcedure?.Organismo )
-
+    console.log("este es el titulo: "+procedureByAPI?.getValue())
+    console.log ("y esto lo que hay+ "+JSON.stringify(procedureByAPI))
     if(estadoProcedure==''){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un estado inicial al trámite")
@@ -127,7 +133,7 @@ export const DA_Procedures_Associate = () => {
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un título al trámite")
       setCrear(false)
-    }else if(doesTitleExist(procedureByAPI?.getValue())){
+    }else if(doesTitleExist(selectedProcedure?.Título!)){
       setShowAlert(true)
       setAlertMessage("Ya existe un trámite con el título seleccionado")
       setCrear(false)
@@ -146,18 +152,21 @@ export const DA_Procedures_Associate = () => {
       const jsonObject: any = {};
       jsonObject.Title_Attached = titleAttachedValues;
       const newProcedureToBeSend = new ProcedureInstance(
-        listaFormularios,
         selectedProcedure?.Título!,
         selectedProcedure?.Texto!,
         selectedProcedure?.Organismo!,
         estadoProcedure,
+        listaFormularios,
         titleAttachedValues,
         userLevel,
         selectedProcedure?.Costo!,
+        selectedProcedure?.Categoria!,
+        selectedProcedure?.URL_TRAMITE!,
+        selectedProcedure?.Icono!,
         selectedProcedure?.C!,
         selectedProcedure?.Contenido_ID!,
-        selectedProcedure?.ORF_ID!,
-        selectedProcedure?.URL_TRAMITE!
+        selectedProcedure?.ORF_ID!, 
+        undefined
       );
       const response = await SaveProcedure(newProcedureToBeSend, setFormState, selectedProcedure?.Título!);
       if (response) {

@@ -22,6 +22,8 @@ interface ProcedureByApiInterface {
   ORF_ID: string;
   Organismo: string;
   URL_TRAMITE: string;
+  Categoria:string;
+  Icono:string;
 }
 
 const ContextValues = () => {
@@ -41,8 +43,15 @@ const ContextValues = () => {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const titleResponse = responseData[0].TITLE
-      if (status && titleResponse == title) {
-        const newProcedure = new ProcedureInstance(procedure.getForms(),procedure.getTitle(), procedure.getDescription(), procedure.getSecretary(), procedure.getState(), procedure.getAttachments(), procedure.getCitizenLevel(), procedure.getPrice(),procedure.getC(), procedure.getContentId(),procedure.getOrfId(),procedure.getUrl())
+
+      //aca comparo titilos pero tengo que comparar sys_exp_id
+      const cleanedTitleResponse = titleResponse.replace(/\s+/g, ''); // Elimina los espacios en blanco
+      const cleanedTitle = title.replace(/\s+/g, ''); // Elimina los espacios en blanco
+
+
+      if (status && cleanedTitleResponse == cleanedTitle) {
+
+        const newProcedure = new ProcedureInstance(procedure.getTitle(), procedure.getDescription(), procedure.getSecretary(), procedure.getState(),procedure.getForms(), procedure.getAttachments(), procedure.getCitizenLevel(), procedure.getPrice(), procedure.getTheme(),procedure.getUrl(), undefined, procedure.getC(), procedure.getContentId(),procedure.getOrfId(), undefined)
         setProcedures(prevState => ([...prevState, newProcedure]));
         return true;
       }
@@ -106,20 +115,21 @@ const ContextValues = () => {
       
             const mappedArray = FormsObj.map((procedureInstance: any) => {
               const newProcedures = new ProcedureInstance(
-                JSON.parse(procedureInstance.FORMS),
                 procedureInstance.TITLE,
                 procedureInstance.DESCRIPTION,
                 procedureInstance.SECRETARY,
                 procedureInstance.STATE,
+                JSON.parse(procedureInstance.FORMS),
                 JSON.parse(procedureInstance.ATTACHMENTS),
                 procedureInstance.CITIZEN_LEVEL,
                 procedureInstance.PRICE,
+                procedureInstance.THEME,
+                procedureInstance.URL_TRAMITE,
+                undefined,
                 procedureInstance.C,
                 procedureInstance.CONTENT_ID,
                 procedureInstance.ORF_ID,
-                procedureInstance.URL_TRAMITE,
-                procedureInstance.ID,
-                procedureInstance.THEME
+                procedureInstance.ID
               );
              
               procedureAux.push(newProcedures);

@@ -169,6 +169,10 @@ interface FormGenericData {
                         <p>{procedureInstance.getDescription()}</p>
                     </LayoutSection>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1>Categoría</h1>
+                        <p>{procedureInstance.getTheme()}</p>
+                    </LayoutSection>
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                         <h1>Organismo</h1>
                         <p>{procedureInstance.getSecretary()}</p>
                     </LayoutSection>

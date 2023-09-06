@@ -151,9 +151,11 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   private content_id?:string;
   private orf_id?:string;
   private url?:string;
+  private icon?:string;
   
 
-  constructor(forms: string[], title: string, description: string, secretary:string, state: string, attachments: string[], citizenLevel?: string, price?:string, c?:string, content_id?:string,orf_id?:string, url?:string , id?: number, theme?: string) {    this.title = title;
+  constructor( title: string, description: string, secretary:string, state: string, forms: string[], attachments: string[], citizenLevel?: string, price?:string, theme?: string, url?:string, icon?:string, c?:string, content_id?:string, orf_id?:string,  id?: number ) {        
+    this.title = title;
     this.description = description;
     this.secretary = secretary;
     this.state = state;
@@ -184,7 +186,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     }
     if (url!==undefined){
       this.url=url
-
+    }
+    if (icon!==undefined){
+      this.icon=icon
     }
     
   }
