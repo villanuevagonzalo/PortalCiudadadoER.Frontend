@@ -166,7 +166,9 @@ export const DA_Procedures_Associate = () => {
         selectedProcedure?.C!,
         selectedProcedure?.Contenido_ID!,
         selectedProcedure?.ORF_ID!, 
-        undefined
+        undefined,
+        selectedProcedure?.ID! 
+
       );
       const response = await SaveProcedure(newProcedureToBeSend, setFormState, selectedProcedure?.Título!);
       if (response) {

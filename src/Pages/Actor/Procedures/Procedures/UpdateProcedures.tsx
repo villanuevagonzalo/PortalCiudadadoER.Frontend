@@ -161,7 +161,8 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
           procedure.getC(),
           procedure.getContentId(),
           procedure.getOrfId(),
-          procedure.getId()
+          procedure.getId(),//procedure id
+          procedure.getSistExpId() // id from sistema de expendiente's table
       );
         const response = await UpdateOneProcedure(newProcedureToBeSend, setFormState, procedure.getTitle());
         if (response) {

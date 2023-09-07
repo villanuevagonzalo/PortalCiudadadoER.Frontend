@@ -152,9 +152,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   private orf_id?:string;
   private url?:string;
   private icon?:string;
-  
+  private sys_exp_id?:string; //id from sistema de expendiente's table
 
-  constructor( title: string, description: string, secretary:string, state: string, forms: string[], attachments: string[], citizenLevel?: string, price?:string, theme?: string, url?:string, icon?:string, c?:string, content_id?:string, orf_id?:string,  id?: number ) {        
+  constructor( title: string, description: string, secretary:string, state: string, forms: string[], attachments: string[], citizenLevel?: string, price?:string, theme?: string, url?:string, icon?:string, c?:string, content_id?:string, orf_id?:string,  id?: number , sys_exp_id?:string) {        
     this.title = title;
     this.description = description;
     this.secretary = secretary;
@@ -172,24 +172,47 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     }
     if (price!==undefined){
       this.price=price
+    }else{
+      this.price=""
 
     }
     if (c!==undefined){
       this.c=c
+    }else{
+      this.c=""
+
     }
     if (content_id!==undefined){
       this.content_id=content_id
 
-    } if (orf_id!==undefined){
+    }else{
+      this.content_id=""
+
+    } 
+    if (orf_id!==undefined){
       this.orf_id=orf_id
+    }else{
+      this.orf_id=""
 
     }
     if (url!==undefined){
       this.url=url
+    }else{
+      this.url=""
+
     }
     if (icon!==undefined){
       this.icon=icon
+    }else{
+      this.icon=""
     }
+    if (sys_exp_id!==undefined){
+      this.sys_exp_id=sys_exp_id
+    }else{
+      this.sys_exp_id=""
+
+    }
+    
     
   }
 
@@ -291,6 +314,9 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   getOrfId() {
     return this.orf_id;
   }
+  getSistExpId(){
+    return this.sys_exp_id;
+  }
 
   // Setter para 'url'
   setUrl(url: string | undefined) {
@@ -317,6 +343,8 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
       "content_id":this.content_id,
       "orf_id" :this.orf_id,
       "url":this.url,
+      "icon":this.icon,
+      "sys_exp_id":this.sys_exp_id
      
     };
     
