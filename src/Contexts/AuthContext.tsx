@@ -215,6 +215,10 @@ const ContextValues = () => {
   const AFIP_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_AFIP_checkToken, data, setFormState);
   const MIARGENTINA_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_MIARGENTINA_getURL, data, setFormState);
   const MIARGENTINA_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_MIARGENTINA_checkToken, data, setFormState);
+  const ANSES_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_ANSES_getURL, data, setFormState);
+  const ANSES_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_ANSES_checkToken, data, setFormState);
+  const RENAPER_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_RENAPER_getURL, data, setFormState);
+  const RENAPER_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_RENAPER_checkToken, data, setFormState);
 
 
   useEffect(() => {
@@ -231,6 +235,8 @@ const ContextValues = () => {
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
     AFIP_getURL, AFIP_checkToken,
     MIARGENTINA_getURL, MIARGENTINA_checkToken,
+    ANSES_getURL, ANSES_checkToken,
+    RENAPER_getURL, RENAPER_checkToken,
     ContextLoaded
   }
 }

@@ -20,7 +20,7 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
 
   const SearchParams = GetParams(["code"]);
 
-  const { userData, userRol, SaveToken, AFIP_checkToken, AFIP_getURL, MIARGENTINA_checkToken, MIARGENTINA_getURL  } = useContext(AuthContext);
+  const { userData, userRol, SaveToken, AFIP_checkToken, AFIP_getURL, MIARGENTINA_checkToken, MIARGENTINA_getURL, ANSES_checkToken, ANSES_getURL, RENAPER_checkToken, RENAPER_getURL  } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   
   async function getValidationLink( type = 'AFIP' ) {
@@ -29,8 +29,16 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
       response = await AFIP_getURL({
         cuil: userData.cuil
       }, setFormState);
-    } else{
+    } else if(type==='miargentina'){
       response = await MIARGENTINA_getURL({
+        cuil: userData.cuil
+      }, setFormState);
+    } else if(type==='anses') {
+      response = await ANSES_getURL({
+        cuil: userData.cuil
+      }, setFormState);
+    } else {
+      response = await RENAPER_getURL({
         cuil: userData.cuil
       }, setFormState);
     }
@@ -46,8 +54,18 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
-    } else{
+    } else if(type==='miargentina'){
       response = await MIARGENTINA_checkToken({
+        'cuil':userData.cuil,
+        'code':SearchParams.values.code
+      }, setFormState);
+    } else if(type==='anses'){
+      response = await ANSES_checkToken({
+        'cuil':userData.cuil,
+        'code':SearchParams.values.code
+      }, setFormState);
+    } else {
+      response = await RENAPER_checkToken({
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
