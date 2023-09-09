@@ -318,6 +318,10 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
     return this.sys_exp_id;
   }
 
+  getIcon(){
+    return this.icon;
+  }
+
   // Setter para 'url'
   setUrl(url: string | undefined) {
     this.url = url;

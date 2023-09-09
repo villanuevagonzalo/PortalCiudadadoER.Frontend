@@ -125,7 +125,7 @@ const ContextValues = () => {
                 procedureInstance.PRICE,
                 procedureInstance.THEME,
                 procedureInstance.URL_TRAMITE,
-                undefined,
+                procedureInstance.ICON,
                 procedureInstance.C,
                 procedureInstance.CONTENT_ID,
                 procedureInstance.ORF_ID,
