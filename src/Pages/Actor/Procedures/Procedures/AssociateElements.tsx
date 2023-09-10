@@ -17,7 +17,7 @@ import { HiOutlineMagnifyingGlass, HiTrash } from "react-icons/hi2";
 import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Pages } from "../../../../Routes/Pages";
-import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp } from "../../../../Components/Forms/PopUpCards";
+import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp, ProcedureSelectedDataPopUp } from "../../../../Components/Forms/PopUpCards";
 import { AuthContext } from "../../../../Contexts/AuthContext";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
 
@@ -45,7 +45,9 @@ export const DA_Procedures_Associate = () => {
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [estadoProcedure, setEstadoProcedure] = useState<string>('');
   const [userLevel, setUserLevel]= useState<string>('level_3');
-  const [procedureByAPI, setProcedureByAPI] = useState <ElementInstance<ElementSchemaTypes>>()
+  const [procedureSelected, setProcedureByAPI] = useState <ElementInstance<ElementSchemaTypes>>()
+  const [procedureByAPIData, setProcedureByAPIData] = useState(false)
+  const [checkProcedureByAPI, setCheckProcedureByAPI] = useState(false)
 
   const [theme, setTheme] = useState <ElementInstance<ElementSchemaTypes>>()
 
@@ -75,11 +77,21 @@ export const DA_Procedures_Associate = () => {
       label: procedures.Título, 
     }));
 
-    const Select_Procedure = new ElementInstance("ProceduresByWeb", new ElementSchema('SELECT', { label: 'Seleccione un Trámite', options: updatedOptions },["isRequired"]))
-
+    const Select_Procedure = new ElementInstance("ProceduresByWeb", new ElementSchema('SELECT', { label: 'Seleccione un Trámite', options: updatedOptions },["isRequired"]))   
     setProcedureByAPI(Select_Procedure)
-    
+
+  
   },[proceduresByApi])
+
+
+  const handleprocedureSelectedClick=()=>{
+
+    if (procedureSelected?.getValue()!= ""){
+
+      setProcedureByAPIData(true)
+    }    
+  }
+
   
   const addNewForm = () =>{
     const updatedOptions = publishedFormularios.map((forms) => ({
@@ -121,15 +133,15 @@ export const DA_Procedures_Associate = () => {
 
   const createProcedure = async () =>{
 
-    const selectedProcedure = proceduresByApi.find((procedure) => procedure.ID === procedureByAPI?.getValue());
+    const selectedProcedure = proceduresByApi.find((procedure) => procedure.ID === procedureSelected?.getValue());
 
-    console.log("este es el titulo: "+procedureByAPI?.getValue())
-    console.log ("y esto lo que hay+ "+JSON.stringify(procedureByAPI))
+    console.log("este es el titulo: "+procedureSelected?.getValue())
+    console.log ("y esto lo que hay+ "+JSON.stringify(procedureSelected))
     if(estadoProcedure==''){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un estado inicial al trámite")
       setCrear(false)
-    }else if (procedureByAPI?.getValue()==""){
+    }else if (procedureSelected?.getValue()==""){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un título al trámite")
       setCrear(false)
@@ -211,10 +223,11 @@ export const DA_Procedures_Associate = () => {
 
     return(<>
       {showAlert && (<GenericAlertPopUp genericMessage={alertMessage} close={setShowAlert}  />)}
-      {crear && (<CreateProcedurePopUp procedureTitle={procedureByAPI!.getValue()} create={createProcedure} close={setCrear}  />)}
-      {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={procedureByAPI!.getValue()} close={setErrorCarga}  /> )}
+      {crear && (<CreateProcedurePopUp procedureTitle={procedureSelected!.getValue()} create={createProcedure} close={setCrear}  />)}
+      {errorCarga && (<ProcedureCreateErrorPopUp procedureTitle={procedureSelected!.getValue()} close={setErrorCarga}  /> )}
       {cargadoCorrectamente && (<ProcedureCreatedPopUp title={""} close={setCargadoCorrectamente} />)}
-  
+      {checkProcedureByAPI && (<ProcedureSelectedDataPopUp procedure={procedureSelected!} close={setCheckProcedureByAPI} />)}
+
       <LayoutActorSection>
         <p>Asociar elementos al trámite</p>
         <h1>Buscar Trámites</h1>
@@ -254,7 +267,17 @@ export const DA_Procedures_Associate = () => {
           >
             <Form autoComplete="off">
               <LayoutStackedPanel>
-                {procedureByAPI&&<Element instance={procedureByAPI!} className="flex-1"/>}
+                <div style={{display:"flex", flexDirection:"column"}} >
+                  {procedureSelected&&
+                    <div onClick={handleprocedureSelectedClick}>
+                    <Element instance={procedureSelected!} className="flex-1"/>
+                    </div>
+                    
+                  }
+                  {procedureByAPIData && <div style={{ display: 'flex', width: 'auto', marginRight:"8px", justifyContent:"flex-end" }}  onClick={() => { setCheckProcedureByAPI(true)}}>
+                    <HiOutlineMagnifyingGlass/> 
+                  </div>}
+                </div>
               </LayoutStackedPanel>  
             </Form>
         </Formik>

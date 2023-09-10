@@ -5,12 +5,14 @@ import { Button } from "./Button"
 import { ElementEditor } from "../../Modules/Actor/ElementEditor"
 import { ElementInstance, FormInstance, ProcedureInstance } from "../../Modules/FormElements/Class"
 import { ElementSchemaTypes } from "../../Modules/FormElements/Types"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { Link } from "react-router-dom"
 import { Pages } from "../../Routes/Pages"
 import { BiArrowBack, BiSave } from "react-icons/bi"
 import { InputWrapper } from "../../Modules/FormElements/Components/StyledComponents"
 import { HiDocumentDuplicate } from "react-icons/hi2"
+import { ProcedureContext } from "../../Contexts/ProcedureContext"
+import { removeHTMLTags } from "../../Utils/General"
 
 interface Props{
     instance: ElementInstance<ElementSchemaTypes>,  
@@ -494,6 +496,48 @@ export const CitizenFormCompleteAllFiles: React.FC<CitizenFormCompleteAllFiles> 
           <h2>Debe completar el campo {element} </h2>      
         </div>
 
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+            <Button style={{ width: '150px', height: '40px' }} onClick={()=>close(false)} >OK</Button>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>);
+};
+
+interface ProcedureSelectedDataPopUp {
+  procedure: ElementInstance<ElementSchemaTypes>,
+  close: Function, 
+
+}
+export const ProcedureSelectedDataPopUp: React.FC<ProcedureSelectedDataPopUp> = ({ procedure, close }) => {
+  
+  const { proceduresByApi} = useContext(ProcedureContext);
+
+  const selectedProcedure = proceduresByApi.find((procedures) => procedures.ID === procedure.getValue());
+
+  return (<NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close(false)}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center"}}>
+          <h1>Datos generales del trámite seleccionado</h1>      
+
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start", textAlign: "left", margin: "15px 0px 15px 0px" }}>
+            <h2>Título:</h2>
+            <h3>{selectedProcedure?.Título}</h3>
+            <h2>Categoría:</h2>
+            <h3>{selectedProcedure?.Categoria}</h3> 
+            <h2>Costo:</h2>
+            <h3>{removeHTMLTags(selectedProcedure?.Costo!)} </h3>      
+            <h2>Descripción:</h2>
+            <h3>{removeHTMLTags(selectedProcedure?.Texto!)}</h3>      
+        
+          </div>
+        </div>
         <LayoutStackedPanel className="mt-2">
           <LayoutSpacer/>
             <Button style={{ width: '150px', height: '40px' }} onClick={()=>close(false)} >OK</Button>
