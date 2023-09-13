@@ -6,6 +6,7 @@ import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/ActorFormAPI";
 import { ProcedureAPI } from "../Services/ActorProcedureAPI";
 import { removeHTMLTags } from "../Utils/General";
+import { CiudadanoProcedureAPI } from "../Services/CiudadanoProcedureAPI";
 
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
@@ -29,8 +30,12 @@ interface ProcedureByApiInterface {
 const ContextValues = () => {
 
   const AxiosProcedureAPI = new ProcedureAPI();
+  const AxiosCiudadanoProcedureAPI = new CiudadanoProcedureAPI();
+
   const [procedures, setProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [proceduresPublished, setProceduresPublished] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
+
+  const [isLoadingProcedure, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
   const [proceduresByApi, setProceduresByApi]= useState<ProcedureByApiInterface []>([])
 
@@ -149,6 +154,62 @@ const ContextValues = () => {
   }
 
 
+  const UpdatePublishedProcedures = async() => {
+
+    setIsLoading(true)
+    let responseAll:AxiosResponse | ResponseError | null = null;
+    
+    try { responseAll = await AxiosCiudadanoProcedureAPI.GetPublished(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    //let forms=responseAll!.data.data; 
+   // response_without_backslashes = json.loads(response.replace('\\', ''))
+    
+   //let FormData = "[]";
+   if(responseAll && responseAll.status!==204) 
+    {
+      const FormData = responseAll.data.data;
+        
+        const jsonStringWithoutEscape =removeHTMLTags(FormData);
+
+        try {
+          const FormsObj = JSON.parse(jsonStringWithoutEscape);
+          const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
+        
+              const mappedArray = FormsObj.map((procedureInstance: any) => {
+                const newProcedures = new ProcedureInstance(
+                  procedureInstance.TITLE,
+                  procedureInstance.DESCRIPTION,
+                  procedureInstance.SECRETARY,
+                  procedureInstance.STATE,
+                  JSON.parse(procedureInstance.FORMS),
+                  JSON.parse(procedureInstance.ATTACHMENTS),
+                  procedureInstance.CITIZEN_LEVEL,
+                  procedureInstance.PRICE,
+                  procedureInstance.THEME,
+                  procedureInstance.URL_TRAMITE,
+                  procedureInstance.ICON,
+                  procedureInstance.C,
+                  procedureInstance.CONTENT_ID,
+                  procedureInstance.ORF_ID,
+                  procedureInstance.ID
+                );
+              
+                procedureAux.push(newProcedures);
+                console.log(JSON.stringify(newProcedures))
+              });   
+              setProceduresPublished(procedureAux);
+        
+        } catch (error) {
+          // Maneja el error si no se puede analizar el JSON
+          console.error('Error al analizar el JSON:', error);
+          
+        }
+        
+    }
+   
+    setIsLoading(false); 
+  }
+
+
   
   //get procedures title, description and deparment
   const GetProceduresDataFromAPI = async() => {
@@ -194,8 +255,9 @@ const ContextValues = () => {
   }
 
   return {
-    isLoading,
+    isLoadingProcedure,
     procedures,
+    proceduresPublished,
     proceduresByApi,
     categories,
     setProcedures,
@@ -203,6 +265,7 @@ const ContextValues = () => {
     UpdateOneProcedure,
     DeleteOneProcedure,
     UpdateProcedures,
+    UpdatePublishedProcedures,
     GetProceduresDataFromAPI,
     GetProcedureCategories
   }

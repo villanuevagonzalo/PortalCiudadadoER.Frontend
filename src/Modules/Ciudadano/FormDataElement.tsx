@@ -36,70 +36,24 @@ interface Arguments {
     const [showFormUploadError, setShowFormUploadError] = useState(false)
 
     const checkValues = () => {
-        form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+        let hasRequiredEmptyElement = false;
+    
+        form.elements.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
             const jsonString = JSON.stringify(element.properties);
             const propertiesObj = JSON.parse(jsonString);
-            const value = element.getValue()
-            if (propertiesObj.required==true && value=="" ){
-                setElementToComplete(element.properties.label)
-                setShowAlertCompleteElements(true)
-            }else{
-                enviar()
-            } 
-        });
-    };
-
-   /* const enviar = async () => {
-
-        let elements_common: FieldsType = [];
-       // let elements_files: FieldsType = [];
-        let hasArray:boolean = false;
-
-        form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
-
-
-            if (element.type === "FILE") {
-                hasArray=true;
-
-            } else {
-                elements_common.push(element);
+            const value = element.getValue();
+    
+            if (propertiesObj.required === true && value === "") {
+                setElementToComplete(element.properties.label);
+                setShowAlertCompleteElements(true);
+                hasRequiredEmptyElement = true; // Mark that a required empty element was found
             }
-
         });
-
-        if (hasArray){
-
-            const data = {
-                procedure_data_id: Number(procedureID),
-                form_unit_code:form.getCode(),
-                form_data: JSON.stringify(elements_common),
-                attachments:fileArray
-              };
-              const response = await SaveForm(data, setFormState);
-              if (response){
-                setShowFormCorrectedUploaded(true)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }else{
-                setShowFormUploadError(true)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }
-        }else{
-
-            const data = {
-                procedure_data_id: Number(procedureID),
-                form_unit_code:form.getCode(),
-                form_data: JSON.stringify(elements_common)
-              };
-              const response = await SaveForm(data, setFormState);
-              if (response){
-                setShowFormCorrectedUploaded(true)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }else{
-                setShowFormUploadError(true)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-              }
+    
+        if (!hasRequiredEmptyElement) {
+            enviar(); // Call enviar() only if there are no required empty elements
         }
-    };*/
+    };
 
     const enviar = async () => {
         const elements_common: FieldsType = [];

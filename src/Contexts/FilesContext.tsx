@@ -9,7 +9,7 @@ const ContextValues = () => {
   };
 
   const addFilesToContext = (filesToAdd: File[]) => {
-    console.log((filesToAdd))
+    //console.log((filesToAdd))
     setFileArray(prevFileArray => [...prevFileArray, ...filesToAdd]);
   };
 

@@ -39,6 +39,16 @@ export class CiudadanoProcedureAPI {
     })
   }
 
+  SendAttachments = async (params: {
+    data:string
+  }) => {
+    return this.baseService.post('/v0/dashboard/procedures/attachments', params,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  }
+
   Delete = async (params: {
     data:string
   }) => {

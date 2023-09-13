@@ -14,7 +14,7 @@ const ContextValues = () => {
 
   const AxiosCiudadanoProcedureAPI = new CiudadanoProcedureAPI();
   const [ciudadanoProcedures, setCiudadanoProcedures] = useState<ProcedureData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingCiudadanoProcedure, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
   useEffect(()=>{
@@ -29,7 +29,6 @@ const ContextValues = () => {
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
-      console.log("estatus: "+status)
       if (status) {
         let parsedForms:any=[]
         let parsedAttachments=[]
@@ -157,19 +156,25 @@ const ContextValues = () => {
 };
 
 
-
   const UserClearData = () => {
     setCiudadanoProcedures([]);
   }
 
+  const sendProcedureAttachment = async (newAttachment:any, setFormState: Function) => {
+
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.SendAttachments, newAttachment, setFormState);
+
+  }
+
   return {
-    isLoading,
+    isLoadingCiudadanoProcedure,
     ciudadanoProcedures,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 
     UpdateOneCiudadanoProcedure,
     DeleteOneCiudadanoProcedure,
-    UpdateCiudadanoProcedures
+    UpdateCiudadanoProcedures, 
+    sendProcedureAttachment
   }
 }
 

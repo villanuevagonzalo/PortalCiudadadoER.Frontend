@@ -1,6 +1,8 @@
+import {Element} from '../FormElements/Components/Element';
+
 import { MdCheck, MdOutlineDataset, MdOutlineNewLabel, MdVerifiedUser } from "react-icons/md";
 import { LayoutSection, LayoutSectionProcedureTitle, LayoutSpacer } from "../../Components/Layout/StyledComponents";
-import { FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
+import {  ElementInstance, ElementSchema, FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Button } from "../../Components/Forms/Button";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
@@ -10,6 +12,11 @@ import { CiudadanoFormElement } from "./FormDataElement";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 import { BiArrowBack, BiSend } from "react-icons/bi";
 import { CitizeProcedureUploadedProps } from "../../Components/Forms/CitizenPopUpCards";
+import { Form, Formik } from "formik";
+import { FormikButton } from '../../Components/Forms/FormikButton';
+import { FilesContext } from '../../Contexts/FilesContext';
+import { DefaultFormState } from '../../Data/DefaultValues';
+import { IFormState } from '../../Interfaces/Data';
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -25,7 +32,9 @@ interface FormGenericData {
 
    
     const {formularios, UpdateForms} = useContext(FormContext);
-    const { ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+    const { ciudadanoProcedures, sendProcedureAttachment } = useContext(CiudadanoProcedureContext);
+    const {fileArray} = useContext(FilesContext)
+    const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
     const [formsOfGenericProcedure, setFormsOfGenericProcedure] = useState <FormInstance<ElementSchemaTypes>[]> ([]);
     const [procedureData, setProcedureData] = useState <ProcedureData > ();
@@ -35,6 +44,9 @@ interface FormGenericData {
 
     const [showProcedureCorrectedUploaded, setShowProcedureCorrectedUploaded] = useState(false) 
 
+    const [attachments, setAttachments] = useState <ElementInstance<ElementSchemaTypes>[]>([])
+
+  
     const completarForm = (formCode:FormInstance<ElementSchemaTypes>) => {
         setFormToComplete(formCode)
     }
@@ -57,6 +69,25 @@ interface FormGenericData {
     },[formularios])
 
 
+    useEffect(() => {
+        if (procedureInstance) {
+
+            if (procedureInstance.getAttachments().length > 0 )
+            {
+                let attachmentsAux: ElementInstance<ElementSchemaTypes>[] = [];
+                const newAttachments = procedureInstance.getAttachments().map((attachment, index) => {
+                const Attachments= new ElementInstance(index.toString(),new ElementSchema('FILE',{label:attachment}), null)
+                attachmentsAux.push(Attachments);
+                });
+                setAttachments(attachmentsAux);
+            }
+        }
+      }, [procedureInstance]);
+    
+      useEffect(() => {
+        console.log(JSON.stringify(attachments))
+      }, [attachments]);
+      
     useEffect(()=>{
         
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
@@ -117,15 +148,33 @@ interface FormGenericData {
     
     const AttachmentSection: React.FC<{ procedureInstance: ProcedureInstance<ElementSchemaTypes>; procedureData: ProcedureData; completarAdjunto: Function }> = ({ procedureInstance, procedureData, completarAdjunto }) => {
         return (
+            
             procedureInstance.getAttachments().length > 0 ? (
                 <LayoutSection style={{ margin: "5px 0px 15px 0px" }}>
                     <h1><MdOutlineDataset />Adjuntos del trámite</h1>
                     {/* Suponiendo que "getAttachments" es una función de tu "procedureInstance" y "AttachmentItem" es un componente similar al de FormularioItem */}
                     <div>
-                        <h2><MdOutlineDataset />Adjuntos</h2>
-                        {procedureInstance.getAttachments().map((attachment, index) => (
-                            <AttachmentItem key={index} attachment={attachment} procedureData={procedureData} completarAdjunto={completarAdjunto} />
-                        ))}
+                        <h2><MdOutlineDataset />Adjuntos</h2>                      
+                        <Formik
+                        validateOnBlur={false}
+                        validateOnChange={false}
+                        enableReinitialize={true}
+                        initialValues={[]}
+                        onSubmit={(e:any)=>{
+                            console.log("popo")
+                        }}
+                    >
+                        <Form autoComplete="off">
+                        {attachments &&
+                        attachments.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                            <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                                <Element instance={element} className="flex-2"/>
+                            </div>
+                            ))}  
+                        <FormikButton disabled={false} color="secondary" type="submit">Cargar archivo</FormikButton>
+
+                        </Form>
+                    </Formik>
                     </div>
                 </LayoutSection>
             ) : null
@@ -133,21 +182,18 @@ interface FormGenericData {
     };
     
 
-    const AttachmentItem: React.FC<{ attachment: any, procedureData: ProcedureData, completarAdjunto: Function }> = ({ attachment, procedureData, completarAdjunto }) => {
-        return(
-            <div style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
-            <LayoutSection>
-                <h1>{attachment} </h1>
-                {procedureData && procedureData.getAttachments() && procedureData.getAttachments()!.includes(attachment) ? (
-                    <h1><MdCheck />Adjunto completado</h1>
-                ) : (
-                    <Button onClick={() => completarAdjunto(attachment)}>
-                        <HiOutlineMagnifyingGlass />Adjuntar Documento</Button>
-                )}
-            </LayoutSection>
-        </div>
-        )
-    };
+    const sendFile = async (fileName:string) => {
+
+        const data = {
+            procedure_data_id: Number(procedureInstance.getId()),
+            attachments: fileArray  // Agregar las attachments solo si hasArray es true
+          };
+        
+        const response = await sendProcedureAttachment(data, setFormState);
+
+        console.log("respuesta de enviar archivo: "+ JSON.stringify(response))
+
+    }
     
 
     if (render==="form"){
@@ -187,6 +233,7 @@ interface FormGenericData {
                     <FormSection forms={formsOfGenericProcedure} procedureData={procedureData!} completarForm={completarForm} />
                     <AttachmentSection procedureInstance={procedureInstance} procedureData={procedureData!} completarAdjunto={completarAdjunto} />
                 </LayoutSection>
+                
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}> 
                     <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                         <Button style={{width:"200px", margin:"0px 0px 15px 0px"}} onClick={() => backFunction("home")} > <BiArrowBack/>Volver</Button>
@@ -194,6 +241,7 @@ interface FormGenericData {
                     </div>
 
                 </LayoutSection>
+                <Button style={{width:"200px", margin:"0px 0px 15px 0px"}}  color={"secondary"} onClick={() => sendFile("un archivo")} >Prueba envio archivo<BiSend/> </Button>
 
                 </div>
                 

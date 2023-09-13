@@ -34,7 +34,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Config = () => {
 
-  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, setProcedures, procedures , isLoading} = useContext(ProcedureContext);
+  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, setProcedures, procedures , isLoadingProcedure} = useContext(ProcedureContext);
   const { UpdateForms} = useContext(FormContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -145,7 +145,7 @@ export const DA_Procedures_Config = () => {
           </LayoutStackedPanel>
          
           <h4>Lista de tramites creados</h4>
-          {isLoading?<>
+          {isLoadingProcedure?<>
             <br/>
             <Spinner color='secondary' size="3rem"/><br/>
             <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>

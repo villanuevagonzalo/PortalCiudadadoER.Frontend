@@ -18,6 +18,7 @@ interface Props extends HTMLAttributes<HTMLDivElement>{
 
 export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
+
   const basetype = FormElementBases[instance.type]
   const [ field ] = useField(instance.name);
   const [ HelpField ] = useField(HelpToken+instance.name)
@@ -37,11 +38,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     setEmpty(field.value==='')
   }
 
-  /*const handleFileChange = (event: any) => {
-    const file = Array.from(event.target.files)
-    console.log("ahora veamos esto del event target: "+ JSON.stringify(event.target.files))
-    setFieldValue(HelpToken+instance.name,file)
-  }*/
+  /*
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.target.files; // Obtener la lista de archivos
 
@@ -55,6 +52,34 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       addFilesToContext(fileArray);
       instance.setValue(fileArray);
 
+    } else {
+      console.log("No files selected.");
+    }
+  };*/
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files; // Obtener la lista de archivos
+  
+    if (fileList) {
+      const fileArray = Array.from(fileList); // Convertir la lista en un array
+  
+      // Obtén el nombre deseado del archivo
+      const EI = instance as ElementInstance<"FILE">
+      const fileName = EI.properties.label;
+  
+      // Agrega el nombre a cada archivo en el array
+      const filesWithNames = fileArray.map(file => {
+        const newFile = new File([file], fileName, { type: file.type });
+        return newFile;
+      });
+  
+      console.log("Selected files:", filesWithNames);
+  
+      // Usar las funciones del contexto
+      setFieldValue(HelpToken + instance.name, filesWithNames);
+      addFilesToContext(filesWithNames);
+      instance.setValue(filesWithNames);
+  
     } else {
       console.log("No files selected.");
     }

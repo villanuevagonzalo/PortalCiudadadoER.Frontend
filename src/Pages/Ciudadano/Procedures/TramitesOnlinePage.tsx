@@ -4,7 +4,7 @@ import { NuevosTramites } from '../../../Components/Elements/NuevosTramites';
 import { NavigatorSpacer, Spinner } from '../../../Components/Elements/StyledComponents';
 import { Button } from '../../../Components/Forms/Button';
 import { FormikSearch } from '../../../Components/Forms/FormikSearch';
-import { LayoutColumns, LayoutSection, LayoutTitle, LayoutColumn } from '../../../Components/Layout/StyledComponents';
+import { LayoutColumns, LayoutSection, LayoutTitle, LayoutColumn, LayoutText } from '../../../Components/Layout/StyledComponents';
 import { DefaultFormState } from '../../../Data/DefaultValues';
 import { IFormState, IUserRol } from '../../../Interfaces/Data';
 import { formGetInitialValues, formGetValidations } from '../../../Interfaces/FormFields';
@@ -35,7 +35,7 @@ export const TramitesOnlinePage = () => {
     
   const navigate = useNavigate();
 
-  const { UpdateProcedures, procedures , isLoading} = useContext(ProcedureContext);
+  const { UpdatePublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
   const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
   const { userData} = useContext(UserContext);
 
@@ -49,9 +49,10 @@ export const TramitesOnlinePage = () => {
   const [citizenLevelError, setCitizenLevelError] = useState(false)
 
   
-  console.log(JSON.stringify(procedures))
+  console.log(JSON.stringify(proceduresPublished))
+
   useEffect(()=>{
-    UpdateProcedures()
+    UpdatePublishedProcedures()
     UpdateCiudadanoProcedures()
 
     const handlePopState = () => {
@@ -85,7 +86,7 @@ export const TramitesOnlinePage = () => {
 
 
   const seeProcedure = (idBuscado: number) => {
-    const foundProcedure = procedures.find(procedure => procedure.getId() === idBuscado);
+    const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
 
     if (foundProcedure) {
 
@@ -120,7 +121,7 @@ export const TramitesOnlinePage = () => {
     }
 };
 
-console.log(JSON.stringify(procedures))
+console.log(JSON.stringify(proceduresPublished))
 
 
     if (render === "procedure" && procedureInstance) {
@@ -154,8 +155,9 @@ console.log(JSON.stringify(procedures))
             </Formik>
         </LayoutSection>
         {showNetworkError&&<h2>Error de red, intente nuevamente</h2>}
+        {isLoadingProcedure && (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)}
         
-        {procedures.map((item, index) => <LayoutSection key={index}>
+        {proceduresPublished.map((item, index) => <LayoutSection key={index}>
             {item.getIcon() !== "" ? (
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
             <div style={{ width: "25%", display: "flex", alignItems: "center" }}>

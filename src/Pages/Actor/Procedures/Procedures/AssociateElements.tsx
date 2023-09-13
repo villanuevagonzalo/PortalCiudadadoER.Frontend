@@ -34,7 +34,7 @@ interface DatosAdjuntos {
 export const DA_Procedures_Associate = () => {
     const ref:any = useRef(null);
 
-  const { UpdateProcedures, SaveProcedure, GetProceduresDataFromAPI, proceduresByApi, GetProcedureCategories, categories,setProcedures, procedures } = useContext(ProcedureContext);
+  const { UpdateProcedures, SaveProcedure, GetProceduresDataFromAPI, proceduresByApi, GetProcedureCategories, categories,setProcedures, procedures, isLoadingProcedure } = useContext(ProcedureContext);
   const { SaveForm, UpdatePublishedForms, publishedFormularios, isLoading, DeleteOneForm} = useContext(FormContext);
   const {secretaria } = useContext(AuthContext);
 
@@ -135,8 +135,6 @@ export const DA_Procedures_Associate = () => {
 
     const selectedProcedure = proceduresByApi.find((procedure) => procedure.ID === procedureSelected?.getValue());
 
-    console.log("este es el titulo: "+procedureSelected?.getValue())
-    console.log ("y esto lo que hay+ "+JSON.stringify(procedureSelected))
     if(estadoProcedure==''){
       setShowAlert(true)
       setAlertMessage("Debe seleccionar un estado inicial al trámite")
