@@ -28,6 +28,7 @@ interface FormGenericData {
     title:string;
   }
 
+
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
    
@@ -139,7 +140,7 @@ interface FormGenericData {
                     {procedureData && procedureData.getForms().includes(form.getCode().toString()) ? (
                         <h1><MdCheck />Formulario completado</h1>
                     ) : (
-                        <Button onClick={() => completarForm(form)}><HiOutlineMagnifyingGlass />Completar Formulario</Button>
+                        <Button onClick={() => {completarForm(form); console.log("Se clickeo: "+JSON.stringify(form))}}><HiOutlineMagnifyingGlass />Completar Formulario</Button>
                     )}
                 </LayoutSection>
             </div>
@@ -195,6 +196,11 @@ interface FormGenericData {
 
     }
     
+
+    //Required to not render until it is procedureInstance
+    if (!procedureInstance){
+        return null;
+    }
 
     if (render==="form"){
         return renderFormComponent();

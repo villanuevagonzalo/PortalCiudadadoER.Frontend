@@ -826,9 +826,9 @@ export const NotificationFullSizeWrapper = styled.div`
       margin:0rem;
     }
     
-    & p{
-      font-size:0.9rem;
-      word-break: break-all;
+    & p {
+      font-size: 1rem; /* Aumenta el tamaño de fuente */
+      word-wrap: break-word; /* Permite el retorno de línea automático si es necesario */
     }
     
     & div.header{
