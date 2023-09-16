@@ -65,22 +65,23 @@ export class FormInstance<T extends ElementSchemaTypes>  {
 
   elements: ElementInstance<ElementSchemaTypes>[];
   private title: string; 
-  private subtitle: string; 
-  private description: string; 
+  subtitle: string; 
+  description: string; 
   private keywords: string; 
   private status:string;
   private code:string;
-  private created_at:string;
+  created_at:string;
   private created_by:string; 
 
 
-  constructor(code:string, title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[], created_at:string ="",created_by:string="" ) {
+  constructor(code:string, title:string, subtitle:string, description:string, keywords:string, status:string, elements:ElementInstance<T>[] = [], created_at:string ="",created_by:string="" ) {
     this.title=title;
     this.subtitle=subtitle;
     this.description=description;
     this.keywords=keywords;
     this.status=status;
-    this.elements = elements ;
+    this.elements = elements;
+   
     this.code=code;
     this.created_at = created_at ; // Asignar valor predeterminado en caso de que sea null
     this.created_by = created_by; // Asignar valor predeterminado en caso de que sea null
@@ -108,6 +109,19 @@ export class FormInstance<T extends ElementSchemaTypes>  {
     return formData;
   }
 
+  setDescription (description:string){
+    console.log("se cargado descripición")
+    this.description=description;
+  }
+
+  setSubtitle (subtitle:string){
+    this.subtitle=subtitle;
+  }
+
+  setCreated_at (created_at:string){
+    this.created_at=created_at;
+  }
+  
   setCode(code:string){
     this.code=code;
   }

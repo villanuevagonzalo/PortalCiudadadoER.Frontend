@@ -36,6 +36,19 @@ export class FormAPI {
     })
   }
 
+
+  GetElements = async (params: {
+    code:number
+  }) => {
+    return this.baseService.get("/v0/backoffice/forms/elements", {params})
+  }
+
+  GetByCode = async (params: {
+    code:number
+  }) => {
+    return this.baseService.get('/v0/backoffice/forms/getByPk',{params})
+  }
+
   Delete = async (params: {
     data:string
   }) => {

@@ -48,16 +48,10 @@ const ContextValues = () => {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const codeResponse = responseData[0].CODE;
+      
       if (status && codeResponse == code ) {
         setFormularios(prevFormularios => prevFormularios.filter(formulario =>formulario.getCode() !== code )); //delete the old form
-       /* const elements=JSON.parse(formulario.elements)
-        let newFields: FieldsType = [];
-        elements.map((componente: any, index: number) => {
-          const aux = new ElementInstance((index + 1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-          aux.update((componente.properties))
-          newFields.push(aux);
-        });
-        const nuevoFormulario = new FormInstance(formulario.code, formulario.title,formulario.subtitle, formulario.description, formulario.keywords, formulario.status, newFields)*/
+     
         setFormularios(prevState => ([...prevState, updateFormulario])); //set the new form
         setIsLoading(false)
         return true;
@@ -97,20 +91,19 @@ const ContextValues = () => {
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.map((formInstance: any) => {
         let fields: FieldsType = [];
-        let componentes= JSON.parse(formInstance.STATUS)
+        /*let componentes= JSON.parse(formInstance.STATUS)
         componentes.map((componente: any, index:number)=> {
           const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
           aux.update((componente.properties))
           fields.push(aux);
-          });
-        const Formulario = new FormInstance(
+          });*/
+          const Formulario = new FormInstance(
             formInstance.CODE,
             formInstance.TITLE,
             formInstance.SUBTITLE,
             formInstance.DESCRIPTION,
-            formInstance.ELEMENTS,
             formInstance.KEYWORDS,
-            fields
+            formInstance.STATUS,
         );
         formulariosAux.push(Formulario);
       });   
@@ -131,20 +124,14 @@ const ContextValues = () => {
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.map((formInstance: any) => {
         let fields: FieldsType = [];
-        let componentes= JSON.parse(formInstance.STATUS)
-        componentes.map((componente: any, index:number)=> {
-          const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-          aux.update((componente.properties))
-          fields.push(aux);
-          });
-        const Formulario = new FormInstance(
+        
+          const Formulario = new FormInstance(
             formInstance.CODE,
             formInstance.TITLE,
             formInstance.SUBTITLE,
             formInstance.DESCRIPTION,
-            formInstance.ELEMENTS,
             formInstance.KEYWORDS,
-            fields
+            formInstance.STATUS,
         );
         formulariosAux.push(Formulario);
       });   
@@ -152,6 +139,95 @@ const ContextValues = () => {
     }
     setIsLoading(false); 
   }
+
+
+  /////////////////////////////////////////////////////////
+
+  const GetElementsByCode = async(code:string, setFormState: Function) => {
+    setIsLoading(true);
+    const jsonObject = {
+      code: code
+    };
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.GetElements, jsonObject, setFormState);
+    if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
+      const status = response.data.success;
+      const formularioEncontrado = formularios.find(form => form.getCode() === code);
+
+      if (status !==204 ){
+
+        if (formularioEncontrado) {
+          const componentesArray = JSON.parse(response.data.data.replace(/\\"/g, '"'));
+
+          componentesArray.forEach((componente:any, index:number) => {
+            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+            aux.update((componente.properties))
+            formularioEncontrado.addElement(aux)
+          });
+          setIsLoading(false);
+          return true
+  
+        } else {
+          console.log('Formulario no encontrado');
+          setIsLoading(false);
+          return false;
+        }
+
+      }else{
+
+        setIsLoading(false);
+        return false;
+
+      }
+      
+    }
+  }
+
+  const GetFormByCode = async(code:string, setFormState: Function) => {
+    setIsLoading(true);
+    const jsonObject = {
+      code: code
+    };
+    const response: AxiosResponse = await handleResponse(AxiosFormAPI.GetByCode, jsonObject, setFormState);
+    if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
+      const status = response.data.success;
+      const formularioEncontrado = formularios.find(form => form.getCode() === code);
+
+
+      if (status !==204 ){
+
+        if (formularioEncontrado) {
+          
+          const dato= JSON.parse(response.data.data)
+         
+          if (dato[0].DESCRIPTION!=undefined){
+            formularioEncontrado.setDescription(dato[0].DESCRIPTION)
+          }
+          if (dato[0].SUBTITLE!=undefined){
+            formularioEncontrado.setSubtitle(dato[0].SUBTITLE)
+          }
+          if (dato[0].CREATED_AT!=undefined){
+            formularioEncontrado.setCreated_at(dato[0].CREATED_AT)
+          }
+          
+          setIsLoading(false);
+          return true
+  
+        } else {
+          console.log('Formulario no encontrado');
+          setIsLoading(false);
+          return false;
+        }
+
+      }else{
+
+        setIsLoading(false);
+        return false;
+        
+      }
+      
+    }
+  }
+  /////////////////////////////////////////////////////////
 
   const UserClearData = () => {
     setFormularios([]);
@@ -166,7 +242,9 @@ const ContextValues = () => {
     UpdateOneForm,
     DeleteOneForm,
     UpdateForms,
-    UpdatePublishedForms
+    UpdatePublishedForms,
+    GetElementsByCode,
+    GetFormByCode
   }
 }
 

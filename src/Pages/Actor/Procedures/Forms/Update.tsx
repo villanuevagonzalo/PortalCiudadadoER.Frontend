@@ -31,7 +31,7 @@ interface Arguments {
 
 export const FormUpdate: React.FC<Arguments> = ({formToUpdate, setVolver}) => {
 
-    const { UpdateOneForm , setFormularios, isLoading } = useContext(FormContext);
+    const { UpdateOneForm , GetElementsByCode, GetFormByCode, setFormularios, isLoading } = useContext(FormContext);
 
   const [edit, setEdit] = useState(false)
   const [ver, setVer] = useState(false)
@@ -49,27 +49,71 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate, setVolver}) => {
   const [estadoFormulario, setEstadoFormulario] = useState<string>('Borrador');
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
 
-  const [formBasicData, setFormBasicData] = useState({
+ /* const [formBasicData, setFormBasicData] = useState({
     Code: new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired"])),
     Title: new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])),
     Subtitle: new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])),
     Description: new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])),
     Keywords: new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])),
-  });
-  const initialValues = Object.entries(formBasicData).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
+  });*/
+
+  const [codigo, setCodigo] = useState( new ElementInstance("Codigo de referencia", new ElementSchema('TEXT', { label: 'Ingresá el código de referencia' }, ["isRequired"])) )
+  const [title, setTitle] = useState(new ElementInstance("Title", new ElementSchema('TEXT', { label: 'Ingresá el Título' }, ["isRequired"])) )
+  const [subtitle, setSubtitle] = useState(new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Ingresá el Subtítulo' }, ["isRequired"])) )
+  const [description, setDescription] = useState(new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"])) )
+  const [keywords, setKeywords] = useState(new ElementInstance("Keywords", new ElementSchema('TEXT', { label: 'Palabras Claves' }, ["isRequired"])))
+
+  const initialValues = Object.entries(codigo).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
+
+  useEffect(() => {
+
+    codigo.setValue(formToUpdate?.getCode());
+    title.setValue(formToUpdate?.getTitle());
+    subtitle.setValue(formToUpdate?.getSubtitle());
+    description.setValue(formToUpdate?.getDescription());
+    keywords.setValue(formToUpdate?.getKeywords());
+    setEstadoFormulario(formToUpdate?.getStatus());
+
+    const fetchData = async () => {
+     
+      // Luego ejecuta GetFormByCode si es necesario
+      if (formToUpdate.getDescription() === undefined && formToUpdate.getSubtitle() === undefined) {
+        await GetFormByCode(formToUpdate.getCode(), setFormState);
+      }
+      
+      // Comienza por ejecutar GetElementsByCode
+      if (formToUpdate.elements.length === 0) {
+        await GetElementsByCode(formToUpdate.getCode(), setFormState);
+      } else {
+        setFields(formToUpdate.elements);
+      }
+  
+      
+    };
+  
+    fetchData();
+  }, []);
+
+    //this is the new code to get the elements appart
+    useEffect(()=>{
+        setFields(formToUpdate.elements);
+    },[formToUpdate.elements])
+
+    useEffect(()=>{
+      setSubtitle(new ElementInstance("Subtitle", new ElementSchema('TEXT', { label: 'Descripción', length_max: 100 }, ["isRequired"]), formToUpdate?.getSubtitle()))
+
+  },[formToUpdate.subtitle])
 
   useEffect(()=>{
-    formBasicData.Code.setValue(formToUpdate?.getCode())
-    formBasicData.Title.setValue(formToUpdate?.getTitle())
-    formBasicData.Subtitle.setValue(formToUpdate?.getSubtitle())
-    formBasicData.Description.setValue(formToUpdate?.getDescription())
-    formBasicData.Keywords.setValue(formToUpdate?.getKeywords())
-    setEstadoFormulario(formToUpdate?.getStatus())
-    setFields(formToUpdate.elements);
-  },[])
+    setDescription(new ElementInstance("Description", new ElementSchema('TEXTAREA', { label: 'Descripción', length_max: 100 }, ["isRequired"]), formToUpdate?.getDescription()))
+
+  },[formToUpdate.description])
+
+  
+
 
   const addItem = (type:any) => {
-    const newfield = new ElementInstance( fields.length.toString (),new ElementSchema(type,{label:'Ingresá el Título'},["isRequired"]))
+    const newfield = new ElementInstance( (fields.length+1).toString (),new ElementSchema(type,{label:'Ingresá el Título'},["isRequired"]))
     setFields((prev: any)=>[...prev,newfield])
   }
 
@@ -96,8 +140,8 @@ export const FormUpdate: React.FC<Arguments> = ({formToUpdate, setVolver}) => {
   }
 
   const guardarFormulario=async ()=> {
-   const nuevoFormulario = new FormInstance(formBasicData.Code.getValue(), formBasicData.Title.getValue(), formBasicData.Subtitle.getValue(), formBasicData.Description.getValue(), formBasicData.Keywords.getValue(), estadoFormulario, fields)
-   const response = await UpdateOneForm(nuevoFormulario, setFormState, formBasicData.Code.value);
+   const nuevoFormulario = new FormInstance(codigo.getValue(), title.getValue(), subtitle.getValue(), description.getValue(), keywords.getValue(), estadoFormulario, fields)
+   const response = await UpdateOneForm(nuevoFormulario, setFormState, codigo.value);
    if (response){
     setCargadoCorrectamente(true)
     setCrear(false)
@@ -133,7 +177,7 @@ const moveElementDown = (index:number) => {
   
  if (ver){
 
-    const nuevoFormulario = new FormInstance(formBasicData.Code.value, formBasicData.Title.value, formBasicData.Subtitle.value, formBasicData.Description.value, formBasicData.Keywords.value, estadoFormulario, fields)
+    const nuevoFormulario = new FormInstance(codigo.value, title.value, subtitle.value, description.value, keywords.value, estadoFormulario, fields)
     return ( 
       <>
         <BackOfficesFormElement form={nuevoFormulario}  />
@@ -153,9 +197,9 @@ const moveElementDown = (index:number) => {
       return(
       <>
         {isLoading&& <LoadingFormPopUp />}
-        {crear && (<UpdateFormPopUp formTitle={formBasicData.Title.value} create={guardarFormulario} close={setCrear} /> )}
-        {cargadoCorrectamente && (<FormCreatedPopUp formTitle={formBasicData.Title.value} close={setCargadoCorrectamente} />)}
-        {errorCarga && (<FormCreateErrorPopUp formTitle={formBasicData.Title.value} close={setErrorCarga} />)}
+        {crear && (<UpdateFormPopUp formTitle={title.value} create={guardarFormulario} close={setCrear} /> )}
+        {cargadoCorrectamente && (<FormCreatedPopUp formTitle={title.value} close={setCargadoCorrectamente} />)}
+        {errorCarga && (<FormCreateErrorPopUp formTitle={title.value} close={setErrorCarga} />)}
         {completarCampos && (<FormCreateCompleteFieldsPopUp close={setCompletarCampos} crear={setCrear} /> )}
         <LayoutSection  style={{margin:"5px 0px 15px 0px"}}>
           <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
@@ -167,14 +211,14 @@ const moveElementDown = (index:number) => {
             onSubmit={(e:any)=>{
               console.log(e)
             }}
-            validate={(values:any) => ValidateForm(values, formBasicData)}
+            validate={(values:any) => ValidateForm(values, codigo.getValue())}
           >
           <Form autoComplete="off">
-            <h1 style={{margin:"10px 0px 20px 0px"}}> Código de referencia: {formBasicData.Code.getValue()}</h1>
-            <Element instance={formBasicData.Title}/>
-            <Element instance={formBasicData.Subtitle}/>
-            <Element instance={formBasicData.Description}/>
-            <Element instance={formBasicData.Keywords}/>
+            <h1 style={{margin:"10px 0px 20px 0px"}}> Código de referencia: {codigo.getValue()}</h1>
+            <Element instance={title}/>
+            <Element instance={subtitle}/>
+            <Element instance={description}/>
+            <Element instance={keywords}/>
             <LayoutStackedPanel>
               <LayoutSpacer/>
             </LayoutStackedPanel>
@@ -196,7 +240,7 @@ const moveElementDown = (index:number) => {
           >
             <Form autoComplete="off">
             {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                      <div key={element.name} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
+                      <div key={index} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
                         <p style={{ margin: "0px 0px 10px 0px" }}>{element.type}</p>
 
                         <Element instance={element} />
