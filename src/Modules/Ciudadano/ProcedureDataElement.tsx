@@ -85,9 +85,9 @@ interface FormGenericData {
         }
       }, [procedureInstance]);
     
-      useEffect(() => {
+    /*  useEffect(() => {
         console.log(JSON.stringify(attachments))
-      }, [attachments]);
+      }, [attachments]); */
       
     useEffect(()=>{
         
@@ -162,7 +162,7 @@ interface FormGenericData {
                         enableReinitialize={true}
                         initialValues={[]}
                         onSubmit={(e:any)=>{
-                            console.log("popo")
+                            sendFile(procedureData)
                         }}
                     >
                         <Form autoComplete="off">
@@ -172,7 +172,7 @@ interface FormGenericData {
                                 <Element instance={element} className="flex-2"/>
                             </div>
                             ))}  
-                        <FormikButton disabled={false} color="secondary" type="submit">Cargar archivo</FormikButton>
+                        <FormikButton disabled={false} color="secondary" type="submit" a>Cargar archivo</FormikButton>
 
                         </Form>
                     </Formik>
@@ -183,10 +183,11 @@ interface FormGenericData {
     };
     
 
-    const sendFile = async (fileName:string) => {
+    const sendFile = async (procedureData: ProcedureData) => {
 
+        console.log("Esta es la información que tengo: "+JSON.stringify(procedureInstance))
         const data = {
-            procedure_data_id: Number(procedureInstance.getId()),
+            procedure_data_id: Number(procedureData.getId()),
             attachments: fileArray  // Agregar las attachments solo si hasArray es true
           };
         
@@ -247,7 +248,6 @@ interface FormGenericData {
                     </div>
 
                 </LayoutSection>
-                <Button style={{width:"200px", margin:"0px 0px 15px 0px"}}  color={"secondary"} onClick={() => sendFile("un archivo")} >Prueba envio archivo<BiSend/> </Button>
 
                 </div>
                 

@@ -162,8 +162,28 @@ const ContextValues = () => {
 
   const sendProcedureAttachment = async (newAttachment:any, setFormState: Function) => {
 
-    const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.SendAttachments, newAttachment, setFormState);
+    setIsLoading(true)
 
+    try {
+      const response = await handleResponse(AxiosCiudadanoProcedureAPI.SendAttachments, newAttachment, setFormState);
+      console.log(response);
+      console.log(response.data);
+      console.log(response.data.data);
+      
+      if (response.data.success) {
+        console.log("es true chamigo");
+        setIsLoading(false);
+        return true;
+      } else {
+        setIsLoading(false);
+        return false;
+      }
+    } catch (error) {
+      console.error("Error al enviar adjunto:", error);
+      setIsLoading(false);
+      return false; // Puedes personalizar cómo manejar el error según tus necesidades
+    }
+  
   }
 
   return {

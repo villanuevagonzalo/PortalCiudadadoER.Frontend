@@ -15,6 +15,7 @@ import { CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Compone
 import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
 import { FormikButton } from "../../Components/Forms/FormikButton";
 import { FilesContext } from "../../Contexts/FilesContext";
+import { FormContext } from "../../Contexts/FormContext";
 
 interface Arguments {
     procedureID:number,
@@ -27,6 +28,8 @@ interface Arguments {
   export const CiudadanoFormElement: React.FC<Arguments> = ({procedureID, form, close}) => {
     
     const { SaveForm } = useContext(CiudadanoFormContext);
+    const { GetElementsByCode, GetFormByCode, isLoading} = useContext(FormContext);
+
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
     const {fileArray} = useContext(FilesContext)
 
@@ -54,6 +57,29 @@ interface Arguments {
             enviar(); // Call enviar() only if there are no required empty elements
         }
     };
+
+    useEffect(() => {
+    
+        const fetchData = async () => {
+         
+            // Luego ejecuta GetFormByCode si es necesario
+          if (form.description === undefined && form.subtitle === undefined) {
+            await GetFormByCode(form.getCode(), setFormState);
+          }
+
+          // Comienza por ejecutar GetElementsByCode
+          if (form.elements.length === 0) {
+            await GetElementsByCode(form.getCode(), setFormState);
+          } else {
+            //setFields(form.elements);
+          }
+      
+          
+        };
+      
+        fetchData();
+      }, []); 
+
 
     const enviar = async () => {
         const elements_common: FieldsType = [];

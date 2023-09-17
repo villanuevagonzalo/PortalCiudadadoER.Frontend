@@ -11,6 +11,10 @@ import { ResponseError, handleResponse } from "../Config/Axios";
 
 const NotificationsUpdateSecondsInterval = 1000
 
+function cleanJsonString(jsonString:string) {
+  return jsonString.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Elimina caracteres no válidos
+}
+
 const ContextValues = () => {
 
   const AxiosNotificationAPI = new NotificationsAPI();
@@ -35,10 +39,13 @@ const ContextValues = () => {
     let notificationsData = "[]";
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
     else if(responseNew && responseNew.status!==204) notificationsData = responseNew.data.data.notifications;
-    const notificationsObj = JSON.parse(notificationsData);
+    
+    const notificationsDataCleaned = cleanJsonString(notificationsData);
+    console.log("Cleaned: "+notificationsDataCleaned)
+    const notificationsObj = JSON.parse(notificationsDataCleaned);
 
     let newNotificaionsIDs: number[] = [];
-    if(responseNew && responseNew.status!==204) newNotificaionsIDs = JSON.parse(responseNew.data.data.notifications).map((notification:Partial<Notification>)=>notification.ID);
+    if(responseNew && responseNew.status!==204) newNotificaionsIDs = JSON.parse(notificationsDataCleaned).map((notification:Partial<Notification>)=>notification.ID);
 
     const Notifications:CitizenNotification[] = notificationsObj.map((notification:Partial<Notification>)=>{
 
@@ -56,18 +63,30 @@ const ContextValues = () => {
     setIsLoading(false); 
   }
 
-  const ReadNotification = async (notification_id:number, setFormState:Function) => {
-    setFormState(notification_id);
-    const response:any = await AxiosNotificationAPI.Read({notification_id});
-    if(response.data){
-      setUserNotifications(prev => prev.map(N => N.ID === notification_id ? { ...N, NEW: false } : N));
-      setErrors("");
-    } else {
-      setErrors(response.message);
+  const ReadNotification = async (notification_id: number, setFormState: Function) => {
+    try {
+      setFormState(notification_id);
+      const response: any = await AxiosNotificationAPI.Read({ notification_id });
+      if (response.data) {
+        setUserNotifications((prev) =>
+          prev.map((N) =>
+            N.ID === notification_id ? { ...N, NEW: false } : N
+          )
+        );
+        setErrors("");
+      } else {
+        setErrors(response.message);
+      }
+      setFormState(0);
+      return response;
+    } catch (error) {
+      // Maneja el error aquí según tus necesidades
+      setErrors("Hubo un problema al leer la notificación. Por favor, inténtelo de nuevo más tarde.");
+      setFormState(0);
+      return null; // Puedes devolver null u otra cosa según sea necesario
     }
-    setFormState(0);
-    return response;
-  }
+  };
+  
 
   const CreateNotification = async (data:any, setFormState:Function) => {
 
@@ -115,8 +134,9 @@ const ContextValues = () => {
     let notificationsData = "[]";
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
 
-
-    const Notifications:ActorNotification[] = JSON.parse(notificationsData).map((notification:Partial<Notification>)=>{
+    const notificationsDataCleaned = cleanJsonString(notificationsData);
+    console.log("Cleaned: "+notificationsDataCleaned)
+    const Notifications:ActorNotification[] = JSON.parse(notificationsDataCleaned).map((notification:Partial<Notification>)=>{
       //console.log(notification)
       return { 
         ID: notification.ID,

@@ -85,41 +85,45 @@ export const TramitesOnlinePage = () => {
   },[render])
 
 
-  const seeProcedure = (idBuscado: number) => {
-    const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
+    const seeProcedure = (idBuscado: number) => {
+        const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
 
-    if (foundProcedure) {
+        if (foundProcedure) {
 
-        const foundCiudadanoProcedure = ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === idBuscado);
-        
-        if (!foundCiudadanoProcedure){
-            if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
-                CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
-                .then(response => {
-                    if (response) {
-                        setProcedureInstance(foundProcedure);
-                    }else{
+            const foundCiudadanoProcedure = ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === idBuscado);
+            
+            if (!foundCiudadanoProcedure){
+                if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
+                    CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
+                    .then(response => {
+                        if (response) {
+                            setProcedureInstance(foundProcedure);
+                        }else{
+                            setShowNetworkError(true)
+                        }
+                    })
+                    .catch(error => {
+                        console.log("error: "+error)
                         setShowNetworkError(true)
-                    }
-                })
-                .catch(error => {
-                    console.log("error: "+error)
-                    setShowNetworkError(true)
-                });
-           }else{
-            setCitizenLevelError (true)
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-           }
-        }else{
-            if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
-                setProcedureInstance(foundProcedure);
+                    });
             }else{
                 setCitizenLevelError (true)
                 window.scrollTo({ top: 0, behavior: 'smooth' })
             }
+            }else{
+                if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
+                    setProcedureInstance(foundProcedure);
+                }else{
+                    setCitizenLevelError (true)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                }
+            }
         }
     }
-};
+
+    const openNewTab = (url:string) => {
+        window.open(url, '_blank');
+      };
 
     if (render === "procedure" && procedureInstance) {
         return <CiudadanoProcedureData procedureInstance={procedureInstance} backFunction={setRender} />;
@@ -174,13 +178,14 @@ export const TramitesOnlinePage = () => {
                 <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
                     <h1>{item.getTitle()}</h1>
                     <p>{item.getDescription()}</p>
+
                 </div>
             </div>
             )}
 
             <div className="text-right flex gap-4">
             <NavigatorSpacer/> 
-                <Button color="gray" fullwidth={false} href={item.getUrl()} >+Información</Button>
+                <Button color="gray" fullwidth={false} onClick={() => ( window.open(item.getUrl()!, '_blank')  )} >+Información</Button>
                 <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
             </div>
         </LayoutSection>)

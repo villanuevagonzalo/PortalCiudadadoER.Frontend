@@ -54,8 +54,6 @@ interface Arguments {
           } else {
             setFields(form.elements);
           }
-      
-          
         };
       
         fetchData();
