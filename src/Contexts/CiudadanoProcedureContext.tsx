@@ -171,7 +171,6 @@ const ContextValues = () => {
       console.log(response.data.data);
       
       if (response.data.success) {
-        console.log("es true chamigo");
         setIsLoading(false);
         return true;
       } else {

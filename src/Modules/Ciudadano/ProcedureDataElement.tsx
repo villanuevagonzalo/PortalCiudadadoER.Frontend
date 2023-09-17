@@ -11,7 +11,7 @@ import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 import { BiArrowBack, BiSend } from "react-icons/bi";
-import { CitizeProcedureUploadedProps } from "../../Components/Forms/CitizenPopUpCards";
+import { CitizeProcedureUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
 import { Form, Formik } from "formik";
 import { FormikButton } from '../../Components/Forms/FormikButton';
 import { FilesContext } from '../../Contexts/FilesContext';
@@ -47,7 +47,10 @@ interface FormGenericData {
 
     const [attachments, setAttachments] = useState <ElementInstance<ElementSchemaTypes>[]>([])
 
-  
+    const [showAttachmentMessage, setShowAttachmentMessage] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertMessage2, setAlertMessage2] = useState("")
+
     const completarForm = (formCode:FormInstance<ElementSchemaTypes>) => {
         setFormToComplete(formCode)
     }
@@ -71,6 +74,7 @@ interface FormGenericData {
 
 
     useEffect(() => {
+        console.log("ESTE ES EL PROCEDURE INSTANCE VEAMOS LOS ATTACHMENTS: "+JSON.stringify(procedureInstance))
         if (procedureInstance) {
 
             if (procedureInstance.getAttachments().length > 0 )
@@ -192,12 +196,21 @@ interface FormGenericData {
           };
         
         const response = await sendProcedureAttachment(data, setFormState);
+        if (response){
+
+            setShowAttachmentMessage(true)
+            setAlertMessage ("Documento cargado correctamente")
+        }else{
+            setShowAttachmentMessage(true)
+            setAlertMessage ("Error en la carga del documento")
+            setAlertMessage2 ("Intente más tarde.")
+
+        }
 
         console.log("respuesta de enviar archivo: "+ JSON.stringify(response))
 
     }
     
-
     //Required to not render until it is procedureInstance
     if (!procedureInstance){
         return null;
@@ -211,6 +224,7 @@ interface FormGenericData {
         return (
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
                 {showProcedureCorrectedUploaded && (<CitizeProcedureUploadedProps close={backFunction} ProcedureTitle={procedureInstance.getTitle()} />)}
+                { showAttachmentMessage && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowAttachmentMessage} />)}
 
                 <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"column", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
                     <h1 style={{textAlign:"center"}} >{procedureInstance.getTitle()}</h1>
