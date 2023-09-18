@@ -34,6 +34,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const [instanceValue, setInstanceValue] = useState<any> (instance.getValue())
 
   const handleFocus = () => {
+   
     setFocus(!focus)            
     setEmpty(field.value==='')
   }
@@ -84,6 +85,18 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       console.log("No files selected.");
     }
   };
+
+  useEffect(() => {
+    console.log("----------------------------")
+    console.log("NAME: "+instance.properties.label)
+
+    console.log("FOCUS: "+focus)
+    console.log("HelpField.value: "+HelpField.value)
+
+    
+    console.log("----------------------------")
+
+  }, [])
 
   useEffect(() => {
     if(field.value!==''){
@@ -311,117 +324,3 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       <ErrorMessage name={instance.name} component={ElementError}/>
     </ElementWrapper>)
   }
-
-
-  /*
-
-
-          <label className="helper">Caracteres {field.value.length}</label>
-
-
-  const renderType = <T extends ElementSchemaTypes>(type: T, schema: ElementSchema<T>) => {
-
-    const test = schema.properties as ElementPropsMap["SELECT"];
-
-    switch (type) {
-      case "TEXT":
-        return <input type="text" />;
-      case "SELECT":
-        return <select>{JSON.stringify(test.options)}</select>;
-      // Agrega más casos según los tipos que tengas definidos
-      default:
-        return null;
-    }
-  }
-
-  /*
-  const renderType = (instance:ElementInstance) => {
-    switch(instance.schema.type) {
-      case 'TEXT':
-        return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
-          <label className="text" htmlFor={instance.name}>{'label' in instance.schema.properties?instance.schema.properties.label:"test"}</label>
-          <input type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
-          <div className="FormIcon"><basetype.icon /></div>
-        </div></InputWrapper>);
-      case 'TEXTAREA':
-        return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div style={{height:'100px'}}>
-          <label className="text" htmlFor={instance.name}>{'label' in instance.schema.properties?instance.schema.properties.label:"test"}</label>
-          <textarea autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
-          <div className="FormIcon"><basetype.icon /></div>
-          <label className="helper">Caracteres {field.value.length}</label>
-        </div></InputWrapper>);
-      case 'SELECT':
-        return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
-          
-    <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
-      {instance.schema.properties.options}
-    </select>
-          <div className="FormIcon"><basetype.icon /></div>
-          <label className="helper">Caracteres {field.value.length}</label>
-        </div></InputWrapper>);
-      default:
-        return 'ERROR';
-    }
-  }
-
-
-  const renderTypeOld = (type:string|null) => {
-    switch(type) {
-      case 'input':
-        return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
-          <label className="text" htmlFor={instance.name}>{'label' in instance.schema.properties?instance.schema.properties.label:"test"}</label>
-          <input type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
-          <div className="FormIcon"><basetype.icon /></div>
-        </div></InputWrapper>);
-      case 'textarea':
-        return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div style={{height:'100px'}}>
-          <label className="text" htmlFor={instance.name}>{'label' in instance.schema.properties?instance.schema.properties.label:"test"}</label>
-          <textarea autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}/>
-          <div className="FormIcon"><basetype.icon /></div>
-          <label className="helper">Caracteres {field.value.length}</label>
-        </div></InputWrapper>);
-      case 'select':
-        return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
-          
-    <select autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlur={handleFocus}>
-      {/* Aquí debes agregar las opciones del select }
-    </select>
-          <div className="FormIcon"><basetype.icon /></div>
-          <label className="helper">Caracteres {field.value.length}</label>
-        </div></InputWrapper>);
-      default:
-        return 'ERROR';
-    }
-  }
-*/
-
-
-
-//{'children' in instance.properties?instance.properties.children.map():<></>}
-
-/*
-
-    <BaseWrapperInfo>
-      <label>{instance.name}</label>
-        <ul>
-          <li>Properties: {JSON.stringify(basetype)}</li>
-          <hr/>
-          <li>Schema: {JSON.stringify(instance.schema)}</li>
-        </ul>
-    </BaseWrapperInfo>
-    ---------<br/><br/>
-
-    
-
-    <FormWrapper className={props.className}>
-      <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}>
-        <div>
-          <label htmlFor={props.name}>{props.label?props.label:fieldprops.placeholder}</label>
-          <input type={fieldprops.type === 'password'?(passwordType?'password':'text'):fieldprops.type} autoFocus={props.autoFocus} {...field} {...props} onFocus={handleFocus} onBlur={handleFocus}/>
-          {fieldprops.type === 'password'?<div onClick={handleClick} className="FormIcon">{passwordType?<AiOutlineEye />:<AiOutlineEyeInvisible />}</div>:<></>}
-        </div>
-      </FormWrapperInput>
-      <ErrorMessage name={props.name} component={FormError}/>
-    </FormWrapper>
-*/
-

@@ -47,9 +47,9 @@ export const TramitesOnlinePage = () => {
   const [showNetworkError,setShowNetworkError] = useState(false)
   const CurrentUserRol:IUserRol[] = getLSData('UserRol');
   const [citizenLevelError, setCitizenLevelError] = useState(false)
+  const isMobile = window.innerWidth <= 768; // Cambia 768 al valor deseado para tu definición de pantalla de celular
 
   
-  console.log(JSON.stringify(proceduresPublished))
 
   useEffect(()=>{
     UpdatePublishedProcedures()
@@ -134,70 +134,80 @@ export const TramitesOnlinePage = () => {
     {citizenLevelError && procedureInstance && <CitizenProcedureLevelError procedureTitle={procedureInstance.getTitle()} userLevel={procedureInstance.getCitizenLevel()?.split("_")[1]!} close={setCitizenLevelError} />}
     {showNetworkError &&  <NetworkAlertPopUp close={setShowNetworkError} />}
     <LayoutColumns className='gap-8 FlexSwitchMobile'>
-        <LayoutColumn>
-        <LayoutTitle>
-            Trámites on line
-        </LayoutTitle>
-        <LayoutSection>
-            <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
-                initialValues={FieldValues}
-                validationSchema={formGetValidations(FormRequiredFields)}
-                onSubmit={async (values: any) => {
-                
-                }}
-            >
-                <Form autoComplete="off">
-                    <FormikSearch name="Tramites" label={"Filtra los trámites"} data={"DataName"} setValue={setSearchProcedure} autoFocus/>
+        <LayoutColumn style={{width:"100%"}} >
+            <LayoutTitle>
+                Trámites on line
+            </LayoutTitle>
+            <LayoutSection >
+                <Formik enableReinitialize={true} validateOnChange={false} validateOnBlur={false}
+                    initialValues={FieldValues}
+                    validationSchema={formGetValidations(FormRequiredFields)}
+                    onSubmit={async (values: any) => {
+                    
+                    }}
+                >
+                    <Form autoComplete="off">
+                        <FormikSearch name="Tramites" label={"Filtra los trámites"} data={"DataName"} setValue={setSearchProcedure} autoFocus/>
 
-                    <Button disabled={FormState.loading} type="submit">
-                        {FormState.loading ? <Spinner /> : "Ir al Trámite"}
-                    </Button>
-                </Form>
-            </Formik>
-        </LayoutSection>
-        {showNetworkError&&<h2>Error de red, intente nuevamente</h2>}
-        {isLoadingProcedure && (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)}
-        
-        {proceduresPublished.map((item, index) => <LayoutSection key={index}>
-            {item.getIcon() !== "" ? (
-            <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
-            <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
-              <img
-                src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
-                alt={item.getTitle()}
-                style={{ width: "64px", height: "64px" }}
-              />
-            </div>
-            <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
-              <h1>{item.getTitle()}</h1>
-              <p>{item.getDescription()}</p>
-            </div>
-          </div>          
-            ) : (
-            <div style={{ display: "flex", flexDirection: "row" }}>
-                <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
-                    <h1>{item.getTitle()}</h1>
-                    <p>{item.getDescription()}</p>
-
+                        <Button disabled={FormState.loading} type="submit">
+                            {FormState.loading ? <Spinner /> : "Ir al Trámite"}
+                        </Button>
+                    </Form>
+                </Formik>
+            </LayoutSection>
+            {showNetworkError&&<h2>Error de red, intente nuevamente</h2>}
+            {isLoadingProcedure && (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)}
+            
+            {proceduresPublished.map((item, index) => <LayoutSection key={index}>
+                {item.getIcon() !== "" ? (
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+                <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
+                <img
+                    src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
+                    alt={item.getTitle()}
+                    style={{ width: "64px", height: "64px" }}
+                />
                 </div>
-            </div>
-            )}
+                <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
+                <h1>{item.getTitle()}</h1>
+                <p>{item.getDescription()}</p>
+                </div>
+            </div>          
+                ) : (
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
+                        <h1>{item.getTitle()}</h1>
+                        <p>{item.getDescription()}</p>
 
-            <div className="text-right flex gap-4">
-            <NavigatorSpacer/> 
-                <Button color="gray" fullwidth={false} onClick={() => ( window.open(item.getUrl()!, '_blank')  )} >+Información</Button>
-                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
-            </div>
-        </LayoutSection>)
-        }
+                    </div>
+                </div>
+                )}
+
+                <div className="text-right flex gap-4">
+                <NavigatorSpacer/> 
+                    <Button color="gray" fullwidth={false} onClick={() => ( window.open(item.getUrl()!, '_blank')  )} >+Información</Button>
+                    <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
+                </div>
+            </LayoutSection>)
+            }
         </LayoutColumn>
-        <LayoutColumn>
-        <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
-        <LayoutTitle className="mt-4 mb-2">
-            Nuevos Tramites
-        </LayoutTitle>
-        <NuevosTramites />
-        </LayoutColumn>
+        {isMobile ? (
+            <LayoutColumn style={{ width: '100%' }}>
+                <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
+                <LayoutTitle className="mt-4 mb-2">
+                Nuevos Tramites
+                </LayoutTitle>
+                <NuevosTramites />
+            </LayoutColumn>
+            ) : (
+            <LayoutColumn style={{ width: '65%' }}>
+                <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
+                <LayoutTitle className="mt-4 mb-2">
+                Nuevos Tramites
+                </LayoutTitle>
+                <NuevosTramites />
+            </LayoutColumn>
+        )}
     </LayoutColumns></>);
     }
 }

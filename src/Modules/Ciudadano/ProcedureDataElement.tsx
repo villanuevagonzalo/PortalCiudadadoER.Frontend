@@ -17,6 +17,7 @@ import { FormikButton } from '../../Components/Forms/FormikButton';
 import { FilesContext } from '../../Contexts/FilesContext';
 import { DefaultFormState } from '../../Data/DefaultValues';
 import { IFormState } from '../../Interfaces/Data';
+import { CiudadanoFormToCheckElement } from './FormDatoUpdateElement';
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -41,6 +42,8 @@ interface FormGenericData {
     const [procedureData, setProcedureData] = useState <ProcedureData > ();
 
     const [formToComplete, setFormToComplete] = useState <FormInstance<ElementSchemaTypes>> ();
+    const [formToCheck, setFormToCheck] = useState <FormInstance<ElementSchemaTypes>> ();
+
     const [render, setRender] = useState("home")
 
     const [showProcedureCorrectedUploaded, setShowProcedureCorrectedUploaded] = useState(false) 
@@ -53,6 +56,9 @@ interface FormGenericData {
 
     const completarForm = (formCode:FormInstance<ElementSchemaTypes>) => {
         setFormToComplete(formCode)
+    }
+    const checkForm = (formCode:FormInstance<ElementSchemaTypes>) => {
+        setFormToCheck(formCode)
     }
 
     const completarAdjunto = (attachment:string) => {
@@ -104,10 +110,16 @@ interface FormGenericData {
     useEffect(()=>{
 
         if (formToComplete!=undefined && procedureData!=undefined){
-
             setRender("form")
         }
     },[formToComplete])
+
+    useEffect(()=>{
+
+        if (formToCheck!=undefined && formToCheck!=undefined){
+            setRender("checkForm")
+        }
+    },[formToCheck])
 
     useEffect(()=>{
         if (render=="home"){
@@ -119,6 +131,15 @@ interface FormGenericData {
         if (formToComplete && procedureData) {
             return (
                 <CiudadanoFormElement form={formToComplete} procedureID={procedureData.getId()} close={setRender} />
+            );
+        }
+        return null;
+    };
+
+    const renderFormToCheckComponent = () => {
+        if (formToCheck && procedureData) {
+            return (
+                <CiudadanoFormToCheckElement form={formToCheck} procedureID={procedureData.getId()} close={setRender} />
             );
         }
         return null;
@@ -142,9 +163,12 @@ interface FormGenericData {
                 <LayoutSection>
                     <h1>{form.getTitle()}</h1>
                     {procedureData && procedureData.getForms().includes(form.getCode().toString()) ? (
-                        <h1><MdCheck />Formulario completado</h1>
+                        <div>
+                            <h1><MdCheck />Formulario completado</h1>
+                            <div onClick={() => {checkForm(form)}}><HiOutlineMagnifyingGlass /></div>
+                        </div>
                     ) : (
-                        <Button onClick={() => {completarForm(form); console.log("Se clickeo: "+JSON.stringify(form))}}><HiOutlineMagnifyingGlass />Completar Formulario</Button>
+                        <Button onClick={() => {completarForm(form)}}><HiOutlineMagnifyingGlass />Completar Formulario</Button>
                     )}
                 </LayoutSection>
             </div>
@@ -207,8 +231,6 @@ interface FormGenericData {
 
         }
 
-        console.log("respuesta de enviar archivo: "+ JSON.stringify(response))
-
     }
     
     //Required to not render until it is procedureInstance
@@ -218,6 +240,10 @@ interface FormGenericData {
 
     if (render==="form"){
         return renderFormComponent();
+
+    }else if (render==="checkForm"){
+
+        return renderFormToCheckComponent();
 
     }else{
 
