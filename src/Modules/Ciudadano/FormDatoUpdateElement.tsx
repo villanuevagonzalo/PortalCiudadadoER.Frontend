@@ -1,6 +1,6 @@
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
-import { ElementInstance, FormInstance } from "../FormElements/Class";
+import { ElementInstance, FormInstance, ProcedureData } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
 import {Element} from '../FormElements/Components/Element';
@@ -18,14 +18,14 @@ import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 
 interface Arguments {
-    procedureID:number,
+    procedureData:ProcedureData,
     form:FormInstance<ElementSchemaTypes>;
     close:Function
   }
 
   type FieldsType = ElementInstance<ElementSchemaTypes>[];
 
-  export const CiudadanoFormToCheckElement: React.FC<Arguments> = ({procedureID, form, close}) => {
+  export const CiudadanoFormToCheckElement: React.FC<Arguments> = ({procedureData, form, close}) => {
     
     const { SaveForm } = useContext(CiudadanoFormContext);
     const { GetElementsByCode, GetFormByCode, isLoading} = useContext(FormContext);
@@ -92,13 +92,13 @@ interface Arguments {
         });
       
         const data = {
-          procedure_data_id: Number(procedureID),
+          procedure_data_id: Number(procedureData.getId()),
           form_unit_code: form.getCode(),
           form_data: JSON.stringify(elements_common),
           ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
         };
       
-        const response = await SaveForm(data, setFormState);
+        const response = await SaveForm(procedureData, data, setFormState);
         if (response) {
           setShowFormCorrectedUploaded(true);
         } else {

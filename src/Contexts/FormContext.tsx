@@ -86,8 +86,8 @@ const ContextValues = () => {
 
     if(responseAll && responseAll.status!==204) 
     {
-      const FormData = responseAll.data.data;
-      const FormsObj = JSON.parse(FormData);
+      const Form_data = responseAll.data.data;
+      const FormsObj = JSON.parse(Form_data);
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.map((formInstance: any) => {
         let fields: FieldsType = [];
@@ -119,8 +119,8 @@ const ContextValues = () => {
     try { responseAll = await AxiosFormAPI.GetPublishedAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     if(responseAll && responseAll.status!==204) 
     {
-      const FormData = responseAll.data.data;
-      const FormsObj = JSON.parse(FormData);
+      const Form_data = responseAll.data.data;
+      const FormsObj = JSON.parse(Form_data);
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.map((formInstance: any) => {
         let fields: FieldsType = [];

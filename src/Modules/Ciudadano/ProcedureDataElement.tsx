@@ -18,6 +18,7 @@ import { FilesContext } from '../../Contexts/FilesContext';
 import { DefaultFormState } from '../../Data/DefaultValues';
 import { IFormState } from '../../Interfaces/Data';
 import { CiudadanoFormToCheckElement } from './FormDatoUpdateElement';
+import { CiudadanoFormContext } from '../../Contexts/CiudadanoFormContext';
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -35,6 +36,8 @@ interface FormGenericData {
    
     const {formularios, UpdateForms} = useContext(FormContext);
     const { ciudadanoProcedures, sendProcedureAttachment } = useContext(CiudadanoProcedureContext);
+    const { ciudadanoFormularios } = useContext(CiudadanoFormContext);
+
     const {fileArray} = useContext(FilesContext)
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
@@ -80,7 +83,6 @@ interface FormGenericData {
 
 
     useEffect(() => {
-        console.log("ESTE ES EL PROCEDURE INSTANCE VEAMOS LOS ATTACHMENTS: "+JSON.stringify(procedureInstance))
         if (procedureInstance) {
 
             if (procedureInstance.getAttachments().length > 0 )
@@ -130,7 +132,7 @@ interface FormGenericData {
     const renderFormComponent = () => {
         if (formToComplete && procedureData) {
             return (
-                <CiudadanoFormElement form={formToComplete} procedureID={procedureData.getId()} close={setRender} />
+                <CiudadanoFormElement form={formToComplete} procedureData={procedureData} close={setRender} />
             );
         }
         return null;
@@ -139,7 +141,7 @@ interface FormGenericData {
     const renderFormToCheckComponent = () => {
         if (formToCheck && procedureData) {
             return (
-                <CiudadanoFormToCheckElement form={formToCheck} procedureID={procedureData.getId()} close={setRender} />
+                <CiudadanoFormToCheckElement form={formToCheck} procedureData={procedureData} close={setRender} />
             );
         }
         return null;

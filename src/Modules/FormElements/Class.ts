@@ -371,6 +371,154 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
 
 }
 
+export class FormDataClass {
+
+  private form_data_id: number;
+  private form_code:string; 
+  private procedure_data_id:number;
+  private user_id?:number;
+  elements: ElementInstance<ElementSchemaTypes>[];
+  private attachments?: string [];
+  private multimedia_id?: string [];
+  private status:string;
+  created_at?:string;
+  private created_by?:string; 
+
+  constructor(
+    form_data_id: number,
+    form_code: string,
+    procedure_data_id: number,
+    elements: ElementInstance<ElementSchemaTypes>[],
+    status: string,
+    attachments?: string[],
+    multimedia_id?: string[],
+    user_id?: number,
+    created_at?: string,
+    created_by?: string
+  ) {
+    this.form_data_id = form_data_id;
+    this.form_code = form_code;
+    this.procedure_data_id = procedure_data_id;
+        
+    this.elements = elements;
+    this.status = status;
+    this.attachments = attachments || [];
+    this.multimedia_id = multimedia_id || [];
+    
+    if (user_id !== undefined){
+      this.user_id = user_id;
+    }
+    if (created_at !==undefined) {
+      this.created_at = created_at
+    }
+    if (created_by !== undefined){
+      this.created_by = created_by
+    }
+    
+    
+  }
+
+  // Funciones getter para cada atributo
+
+  getFormDataId(): number {
+    return this.form_data_id;
+  }
+
+  getFormCode(): string {
+    return this.form_code;
+  }
+
+  getProcedureDataId(): number {
+    return this.procedure_data_id;
+  }
+
+  getUserId(): number | undefined {
+    return this.user_id;
+  }
+
+  getElements(): ElementInstance<ElementSchemaTypes>[] {
+    return this.elements;
+  }
+
+  getAttachments(): string[] | undefined {
+    return this.attachments;
+  }
+
+  getMultimediaId(): string[] | undefined {
+    return this.multimedia_id;
+  }
+
+  getStatus(): string {
+    return this.status;
+  }
+
+  getCreatedAt(): string | undefined {
+    return this.created_at;
+  }
+
+  getCreatedBy(): string | undefined {
+    return this.created_by;
+  }
+
+  // Funciones setter para cada atributo
+
+  setFormDataId(form_data_id: number): void {
+    this.form_data_id = form_data_id;
+  }
+
+  setFormCode(form_code: string): void {
+    this.form_code = form_code;
+  }
+
+  setProcedureDataId(procedure_data_id: number): void {
+    this.procedure_data_id = procedure_data_id;
+  }
+
+  setUserId(user_id?: number): void {
+    this.user_id = user_id;
+  }
+
+  setElements(elements: ElementInstance<ElementSchemaTypes>[]): void {
+    this.elements = elements;
+  }
+
+  setAttachments(attachments?: string[]): void {
+    this.attachments = attachments || [];
+  }
+
+  setMultimediaId(multimedia_id?: string[]): void {
+    this.multimedia_id = multimedia_id || [];
+  }
+
+  setStatus(status: string): void {
+    this.status = status;
+  }
+
+  setCreatedAt(created_at?: string): void {
+    this.created_at = created_at;
+  }
+
+  setCreatedBy(created_by?: string): void {
+    this.created_by = created_by;
+  }
+
+  getJSON (){
+    const FormData = {
+      "form_data_id": this.form_data_id,
+      "form_code": this.form_code,
+      "procedure_data_id": this.procedure_data_id,
+      "elements": JSON.stringify(this.elements),
+      "status": this.status,
+      "attachments": JSON.stringify(this.attachments),
+      "multimedia_id": JSON.stringify(this.multimedia_id),
+     
+    };
+    
+    return ProcedureData;
+  }
+
+}
+
 export class ProcedureData {
 
   private procedure_data_id:number; 
@@ -411,8 +559,28 @@ export class ProcedureData {
     return this.forms;
   }
 
+  setForms(form: string) {
+    // Verificar si 'forms' es undefined o null y crear un nuevo arreglo si es necesario
+    if (!this.forms) {
+      this.forms = [];
+    }
+  
+    // Agregar el nuevo 'form' al arreglo 'forms'
+    this.forms.push(form);
+  }
+
   getAttachments(){
     return this.attachments;
+  }
+
+  setAttachments(attachment: string) {
+    // Verificar si 'forms' es undefined o null y crear un nuevo arreglo si es necesario
+    if (!this.attachments) {
+      this.attachments = [];
+    }
+  
+    // Agregar el nuevo 'form' al arreglo 'forms'
+    this.attachments.push(attachment);
   }
 
   getJSON (){

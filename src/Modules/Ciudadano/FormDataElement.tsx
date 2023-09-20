@@ -1,6 +1,6 @@
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
-import { ElementInstance, FormInstance } from "../FormElements/Class";
+import { ElementInstance, FormInstance, ProcedureData } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
 import {Element} from '../FormElements/Components/Element';
@@ -16,18 +16,21 @@ import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
 import { FormikButton } from "../../Components/Forms/FormikButton";
 import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
+import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 
 interface Arguments {
-    procedureID:number,
+    procedureData:ProcedureData,
     form:FormInstance<ElementSchemaTypes>;
     close:Function
   }
 
   type FieldsType = ElementInstance<ElementSchemaTypes>[];
 
-  export const CiudadanoFormElement: React.FC<Arguments> = ({procedureID, form, close}) => {
+  export const CiudadanoFormElement: React.FC<Arguments> = ({procedureData, form, close}) => {
     
-    const { SaveForm } = useContext(CiudadanoFormContext);
+    const { SaveForm, ciudadanoFormularios } = useContext(CiudadanoFormContext);
+    const { ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+
     const { GetElementsByCode, GetFormByCode, isLoading} = useContext(FormContext);
 
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -80,6 +83,12 @@ interface Arguments {
         fetchData();
       }, []); 
 
+      useEffect(() => {
+    
+        console.log("VEamos si se cargó el formulario: "+JSON.stringify(ciudadanoFormularios))
+      }, [ciudadanoFormularios]); 
+
+      
 
     const enviar = async () => {
         const elements_common: FieldsType = [];
@@ -92,13 +101,13 @@ interface Arguments {
         });
       
         const data = {
-          procedure_data_id: Number(procedureID),
+          procedure_data_id: Number(procedureData.getId()),
           form_unit_code: form.getCode(),
           form_data: JSON.stringify(elements_common),
           ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
         };
       
-        const response = await SaveForm(data, setFormState);
+        const response = await SaveForm(procedureData, data, setFormState);
         if (response) {
           setShowFormCorrectedUploaded(true);
         } else {
