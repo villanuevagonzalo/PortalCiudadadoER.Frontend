@@ -526,18 +526,21 @@ export class ProcedureData {
   private reason:string;
   private forms: string [];
   private attachments?: string [];
+  private multimedia_id?: number [];
   private status:string;
   private created_at?:string;
   private updated_at?:string;
   private date_approved?:string;
 
-  constructor(procedure_data_id: number, procedure_unit_id: number, reason: string, status: string, forms:string [], attachments?: string[],  created_at?: string, updated_at?:string,date_approved?:string ) {
+  constructor(procedure_data_id: number, procedure_unit_id: number, reason: string, status: string, forms:string [], attachments?: string[], multimedia_id?: number[],  created_at?: string, updated_at?:string,date_approved?:string ) {
 
     this.procedure_data_id=procedure_data_id;
     this.procedure_unit_id=procedure_unit_id;
     this.reason=reason;
     this.forms=forms;
-    this.attachments=attachments;
+    this.attachments = attachments || []; // Initialize as an empty array if not provided
+    this.multimedia_id = multimedia_id || []; // Initialize as an empty array if not provided
+  
     this.status=status;
     this.created_at=created_at;
     this.updated_at=updated_at;
@@ -573,14 +576,23 @@ export class ProcedureData {
     return this.attachments;
   }
 
-  setAttachments(attachment: string) {
-    // Verificar si 'forms' es undefined o null y crear un nuevo arreglo si es necesario
+  setAttachments(attachments: string[]) {
+    // Verificar si 'attachments' es undefined o null y crear un nuevo arreglo si es necesario
     if (!this.attachments) {
       this.attachments = [];
     }
   
-    // Agregar el nuevo 'form' al arreglo 'forms'
-    this.attachments.push(attachment);
+    // Agregar los nuevos 'attachments' al arreglo 'attachments'
+    this.attachments.push(...attachments);
+  }
+
+  setMultimediaId(multimediaId: number) {
+    // Verificar si 'multimedia_id' es undefined o null y crear un nuevo arreglo si es necesario
+    if (!this.multimedia_id) {
+      this.multimedia_id = [];
+    }
+    
+    this.multimedia_id = [...this.multimedia_id, multimediaId];
   }
 
   getJSON (){
@@ -591,6 +603,7 @@ export class ProcedureData {
       "reason": this.reason,
       "forms": JSON.stringify(this.forms),
       "attachments":JSON.stringify(this.attachments),
+      "multimedia_id":JSON.stringify(this.multimedia_id),
       "status": this.status,
       "created_at": this.created_at,
       "updated_at": this.updated_at,

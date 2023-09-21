@@ -32,9 +32,8 @@ const ContextValues = () => {
       if (status) {
         let parsedForms:any=[]
         let parsedAttachments=[]
-        console.log("responseData"+JSON.stringify(responseData))
-
-        console.log("responseData.FORMS"+(responseData.FORMS))
+        let parsedMultimedia = []
+        
 
         if (responseData.FORMS!="" && responseData.FORMS!=undefined){
           parsedForms = responseData.FORMS.split(",");
@@ -42,24 +41,24 @@ const ContextValues = () => {
         if (responseData.ATTACHMENTS!=""&&responseData.ATTACHMENTS!=undefined){
           parsedAttachments = responseData.ATTACHMENTS.split(",");
         }
+        if (responseData.MULTIMEDIA_ID!=""&&responseData.MULTIMEDIA_ID!=undefined){
+          parsedMultimedia = responseData.MULTIMEDIA_ID.split(",");
+        }
 
         const newProceduresData = new ProcedureData(
           responseData.ID,
           responseData.PROCEDURE_UNITS_ID,
           responseData.REASON,
           responseData.STATUS,
-            parsedForms,
-            parsedAttachments,
-            responseData.CREATED_AT,
-            responseData.UPDATED_AT,
-            responseData.DATE_APPROVED
+          parsedForms,
+          parsedAttachments,
+          parsedMultimedia,
+          responseData.CREATED_AT,
+          responseData.UPDATED_AT,
+          responseData.DATE_APPROVED
         );
         setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
-      /*if(ciudadanoProcedures.length==0){
-        setCiudadanoProcedures([newProceduresData])
-      }else{
-        setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
-      }*/
+        console.log("responseData"+JSON.stringify(ciudadanoProcedures))
         return true;
       }
       else{
@@ -118,13 +117,16 @@ const ContextValues = () => {
 
                     let parsedForms:any=[]
                     let parsedAttachments=[]
-                    
+                    let parsedMultimedia=[]
                     if (procedureInstance.FORMS!=""){
                       parsedForms = procedureInstance.FORMS.split(",");
 
                     }
                     if (procedureInstance.ATTACHMENTS!=""){
                       parsedAttachments = procedureInstance.ATTACHMENTS.split(",");
+                    }
+                    if (procedureInstance.MULTIMEDIA_ID!=""&&procedureInstance.MULTIMEDIA_ID!=undefined){
+                      parsedMultimedia = procedureInstance.MULTIMEDIA_ID.split(",");
                     }
 
                     const newProceduresData = new ProcedureData(
@@ -134,6 +136,7 @@ const ContextValues = () => {
                         procedureInstance.STATUS,
                         parsedForms,
                         parsedAttachments,
+                        parsedMultimedia,
                         procedureInstance.CREATED_AT,
                         procedureInstance.UPDATED_AT,
                         procedureInstance.DATE_APPROVED
@@ -160,17 +163,22 @@ const ContextValues = () => {
     setCiudadanoProcedures([]);
   }
 
-  const sendProcedureAttachment = async (newAttachment:any, setFormState: Function) => {
+  const sendProcedureAttachment = async (procedure_data: ProcedureData, newAttachment:any, setFormState: Function) => {
 
     setIsLoading(true)
-
     try {
       const response = await handleResponse(AxiosCiudadanoProcedureAPI.SendAttachments, newAttachment, setFormState);
       console.log(response);
       console.log(response.data);
-      console.log(response.data.data);
+     
       
       if (response.data.success) {
+
+        const names = newAttachment.attachments.map((file: { name: any; }) => file.name);
+        procedure_data.setAttachments([...names]);
+        response.data.data.map((multimediaId: number) => {
+          procedure_data.setMultimediaId(multimediaId);
+        });
         setIsLoading(false);
         return true;
       } else {

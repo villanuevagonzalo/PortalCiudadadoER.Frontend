@@ -33,29 +33,30 @@ interface FormGenericData {
 
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
-   
-    const {formularios, UpdateForms} = useContext(FormContext);
-    const { ciudadanoProcedures, sendProcedureAttachment } = useContext(CiudadanoProcedureContext);
-    const { ciudadanoFormularios } = useContext(CiudadanoFormContext);
+
+    const { ciudadanoProcedures, sendProcedureAttachment } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
+    const [procedureData, setProcedureData] = useState <ProcedureData > (); //Is this procedure citizen data
+
+    const {formularios, UpdateForms} = useContext(FormContext); // Is is the total created forms which it does not implies that the citizen has data here. 
+    const [formsOfGenericProcedure, setFormsOfGenericProcedure] = useState <FormInstance<ElementSchemaTypes>[]> ([]); // Procedures forms that are not the forms that the citizen has completed but are the forms of the procedure instance
+    //const { ciudadanoFormularios } = useContext(CiudadanoFormContext); //this is the total citizen data forms
+    const [formToComplete, setFormToComplete] = useState <FormInstance<ElementSchemaTypes>> (); //Form to complete by the citizen
+    const [formToCheck, setFormToCheck] = useState <FormInstance<ElementSchemaTypes>> (); // Form completed by the citizen but it can be seeing and updated
 
     const {fileArray} = useContext(FilesContext)
-    const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
+    const [procedureInstanceAttachments, setProcedureInstanceAttachments] = useState <ElementInstance<ElementSchemaTypes>[]>([]) // Procedure instance attachments, this are the attachment of the procedure but it doesnt implies that the citizen uploaded it
+    const [procedureDataAttachments, setProcedureDataAttachments ] = useState <string[]>([])
 
-    const [formsOfGenericProcedure, setFormsOfGenericProcedure] = useState <FormInstance<ElementSchemaTypes>[]> ([]);
-    const [procedureData, setProcedureData] = useState <ProcedureData > ();
+    const [render, setRender] = useState("home") //diferent render views.
 
-    const [formToComplete, setFormToComplete] = useState <FormInstance<ElementSchemaTypes>> ();
-    const [formToCheck, setFormToCheck] = useState <FormInstance<ElementSchemaTypes>> ();
-
-    const [render, setRender] = useState("home")
-
+    //Alerts
     const [showProcedureCorrectedUploaded, setShowProcedureCorrectedUploaded] = useState(false) 
-
-    const [attachments, setAttachments] = useState <ElementInstance<ElementSchemaTypes>[]>([])
-
     const [showAttachmentMessage, setShowAttachmentMessage] = useState(false)
     const [alertMessage, setAlertMessage] = useState("")
     const [alertMessage2, setAlertMessage2] = useState("")
+
+    const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
+
 
     const completarForm = (formCode:FormInstance<ElementSchemaTypes>) => {
         setFormToComplete(formCode)
@@ -70,6 +71,12 @@ interface FormGenericData {
 
     useEffect(()=>{
         UpdateForms()
+        const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
+        console.log("lo encontró: "+JSON.stringify(filteredProcedure))
+        if (filteredProcedure){
+            setProcedureData(filteredProcedure);
+            setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+        }
     },[])
 
     //se busca formularios del tramite como se definió por el actor
@@ -92,29 +99,38 @@ interface FormGenericData {
                 const Attachments= new ElementInstance(index.toString(),new ElementSchema('FILE',{label:attachment}), null)
                 attachmentsAux.push(Attachments);
                 });
-                setAttachments(attachmentsAux);
+                setProcedureInstanceAttachments(attachmentsAux);
             }
         }
       }, [procedureInstance]);
     
-    /*  useEffect(() => {
-        console.log(JSON.stringify(attachments))
-      }, [attachments]); */
-      
+
     useEffect(()=>{
         
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
-        setProcedureData(filteredProcedure);
+        if (filteredProcedure){
+            setProcedureData(filteredProcedure);
+            setProcedureDataAttachments(filteredProcedure.getAttachments()!)
 
+        }
+        
     },[ciudadanoProcedures])
+
+
+    useEffect(()=>{
+        
+       console.log("PROCEDURE DATA: "+JSON.stringify(procedureData))
+    },[procedureData])
     
 
+    
     useEffect(()=>{
 
         if (formToComplete!=undefined && procedureData!=undefined){
             setRender("form")
         }
     },[formToComplete])
+
 
     useEffect(()=>{
 
@@ -123,11 +139,13 @@ interface FormGenericData {
         }
     },[formToCheck])
 
+
     useEffect(()=>{
         if (render=="home"){
             setFormToComplete(undefined)
         }
       },[render])
+
 
     const renderFormComponent = () => {
         if (formToComplete && procedureData) {
@@ -137,6 +155,7 @@ interface FormGenericData {
         }
         return null;
     };
+
 
     const renderFormToCheckComponent = () => {
         if (formToCheck && procedureData) {
@@ -158,6 +177,7 @@ interface FormGenericData {
             </LayoutSection>
         );
     };
+
     
     const FormularioItem: React.FC<{ form: FormInstance<ElementSchemaTypes>, procedureData: ProcedureData, completarForm: Function }> = ({ form, procedureData, completarForm }) => {
         return (
@@ -176,6 +196,7 @@ interface FormGenericData {
             </div>
         );
     };
+
     
     const AttachmentSection: React.FC<{ procedureInstance: ProcedureInstance<ElementSchemaTypes>; procedureData: ProcedureData; completarAdjunto: Function }> = ({ procedureInstance, procedureData, completarAdjunto }) => {
         return (
@@ -196,10 +217,14 @@ interface FormGenericData {
                         }}
                     >
                         <Form autoComplete="off">
-                        {attachments &&
-                        attachments.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                        {procedureInstanceAttachments &&
+                        procedureInstanceAttachments.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
-                                <Element instance={element} className="flex-2"/>
+                                {procedureDataAttachments.includes(element.properties.label) ? (
+                                <p>Ya cargado</p>
+                                ) : (
+                                <Element instance={element} className="flex-2" />
+                                )}
                             </div>
                             ))}  
                         <FormikButton disabled={false} color="secondary" type="submit" a>Cargar archivo</FormikButton>
@@ -214,33 +239,35 @@ interface FormGenericData {
     
 
     const sendFile = async (procedureData: ProcedureData) => {
-
-        console.log("Esta es la información que tengo: "+JSON.stringify(procedureInstance))
         const data = {
             procedure_data_id: Number(procedureData.getId()),
             attachments: fileArray  // Agregar las attachments solo si hasArray es true
           };
         
-        const response = await sendProcedureAttachment(data, setFormState);
+        const response = await sendProcedureAttachment(procedureData, data, setFormState);
+        console.log("esta es la respuesta: "+ response)
         if (response){
+            console.log("esta es la salida: "+JSON.stringify(procedureData))
+            console.log("esta es la salida: "+JSON.stringify(ciudadanoProcedures))
 
+            
             setShowAttachmentMessage(true)
             setAlertMessage ("Documento cargado correctamente")
         }else{
             setShowAttachmentMessage(true)
             setAlertMessage ("Error en la carga del documento")
             setAlertMessage2 ("Intente más tarde.")
-
         }
-
     }
-    
+
+
     //Required to not render until it is procedureInstance
     if (!procedureInstance){
         return null;
     }
 
     if (render==="form"){
+
         return renderFormComponent();
 
     }else if (render==="checkForm"){
@@ -253,7 +280,6 @@ interface FormGenericData {
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
                 {showProcedureCorrectedUploaded && (<CitizeProcedureUploadedProps close={backFunction} ProcedureTitle={procedureInstance.getTitle()} />)}
                 { showAttachmentMessage && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowAttachmentMessage} />)}
-
                 <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"column", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
                     <h1 style={{textAlign:"center"}} >{procedureInstance.getTitle()}</h1>
                 </LayoutSectionProcedureTitle>
@@ -276,24 +302,18 @@ interface FormGenericData {
                         <p>{procedureInstance.getPrice()}</p>
                     </LayoutSection>
                  </LayoutSection>    
-      
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
-                <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
-                    <FormSection forms={formsOfGenericProcedure} procedureData={procedureData!} completarForm={completarForm} />
-                    <AttachmentSection procedureInstance={procedureInstance} procedureData={procedureData!} completarAdjunto={completarAdjunto} />
-                </LayoutSection>
-                
-                <LayoutSection style={{margin:"5px 0px 15px 0px"}}> 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                        <Button style={{width:"200px", margin:"0px 0px 15px 0px"}} onClick={() => backFunction("home")} > <BiArrowBack/>Volver</Button>
-                        <Button style={{width:"200px", margin:"0px 0px 15px 0px"}}  color={"secondary"} >Cargar<BiSend/> </Button>
-                    </div>
-
-                </LayoutSection>
-
+                    <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
+                        <FormSection forms={formsOfGenericProcedure} procedureData={procedureData!} completarForm={completarForm} />
+                        <AttachmentSection procedureInstance={procedureInstance} procedureData={procedureData!} completarAdjunto={completarAdjunto} />
+                    </LayoutSection>
+                    <LayoutSection style={{margin:"5px 0px 15px 0px"}}> 
+                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                            <Button style={{width:"200px", margin:"0px 0px 15px 0px"}} onClick={() => backFunction("home")} > <BiArrowBack/>Volver</Button>
+                            <Button style={{width:"200px", margin:"0px 0px 15px 0px"}}  color={"secondary"} >Cargar<BiSend/> </Button>
+                        </div>
+                    </LayoutSection>
                 </div>
-                
-                
             </div>
         )
 
