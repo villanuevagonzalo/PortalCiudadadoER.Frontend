@@ -73,9 +73,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         const newFile = new File([file], fileName, { type: file.type });
         return newFile;
       });
-  
-      console.log("Selected files:", filesWithNames);
-  
+    
       // Usar las funciones del contexto
       setFieldValue(HelpToken + instance.name, filesWithNames);
       addFilesToContext(filesWithNames);
@@ -86,17 +84,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     }
   };
 
-  useEffect(() => {
-    console.log("----------------------------")
-    console.log("NAME: "+instance.properties.label)
-
-    console.log("FOCUS: "+focus)
-    console.log("HelpField.value: "+HelpField.value)
-
-    
-    console.log("----------------------------")
-
-  }, [])
 
   useEffect(() => {
     if(field.value!==''){

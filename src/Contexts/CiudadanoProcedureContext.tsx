@@ -21,7 +21,7 @@ const ContextValues = () => {
     console.log("esto es lo que tiene ciudadanoProcedures: "+JSON.stringify(ciudadanoProcedures))
 },[ciudadanoProcedures])
 
-  const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
+const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
     
     const data = {procedure_unit_id:procedure_id}
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.Create, data, setFormState);
@@ -34,7 +34,6 @@ const ContextValues = () => {
         let parsedAttachments=[]
         let parsedMultimedia = []
         
-
         if (responseData.FORMS!="" && responseData.FORMS!=undefined){
           parsedForms = responseData.FORMS.split(",");
         }
@@ -58,7 +57,6 @@ const ContextValues = () => {
           responseData.DATE_APPROVED
         );
         setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
-        console.log("responseData"+JSON.stringify(ciudadanoProcedures))
         return true;
       }
       else{
@@ -67,6 +65,7 @@ const ContextValues = () => {
     }
     return false;
   }
+  
 
   const  UpdateOneCiudadanoProcedure = async(procedure: ProcedureData, setFormState: Function, procedure_data_id:number) => {
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.Update, procedure.getJSON(), setFormState);

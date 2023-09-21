@@ -97,6 +97,7 @@ export const TramitesOnlinePage = () => {
                     CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
                     .then(response => {
                         if (response) {
+                            console.log("veamos si se cargo: "+JSON.stringify(ciudadanoProcedures))
                             setProcedureInstance(foundProcedure);
                         }else{
                             setShowNetworkError(true)

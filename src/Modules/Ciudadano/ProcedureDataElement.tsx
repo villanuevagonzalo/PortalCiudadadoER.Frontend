@@ -72,7 +72,6 @@ interface FormGenericData {
     useEffect(()=>{
         UpdateForms()
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
-        console.log("lo encontró: "+JSON.stringify(filteredProcedure))
         if (filteredProcedure){
             setProcedureData(filteredProcedure);
             setProcedureDataAttachments(filteredProcedure.getAttachments()!)
@@ -119,7 +118,6 @@ interface FormGenericData {
 
     useEffect(()=>{
         
-       console.log("PROCEDURE DATA: "+JSON.stringify(procedureData))
     },[procedureData])
     
 
@@ -221,7 +219,7 @@ interface FormGenericData {
                         procedureInstanceAttachments.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                                 {procedureDataAttachments.includes(element.properties.label) ? (
-                                <p>Ya cargado</p>
+                                <p>YArchivo {element.properties.label} cargado</p>
                                 ) : (
                                 <Element instance={element} className="flex-2" />
                                 )}
@@ -245,12 +243,7 @@ interface FormGenericData {
           };
         
         const response = await sendProcedureAttachment(procedureData, data, setFormState);
-        console.log("esta es la respuesta: "+ response)
-        if (response){
-            console.log("esta es la salida: "+JSON.stringify(procedureData))
-            console.log("esta es la salida: "+JSON.stringify(ciudadanoProcedures))
-
-            
+        if (response){            
             setShowAttachmentMessage(true)
             setAlertMessage ("Documento cargado correctamente")
         }else{
