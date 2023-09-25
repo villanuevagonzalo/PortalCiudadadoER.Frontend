@@ -132,6 +132,7 @@ const ContextValues = () => {
                   fields.push(aux);
       });*/
         let parsedAttachments=[]
+        console.log("response data: "+responseData)
         if (responseData[0].ATTACHMENTS !== undefined && responseData[0].ATTACHMENTS.trim() !== "") {
           parsedAttachments = responseData[0].ATTACHMENTS.split(",");
         }

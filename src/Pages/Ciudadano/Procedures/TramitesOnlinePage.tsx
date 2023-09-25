@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { NuevosTramites } from '../../../Components/Elements/NuevosTramites';
 import { NavigatorSpacer, Spinner } from '../../../Components/Elements/StyledComponents';
 import { Button } from '../../../Components/Forms/Button';
@@ -37,12 +37,14 @@ export const TramitesOnlinePage = () => {
 
   const { UpdatePublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
   const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
-  
+  const [filteredProcedures, setFilteredProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
+  const [searchProcedure, setSearchProcedure] = useState<string>()
+
   const { userData} = useContext(UserContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
-  const [searchProcedure, setSearchProcedure] = useState<string>()
+  //const [searchProcedure, setSearchProcedure] = useState<string>()
   const [procedureInstance, setProcedureInstance] = useState<ProcedureInstance<ElementSchemaTypes>>();
   const [render, setRender] = useState("home")
   const [showNetworkError,setShowNetworkError] = useState(false)
@@ -54,7 +56,6 @@ export const TramitesOnlinePage = () => {
   useEffect(()=>{
     UpdatePublishedProcedures()
     UpdateCiudadanoProcedures()
-
     const handlePopState = () => {
         setRender("home");
         setProcedureInstance(undefined)
@@ -78,10 +79,38 @@ export const TramitesOnlinePage = () => {
 
 
   useEffect(()=>{
+    setFilteredProcedures(proceduresPublished)
+  },[proceduresPublished])
+
+  useEffect(()=>{
+    if (searchProcedure !== undefined &&  searchProcedure != '') {
+      const cleanedSearchProcedure = searchProcedure.replace(/\s+\((título|temática)\)$/, '');
+      const filtered = proceduresPublished.filter(procedures => procedures.getTitle() === cleanedSearchProcedure);
+        if (filtered.length>0){
+            setFilteredProcedures(filtered);
+        }else{
+          const filtered = proceduresPublished.filter(procedures => procedures.getTheme() === cleanedSearchProcedure);
+          if (filtered.length>0){
+            setFilteredProcedures(filtered);
+          }else{
+            setFilteredProcedures(proceduresPublished)
+          }
+        } 
+      } else {
+        setFilteredProcedures(proceduresPublished)
+      }
+  },[searchProcedure])
+
+
+  useEffect(()=>{
     if (render=="home"){
         setProcedureInstance(undefined)
     }
   },[render])
+
+  const DataTitle = useMemo(() => proceduresPublished.map((item:any) => item.getTitle()+" (título)"), [proceduresPublished]);
+  const DataTheme = useMemo(() => proceduresPublished.map((item:any) => item.getTheme()+" (temática)").flat(), [proceduresPublished]);
+  const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme]);
 
 
     const seeProcedure = (idBuscado: number) => {
@@ -146,7 +175,7 @@ export const TramitesOnlinePage = () => {
                     }}
                 >
                     <Form autoComplete="off">
-                        <FormikSearch name="Tramites" label={"Filtra los trámites"} data={"DataName"} setValue={setSearchProcedure} autoFocus/>
+                        <FormikSearch name="Tramites" label={"Filtra los trámites"} data={ResultArray} setValue={setSearchProcedure} autoFocus/>
 
                         <Button disabled={FormState.loading} type="submit">
                             {FormState.loading ? <Spinner /> : "Ir al Trámite"}
@@ -157,7 +186,7 @@ export const TramitesOnlinePage = () => {
             {showNetworkError&&<h2>Error de red, intente nuevamente</h2>}
             {isLoadingProcedure && (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)}
             
-            {proceduresPublished.map((item, index) => <LayoutSection key={index}>
+            {filteredProcedures.map((item, index) => <LayoutSection key={index}>
                 {item.getIcon() !== "" ? (
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
                 <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
@@ -210,5 +239,3 @@ export const TramitesOnlinePage = () => {
     </LayoutColumns></>);
     }
 }
-
-
