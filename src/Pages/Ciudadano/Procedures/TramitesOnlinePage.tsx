@@ -37,6 +37,7 @@ export const TramitesOnlinePage = () => {
 
   const { UpdatePublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
   const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+  
   const { userData} = useContext(UserContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -49,7 +50,6 @@ export const TramitesOnlinePage = () => {
   const [citizenLevelError, setCitizenLevelError] = useState(false)
   const isMobile = window.innerWidth <= 768; // Cambia 768 al valor deseado para tu definición de pantalla de celular
 
-  
 
   useEffect(()=>{
     UpdatePublishedProcedures()
@@ -73,7 +73,6 @@ export const TramitesOnlinePage = () => {
         navigate("/dashboard/procedures/"); // Cambiar "/procedure" a la ruta real de tu procedimiento
         setRender("procedure")
         window.scrollTo({ top: 0, behavior: 'smooth' });
-
     }
   },[procedureInstance])
 
@@ -97,7 +96,6 @@ export const TramitesOnlinePage = () => {
                     CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
                     .then(response => {
                         if (response) {
-                            console.log("veamos si se cargo: "+JSON.stringify(ciudadanoProcedures))
                             setProcedureInstance(foundProcedure);
                         }else{
                             setShowNetworkError(true)

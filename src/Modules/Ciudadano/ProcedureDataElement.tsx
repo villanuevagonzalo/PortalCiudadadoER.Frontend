@@ -10,7 +10,7 @@ import { useContext, useEffect, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
-import { BiArrowBack, BiSend } from "react-icons/bi";
+import { BiArrowBack, BiSend, BiTrash } from "react-icons/bi";
 import { CitizeProcedureUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
 import { Form, Formik } from "formik";
 import { FormikButton } from '../../Components/Forms/FormikButton';
@@ -34,7 +34,8 @@ interface FormGenericData {
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
 
-    const { ciudadanoProcedures, sendProcedureAttachment } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
+    const { ciudadanoProcedures, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
+    const {UpdateCitizenForms}= useContext(CiudadanoFormContext); //This is the total citizen data procedures
     const [procedureData, setProcedureData] = useState <ProcedureData > (); //Is this procedure citizen data
 
     const {formularios, UpdateForms} = useContext(FormContext); // Is is the total created forms which it does not implies that the citizen has data here. 
@@ -43,7 +44,7 @@ interface FormGenericData {
     const [formToComplete, setFormToComplete] = useState <FormInstance<ElementSchemaTypes>> (); //Form to complete by the citizen
     const [formToCheck, setFormToCheck] = useState <FormInstance<ElementSchemaTypes>> (); // Form completed by the citizen but it can be seeing and updated
 
-    const {fileArray} = useContext(FilesContext)
+    const {fileArray, clearFileArray} = useContext(FilesContext)
     const [procedureInstanceAttachments, setProcedureInstanceAttachments] = useState <ElementInstance<ElementSchemaTypes>[]>([]) // Procedure instance attachments, this are the attachment of the procedure but it doesnt implies that the citizen uploaded it
     const [procedureDataAttachments, setProcedureDataAttachments ] = useState <string[]>([])
 
@@ -57,12 +58,14 @@ interface FormGenericData {
 
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
-
-    const completarForm = (formCode:FormInstance<ElementSchemaTypes>) => {
-        setFormToComplete(formCode)
+    const completarForm = (formSelected:FormInstance<ElementSchemaTypes>) => {
+        setFormToComplete(formSelected)
     }
-    const checkForm = (formCode:FormInstance<ElementSchemaTypes>) => {
-        setFormToCheck(formCode)
+    const checkForm = (formSelected:FormInstance<ElementSchemaTypes>) => {
+        if (formSelected!=undefined){
+            setFormToCheck(formSelected)
+
+        }
     }
 
     const completarAdjunto = (attachment:string) => {
@@ -71,11 +74,15 @@ interface FormGenericData {
 
     useEffect(()=>{
         UpdateForms()
-        const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
-        if (filteredProcedure){
-            setProcedureData(filteredProcedure);
-            setProcedureDataAttachments(filteredProcedure.getAttachments()!)
-        }
+        UpdateCitizenForms()
+        setTimeout(() => {
+            const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
+            if (filteredProcedure){
+                setProcedureData(filteredProcedure);
+                setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+            }
+         }, 500); // espera 500ms antes de ejecutarse
+        
     },[])
 
     //se busca formularios del tramite como se definió por el actor
@@ -110,7 +117,6 @@ interface FormGenericData {
         if (filteredProcedure){
             setProcedureData(filteredProcedure);
             setProcedureDataAttachments(filteredProcedure.getAttachments()!)
-
         }
         
     },[ciudadanoProcedures])
@@ -156,14 +162,72 @@ interface FormGenericData {
 
 
     const renderFormToCheckComponent = () => {
+
         if (formToCheck && procedureData) {
             return (
-                <CiudadanoFormToCheckElement form={formToCheck} procedureData={procedureData} close={setRender} />
+                <CiudadanoFormToCheckElement form={formToCheck} procedureData={procedureData} setFormToCheck={setFormToCheck} close={setRender} />
             );
         }
         return null;
     };
 
+    const downloadAttachment = async (attachmentName:string) => {
+
+        const attachments = procedureData?.getAttachments()
+        const multimediaId = procedureData?.getMultimediaId()
+        let position = -1; 
+        if (attachments && attachmentName) {
+            for (let i = 0; i < attachments.length; i++) {
+              if (attachments[i] === attachmentName) {
+                position = i; // Guardamos la posición cuando encontramos el elemento
+                break; // Salimos del bucle una vez que lo encontramos
+              }
+            }
+          }
+        if (position !== -1 && multimediaId) {
+            const multimediaIdAtIndex = multimediaId[position];
+
+            const response = await GetCiudadanoProcedureAttachment(multimediaIdAtIndex, attachmentName, setFormState);
+           
+        } else {
+            setShowAttachmentMessage(true)
+            setAlertMessage ("Error en la visualización del documento")
+            setAlertMessage2 ("Intente más tarde.")
+        }
+
+    }
+
+    const deleteAttachment = async (attachmentName:string) => {
+
+        const attachments = procedureData?.getAttachments()
+        const multimediaId = procedureData?.getMultimediaId()
+        let position = -1; 
+
+        if (attachments && attachmentName) {
+            for (let i = 0; i < attachments.length; i++) {
+              if (attachments[i] === attachmentName) {
+                position = i; // Guardamos la posición cuando encontramos el elemento
+                break; // Salimos del bucle una vez que lo encontramos
+              }
+            }
+          }
+
+        if (position !== -1 && multimediaId) {
+            const multimediaIdAtIndex = multimediaId[position];
+            const response = await DeleteCiudadanoProcedureAttachment( procedureData?.getId()!, multimediaIdAtIndex, setFormState);
+            if (response){
+                setShowAttachmentMessage(true)
+                setAlertMessage ("Documento adjunto eliminado")
+            }
+            // Ahora "multimediaIdAtIndex" contiene el elemento en la posición "position"
+        } else {
+            setAlertMessage ("Error")
+            setAlertMessage2 ("Intente más tarde.")
+            setShowAttachmentMessage(true)
+
+        }
+
+    }
 
     const FormSection: React.FC<{ forms: FormInstance<ElementSchemaTypes>[], procedureData: ProcedureData, completarForm: Function }> = ({ forms, procedureData, completarForm }) => {
         return (
@@ -183,9 +247,9 @@ interface FormGenericData {
                 <LayoutSection>
                     <h1>{form.getTitle()}</h1>
                     {procedureData && procedureData.getForms().includes(form.getCode().toString()) ? (
-                        <div>
-                            <h1><MdCheck />Formulario completado</h1>
-                            <div onClick={() => {checkForm(form)}}><HiOutlineMagnifyingGlass /></div>
+                        <div style={{ display: "flex", flexDirection: "column" }}>
+                            <h1><MdCheck /> Formulario completado</h1>
+                            <Button style={{ width:"120px", marginLeft: "auto", marginTop:"15px" }} onClick={() => { checkForm(form) }} ><HiOutlineMagnifyingGlass/>Revisar</Button>
                         </div>
                     ) : (
                         <Button onClick={() => {completarForm(form)}}><HiOutlineMagnifyingGlass />Completar Formulario</Button>
@@ -217,15 +281,27 @@ interface FormGenericData {
                         <Form autoComplete="off">
                         {procedureInstanceAttachments &&
                         procedureInstanceAttachments.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                            <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                            <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"30px 0px 15px 0px"}}>
                                 {procedureDataAttachments.includes(element.properties.label) ? (
-                                <p>YArchivo {element.properties.label} cargado</p>
+                                <div style={{display:"flex", flexDirection:"column"}} >
+                                    <p>Archivo {element.properties.label} cargado</p>
+                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop:"15px" }}>
+                                        <Button fullwidth={false}  onClick={() => downloadAttachment(element.properties.label)}  ><HiOutlineMagnifyingGlass/>Ver</Button>
+                                        <Button color="secondary" fullwidth={false}  onClick={() => deleteAttachment(element.properties.label)}><BiTrash />Eliminar</Button>
+                                    </div>
+                                </div>
                                 ) : (
-                                <Element instance={element} className="flex-2" />
+                                    <>
+                                    <Element instance={element} className="flex-2" />
+                                    <div style={{ display: "flex", alignItems: "flex-end" }}>
+                                      <FormikButton style={{ width: "200px" }} disabled={false} color="secondary" type="submit">
+                                        Cargar archivo
+                                      </FormikButton>
+                                    </div>
+                                  </>                               
                                 )}
                             </div>
                             ))}  
-                        <FormikButton disabled={false} color="secondary" type="submit" a>Cargar archivo</FormikButton>
 
                         </Form>
                     </Formik>
@@ -244,9 +320,11 @@ interface FormGenericData {
         
         const response = await sendProcedureAttachment(procedureData, data, setFormState);
         if (response){            
+            clearFileArray()
             setShowAttachmentMessage(true)
             setAlertMessage ("Documento cargado correctamente")
         }else{
+            clearFileArray()
             setShowAttachmentMessage(true)
             setAlertMessage ("Error en la carga del documento")
             setAlertMessage2 ("Intente más tarde.")
@@ -273,7 +351,14 @@ interface FormGenericData {
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
                 {showProcedureCorrectedUploaded && (<CitizeProcedureUploadedProps close={backFunction} ProcedureTitle={procedureInstance.getTitle()} />)}
                 { showAttachmentMessage && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowAttachmentMessage} />)}
-                <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"column", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
+                <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"row", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
+                    <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
+                        <img
+                            src={`../../../public/ProceduresIcons/icono_${procedureInstance.getIcon()}.svg`}
+                            alt={procedureInstance.getTitle()}
+                            style={{ width: "64px", height: "64px" }}
+                        />
+                    </div>
                     <h1 style={{textAlign:"center"}} >{procedureInstance.getTitle()}</h1>
                 </LayoutSectionProcedureTitle>
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
@@ -309,7 +394,5 @@ interface FormGenericData {
                 </div>
             </div>
         )
-
     }
-    
   }

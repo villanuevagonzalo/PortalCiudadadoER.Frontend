@@ -371,7 +371,7 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
 
 }
 
-export class FormDataClass {
+export class FormDataClass   {
 
   private form_data_id: number;
   private form_code:string; 
@@ -382,19 +382,20 @@ export class FormDataClass {
   private multimedia_id?: string [];
   private status:string;
   created_at?:string;
-  private created_by?:string; 
+  private updated_at?:string; 
 
   constructor(
     form_data_id: number,
     form_code: string,
     procedure_data_id: number,
-    elements: ElementInstance<ElementSchemaTypes>[],
     status: string,
     attachments?: string[],
     multimedia_id?: string[],
     user_id?: number,
     created_at?: string,
-    created_by?: string
+    updated_at?: string,
+    elements: ElementInstance<ElementSchemaTypes>[]= [],
+
   ) {
     this.form_data_id = form_data_id;
     this.form_code = form_code;
@@ -411,8 +412,8 @@ export class FormDataClass {
     if (created_at !==undefined) {
       this.created_at = created_at
     }
-    if (created_by !== undefined){
-      this.created_by = created_by
+    if (updated_at !== undefined){
+      this.updated_at = updated_at
     }
     
     
@@ -456,8 +457,8 @@ export class FormDataClass {
     return this.created_at;
   }
 
-  getCreatedBy(): string | undefined {
-    return this.created_by;
+  getUpdatedAt(): string | undefined {
+    return this.updated_at;
   }
 
   // Funciones setter para cada atributo
@@ -498,8 +499,12 @@ export class FormDataClass {
     this.created_at = created_at;
   }
 
-  setCreatedBy(created_by?: string): void {
-    this.created_by = created_by;
+  setUpdatedAt(updated_at?: string): void {
+    this.updated_at = updated_at;
+  }
+
+  addElement(element: ElementInstance<ElementSchemaTypes>) {
+    this.elements.push(element);
   }
 
   getJSON (){
@@ -516,6 +521,9 @@ export class FormDataClass {
     
     return ProcedureData;
   }
+
+
+  
 
 }
 
@@ -562,6 +570,10 @@ export class ProcedureData {
     return this.forms;
   }
 
+  getStatus(){
+    return this.status;
+  }
+
   setForms(form: string) {
     // Verificar si 'forms' es undefined o null y crear un nuevo arreglo si es necesario
     if (!this.forms) {
@@ -574,6 +586,10 @@ export class ProcedureData {
 
   getAttachments(){
     return this.attachments;
+  }
+
+  getMultimediaId(){
+    return this.multimedia_id;
   }
 
   setAttachments(attachments: string[]) {
@@ -595,6 +611,15 @@ export class ProcedureData {
     this.multimedia_id = [...this.multimedia_id, multimediaId];
   }
 
+  setMultimediaIdArray(multimediaId: number[]) {
+    // Verificar si 'attachments' es undefined o null y crear un nuevo arreglo si es necesario
+    if (!this.multimedia_id) {
+      this.multimedia_id = [];
+    }
+  
+    // Agregar los nuevos 'attachments' al arreglo 'attachments'
+    this.multimedia_id.push(...multimediaId);
+  }
   getJSON (){
 
     const ProcedureData = {

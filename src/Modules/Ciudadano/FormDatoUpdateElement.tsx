@@ -1,6 +1,6 @@
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
-import { ElementInstance, FormInstance, ProcedureData } from "../FormElements/Class";
+import { ElementInstance, FormDataClass, FormInstance, ProcedureData } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
 import {Element} from '../FormElements/Components/Element';
@@ -20,15 +20,19 @@ import { FormContext } from "../../Contexts/FormContext";
 interface Arguments {
     procedureData:ProcedureData,
     form:FormInstance<ElementSchemaTypes>;
+    setFormToCheck:Function,
     close:Function
   }
 
   type FieldsType = ElementInstance<ElementSchemaTypes>[];
 
-  export const CiudadanoFormToCheckElement: React.FC<Arguments> = ({procedureData, form, close}) => {
+  export const CiudadanoFormToCheckElement: React.FC<Arguments> = ({procedureData, form, setFormToCheck, close}) => {
     
-    const { SaveForm } = useContext(CiudadanoFormContext);
-    const { GetElementsByCode, GetFormByCode, isLoading} = useContext(FormContext);
+    const { UpdateCitizenForms, SaveForm, GetCitizenElementsByCode, ciudadanoFormularios } = useContext(CiudadanoFormContext);
+    const { GetFormByCode, isLoading} = useContext(FormContext);
+    const [citizenForm, setCitizenForm] = useState<FormDataClass>();;
+
+    const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
 
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
     const {fileArray} = useContext(FilesContext)
@@ -62,25 +66,48 @@ interface Arguments {
     
         const fetchData = async () => {
          
-            // Luego ejecuta GetFormByCode si es necesario
           if (form.description === undefined && form.subtitle === undefined) {
             await GetFormByCode(form.getCode(), setFormState);
           }
 
-          // Comienza por ejecutar GetElementsByCode
-          if (form.elements.length === 0) {
-            await GetElementsByCode(form.getCode(), setFormState);
+          const elementoBuscado = ciudadanoFormularios.find((elemento) => {
+            return elemento.getFormCode() === form.getCode();
+          });
+          
+          if (elementoBuscado){
+            setCitizenForm(elementoBuscado)
+
+            // Comienza por ejecutar GetElementsByCode
+          if (elementoBuscado.elements.length === 0) {
+            await GetCitizenElementsByCode(form.getCode(), setFormState);
           } else {
             //setFields(form.elements);
+          }
+
           }
       
           
         };
-      
+        
         fetchData();
       }, []); 
 
 
+    useEffect(()=>{
+      if(citizenForm){
+        setFields(citizenForm.elements);
+
+      }  
+        
+        
+    },[citizenForm])
+
+    useEffect(()=>{
+      console.log("fields buscado: "+JSON.stringify(fields))
+      
+  },[fields])
+
+      
     const enviar = async () => {
         const elements_common: FieldsType = [];
         const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
@@ -149,7 +176,7 @@ interface Arguments {
                         }}
                     >
                         <Form autoComplete="off">
-                            {form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                            {citizenForm?.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                                 <Element instance={element} className="flex-2"/>
                             </div>
@@ -162,8 +189,10 @@ interface Arguments {
                 </LayoutSection> 
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
-                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >CARGAR<BiSend/> </Button>
+                <Button style={{width:"50px"}} onClick={ () => {close("home"); setFormToCheck(undefined)}} ><BiArrowBack/> VOLVER</Button>
+                {procedureData.getStatus() === "INICIADO" &&(
+                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >MODIFICAR<BiSend/> </Button>
+                )}
             </div>
         </div>
     )

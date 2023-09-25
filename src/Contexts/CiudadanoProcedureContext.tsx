@@ -4,6 +4,8 @@ import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import axios, { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
 import { CiudadanoProcedureAPI } from "../Services/CiudadanoProcedureAPI";
+import { FileBlob } from "../Interfaces/Data";
+import { getFileType } from "../Interfaces/FileTypes";
 
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
@@ -17,49 +19,55 @@ const ContextValues = () => {
   const [isLoadingCiudadanoProcedure, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
-  useEffect(()=>{
-    console.log("esto es lo que tiene ciudadanoProcedures: "+JSON.stringify(ciudadanoProcedures))
-},[ciudadanoProcedures])
 
-const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
+  const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
     
-    const data = {procedure_unit_id:procedure_id}
+    const data = { procedure_unit_id: procedure_id }
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.Create, data, setFormState);
 
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
-      const responseData = JSON.parse(response.data.data);
-      if (status) {
-        let parsedForms:any=[]
-        let parsedAttachments=[]
-        let parsedMultimedia = []
-        
-        if (responseData.FORMS!="" && responseData.FORMS!=undefined){
-          parsedForms = responseData.FORMS.split(",");
-        }
-        if (responseData.ATTACHMENTS!=""&&responseData.ATTACHMENTS!=undefined){
-          parsedAttachments = responseData.ATTACHMENTS.split(",");
-        }
-        if (responseData.MULTIMEDIA_ID!=""&&responseData.MULTIMEDIA_ID!=undefined){
-          parsedMultimedia = responseData.MULTIMEDIA_ID.split(",");
-        }
 
-        const newProceduresData = new ProcedureData(
-          responseData.ID,
-          responseData.PROCEDURE_UNITS_ID,
-          responseData.REASON,
-          responseData.STATUS,
-          parsedForms,
-          parsedAttachments,
-          parsedMultimedia,
-          responseData.CREATED_AT,
-          responseData.UPDATED_AT,
-          responseData.DATE_APPROVED
-        );
-        setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
-        return true;
-      }
-      else{
+      if (status) {
+        const responseDataArray = JSON.parse(response.data.data); // Parse as an array
+
+        if (responseDataArray.length > 0) {
+          const firstResponseData = responseDataArray[0]; // Get the first object in the array
+
+          if (firstResponseData.ID !== undefined && firstResponseData.ID !== "") {
+            // Process the data and setCiudadanoProcedures here
+            let parsedForms:any=[]
+            let parsedAttachments=[]
+            let parsedMultimedia = []
+
+            if (firstResponseData.FORMS !== "" && firstResponseData.FORMS !== undefined) {
+              parsedForms = firstResponseData.FORMS.split(",");
+            }
+            if (firstResponseData.ATTACHMENTS !== "" && firstResponseData.ATTACHMENTS !== undefined) {
+              parsedAttachments = firstResponseData.ATTACHMENTS.split(",");
+            }
+            if (firstResponseData.MULTIMEDIA_ID !== "" && firstResponseData.MULTIMEDIA_ID !== undefined) {
+              parsedMultimedia = firstResponseData.MULTIMEDIA_ID.split(",");
+            }
+
+            const newProceduresData = new ProcedureData(
+              firstResponseData.ID,
+              firstResponseData.PROCEDURE_UNITS_ID,
+              firstResponseData.REASON,
+              firstResponseData.STATUS,
+              parsedForms,
+              parsedAttachments,
+              parsedMultimedia,
+              firstResponseData.CREATED_AT,
+              firstResponseData.UPDATED_AT,
+              firstResponseData.DATE_APPROVED
+            );
+
+            setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
+            return true;
+          }
+        }
+      } else {
         return false;
       }
     }
@@ -88,7 +96,6 @@ const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Funct
 
   const DeleteOneCiudadanoProcedure = async(id:number, setFormState: Function) => {
     setIsLoading(true);
-
     const jsonObject = {
       id: id
     };
@@ -167,29 +174,111 @@ const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Funct
     setIsLoading(true)
     try {
       const response = await handleResponse(AxiosCiudadanoProcedureAPI.SendAttachments, newAttachment, setFormState);
-      console.log(response);
-      console.log(response.data);
-     
       
-      if (response.data.success) {
+      if (response && response.data){
+        if (response.data.success) {
 
-        const names = newAttachment.attachments.map((file: { name: any; }) => file.name);
-        procedure_data.setAttachments([...names]);
-        response.data.data.map((multimediaId: number) => {
-          procedure_data.setMultimediaId(multimediaId);
-        });
+          const names = newAttachment.attachments.map((file: { name: any; }) => file.name);
+          procedure_data.setAttachments([...names]);
+          response.data.data.map((multimediaId: number) => {
+            procedure_data.setMultimediaId(multimediaId);
+          });
+          setIsLoading(false);
+          return true;
+        } else {
+          setIsLoading(false);
+          return false;
+        }
+      }else{
         setIsLoading(false);
-        return true;
-      } else {
-        setIsLoading(false);
-        return false;
+          return false;
       }
+      
     } catch (error) {
       console.error("Error al enviar adjunto:", error);
       setIsLoading(false);
       return false; // Puedes personalizar cómo manejar el error según tus necesidades
     }
+  }
+
   
+  const GetCiudadanoProcedureAttachment = async (attachmentId: number, Filename: string, setFormState: Function) => {
+    setIsLoading(true);
+    console.log(attachmentId)
+    
+      const response: AxiosResponse = await handleResponse(
+        AxiosCiudadanoProcedureAPI.GetAttachment,
+        attachmentId,
+        setFormState
+      );
+  /*
+      const reader = new FileReader();
+  
+      return new Promise<FileBlob>((resolve, reject) => {
+        reader.onloadend = () => {
+          const imageDataURL = reader.result as string;
+          const filefile = Filename;
+          const filext = filefile.split(".");
+          const data: FileBlob = {
+            name: filefile,
+            type: filext[1],
+            data: imageDataURL.replace("text/html", getFileType(filext[1]).fulltype),
+          };
+          resolve(data);
+        };
+  
+        reader.onerror = reject;
+  
+        //console.log("response: "+response)
+        //reader.readAsDataURL(response);
+      });*/
+  
+  };
+  
+
+  const DeleteCiudadanoProcedureAttachment = async(procedure_data_id:number, multimedia_id:number, setFormState: Function) => {
+    setIsLoading(true);
+    const jsonObject = {
+      procedure_data_id: procedure_data_id,
+      multimedia_id:multimedia_id
+    };
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.DeleteAttachment, jsonObject, setFormState);
+    console.log(response)
+    console.log(typeof response)
+    console.log("response.data: " + response.data)
+    console.log("response.data: " + JSON.stringify(response.data))
+
+    if (response.data){
+      if (response.data.data == multimedia_id){
+        const targetProcedure = ciudadanoProcedures.find((element) => element.getId() === procedure_data_id);
+        if (targetProcedure){
+          const multimediaId = targetProcedure.getMultimediaId(); // Supongamos que esto es una cadena
+          const posicion = multimediaId!.indexOf(multimedia_id);
+          const multimediaIdArray = multimediaId!.filter((element) => element !== multimedia_id);
+          const attachmentArray= targetProcedure.getAttachments()
+          
+          attachmentArray!.splice(posicion, 1); // Elimina 1 elemento en la posición especificada
+  
+          targetProcedure.setAttachments(attachmentArray!)
+          targetProcedure.setMultimediaIdArray(multimediaIdArray!)
+  
+          setIsLoading(false);
+          return true;
+        }else{
+          setIsLoading(false);
+          return false;
+        }
+        
+      }else{
+        setIsLoading(false);
+        return false;
+      }
+    }else{
+      setIsLoading(false);
+      return false;
+    }
+    
+    
   }
 
   return {
@@ -200,7 +289,10 @@ const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Funct
     UpdateOneCiudadanoProcedure,
     DeleteOneCiudadanoProcedure,
     UpdateCiudadanoProcedures, 
-    sendProcedureAttachment
+    sendProcedureAttachment,
+    GetCiudadanoProcedureAttachment,
+    DeleteCiudadanoProcedureAttachment
+
   }
 }
 

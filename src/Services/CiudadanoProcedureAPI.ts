@@ -17,6 +17,16 @@ export class CiudadanoProcedureAPI {
   GetAll = async () => {
     return this.baseService.get('/v0/dashboard/procedures')
   }
+
+  GetByProcedureUnitId = async (params: {
+    id:number
+  }) => {
+    return this.baseService.post('/v0/dashboard/getByProcedureUnitId', params,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  }
   
   //create a new procedure
   Create = async (params: {
@@ -55,5 +65,17 @@ export class CiudadanoProcedureAPI {
     return this.baseService.post('/v0/dashboard/procedures/delete', params)
   }
 
+  GetAttachment = async (params: {
+    attachmentId:number
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/attachments', {params})
+  }
+
+  DeleteAttachment = async (params: {
+    procedure_data_id:number,
+    multimedia_id:number
+  }) => {
+    return this.baseService.post('/v0/dashboard/procedures/attachments/delete', params)
+  }
 
 }

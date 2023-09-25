@@ -41,7 +41,6 @@ const ContextValues = () => {
     else if(responseNew && responseNew.status!==204) notificationsData = responseNew.data.data.notifications;
     
     const notificationsDataCleaned = cleanJsonString(notificationsData);
-    console.log("Cleaned: "+notificationsDataCleaned)
     const notificationsObj = JSON.parse(notificationsDataCleaned);
 
     let newNotificaionsIDs: number[] = [];
@@ -135,7 +134,6 @@ const ContextValues = () => {
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
 
     const notificationsDataCleaned = cleanJsonString(notificationsData);
-    console.log("Cleaned: "+notificationsDataCleaned)
     const Notifications:ActorNotification[] = JSON.parse(notificationsDataCleaned).map((notification:Partial<Notification>)=>{
       //console.log(notification)
       return { 
