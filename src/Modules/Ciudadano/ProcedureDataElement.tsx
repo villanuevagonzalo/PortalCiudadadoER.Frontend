@@ -1,6 +1,6 @@
 import {Element} from '../FormElements/Components/Element';
 
-import { MdCheck, MdOutlineDataset, MdOutlineNewLabel, MdVerifiedUser } from "react-icons/md";
+import { MdBarChart, MdCheck, MdOutlineDataset, MdOutlineNewLabel, MdVerifiedUser } from "react-icons/md";
 import { LayoutSection, LayoutSectionProcedureTitle, LayoutSpacer } from "../../Components/Layout/StyledComponents";
 import {  ElementInstance, ElementSchema, FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
@@ -331,8 +331,6 @@ interface FormGenericData {
         }
     }
 
-
-    //Required to not render until it is procedureInstance
     if (!procedureInstance){
         return null;
     }
@@ -361,6 +359,12 @@ interface FormGenericData {
                     </div>
                     <h1 style={{textAlign:"center"}} >{procedureInstance.getTitle()}</h1>
                 </LayoutSectionProcedureTitle>
+
+                <LayoutSection style={{margin:"0px 0px 10px 0px", paddingBottom:"10px"}}>
+                        <h1><MdBarChart/>Estado del trámite</h1>
+                        <h2>{procedureData?.getStatus()}</h2>
+                    </LayoutSection>
+                    
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineNewLabel />Datos Generales del Trámite</h1>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>

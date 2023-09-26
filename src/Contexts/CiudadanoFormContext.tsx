@@ -123,16 +123,8 @@ const ContextValues = () => {
       const Form_data = responseAll.data.data;
       const responseData = JSON.parse(Form_data);
 
-
-      //let fields: ElementInstance<ElementSchemaTypes>[] = [];
-     /* let componentes= JSON.parse(responseData.ELEMENTS)
-      componentes.map((componente: any, index:number)=> {
-                  const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-                  aux.update((componente.properties))
-                  fields.push(aux);
-      });*/
+      if (Array.isArray(responseData) && responseData.length > 0) {
         let parsedAttachments=[]
-        console.log("response data: "+responseData)
         if (responseData[0].ATTACHMENTS !== undefined && responseData[0].ATTACHMENTS.trim() !== "") {
           parsedAttachments = responseData[0].ATTACHMENTS.split(",");
         }
@@ -151,9 +143,9 @@ const ContextValues = () => {
           responseData[0].USER_ID,
           responseData[0].CREATED_AT,
           responseData[0].UPDATED_AT
-      );
-      setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
-
+       );
+        setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
+      }
     }
     setIsLoading(false); 
   }

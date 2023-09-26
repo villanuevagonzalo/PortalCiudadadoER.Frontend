@@ -18,6 +18,8 @@ import {UserContext} from '../../../Contexts/UserContext';
 import { getLSData } from '../../../Utils/General';
 import { CitizenProcedureLevelError, NetworkAlertPopUp } from '../../../Components/Forms/CitizenPopUpCards';
 import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
+import { Pages } from '../../../Routes/Pages';
 /*
 const dummyData = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -108,8 +110,19 @@ export const TramitesOnlinePage = () => {
     }
   },[render])
 
-  const DataTitle = useMemo(() => proceduresPublished.map((item:any) => item.getTitle()+" (título)"), [proceduresPublished]);
-  const DataTheme = useMemo(() => proceduresPublished.map((item:any) => item.getTheme()+" (temática)").flat(), [proceduresPublished]);
+  const DataTitle = useMemo(() => {
+    const uniqueTitles = Array.from(
+      new Set(proceduresPublished.map((item: any) => item.getTitle() + " (título)"))
+    );
+    return uniqueTitles;
+  }, [proceduresPublished]);
+  
+  const DataTheme = useMemo(() => {
+    const uniqueThemes = Array.from(
+      new Set(proceduresPublished.map((item: any) => item.getTheme() + " (temática)"))
+    ).flat();
+    return uniqueThemes;
+  }, [proceduresPublished]);
   const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme]);
 
 
@@ -221,7 +234,9 @@ export const TramitesOnlinePage = () => {
         </LayoutColumn>
         {isMobile ? (
             <LayoutColumn style={{ width: '100%' }}>
-                <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
+                <Link to={Pages.DC_PROCEDURES_STARTED}>
+                    <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button> 
+                </Link>
                 <LayoutTitle className="mt-4 mb-2">
                 Nuevos Tramites
                 </LayoutTitle>
@@ -229,13 +244,17 @@ export const TramitesOnlinePage = () => {
             </LayoutColumn>
             ) : (
             <LayoutColumn style={{ width: '65%' }}>
-                <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
+                <Link to={Pages.DC_PROCEDURES_STARTED}>
+                    <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
+                </Link>
+
                 <LayoutTitle className="mt-4 mb-2">
                 Nuevos Tramites
                 </LayoutTitle>
                 <NuevosTramites />
             </LayoutColumn>
         )}
+
     </LayoutColumns></>);
     }
 }
