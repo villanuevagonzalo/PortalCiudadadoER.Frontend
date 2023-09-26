@@ -22,7 +22,6 @@ export const DC_Procedures_Started = () => {
 
   const navigate = useNavigate();
 
-
   const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
   const { UpdatePublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
 
@@ -201,6 +200,7 @@ export const DC_Procedures_Started = () => {
                 <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
                 <h1>{item.getTitle()}</h1>
                 <p>{item.getDescription()}</p>
+                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === item.getId())?.getStatus()}</h2>
                 </div>
             </div>          
                 ) : (
@@ -226,7 +226,7 @@ export const DC_Procedures_Started = () => {
                   fullwidth={false}
                   onClick={() => seeProcedure(item.getId()!)}
                 >
-                  Iniciar
+                  Ver
                 </Button>
               </div>
             </div>
