@@ -415,8 +415,6 @@ export class FormDataClass   {
     if (updated_at !== undefined){
       this.updated_at = updated_at
     }
-    
-    
   }
 
   // Funciones getter para cada atributo
@@ -521,9 +519,6 @@ export class FormDataClass   {
     
     return ProcedureData;
   }
-
-
-  
 
 }
 

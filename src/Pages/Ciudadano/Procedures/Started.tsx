@@ -10,9 +10,10 @@ import { formGetInitialValues, formGetValidations } from "../../../Interfaces/Fo
 import { ProcedureContext } from "../../../Contexts/ProcedureContext";
 import { NavigatorSpacer } from "../../../Components/Elements/StyledComponents";
 import { CiudadanoProcedureData } from "../../../Modules/Ciudadano/ProcedureDataElement";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IFormState } from "../../../Interfaces/Data";
 import { DefaultFormState } from "../../../Data/DefaultValues";
+import { Pages } from "../../../Routes/Pages";
 
 const FormRequiredFields = ["Tramites"];
 
@@ -39,14 +40,21 @@ export const DC_Procedures_Started = () => {
 
   useEffect(()=>{
 
-    const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => item.getProcedureUnitId());
-    const proceduresInCiudadano = proceduresPublished.filter((item) =>
-      ciudadanoProcedureUnitIds.includes(item.getId()!)
-    );
+    if (ciudadanoProcedures != null && ciudadanoProcedures.length > 0) {
+      const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => item.getProcedureUnitId());
+      const proceduresInCiudadano = proceduresPublished.filter((item) =>
+        ciudadanoProcedureUnitIds.includes(item.getId()!)
+      );
 
-    setAllProcedures(proceduresInCiudadano)
-    setFilteredProcedures(proceduresInCiudadano)
+      setAllProcedures(proceduresInCiudadano)
+      setFilteredProcedures(proceduresInCiudadano)
 
+    }else{
+      UpdatePublishedProcedures()
+      UpdateCiudadanoProcedures()
+    }
+
+    
     const handlePopState = () => {
       setRender("home");
       setProcedureInstance(undefined)
@@ -59,6 +67,18 @@ export const DC_Procedures_Started = () => {
     };
 
   },[])
+
+  useEffect(()=>{
+
+    const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => item.getProcedureUnitId());
+      const proceduresInCiudadano = proceduresPublished.filter((item) =>
+        ciudadanoProcedureUnitIds.includes(item.getId()!)
+      );
+
+      setAllProcedures(proceduresInCiudadano)
+      setFilteredProcedures(proceduresInCiudadano)
+  
+  }, [proceduresPublished, ciudadanoProcedures]);
 
   useEffect(()=>{
     if (procedureInstance!=null && procedureInstance!=undefined){
@@ -165,53 +185,33 @@ export const DC_Procedures_Started = () => {
             )}
           </Formik>
         </LayoutSection>
-          {filteredProcedures.map((item, index) => (
-            <LayoutSection key={index}>
+        {filteredProcedures.length > 0 ? (
+        filteredProcedures.map((item, index) => (
+          <LayoutSection key={index}>
             <div key={index}>
-              {item.getIcon() !== "" ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "25%",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <img
-                      src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
-                      alt={item.getTitle()}
-                      style={{ width: "64px", height: "64px" }}
-                    />
-                  </div>
-                  <div
-                    style={{
-                      width: "75%",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "flex-start",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <h1>{item.getTitle()}</h1>
-                    <p>{item.getDescription()}</p>
-                  </div>
+            {item.getIcon() !== "" ? (
+                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+                <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
+                <img
+                    src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
+                    alt={item.getTitle()}
+                    style={{ width: "64px", height: "64px" }}
+                />
                 </div>
-                
-              ) : (
+                <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
+                <h1>{item.getTitle()}</h1>
+                <p>{item.getDescription()}</p>
+                </div>
+            </div>          
+                ) : (
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
-                    <h1>{item.getTitle()}</h1>
-                    <p>{item.getDescription()}</p>
-                  </div>
+                    <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
+                        <h1>{item.getTitle()}</h1>
+                        <p>{item.getDescription()}</p>
+
+                    </div>
                 </div>
-              )}
-    
+                )}    
               <div className="text-right flex gap-4">
                 <NavigatorSpacer />
                 <Button
@@ -231,7 +231,16 @@ export const DC_Procedures_Started = () => {
               </div>
             </div>
           </LayoutSection>
-          ))}
+        ))
+      ) : (
+        <LayoutSection>
+          <h1>No ha iniciado ningún trámite</h1>
+          <Link to={Pages.DC_PROCEDURES}>
+              <Button size={1.5}><b>SECCIÓN TRÁMITES</b></Button>
+          </Link>
+        </LayoutSection>
+
+      )}
       </>
     );
   } 
