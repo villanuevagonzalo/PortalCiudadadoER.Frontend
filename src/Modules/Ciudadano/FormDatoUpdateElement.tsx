@@ -43,8 +43,7 @@ interface Arguments {
     const [showFormCorrectedUploaded, setShowFormCorrectedUploaded] = useState(false)
     const [showFormUploadError, setShowFormUploadError] = useState(false)
 
-    const currentPath = window.location.pathname;
-    console.log('Ruta relativa actual:', currentPath);
+   
     const checkValues = () => {
         let hasRequiredEmptyElement = false;
     
@@ -105,15 +104,7 @@ interface Arguments {
         
     },[citizenForm])
 
-    useEffect(()=>{
-      console.log("fields buscado: "+isLoadingFormCitizen)
-      
-  },[isLoadingFormCitizen])
-
-      
-
-   
-
+    
     const enviar = async () => {
 
         const elements_common: FieldsType = [];

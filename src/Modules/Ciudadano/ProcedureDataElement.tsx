@@ -355,7 +355,7 @@ interface FormGenericData {
                 { showAttachmentMessage && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowAttachmentMessage} />)}
                 <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"row", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
                     <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
-                    {currentPath === '/dashboard/procedures/started/' ? (
+                    {currentPath.includes("procedures/started") ? (
                         <img
                         src={`../../../../public/ProceduresIcons/icono_${procedureInstance.getIcon()}.svg`}
                         alt={procedureInstance.getTitle()}

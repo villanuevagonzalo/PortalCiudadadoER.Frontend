@@ -204,7 +204,6 @@ const ContextValues = () => {
   
   const GetCiudadanoProcedureAttachment = async (attachmentId: number, Filename: string, setFormState: Function) => {
     setIsLoading(true);
-    console.log(attachmentId)
     
       const response: AxiosResponse = await handleResponse(
         AxiosCiudadanoProcedureAPI.GetAttachment,

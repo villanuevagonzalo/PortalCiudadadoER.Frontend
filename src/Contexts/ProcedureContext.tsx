@@ -194,7 +194,6 @@ const ContextValues = () => {
                 );
               
                 procedureAux.push(newProcedures);
-                console.log(JSON.stringify(newProcedures))
               });   
               setProceduresPublished(procedureAux);
         
