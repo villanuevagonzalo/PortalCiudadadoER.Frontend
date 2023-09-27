@@ -87,9 +87,6 @@ export const DC_Procedures_Started = () => {
     }
   },[procedureInstance])
 
-  useEffect(()=>{
-    console.log("veamos como cambia: "+JSON.stringify(filteredProcedures))
-  },[filteredProcedures])
   
   const seeProcedure = (idBuscado: number) => {
     const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
@@ -155,7 +152,9 @@ export const DC_Procedures_Started = () => {
   },[searchProcedure])
 
   if (render === "procedure" && procedureInstance) {
+
     return <CiudadanoProcedureData procedureInstance={procedureInstance} backFunction={setRender} />;
+  
   }else{
     return (
       <>

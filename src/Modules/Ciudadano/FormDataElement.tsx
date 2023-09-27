@@ -11,12 +11,13 @@ import { BiArrowBack, BiSend } from "react-icons/bi";
 import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
-import { CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
+import { CitizeFormCreatedProps, CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
 import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
 import { FormikButton } from "../../Components/Forms/FormikButton";
 import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
+import { Spinner } from "../../Components/Elements/StyledComponents";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -28,7 +29,7 @@ interface Arguments {
 
   export const CiudadanoFormElement: React.FC<Arguments> = ({procedureData, form, close}) => {
     
-    const { SaveForm, ciudadanoFormularios } = useContext(CiudadanoFormContext);
+    const { SaveForm, ciudadanoFormularios, isLoadingFormCitizen } = useContext(CiudadanoFormContext);
     const { ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
 
     const { GetElementsByCode, GetFormByCode, isLoading} = useContext(FormContext);
@@ -83,12 +84,6 @@ interface Arguments {
         fetchData();
       }, []); 
 
-      useEffect(() => {
-    
-        console.log("VEamos si se cargó el formulario: "+JSON.stringify(ciudadanoFormularios))
-      }, [ciudadanoFormularios]); 
-
-      
 
     const enviar = async () => {
         const elements_common: FieldsType = [];
@@ -126,11 +121,10 @@ interface Arguments {
     return (
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
-            {showFormCorrectedUploaded && (<CitizeFormUploadedProps close={close} FormTitle={form.getTitle()} />)}
+            {showFormCorrectedUploaded && (<CitizeFormCreatedProps close={close} FormTitle={form.getTitle()} />)}
             { showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
             <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-             
                 <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                     <h1>Título</h1>
                     <p>{form.getTitle()}</p>
@@ -158,11 +152,15 @@ interface Arguments {
                         }}
                     >
                         <Form autoComplete="off">
-                            {form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                            <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
-                                <Element instance={element} className="flex-2"/>
-                            </div>
-                            ))}  
+                          {isLoadingFormCitizen ? (
+                              <Spinner />
+                            ) : (
+                              form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                                <div key={element.name} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
+                                  <Element instance={element} className="flex-2" />
+                                </div>
+                              ))
+                            )}
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>

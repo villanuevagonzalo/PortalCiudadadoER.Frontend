@@ -22,7 +22,7 @@ const ContextValues = () => {
   const AxiosCiudadanoFormAPI = new CiudadanoFormAPI();
   const [ciudadanoFormularios, setCiudadanoFormularios] = useState<FormDataClass[]>([]);;
   const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
   //create a form
@@ -34,8 +34,6 @@ const ContextValues = () => {
       const responseData = JSON.parse(response.data.data);
       if (status) {
         let fields: ElementInstance<ElementSchemaTypes>[] = [];
-       
-
         let componentes= JSON.parse(responseData[0].ELEMENTS)
         componentes.map((componente: any, index:number)=> {
                   const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
@@ -77,18 +75,32 @@ const ContextValues = () => {
   }
 
   //update a form
-  const UpdateOneForm = async(updateFormulario: FormDataClass, setFormState: Function, code:string) => {
+  const UpdateOneForm = async(procedureData:ProcedureData, newFormularioData: any, setFormState: Function) => {
     setIsLoading(true)
-    const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.Update, updateFormulario.getJSON(), setFormState);
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.Update, newFormularioData, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
-      const codeResponse = responseData[0].CODE;
-      if (status && codeResponse == code ) {
-        setCiudadanoFormularios(prevFormularios => prevFormularios.filter(formulario =>formulario.getFormCode() !== code )); //delete the old form
-        setCiudadanoFormularios(prevState => ([...prevState, updateFormulario])); //set the new form
-        setIsLoading(false)
-        return true;
+      if (status  ) {
+        const foundFormData = ciudadanoFormularios.find(formData => formData.getProcedureDataId() == procedureData.getId());
+       
+        if (foundFormData){
+
+          let fields: ElementInstance<ElementSchemaTypes>[] = [];
+          let componentes= JSON.parse(responseData[0].ELEMENTS)
+          componentes.map((componente: any, index:number)=> {
+                    const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]),componente.value);
+                    aux.update((componente.properties))
+                    fields.push(aux);
+          });
+          foundFormData.setElements(fields)
+          setIsLoading(false)
+          return true;
+        }else{
+          setIsLoading(false)
+          return false;
+        }
+        
       }
       else{
         setIsLoading(false)
@@ -199,7 +211,7 @@ const ContextValues = () => {
   /////////////////////////////////////////////////////////
 
   return {
-    isLoading,
+    isLoadingFormCitizen,
     ciudadanoFormularios,
     publishedFormularios,
     setCiudadanoFormularios,

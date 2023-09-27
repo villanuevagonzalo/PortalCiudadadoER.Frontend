@@ -16,6 +16,7 @@ import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
 import { FormikButton } from "../../Components/Forms/FormikButton";
 import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
+import { Spinner } from "../../Components/Elements/StyledComponents";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -28,9 +29,9 @@ interface Arguments {
 
   export const CiudadanoFormToCheckElement: React.FC<Arguments> = ({procedureData, form, setFormToCheck, close}) => {
     
-    const { UpdateCitizenForms, SaveForm, GetCitizenElementsByCode, ciudadanoFormularios } = useContext(CiudadanoFormContext);
+    const { UpdateCitizenForms, UpdateOneForm, GetCitizenElementsByCode, ciudadanoFormularios, isLoadingFormCitizen } = useContext(CiudadanoFormContext);
     const { GetFormByCode, isLoading} = useContext(FormContext);
-    const [citizenForm, setCitizenForm] = useState<FormDataClass>();;
+    const [citizenForm, setCitizenForm] = useState<FormDataClass>();
 
     const [ fields, setFields ] = useState<ElementInstance<ElementSchemaTypes>[]>([]);
 
@@ -42,6 +43,7 @@ interface Arguments {
     const [showFormCorrectedUploaded, setShowFormCorrectedUploaded] = useState(false)
     const [showFormUploadError, setShowFormUploadError] = useState(false)
 
+    
     const checkValues = () => {
         let hasRequiredEmptyElement = false;
     
@@ -103,14 +105,18 @@ interface Arguments {
     },[citizenForm])
 
     useEffect(()=>{
-      console.log("fields buscado: "+JSON.stringify(fields))
+      console.log("fields buscado: "+isLoadingFormCitizen)
       
-  },[fields])
+  },[isLoadingFormCitizen])
 
       
+
+   
+
     const enviar = async () => {
+
         const elements_common: FieldsType = [];
-        const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+        const hasArray = citizenForm!.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
           if (element.type === "FILE") {
             return true;
           }
@@ -125,7 +131,7 @@ interface Arguments {
           ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
         };
       
-        const response = await SaveForm(procedureData, data, setFormState);
+        const response = await UpdateOneForm(procedureData, data, setFormState);
         if (response) {
           setShowFormCorrectedUploaded(true);
         } else {
@@ -144,7 +150,7 @@ interface Arguments {
     return (
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
-            {showFormCorrectedUploaded && (<CitizeFormUploadedProps close={close} FormTitle={form.getTitle()} />)}
+            {showFormCorrectedUploaded && (<CitizeFormUploadedProps close={close} FormTitle={form.getTitle()} setFormToCheck={setFormToCheck} />)}
             { showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
             <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
@@ -166,6 +172,7 @@ interface Arguments {
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                     <h1><MdOutlineDataset />Campos de formulario</h1>
+                    <h1>Ha completado el formulario con la siguiente información</h1>
                     <Formik
                         validateOnBlur={false}
                         validateOnChange={false}
@@ -176,11 +183,14 @@ interface Arguments {
                         }}
                     >
                         <Form autoComplete="off">
-                            {citizenForm?.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                        {isLoadingFormCitizen ? (
+                          <Spinner />
+                          ) : (
+                        citizenForm?.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
-                                <Element instance={element} className="flex-2"/>
+                              <Element instance={element} className="flex-2"/>
                             </div>
-                            ))}  
+                          )))}
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>

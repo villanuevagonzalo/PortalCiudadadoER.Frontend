@@ -72,8 +72,36 @@ interface NetworkAlertProps{
   interface CitizeFormUploadedProps{
     FormTitle:string,
     close:Function,
+    setFormToCheck:Function
   }
-  export const CitizeFormUploadedProps: React.FC<CitizeFormUploadedProps> = ({FormTitle, close})  => {
+  export const CitizeFormUploadedProps: React.FC<CitizeFormUploadedProps> = ({FormTitle, close, setFormToCheck})  => {
+      
+    return <NotificationFullSizeWrapper>
+        <LayoutSection className="content">
+          <div className="header">
+            <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+            <span className="flex-1"></span>
+            <span className="close" onClick={()=>close("home")}><AiOutlineClose fontSize={"1rem"}/></span>
+          </div>
+          <div style={{display: "flex", flexDirection:"column", justifyContent: "center", textAlign:"center", margin:" 15px 0px 15px 0px" }}>
+            <h1 style={{ color: "primary" }}>Formulario "{FormTitle}" cargado correctamente!</h1>
+          </div>
+          <LayoutStackedPanel className="mt-2">
+            <LayoutSpacer/>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+              <Button onClick={()=>{close("home"); setFormToCheck(undefined)}}>OK</Button>
+            </div>
+          </LayoutStackedPanel>
+        </LayoutSection>
+        <LayoutSpacer/>
+      </NotificationFullSizeWrapper>
+  };
+
+  interface CitizeFormCreatedProps{
+    FormTitle:string,
+    close:Function,
+  }
+  export const CitizeFormCreatedProps: React.FC<CitizeFormCreatedProps> = ({FormTitle, close, })  => {
       
     return <NotificationFullSizeWrapper>
         <LayoutSection className="content">

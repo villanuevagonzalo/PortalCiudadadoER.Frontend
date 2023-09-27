@@ -75,13 +75,11 @@ interface FormGenericData {
     useEffect(()=>{
         UpdateForms()
         UpdateCitizenForms()
-        setTimeout(() => {
-            const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
-            if (filteredProcedure){
+        const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
+        if (filteredProcedure){
                 setProcedureData(filteredProcedure);
                 setProcedureDataAttachments(filteredProcedure.getAttachments()!)
             }
-         }, 500); // espera 500ms antes de ejecutarse
         
     },[])
 
@@ -153,6 +151,8 @@ interface FormGenericData {
 
     const renderFormComponent = () => {
         if (formToComplete && procedureData) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
             return (
                 <CiudadanoFormElement form={formToComplete} procedureData={procedureData} close={setRender} />
             );
@@ -164,6 +164,8 @@ interface FormGenericData {
     const renderFormToCheckComponent = () => {
 
         if (formToCheck && procedureData) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
             return (
                 <CiudadanoFormToCheckElement form={formToCheck} procedureData={procedureData} setFormToCheck={setFormToCheck} close={setRender} />
             );

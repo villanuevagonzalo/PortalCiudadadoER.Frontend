@@ -16,7 +16,7 @@ const ContextValues = () => {
 
   const AxiosCiudadanoProcedureAPI = new CiudadanoProcedureAPI();
   const [ciudadanoProcedures, setCiudadanoProcedures] = useState<ProcedureData[]>([]);
-  const [isLoadingCiudadanoProcedure, setIsLoading] = useState<boolean>(true);
+  const [isLoadingProcedureCitizen, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
 
@@ -243,11 +243,7 @@ const ContextValues = () => {
       multimedia_id:multimedia_id
     };
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.DeleteAttachment, jsonObject, setFormState);
-    console.log(response)
-    console.log(typeof response)
-    console.log("response.data: " + response.data)
-    console.log("response.data: " + JSON.stringify(response.data))
-
+    
     if (response.data){
       if (response.data.data == multimedia_id){
         const targetProcedure = ciudadanoProcedures.find((element) => element.getId() === procedure_data_id);
@@ -282,7 +278,7 @@ const ContextValues = () => {
   }
 
   return {
-    isLoadingCiudadanoProcedure,
+    isLoadingProcedureCitizen,
     ciudadanoProcedures,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 

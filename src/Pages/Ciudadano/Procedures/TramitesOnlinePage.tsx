@@ -167,6 +167,7 @@ export const TramitesOnlinePage = () => {
       };
 
     if (render === "procedure" && procedureInstance) {
+        
         return <CiudadanoProcedureData procedureInstance={procedureInstance} backFunction={setRender} />;
     } 
     else{ 
