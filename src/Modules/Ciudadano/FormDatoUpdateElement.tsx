@@ -43,7 +43,8 @@ interface Arguments {
     const [showFormCorrectedUploaded, setShowFormCorrectedUploaded] = useState(false)
     const [showFormUploadError, setShowFormUploadError] = useState(false)
 
-    
+    const currentPath = window.location.pathname;
+    console.log('Ruta relativa actual:', currentPath);
     const checkValues = () => {
         let hasRequiredEmptyElement = false;
     

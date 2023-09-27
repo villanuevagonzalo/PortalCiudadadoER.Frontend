@@ -191,7 +191,7 @@ export const DC_Procedures_Started = () => {
                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
                 <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
                 <img
-                    src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
+                    src={`../../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
                     alt={item.getTitle()}
                     style={{ width: "64px", height: "64px" }}
                 />

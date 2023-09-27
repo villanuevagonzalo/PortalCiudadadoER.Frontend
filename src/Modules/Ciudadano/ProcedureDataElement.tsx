@@ -58,6 +58,8 @@ interface FormGenericData {
 
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
+    const currentPath = window.location.pathname;
+    
     const completarForm = (formSelected:FormInstance<ElementSchemaTypes>) => {
         setFormToComplete(formSelected)
     }
@@ -353,11 +355,19 @@ interface FormGenericData {
                 { showAttachmentMessage && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowAttachmentMessage} />)}
                 <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"row", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
                     <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
+                    {currentPath === '/dashboard/procedures/started/' ? (
                         <img
-                            src={`../../../public/ProceduresIcons/icono_${procedureInstance.getIcon()}.svg`}
-                            alt={procedureInstance.getTitle()}
-                            style={{ width: "64px", height: "64px" }}
+                        src={`../../../../public/ProceduresIcons/icono_${procedureInstance.getIcon()}.svg`}
+                        alt={procedureInstance.getTitle()}
+                        style={{ width: "64px", height: "64px" }}
                         />
+                    ) : (
+                        <img
+                        src={`../../../public/ProceduresIcons/icono_${procedureInstance.getIcon()}.svg`}
+                        alt={procedureInstance.getTitle()}
+                        style={{ width: "64px", height: "64px" }}
+                        />
+                    )}
                     </div>
                     <h1 style={{textAlign:"center"}} >{procedureInstance.getTitle()}</h1>
                 </LayoutSectionProcedureTitle>
