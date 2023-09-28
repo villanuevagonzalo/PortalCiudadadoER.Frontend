@@ -546,3 +546,32 @@ export const ProcedureSelectedDataPopUp: React.FC<ProcedureSelectedDataPopUp> = 
       <LayoutSpacer/>
     </NotificationFullSizeWrapper>);
 };
+
+
+interface NewUserLevelProps{
+  message1: string,  
+  message2: string,  
+  close:Function
+}
+
+export const NewUserLevel: React.FC<NewUserLevelProps> = ({ message1, message2, close }) => {
+  
+  return (<NotificationFullSizeWrapper>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close(false)}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <div style={{  display: "flex", flexDirection:"column", alignItems: "center", justifyContent: "left", textAlign:"left", margin:" 15px 0px 15px 0px" }}>
+          <h1>{message1}</h1>
+          <h2>{message2}</h2>      
+        </div>
+        <LayoutStackedPanel className="mt-2">
+          <LayoutSpacer/>
+              <Button style={{ width: '150px', height: '40px' }} onClick={()=>close(false)} >OK</Button>
+        </LayoutStackedPanel>
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>);
+};

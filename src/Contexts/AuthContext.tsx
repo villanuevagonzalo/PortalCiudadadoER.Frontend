@@ -38,7 +38,6 @@ const ContextValues = () => {
       expiration: new Date(DecodeToken.exp*1000)
     };
     const NewUserRol = GetLevels(isactor?[...DecodeToken.scopes,"actor_1"]:DecodeToken.scopes);
-    console.log(NewUserRol)
 
     setAuthToken(NewToken);
     setUserRol(NewUserRol);

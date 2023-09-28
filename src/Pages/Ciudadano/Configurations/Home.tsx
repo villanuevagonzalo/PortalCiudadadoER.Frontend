@@ -11,7 +11,7 @@ import { FormikFieldDummy } from "../../../Components/Forms/FormikFieldDummy";
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
 import { LayoutTitle, LayoutSection, LayoutStackedPanel, LayoutSpacer } from "../../../Components/Layout/StyledComponents";
 import { AuthContext } from "../../../Contexts/AuthContext";
-import { ILocation } from "../../../Interfaces/Data";
+import { ILocation, IUserRol } from "../../../Interfaces/Data";
 import { formGetValidations } from "../../../Interfaces/FormFields";
 import { IFormState } from "../../../Interfaces/Data";
 import { DefaultFormState } from "../../../Data/DefaultValues";
@@ -20,6 +20,8 @@ import { FormikButton } from "../../../Components/Forms/FormikButton";
 import { Button } from "../../../Components/Forms/Button";
 import { DC_Validation } from "./DC_Validation";
 import { Pages } from "../../../Routes/Pages";
+import { getLSData } from "../../../Utils/General";
+import { NewUserLevel } from "../../../Components/Forms/PopUpCards";
 
 const FormRequiredFields = [
   'Cellphone',
@@ -37,6 +39,11 @@ export const DC_Configurations = () => {
   const [ LocationsValues, setLocationsValues ] = useState< ILocation[]>([]);
   const [ FieldValues, setFieldValues ] = useState<any>(null);
   const [locations, setLocations] = useState<string>()
+  const [newLevelAlert, showNewLevelAlert] = useState(false)
+  const [message1, setMessage1] = useState <string>("") 
+  const [message2, setMessage2] = useState <string>("") 
+
+  const CurrentUserRol:IUserRol[] = getLSData('UserRol');
 
   useEffect(() => {
     if(userContact){
@@ -69,10 +76,28 @@ export const DC_Configurations = () => {
 
   },[userContact])
 
+  const checkNewLevel = (response:boolean)=>{
+    if (response){
+      if (CurrentUserRol[0].level==1){
+        setMessage1("Ha alcanzado un nuevo nivel de usuario")
+        setMessage2("Nivel 2")
+        showNewLevelAlert(true)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }else{
+        setMessage1("Datos personales modificados")
+        setMessage2("")
+        showNewLevelAlert(true)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+  }
+
   return (<>
     <LayoutTitle>
       Mi Perfil
     </LayoutTitle>
+    {newLevelAlert && <NewUserLevel close={showNewLevelAlert} message1={message1!} message2={message2!} />}
     <LayoutSection>
       <h1><BiUserCircle />Datos Personales</h1>
       <LayoutStackedPanel>
@@ -113,6 +138,7 @@ export const DC_Configurations = () => {
             address_number: values.AddressNumber,
             apartment: values.Apartment
           }, setFormState);
+          checkNewLevel(SaveDataResponse.data.success)
         }}
       ><Form autoComplete="off">
         <FormikField name="Cellphone" disabled={FormState.loading}/>
