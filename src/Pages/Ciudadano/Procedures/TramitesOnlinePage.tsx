@@ -15,7 +15,7 @@ import { ProcedureInstance } from '../../../Modules/FormElements/Class';
 import { ElementSchemaTypes } from '../../../Modules/FormElements/Types';
 import { CiudadanoProcedureData } from '../../../Modules/Ciudadano/ProcedureDataElement';
 import {UserContext} from '../../../Contexts/UserContext';
-import { getLSData } from '../../../Utils/General';
+import { abrirEnlaceExterno, getLSData } from '../../../Utils/General';
 import { CitizenProcedureLevelError, NetworkAlertPopUp } from '../../../Components/Forms/CitizenPopUpCards';
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
@@ -227,8 +227,8 @@ export const TramitesOnlinePage = () => {
 
                 <div className="text-right flex gap-4">
                 <NavigatorSpacer/> 
-                    <Button color="gray" fullwidth={false} onClick={() => ( window.open(item.getUrl()!, '_blank')  )} >+Información</Button>
-                    <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
+                {item.getUrl() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno(item.getUrl()!)}>+Información </Button>) : null} 
+                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
                 </div>
             </LayoutSection>)
             }

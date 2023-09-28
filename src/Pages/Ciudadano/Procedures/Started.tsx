@@ -14,6 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { IFormState } from "../../../Interfaces/Data";
 import { DefaultFormState } from "../../../Data/DefaultValues";
 import { Pages } from "../../../Routes/Pages";
+import { abrirEnlaceExterno } from "../../../Utils/General";
 
 const FormRequiredFields = ["Tramites"];
 
@@ -213,13 +214,15 @@ export const DC_Procedures_Started = () => {
                 )}    
               <div className="text-right flex gap-4">
                 <NavigatorSpacer />
-                <Button
-                  color="gray"
-                  fullwidth={false}
-                  onClick={() => window.open(item.getUrl()!, '_blank')}
-                >
-                  +Información
-                </Button>
+                {item.getUrl() ? (
+                  <Button
+                    color="gray"
+                    fullwidth={false}
+                    onClick={() => abrirEnlaceExterno(item.getUrl()!)}
+                  >
+                    +Información
+                  </Button>
+                ) : null}
                 <Button
                   color="secondary"
                   fullwidth={false}

@@ -125,4 +125,14 @@ export function removeHTMLTags(text:string) {
   return text.replace(/<[^>]*>/g, '');
 }
 
+export function abrirEnlaceExterno(url:string) {
+  // Verificar si la URL comienza con "http://" o "https://"
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    // Si no comienza con ninguno de los dos, agregar "https://"
+    url = "https://" + url;
+  }
+  // Abrir la URL en una nueva pestaña
+  window.open(url, '_blank');
+}
+
 export const actionData = (data:string) => JSON.parse(atob(data));
