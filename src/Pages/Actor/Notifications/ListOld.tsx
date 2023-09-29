@@ -43,7 +43,7 @@ export const DA_Notifications = () =>{
 
   useEffect(()=>{
     handleLocations();
-    GetAllNotifications()
+    //GetAllNotifications()
   },[])
 
 

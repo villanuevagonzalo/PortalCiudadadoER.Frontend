@@ -18,6 +18,8 @@ import { NotificationActorFullSize } from "../../../Components/Notifications/Act
 import { Link } from "react-router-dom";
 import { Pages } from "../../../Routes/Pages";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
+import { Button } from "../../../Components/Forms/Button";
+import { BsFileArrowDown } from "react-icons/bs";
 
 type Item = {
   title: string;
@@ -31,6 +33,7 @@ export const DA_Notifications = () =>{
   const { isLoading, errors, GetAllNotifications, actorNotifications, DeleteNotification } = useContext(NotificationsContext);
   const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
+  const [totalNotifications, setTotalNotifications] = useState <number> (0)
 
   const handleLocations = async () => {
     try {
@@ -54,7 +57,7 @@ export const DA_Notifications = () =>{
 
   useEffect(()=>{
     handleLocations();
-    GetAllNotifications()
+    GetAllNotifications(totalNotifications, setTotalNotifications)
   },[])
 
 
@@ -80,6 +83,11 @@ export const DA_Notifications = () =>{
 
     //setData(actorNotifications)
   },[actorNotifications, Location])
+
+  const getMoreNews = ()=>{
+    GetAllNotifications(totalNotifications, setTotalNotifications)
+
+  }
 
   const mcolumns = useMemo<ColumnDef<ActorTableNotification>[]>(()=>[
     {
@@ -154,7 +162,12 @@ export const DA_Notifications = () =>{
         <Spinner color='secondary' size="3rem"/><br/>
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
       </>:(actorNotifications.length > 0
-        ?<Table columns={mcolumns} data={data} />//actorNotifications.map((N: ActorNotification) => <NotificationActionCard data={N} key={N.ID} onClick={() => ShowNotification(N)} func={()=>DeleteNotification(N.ID,setFormState)} loading={FormState.loading}/>)
+        ?(<div style={{display:"flex", flexDirection:"column", width:"100%"}} >
+          <Table columns={mcolumns} data={data} />
+          <Button style={{marginTop:"15px"}} onClick={() => getMoreNews()}><BsFileArrowDown />VER MÁS</Button>
+          </div>
+
+        )
         :<LayoutSection className="items-center">
           <BiMessage size="3rem" />
           <LayoutText className='text-center mb-0'>No tienes ningun mensaje nuevo</LayoutText>

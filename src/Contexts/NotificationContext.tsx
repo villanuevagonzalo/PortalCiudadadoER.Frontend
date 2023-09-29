@@ -123,12 +123,19 @@ const ContextValues = () => {
   }
   }
 
-  const GetAllNotifications = async () => {
+  const GetAllNotifications = async (notification_rows:number, setNotificationsNumber:Function) => {
 
     setIsLoading(true)
+    /*let value=0
+    if (notification_rows!=0){
+      value=notification_rows+1
+    }*/
+    const jsonObject = {
+      notification_rows: notification_rows
+    };
     let responseAll:AxiosResponse | ResponseError | null = null;
     
-    try { responseAll = await AxiosNotificationAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    try { responseAll = await AxiosNotificationAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
 
     let notificationsData = "[]";
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
@@ -155,7 +162,9 @@ const ContextValues = () => {
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
 
 
-    setActorNotifications(Notifications);
+    console.log(JSON.stringify(Notifications))
+    setActorNotifications((prevNotifications) => [...prevNotifications, ...Notifications]);
+    setNotificationsNumber(notification_rows+21)
     setIsLoading(false);
   }
 

@@ -28,8 +28,10 @@ export class NotificationsAPI {
     })
   }
 
-  GetAll = async () => {
-    return this.baseService.get('/v0/notification/get/actor/active/news')
+  GetAll = async (params: {
+    notification_rows: number;
+  }) => {
+    return this.baseService.get('/v0/notification/get/actor/active/news',{params})
   }
   
   GetByUserNews = async () => {
