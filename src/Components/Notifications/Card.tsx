@@ -47,7 +47,7 @@ export const NotificationCardReduced: React.FC<Props> = ({data, loading=false, .
       </label>
       <h1>{data.MESSAGE_TITLE}</h1>
       <label className="footer">
-        <span className="time">{moment(data.CREATED_AT).fromNow()}</span>
+        <span className="time">{moment(data.CREATED_AT, "DD/MM/YYYY HH:mm:ss").fromNow()}</span>
         {data.ATTACHMENTS.length>0 ? <span className="attachments"><AiOutlinePaperClip/> {data.ATTACHMENTS.length} Archivos adjuntos</span>: <></>}
       </label>
     </div>

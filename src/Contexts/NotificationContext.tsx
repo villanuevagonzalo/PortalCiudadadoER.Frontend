@@ -59,13 +59,17 @@ const ContextValues = () => {
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
     else if(responseNew && responseNew.status!==204) notificationsData = responseNew.data.data.notifications;
     
-    const notificationsDataCleaned = cleanJsonString(notificationsData);
-    const notificationsObj = JSON.parse(notificationsDataCleaned);
+    const notificationsAllDataCleaned = cleanJsonString(notificationsData);
+    const notificationsAllArray = JSON.parse(notificationsAllDataCleaned);
+    
 
     let newNotificaionsIDs: number[] = [];
-    if(responseNew && responseNew.status!==204) newNotificaionsIDs = JSON.parse(notificationsDataCleaned).map((notification:Partial<Notification>)=>notification.ID);
-
-    const Notifications:CitizenNotification[] = notificationsObj.map((notification:Partial<Notification>)=>{
+    if(responseNew && responseNew.status!==204){
+      const notificationsNewDataCleaned = cleanJsonString(responseNew.data.data.notifications);
+      newNotificaionsIDs = JSON.parse(notificationsNewDataCleaned).map((notification:Partial<Notification>)=>notification.ID);
+    } 
+    
+    const Notifications:CitizenNotification[] = notificationsAllArray.map((notification:Partial<Notification>)=>{
 
       return { 
         ID: notification.ID,
