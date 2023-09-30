@@ -14,8 +14,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const NotificationCard: React.FC<Props> = ({data, loading=false, ...props}) => {
-  console.log("fecha: "+data.CREATED_AT)
-  console.log("fecha modificada: "+moment(data.CREATED_AT))
+ 
   return <NotificationCardWrapper new={data.NEW} {...props} loading={loading}>
     <div className="icon">
       {loading?<Spinner color='gray' size="1rem"/>:<AiOutlineNotification />}

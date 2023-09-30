@@ -72,7 +72,7 @@ export const DA_Notifications = () =>{
         :(N.AGE_TO==120 ? N.AGE_FROM + " <" : (N.AGE_FROM + " a " + N.AGE_TO))),
       Recipients: Recipients[N.RECIPIENTS],
       Attachments: ""+N.ATTACHMENTS.length||"-",
-      Active: N.DELETED_AT!=""?"BORRADA":moment().isBetween(moment(N.DATE_FROM), moment(N.DATE_TO))?"ACTIVA":"-",
+      Active: N.DELETED_AT!=""?"BORRADA":moment().isBetween(moment(N.DATE_FROM, "DD/MM/YYYY HH:mm:ss"), moment(N.DATE_TO, "DD/MM/YYYY HH:mm:ss"))?"ACTIVA":"-",
       Disabled: N.DELETED_AT!="",
       ALL: N
     })})
