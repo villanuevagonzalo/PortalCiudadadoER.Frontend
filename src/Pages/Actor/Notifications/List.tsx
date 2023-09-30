@@ -1,4 +1,3 @@
-
 import { AiOutlineDelete, AiOutlineOrderedList, AiOutlinePlus } from "react-icons/ai";
 import { GrFormView } from "react-icons/gr";
 import { LayoutNote, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText, LayoutTitle } from "../../../Components/Layout/StyledComponents";
@@ -20,20 +19,23 @@ import { Pages } from "../../../Routes/Pages";
 import { FormikButton } from "../../../Components/Forms/FormikButton";
 import { Button } from "../../../Components/Forms/Button";
 import { BsFileArrowDown } from "react-icons/bs";
+import { HiArrowDown } from "react-icons/hi2";
 
 type Item = {
   title: string;
   description: string;
  }
 
-
-
 export const DA_Notifications = () =>{
 
-  const { isLoading, errors, GetAllNotifications, actorNotifications, DeleteNotification } = useContext(NotificationsContext);
+  const { isLoading, GetAllNotifications, actorNotifications, DeleteNotification , gotAllActor } = useContext(NotificationsContext);
   const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
-  const [totalNotifications, setTotalNotifications] = useState <number> (0)
+  
+
+  const [ FullSizeNotification, setFullSizeNotification ] = useState<ActorNotification | null>(null);
+  const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState); 
+ // const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
 
   const handleLocations = async () => {
     try {
@@ -43,10 +45,6 @@ export const DA_Notifications = () =>{
       console.error("Error en handleLocations:", error);
     }
   }
-
-  const [ FullSizeNotification, setFullSizeNotification ] = useState<ActorNotification | null>(null);
-  const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState); 
-  const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
   
   const ShowNotification = async (N: ActorNotification) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -57,7 +55,7 @@ export const DA_Notifications = () =>{
 
   useEffect(()=>{
     handleLocations();
-    GetAllNotifications(totalNotifications, setTotalNotifications)
+    GetAllNotifications()
   },[])
 
 
@@ -85,8 +83,7 @@ export const DA_Notifications = () =>{
   },[actorNotifications, Location])
 
   const getMoreNews = ()=>{
-    GetAllNotifications(totalNotifications, setTotalNotifications)
-
+    GetAllNotifications()
   }
 
   const mcolumns = useMemo<ColumnDef<ActorTableNotification>[]>(()=>[
@@ -164,7 +161,7 @@ export const DA_Notifications = () =>{
       </>:(actorNotifications.length > 0
         ?(<div style={{display:"flex", flexDirection:"column", width:"100%"}} >
           <Table columns={mcolumns} data={data} />
-          <Button style={{marginTop:"15px"}} onClick={() => getMoreNews()}><BsFileArrowDown />VER MÁS</Button>
+         { gotAllActor ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>}
           </div>
 
         )
@@ -177,4 +174,3 @@ export const DA_Notifications = () =>{
     </LayoutSection>
   </>)
 }
-

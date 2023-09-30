@@ -25,16 +25,35 @@ const ContextValues = () => {
   const [userNotifications, setUserNotifications] = useState<CitizenNotification[]>([]);
   const [actorNotifications, setActorNotifications] = useState<ActorNotification[]>([]);
 
+  const [totalNotificationsActor, setTotalNotificationsActor] = useState <number> (0)
+  const [gotAllActor, setGotAllActor] = useState <Boolean> (false) 
+
+  const [totalNotifications, setTotalNotifications] = useState <number> (0)
+  const [gotAll, setGotAll] = useState <Boolean> (false) 
+
+  const [isUpdatingNotifications, setIsUpdatingNotifications] = useState(false); //To prevent UpdateNotifications from running twice in quick succession.
+  const [isUpdatingActorNotifications, setIsUpdatingActorNotifications] = useState(false); //To prevent UpdateNotifications from running twice in quick succession.
+
+  
   const parseAttachements = (data:string) => (data?.match(/\d+/g) || []).map((e: any) => parseInt(e)).filter((e: any) => e > 0);
 
   const UpdateNotifications = async() => {
 
+    if (isUpdatingNotifications) {
+      return;
+    }
+    setIsUpdatingNotifications(true);
     setIsLoading(true)
+
+    const jsonObject = {
+      notification_rows: totalNotifications
+    };
+
     let responseAll:AxiosResponse | ResponseError | null = null;
     let responseNew:AxiosResponse | ResponseError | null = null;
     
-    try { responseAll = await AxiosNotificationAPI.GetByUserAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    try { responseNew = await AxiosNotificationAPI.GetByUserNews(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales sin leer. Por favor, intente nuevamente mas tarde.") }
+    try { responseAll = await AxiosNotificationAPI.GetByUserAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    try { responseNew = await AxiosNotificationAPI.GetByUserNews(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales sin leer. Por favor, intente nuevamente mas tarde.") }
 
     let notificationsData = "[]";
     if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
@@ -58,7 +77,24 @@ const ContextValues = () => {
         NEW: newNotificaionsIDs.includes(notification.ID as number)
        }
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
-    setUserNotifications(Notifications);
+
+    if (Notifications.length === 0) {
+      setGotAll(true)
+    }else{
+      //elimino si hay array repetidos
+      const notificationsToAdd = Notifications.filter((notification: Partial<Notification>) => {
+        // Comprueba si el ID de la notificación actual no está presente en userNotifications
+        return !userNotifications.some((userNotification) => userNotification.ID === notification.ID);
+      });
+      console.log("esto se suma: "+JSON.stringify(notificationsToAdd))
+      console.log("esto había: "+JSON.stringify(userNotifications))
+
+      setUserNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
+      setTotalNotifications(totalNotifications+21)
+    }
+
+    //setUserNotifications(Notifications);
+    setIsUpdatingNotifications(false);
     setIsLoading(false); 
   }
 
@@ -123,16 +159,19 @@ const ContextValues = () => {
   }
   }
 
-  const GetAllNotifications = async (notification_rows:number, setNotificationsNumber:Function) => {
+  const GetAllNotifications = async () => {
 
+    if (isUpdatingActorNotifications) {
+      return;
+    }
+
+    setIsUpdatingActorNotifications(true);
     setIsLoading(true)
-    /*let value=0
-    if (notification_rows!=0){
-      value=notification_rows+1
-    }*/
+    
     const jsonObject = {
-      notification_rows: notification_rows
+      notification_rows: totalNotificationsActor
     };
+
     let responseAll:AxiosResponse | ResponseError | null = null;
     
     try { responseAll = await AxiosNotificationAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
@@ -161,10 +200,18 @@ const ContextValues = () => {
        }
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
 
+    if (Notifications.length === 0) {
+        setGotAllActor(true)
+    }else{
+        const notificationsToAdd = Notifications.filter((notification: Partial<Notification>) => {
+          // Comprueba si el ID de la notificación actual no está presente en userNotifications
+          return !actorNotifications.some((actorNotification) => actorNotification.ID === notification.ID);
+        });
 
-    console.log(JSON.stringify(Notifications))
-    setActorNotifications((prevNotifications) => [...prevNotifications, ...Notifications]);
-    setNotificationsNumber(notification_rows+21)
+        setActorNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
+        setTotalNotificationsActor(totalNotificationsActor+21)
+    }
+    setIsUpdatingActorNotifications(false);
     setIsLoading(false);
   }
 
@@ -224,6 +271,8 @@ const ContextValues = () => {
     isLoading, userNotifications, actorNotifications,
     setUserNotifications, GetScope, GetAttachments, GetScopeByID,
     CreateNotification, GetAllNotifications, DeleteNotification,
+    totalNotificationsActor, setTotalNotificationsActor, gotAllActor,
+    totalNotifications, setTotalNotifications, gotAll
   }
 }
 
