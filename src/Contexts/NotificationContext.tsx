@@ -86,9 +86,7 @@ const ContextValues = () => {
         // Comprueba si el ID de la notificación actual no está presente en userNotifications
         return !userNotifications.some((userNotification) => userNotification.ID === notification.ID);
       });
-      console.log("esto se suma: "+JSON.stringify(notificationsToAdd))
-      console.log("esto había: "+JSON.stringify(userNotifications))
-
+     
       setUserNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
       setTotalNotifications(totalNotifications+21)
     }

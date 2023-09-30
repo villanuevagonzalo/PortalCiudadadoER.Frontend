@@ -65,7 +65,7 @@ export const DA_Notifications = () =>{
     const newdata:ActorTableNotification[] = actorNotifications.map((N:ActorNotification)=>{
       return ({
       Title: stringPreview(N.MESSAGE_TITLE,30),
-      Date: moment(N.DATE_FROM).format("DD/MM/YY") + " a " + moment(N.DATE_TO).format("DD/MM/YY"),
+      Date: moment(N.DATE_FROM, "DD/MM/YYYY HH:mm:ss").format("DD/MM/YY") + " a " + moment(N.DATE_TO, "DD/MM/YYYY HH:mm:ss").format("DD/MM/YY"),
       Loc: N.LOCALITY?(LocationNameByID(Location,N.LOCALITY)):(N.DEPARTMENT?DeparmentNameByID(Location,N.DEPARTMENT):"Todos"),
       AgeRange: (N.AGE_FROM == 1
         ?(N.AGE_TO==120 ? "-" : "< " + N.AGE_TO)
