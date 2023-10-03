@@ -3,7 +3,7 @@ import { FormElement, FormElementInstance } from "../OLDTYPES";
 import { ElementPropsMap, ElementSchemaTypes, FormElementBases, HelpToken } from "../Types";
 import { ElementWrapper, BaseWrapperInfo, InputWrapper, ElementError, SelectWrapper, FileWrapper, CheckboxWrapper } from "./StyledComponents";
 import { FormWrapperInput } from "../../../Components/Forms/StyledComponents";
-import { AiOutlineCheckCircle, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiOutlineCheckCircle, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { ElementInstance, ElementSchema } from "../Class";
 import { ErrorMessage, getIn, useField, useFormikContext } from "formik";
 import { validationFunctions } from "../Validators";
@@ -36,6 +36,14 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const handleFocus = () => {
     setFocus(!focus)            
     setEmpty(field.value==='')
+  }
+
+  const [passwordType, setPasswordType] = useState(true);
+
+  const handleClick = () => {
+    if(basetype.format === 'password'){
+      setPasswordType(!passwordType)
+    }
   }
 
   /*
@@ -153,18 +161,22 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
             </div>);
           
           default:
-            return (<InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}><div>
-              <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
-              <input 
-                type={basetype.format === 'password'?(true?'password':'text'):basetype.format||""} 
-                autoFocus={props.autoFocus} 
-                {...field} 
-                onFocus={handleFocus} 
-                onBlur={handleFocus}
-                value={EI.value}
-                onInput={(e) => changeValue((e.target as HTMLInputElement).value)} 
-                />
-            </div></InputWrapper>);
+            return (
+            <InputWrapper error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty}>
+              <div>
+                <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+                <input 
+                  type={basetype.format === 'password'?(passwordType?'password':'text'):basetype.format||""} 
+                  autoFocus={props.autoFocus} 
+                  {...field} 
+                  onFocus={handleFocus} 
+                  onBlur={handleFocus}
+                  value={EI.value}
+                  onInput={(e) => changeValue((e.target as HTMLInputElement).value)} 
+                  />
+                  {basetype.format === 'password'?<div onClick={handleClick} className="FormIcon">{passwordType?<AiOutlineEye />:<AiOutlineEyeInvisible />}</div>:<></>}
+              </div>
+            </InputWrapper>);
         }
         
       case "file": EI = instance as ElementInstance<"FILE">;
