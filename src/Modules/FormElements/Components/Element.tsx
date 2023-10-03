@@ -34,7 +34,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const [instanceValue, setInstanceValue] = useState<any> (instance.getValue())
 
   const handleFocus = () => {
-   
     setFocus(!focus)            
     setEmpty(field.value==='')
   }
@@ -303,7 +302,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   useEffect(()=>{
     
     //console.log(basetype, instance)
-  
+    setFocus(false)
     },[])
   
     return (<ElementWrapper {...props}>
