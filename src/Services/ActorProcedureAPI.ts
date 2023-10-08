@@ -9,8 +9,11 @@ export class ProcedureAPI {
   }
 
 
-  GetAll = async () => {
-    return this.baseService.get('/v0/backoffice/procedures')
+  GetAll = async (params: {
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/backoffice/procedures', {params})
   }
   
 

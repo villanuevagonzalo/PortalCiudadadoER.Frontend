@@ -9,13 +9,19 @@ export class CiudadanoProcedureAPI {
   }
 
    //Get published procedures
-  GetPublished = async () => {
-    return this.baseService.get('/v0/dashboard/procedures/published')
+  GetPublished = async (params: {
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/published',{params})
   }
 
   //get all user procedures, the procedures that are in process
-  GetAll = async () => {
-    return this.baseService.get('/v0/dashboard/procedures')
+  GetAll = async (params: {
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures',{params})
   }
 
   GetByProcedureUnitId = async (params: {

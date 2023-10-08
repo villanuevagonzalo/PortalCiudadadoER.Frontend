@@ -21,9 +21,11 @@ const ContextValues = () => {
 
   const AxiosCiudadanoFormAPI = new CiudadanoFormAPI();
   const [ciudadanoFormularios, setCiudadanoFormularios] = useState<FormDataClass[]>([]);;
-  const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
+  //const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
+
+  const [isUpdatingCitizenForms, setUpdatingCitizenForms] = useState<boolean>(true);
 
   //create a form
   const SaveForm = async (procedureData:ProcedureData, newFormularioData: any, setFormState: Function) => {
@@ -126,6 +128,11 @@ const ContextValues = () => {
 
   //get complete forms list
   const UpdateCitizenForms = async() => {
+
+    if (isUpdatingCitizenForms) {
+      return;
+    }
+    setUpdatingCitizenForms(true)
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosCiudadanoFormAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
@@ -159,6 +166,7 @@ const ContextValues = () => {
         setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
       }
     }
+    setUpdatingCitizenForms(false)
     setIsLoading(false); 
   }
 
@@ -213,7 +221,7 @@ const ContextValues = () => {
   return {
     isLoadingFormCitizen,
     ciudadanoFormularios,
-    publishedFormularios,
+    //publishedFormularios,
     setCiudadanoFormularios,
     SaveForm, 
     UpdateOneForm,

@@ -15,7 +15,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { FormInstance } from "../../../../Modules/FormElements/Class";
-import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
+import { HiArrowDown, HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormUpdate } from "./Update";
 import { CopyFormPopUp, DeleteFormPopUp, FormCreateErrorPopUp } from "../../../../Components/Forms/PopUpCards";
 import { BiArrowBack, BiTrash } from "react-icons/bi";
@@ -28,7 +28,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
 
-  const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const { SaveForm, gotAllFormUnits, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -47,8 +47,10 @@ export const DA_Procedures_Forms_Home = () => {
   
   useEffect(()=>{
     
-    UpdateForms()
-
+    if(formularios.length==0){
+      UpdateForms()
+    }
+    
     const handlePopState = () => {
       setSeeOptions("home");
       setFormToCheck(undefined)
@@ -59,6 +61,11 @@ export const DA_Procedures_Forms_Home = () => {
     };
 
   },[])
+
+  const getMoreNews = () => {
+    UpdateForms()
+  }
+
 
   const handleDeleteForm = async (code:string)=> {
     const response = await DeleteOneForm(code,setFormState);
@@ -172,7 +179,11 @@ export const DA_Procedures_Forms_Home = () => {
         <br/>
         <Spinner color='secondary' size="3rem"/><br/>
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-      </>:< TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
+      </>:
+          <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
+            < TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
+            {gotAllFormUnits ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+          </div>
       }
         </LayoutActorSection>
       </>);

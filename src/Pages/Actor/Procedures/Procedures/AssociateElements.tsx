@@ -64,7 +64,11 @@ export const DA_Procedures_Associate = () => {
   useEffect(()=>{
     UpdateProcedures()
     //UpdateForms()
-    UpdatePublishedForms()
+    
+   /* if(publishedFormularios.length===0){
+      UpdatePublishedForms()
+    }*/
+    
     GetProceduresDataFromAPI()
     //GetProcedureCategories()
   },[])

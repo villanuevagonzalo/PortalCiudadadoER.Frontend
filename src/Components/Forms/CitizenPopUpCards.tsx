@@ -24,7 +24,7 @@ interface createCitizenProcedureLevelProps{
             <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
           </div>
           <div style={{display: "flex", flexDirection:"column", justifyContent: "center", textAlign:"center", margin:" 15px 0px 15px 0px" }}>
-            <h1 >El trámite {procedureTitle} requiere nivel de usuario {userLevel}!</h1>
+            <h4>Trámite {procedureTitle} requiere nivel de usuario {userLevel}</h4>
           </div>
           <LayoutStackedPanel className="mt-2">
             <LayoutSpacer/>

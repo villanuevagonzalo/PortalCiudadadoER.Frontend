@@ -35,7 +35,7 @@ const FormRequiredFields = ["Tramites"];
 export const DA_Procedures_Config = () => {
 
   const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, setProcedures, procedures , isLoadingProcedure} = useContext(ProcedureContext);
-  const { UpdateForms} = useContext(FormContext);
+  const { UpdateForms, formularios} = useContext(FormContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
@@ -50,8 +50,13 @@ export const DA_Procedures_Config = () => {
   const [filteredProcedure, setFilteredProcedure] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
 
   useEffect(()=>{
-    UpdateProcedures()
-    UpdateForms()
+    if (procedures.length==0){
+      UpdateProcedures()
+    }
+    if (formularios.length==0){
+      UpdateForms()
+    }
+    
 
     const handlePopState = () => {
       setSeeOptions("home");

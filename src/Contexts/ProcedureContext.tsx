@@ -41,6 +41,16 @@ const ContextValues = () => {
 
   const [categories, setCategories]= useState<string []>([])
 
+  const [totalActorProcedures, setTotalActorProcedures] = useState <number> (0)
+  const [gotAllActorProcedures, setGotAllActorProcedures] = useState <Boolean> (false) 
+
+  const [totalPublishedProcedures, setTotalPublishedProcedures] = useState <number> (0)
+  const [gotAllPublishedProcedures, setGotAllPublishedProcedures] = useState <Boolean> (false) 
+
+  const [isUpdatingProcedureUnit, setUpdatingProcedureUnit] = useState <Boolean> (false) 
+  const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
+
+  
   const SaveProcedure = async (procedure: ProcedureInstance<ElementSchemaTypes>, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure.getJSON(), setFormState);
 
@@ -100,10 +110,20 @@ const ContextValues = () => {
 
   const UpdateProcedures = async() => {
 
+    if (isUpdatingProcedureUnit) {
+      return;
+    }
+    setUpdatingProcedureUnit(true)
     setIsLoading(true)
+
+    const jsonObject = {
+      start_position: totalActorProcedures,
+      end_position: (totalActorProcedures+20),
+    };
+
     let responseAll:AxiosResponse | ResponseError | null = null;
     
-    try { responseAll = await AxiosProcedureAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    try { responseAll = await AxiosProcedureAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     //let forms=responseAll!.data.data; 
    // response_without_backslashes = json.loads(response.replace('\\', ''))
     
@@ -140,26 +160,45 @@ const ContextValues = () => {
               procedureAux.push(newProcedures);
       
             });   
-            setProcedures(procedureAux);
-      
+
+            if (FormsObj.length===0){
+              setGotAllActorProcedures(true)
+              
+            }else{
+              setTotalActorProcedures(totalActorProcedures+21)
+              setProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
+            }
+            
+
       } catch (error) {
         // Maneja el error si no se puede analizar el JSON
         console.error('Error al analizar el JSON:', error);
         
       }
       
-   }
-   
+   }   
+   setUpdatingProcedureUnit(false)
     setIsLoading(false); 
   }
 
 
   const UpdatePublishedProcedures = async() => {
 
+    
+    if (isUpdatingPublishedProcedures) {
+      return;
+    }
+    setUpdatingPublishedProcedures(true)
     setIsLoading(true)
+
+    const jsonObject = {
+      start_position: totalPublishedProcedures,
+      end_position: (totalPublishedProcedures+20),
+    };
+
     let responseAll:AxiosResponse | ResponseError | null = null;
     
-    try { responseAll = await AxiosCiudadanoProcedureAPI.GetPublished(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    try { responseAll = await AxiosCiudadanoProcedureAPI.GetPublished(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     //let forms=responseAll!.data.data; 
    // response_without_backslashes = json.loads(response.replace('\\', ''))
     
@@ -195,7 +234,16 @@ const ContextValues = () => {
               
                 procedureAux.push(newProcedures);
               });   
-              setProceduresPublished(procedureAux);
+              
+              if (FormsObj.length===0){
+                setGotAllPublishedProcedures(true)
+                
+              }else{
+                setTotalPublishedProcedures(totalPublishedProcedures+21)
+                setProceduresPublished(prevProcedures => [...prevProcedures, ...procedureAux]);
+  
+              }
+
         
         } catch (error) {
           // Maneja el error si no se puede analizar el JSON
@@ -204,7 +252,7 @@ const ContextValues = () => {
         }
         
     }
-   
+    setUpdatingPublishedProcedures(false)
     setIsLoading(false); 
   }
 
@@ -259,6 +307,8 @@ const ContextValues = () => {
     proceduresPublished,
     proceduresByApi,
     categories,
+    gotAllActorProcedures, 
+    gotAllPublishedProcedures,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,

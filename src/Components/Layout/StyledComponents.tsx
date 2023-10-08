@@ -727,6 +727,50 @@ export const LayoutSection = styled.div<{ }>`
   }
 `;
 
+export const LayoutSectionCentered = styled.div<{ }>`
+  background: var(--maincolor);
+  border-radius: 0.5rem;
+  border: 1px solid var(--disabled);
+  width: 100%;
+  padding: 2rem;
+  color: var(--maincolor_text);
+  text-align: center; /* Centrar el texto horizontalmente */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center; /* Centrar todo verticalmente */
+
+  & h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  & h2, & h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary_tint); /* Aplicar color a h2 y h3 */
+  }
+
+  & h4 {
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  & h1 svg {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
+  }
+
+  & button {
+    flex: 0.1;
+  }
+`;
+
+
 export const LayoutSectionProcedureTitle = styled.div<{ }>`
   background: var(--maincolor);
   border-radius:0.5rem;

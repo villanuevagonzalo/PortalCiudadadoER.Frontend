@@ -20,6 +20,7 @@ import { FormikButton } from "../../../Components/Forms/FormikButton";
 import { Button } from "../../../Components/Forms/Button";
 import { BsFileArrowDown } from "react-icons/bs";
 import { HiArrowDown } from "react-icons/hi2";
+import { RxUpdate } from "react-icons/rx";
 
 type Item = {
   title: string;
@@ -28,7 +29,7 @@ type Item = {
 
 export const DA_Notifications = () =>{
 
-  const { isLoading, GetAllNotifications, actorNotifications, DeleteNotification , gotAllActor } = useContext(NotificationsContext);
+  const { isLoading, GetAllNotifications, realoadActorNotifications, actorNotifications, DeleteNotification , gotAllActor } = useContext(NotificationsContext);
   const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
   
@@ -55,7 +56,9 @@ export const DA_Notifications = () =>{
 
   useEffect(()=>{
     handleLocations();
-    GetAllNotifications()
+    if (actorNotifications.length==0){
+      GetAllNotifications()
+    }
   },[])
 
 
@@ -84,6 +87,11 @@ export const DA_Notifications = () =>{
 
   const getMoreNews = ()=>{
     GetAllNotifications()
+  }
+
+  const ReloadAllActorNotifications  = ()=> {
+    realoadActorNotifications()
+    
   }
 
   const mcolumns = useMemo<ColumnDef<ActorTableNotification>[]>(()=>[
@@ -151,6 +159,9 @@ export const DA_Notifications = () =>{
     <LayoutSection>
       <LayoutStackedPanel>
         <LayoutSpacer/>
+        <Button color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() => ReloadAllActorNotifications()} >
+                {isLoading ? <Spinner /> : "Actualizar"}<RxUpdate/>
+              </Button>
         <Link to={Pages.DA_NOTIFICATIONS_NEW}><FormikButton>Nuevo<AiOutlinePlus/></FormikButton></Link>
       </LayoutStackedPanel>
       <h1><AiOutlineOrderedList/>Lista de Notificaciones Generales</h1>

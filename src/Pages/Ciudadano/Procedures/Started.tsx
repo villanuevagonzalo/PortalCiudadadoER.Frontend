@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { LayoutSection, LayoutTitle } from "../../../Components/Layout/StyledComponents"
+import { LayoutSection, LayoutSectionCentered, LayoutTitle } from "../../../Components/Layout/StyledComponents"
 import { CiudadanoProcedureContext } from "../../../Contexts/CiudadanoProcedureContext";
 import { Form, Formik } from 'formik';
 import { FormikSearch } from "../../../Components/Forms/FormikSearch";
@@ -15,6 +15,7 @@ import { IFormState } from "../../../Interfaces/Data";
 import { DefaultFormState } from "../../../Data/DefaultValues";
 import { Pages } from "../../../Routes/Pages";
 import { abrirEnlaceExterno } from "../../../Utils/General";
+import { FaClipboardList } from "react-icons/fa";
 
 const FormRequiredFields = ["Tramites"];
 
@@ -160,7 +161,8 @@ export const DC_Procedures_Started = () => {
     return (
       <>
         <LayoutTitle>Mis Trámites</LayoutTitle>
-        <LayoutSection>
+        
+        {filteredProcedures.length > 0 ? (<LayoutSection>
           <Formik
             enableReinitialize={true}
             validateOnChange={false}
@@ -183,7 +185,8 @@ export const DC_Procedures_Started = () => {
               </Form>
             )}
           </Formik>
-        </LayoutSection>
+          </LayoutSection>) : null}
+        
         {filteredProcedures.length > 0 ? (
         filteredProcedures.map((item, index) => (
           <LayoutSection key={index}>
@@ -208,7 +211,6 @@ export const DC_Procedures_Started = () => {
                     <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
                         <h1>{item.getTitle()}</h1>
                         <p>{item.getDescription()}</p>
-
                     </div>
                 </div>
                 )}    
@@ -235,12 +237,17 @@ export const DC_Procedures_Started = () => {
           </LayoutSection>
         ))
       ) : (
-        <LayoutSection>
-          <h1>No ha iniciado ningún trámite</h1>
-          <Link to={Pages.DC_PROCEDURES}>
-              <Button size={1.5}><b>SECCIÓN TRÁMITES</b></Button>
-          </Link>
-        </LayoutSection>
+        <LayoutSectionCentered>
+          <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <h1><FaClipboardList /></h1>
+            <h1>No ha iniciado ningún trámite</h1>
+            <h4>Le invitamos a explorar la sección de trámites, donde encontrará una lista completa de todos los procedimientos y gestiones disponibles</h4>
+            <Link to={Pages.DC_PROCEDURES}>
+                <Button size={1}><b>SECCIÓN TRÁMITES</b></Button>
+            </Link>
+          </div>
+
+        </LayoutSectionCentered>
 
       )}
       </>

@@ -7,7 +7,7 @@ import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { ProcedureInstance } from "../../../../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
-import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
+import { HiArrowDown, HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { BiTrash } from "react-icons/bi";
 import { Button } from "../../../../Components/Forms/Button";
 import { BackOfficesProcedureElement } from "../../../../Modules/Actor/ProcedureElement";
@@ -15,7 +15,7 @@ import { BackOfficesProcedureElement } from "../../../../Modules/Actor/Procedure
 
 export const DA_Procedures_List = () => {
 
-  const { UpdateProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
+  const { UpdateProcedures, gotAllActorProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
   const [procedureToCheck, setProcedureToCheck] = useState<ProcedureInstance<ElementSchemaTypes>>()
   const [procedureToDelete, setProcedureToDelete] = useState<ProcedureInstance<ElementSchemaTypes>>()
   const [seeOptions, setSeeOptions] = useState("home")
@@ -23,8 +23,16 @@ export const DA_Procedures_List = () => {
   const [copy, setCopy] = useState(false)
 
   useEffect(()=>{
-    UpdateProcedures()
+
+    if(procedures.length==0){
+      UpdateProcedures()
+    }
+
   },[])
+
+  const getMoreNews = () => {
+    UpdateProcedures()
+  }
 
   const renderElement = () => {
 
@@ -39,7 +47,11 @@ export const DA_Procedures_List = () => {
     return(<>
       <LayoutSection>
         Lista de tramites creados
+        <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
         < TableForms datos={procedures} setFormToCheck={setProcedureToCheck} setSeeOptions={setSeeOptions} setDeleteProcedure={setDeleteProcedure} setProcedureToDelete={setProcedureToDelete} setCopy={setCopy} />
+        {gotAllActorProcedures ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+        </div>
+        
       </LayoutSection>
     </>);
   }

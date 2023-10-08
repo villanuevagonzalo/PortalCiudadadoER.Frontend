@@ -22,20 +22,37 @@ const ContextValues = () => {
    
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
-  const [userNotifications, setUserNotifications] = useState<CitizenNotification[]>([]);
-  const [actorNotifications, setActorNotifications] = useState<ActorNotification[]>([]);
 
+  const [actorNotifications, setActorNotifications] = useState<ActorNotification[]>([]);
   const [totalNotificationsActor, setTotalNotificationsActor] = useState <number> (0)
   const [gotAllActor, setGotAllActor] = useState <Boolean> (false) 
 
+  const [userNotifications, setUserNotifications] = useState<CitizenNotification[]>([]);
   const [totalNotifications, setTotalNotifications] = useState <number> (0)
   const [gotAll, setGotAll] = useState <Boolean> (false) 
 
   const [isUpdatingNotifications, setIsUpdatingNotifications] = useState(false); //To prevent UpdateNotifications from running twice in quick succession.
   const [isUpdatingActorNotifications, setIsUpdatingActorNotifications] = useState(false); //To prevent UpdateNotifications from running twice in quick succession.
 
-  
+  const [realoadAll, setRealoadAll] = useState(false); 
+
   const parseAttachements = (data:string) => (data?.match(/\d+/g) || []).map((e: any) => parseInt(e)).filter((e: any) => e > 0);
+
+
+  useEffect(()=>{
+
+    if (actorNotifications.length==0 && totalNotificationsActor==0 && !gotAllActor){
+      GetAllNotifications()
+    }
+   
+  },[actorNotifications && totalNotificationsActor && realoadAll && gotAllActor])
+
+  const realoadActorNotifications = async() => {
+    setActorNotifications([])
+    setTotalNotificationsActor(0)
+    setGotAllActor(false) 
+    setRealoadAll(true)
+  } 
 
   const UpdateNotifications = async() => {
 
@@ -269,7 +286,7 @@ const ContextValues = () => {
   }, [isLogged])
 
   return {
-    UpdateNotifications, ReadNotification, errors,
+    UpdateNotifications, ReadNotification, realoadActorNotifications, errors,
     isLoading, userNotifications, actorNotifications,
     setUserNotifications, GetScope, GetAttachments, GetScopeByID,
     CreateNotification, GetAllNotifications, DeleteNotification,

@@ -19,6 +19,17 @@ const ContextValues = () => {
   const [isLoadingProcedureCitizen, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
+  const [totalCitizenProcedures, setTotalCitizenProcedures] = useState <number> (0)
+  const [gotAllCitizenProcedures, setGotAllCitizenProcedures] = useState <Boolean> (false) 
+
+  const [isUpdatingCiudadanoProcedures, setUpdatingCiudadanoProcedures]= useState <Boolean> (false) 
+
+  //RECURSIVITY
+  useEffect(() => {
+    if (!gotAllCitizenProcedures) {
+      UpdateCiudadanoProcedures();
+    }
+  }, [ciudadanoProcedures && totalCitizenProcedures]);
 
   const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
     
@@ -107,10 +118,20 @@ const ContextValues = () => {
 
 
   const UpdateCiudadanoProcedures = async () => {
+
+    if (isUpdatingCiudadanoProcedures) {
+      return;
+    }
+    setUpdatingCiudadanoProcedures(true)
     setIsLoading(true);
 
+    const jsonObject = {
+      start_position: totalCitizenProcedures,
+      end_position: (totalCitizenProcedures+20),
+    };
+
     try {
-        const responseAll = await AxiosCiudadanoProcedureAPI.GetAll();
+        const responseAll = await AxiosCiudadanoProcedureAPI.GetAll(jsonObject);
 
         if (responseAll && responseAll.status !== 204) {
             const FormData = responseAll.data.data;
@@ -155,12 +176,18 @@ const ContextValues = () => {
                 }
             });
 
-            setCiudadanoProcedures(procedureAux);
+            if (FormsObj.length===0){
+              setGotAllCitizenProcedures(true)
+            }else{
+              setTotalCitizenProcedures(totalCitizenProcedures+21)
+              setCiudadanoProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
+            }
+
         }
     } catch (error) {
         setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.");
     }
-
+    setUpdatingCiudadanoProcedures(false)
     setIsLoading(false);
 };
 
@@ -279,6 +306,7 @@ const ContextValues = () => {
   return {
     isLoadingProcedureCitizen,
     ciudadanoProcedures,
+    gotAllCitizenProcedures,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 
     UpdateOneCiudadanoProcedure,

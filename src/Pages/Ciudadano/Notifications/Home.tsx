@@ -29,7 +29,9 @@ export const DC_Notifications = () =>{
   const CloseNotification = () => setFullSizeNotification(null);
   
   useEffect(()=>{
-    UpdateNotifications()
+    if (userNotifications.length==0){
+      UpdateNotifications()
+    }
   },[])
 
   const getMoreNews = () => {

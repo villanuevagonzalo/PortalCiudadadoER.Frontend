@@ -20,6 +20,7 @@ import { CitizenProcedureLevelError, NetworkAlertPopUp } from '../../../Componen
 import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { Pages } from '../../../Routes/Pages';
+import { HiArrowDown } from 'react-icons/hi2';
 /*
 const dummyData = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -37,8 +38,8 @@ export const TramitesOnlinePage = () => {
     
   const navigate = useNavigate();
 
-  const { UpdatePublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
-  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+  const { UpdatePublishedProcedures, gotAllPublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
+  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , gotAllCitizenProcedures} = useContext(CiudadanoProcedureContext);
   const [filteredProcedures, setFilteredProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
   const [searchProcedure, setSearchProcedure] = useState<string>()
 
@@ -54,10 +55,20 @@ export const TramitesOnlinePage = () => {
   const [citizenLevelError, setCitizenLevelError] = useState(false)
   const isMobile = window.innerWidth <= 768; // Cambia 768 al valor deseado para tu definición de pantalla de celular
 
+  const [seeingProcedure, setSeeingProcedure] = useState(false) 
+    
+  const [chekingCitizenProcedure, setCheckingCitizenProcedure] = useState(false)
+  const [procedureIdSearched, setProcedureIdSearched] = useState<number>()
 
   useEffect(()=>{
-    UpdatePublishedProcedures()
-    UpdateCiudadanoProcedures()
+    
+    if (proceduresPublished.length===0){
+      UpdatePublishedProcedures()
+    }
+    
+    if(!gotAllCitizenProcedures){
+      UpdateCiudadanoProcedures()
+  }
     const handlePopState = () => {
         setRender("home");
         setProcedureInstance(undefined)
@@ -72,13 +83,27 @@ export const TramitesOnlinePage = () => {
   },[])
 
   useEffect(()=>{
-    if (procedureInstance!=null && procedureInstance!=undefined){
+
+    if (chekingCitizenProcedure){
+        seeProcedure(procedureIdSearched!)
+    }
+    
+  },[ciudadanoProcedures])
+
+  useEffect(()=>{
+    if (procedureInstance!=null && procedureInstance!=undefined && seeingProcedure){
         navigate("/dashboard/procedures/"); // Cambiar "/procedure" a la ruta real de tu procedimiento
         setRender("procedure")
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  },[procedureInstance])
+  },[procedureInstance && seeingProcedure])
 
+  const getMoreNews = () => {
+    UpdatePublishedProcedures()
+    if(!gotAllCitizenProcedures){
+        UpdateCiudadanoProcedures()
+    }
+  }
 
   useEffect(()=>{
     setFilteredProcedures(proceduresPublished)
@@ -107,6 +132,7 @@ export const TramitesOnlinePage = () => {
   useEffect(()=>{
     if (render=="home"){
         setProcedureInstance(undefined)
+        setSeeingProcedure(false)
     }
   },[render])
 
@@ -125,46 +151,55 @@ export const TramitesOnlinePage = () => {
   }, [proceduresPublished]);
   const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme]);
 
+    const seeProcedure = async (idBuscado: number) => {
+      // Busca el procedimiento en la lista de procedimientos publicados
+      const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
+    
+      // Si no se encuentra el procedimiento, salimos temprano
+      if (!foundProcedure) {
+        return;
+      }
+  
+       // Busca el procedimiento del ciudadano en la lista de procedimientos del ciudadano
+       const foundCiudadanoProcedure = ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === idBuscado);
+       
+       // Si no se encuentra el procedimiento del ciudadano
+      if (!foundCiudadanoProcedure) {
+          if (gotAllCitizenProcedures){
 
-    const seeProcedure = (idBuscado: number) => {
-        const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
-
-        if (foundProcedure) {
-
-            const foundCiudadanoProcedure = ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === idBuscado);
-            
-            if (!foundCiudadanoProcedure){
-                if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
-                    CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
-                    .then(response => {
-                        if (response) {
-                            setProcedureInstance(foundProcedure);
-                        }else{
-                            setShowNetworkError(true)
-                        }
-                    })
-                    .catch(error => {
-                        console.log("error: "+error)
-                        setShowNetworkError(true)
-                    });
-            }else{
-                setCitizenLevelError (true)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
-            }
-            }else{
-                if (CurrentUserRol[0].level.toString()==="3" || CurrentUserRol[0].level.toString() == foundProcedure.getCitizenLevel()?.split("_")[1]){
-                    setProcedureInstance(foundProcedure);
-                }else{
-                    setCitizenLevelError (true)
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                }
-            }
-        }
-    }
-
-    const openNewTab = (url:string) => {
-        window.open(url, '_blank');
-      };
+              if (CurrentUserRol[0].level.toString() === "3" || CurrentUserRol[0].level.toString() === foundProcedure.getCitizenLevel()?.split("_")[1]) {
+                CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
+                  .then(response => {
+                      if (response) {
+                          setProcedureInstance(foundProcedure);
+                          setSeeingProcedure(true)
+                      }else{
+                          setShowNetworkError(true)
+                      }
+                  })
+                  .catch(error => {
+                      console.log("error: "+error)
+                      setShowNetworkError(true)
+                  });
+              }else{
+                  setProcedureInstance(foundProcedure);
+                  setCitizenLevelError (true)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+              }
+          }
+      }else{
+       
+          if (CurrentUserRol[0].level.toString() === "3" || CurrentUserRol[0].level.toString() === foundProcedure.getCitizenLevel()?.split("_")[1]) {
+            setProcedureInstance(foundProcedure);
+            setSeeingProcedure(true)
+          }else{
+            setProcedureInstance(foundProcedure);
+            setCitizenLevelError (true)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }
+      }
+  }
+    
 
     if (render === "procedure" && procedureInstance) {
         
@@ -173,7 +208,7 @@ export const TramitesOnlinePage = () => {
     else{ 
 
     return(<>
-    {citizenLevelError && procedureInstance && <CitizenProcedureLevelError procedureTitle={procedureInstance.getTitle()} userLevel={procedureInstance.getCitizenLevel()?.split("_")[1]!} close={setCitizenLevelError} />}
+    {citizenLevelError && <CitizenProcedureLevelError procedureTitle={procedureInstance!.getTitle()} userLevel={procedureInstance!.getCitizenLevel()?.split("_")[1]!} close={setCitizenLevelError} />}
     {showNetworkError &&  <NetworkAlertPopUp close={setShowNetworkError} />}
     <LayoutColumns className='gap-8 FlexSwitchMobile'>
         <LayoutColumn style={{width:"100%"}} >
@@ -213,6 +248,8 @@ export const TramitesOnlinePage = () => {
                 <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
                 <h1>{item.getTitle()}</h1>
                 <p>{item.getDescription()}</p>
+                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === item.getId())?.getStatus()}</h2>
+
                 </div>
             </div>          
                 ) : (
@@ -220,6 +257,7 @@ export const TramitesOnlinePage = () => {
                     <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
                         <h1>{item.getTitle()}</h1>
                         <p>{item.getDescription()}</p>
+                        <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === item.getId())?.getStatus()}</h2>
 
                     </div>
                 </div>
@@ -232,6 +270,8 @@ export const TramitesOnlinePage = () => {
                 </div>
             </LayoutSection>)
             }
+            {gotAllPublishedProcedures ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+
         </LayoutColumn>
         {isMobile ? (
             <LayoutColumn style={{ width: '100%' }}>

@@ -17,6 +17,22 @@ const ContextValues = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
+  const [totalFormUnits, setTotalFormUnits] = useState <number> (0)
+  const [gotAllFormUnits, setGotAllFormUnits] = useState <Boolean> (false) 
+
+  const [totalFormUnitsPublished, setTotalFormUnitsPublished] = useState <number> (0)
+  const [gotAllFormUnitsPublished, setGotAllFormUnitsPublished] = useState <Boolean> (false) 
+
+  const [isUpdatingFormUnit, setUpdatingFormUnit] = useState<Boolean> (false)
+  const [isUpdatingPublishedForms, setUpdatingPublishedForms] = useState<Boolean> (false)
+
+  //RECURSIVITY
+  useEffect(() => {
+    if (!gotAllFormUnitsPublished) {
+      UpdatePublishedForms();
+    }
+  }, [publishedFormularios && totalFormUnitsPublished]);
+
   //create a form
   const SaveForm = async (newFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string, title:string) => {
     setIsLoading(true)
@@ -80,9 +96,22 @@ const ContextValues = () => {
 
   //get complete forms list
   const UpdateForms = async() => {
+
+
+    if (isUpdatingFormUnit) {
+      return;
+    }
+
+    setUpdatingFormUnit(true)
     setIsLoading(true)
+
+    const jsonObject = {
+      start_position: totalFormUnits,
+      end_position: (totalFormUnits+20),
+    };
+
     let responseAll:AxiosResponse | ResponseError | null = null;
-    try { responseAll = await AxiosFormAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    try { responseAll = await AxiosFormAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
 
     if(responseAll && responseAll.status!==204) 
     {
@@ -91,12 +120,7 @@ const ContextValues = () => {
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.map((formInstance: any) => {
         let fields: FieldsType = [];
-        /*let componentes= JSON.parse(formInstance.STATUS)
-        componentes.map((componente: any, index:number)=> {
-          const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-          aux.update((componente.properties))
-          fields.push(aux);
-          });*/
+      
           const Formulario = new FormInstance(
             formInstance.CODE,
             formInstance.TITLE,
@@ -107,16 +131,34 @@ const ContextValues = () => {
         );
         formulariosAux.push(Formulario);
       });   
-      setFormularios(formulariosAux);
+
+      if (FormsObj.length===0){
+        setGotAllFormUnits(true)
+      }else{
+        setTotalFormUnits(totalFormUnits+21)
+        setFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
+      }
     }
+    setUpdatingFormUnit(false)
     setIsLoading(false); 
   }
 
   //get complete published forms
   const UpdatePublishedForms = async() => {
+    
+    if (isUpdatingPublishedForms) {
+      return;
+    }
+    setUpdatingPublishedForms(true)
     setIsLoading(true)
+
+    const jsonObject = {
+      start_position: totalFormUnitsPublished,
+      end_position: (totalFormUnitsPublished+20),
+    };
+
     let responseAll:AxiosResponse | ResponseError | null = null;
-    try { responseAll = await AxiosFormAPI.GetPublishedAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+    try { responseAll = await AxiosFormAPI.GetPublishedAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     if(responseAll && responseAll.status!==204) 
     {
       const Form_data = responseAll.data.data;
@@ -135,8 +177,14 @@ const ContextValues = () => {
         );
         formulariosAux.push(Formulario);
       });   
-      setPublishedFormularios(formulariosAux);
+      if (FormsObj.length===0){
+        setGotAllFormUnitsPublished(true)
+      }else{
+        setTotalFormUnitsPublished(totalFormUnitsPublished+21)
+        setPublishedFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
+      }
     }
+    setUpdatingPublishedForms(false)
     setIsLoading(false); 
   }
 
@@ -237,6 +285,8 @@ const ContextValues = () => {
     isLoading,
     formularios,
     publishedFormularios,
+    gotAllFormUnits, 
+    gotAllFormUnitsPublished,
     setFormularios,
     SaveForm, 
     UpdateOneForm,

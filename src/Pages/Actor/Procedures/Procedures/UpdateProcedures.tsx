@@ -55,7 +55,11 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   const [seeOptions, setSeeOptions] = useState("home")
 
   useEffect(() => {
-    UpdatePublishedForms()
+    
+    if(publishedFormularios.length===0){
+      UpdatePublishedForms()
+    }
+
     const listaFormularios: string [] = [];
     const listaAdjuntos: string [] = [];
     procedure.getForms().map((element, index: number) => {
