@@ -11,12 +11,15 @@ import ProcedureContext from './Contexts/ProcedureContext';
 import CiudadanoFormContextProvider from './Contexts/CiudadanoFormContext';
 import CiudadanoProcedureContextProvider from './Contexts/CiudadanoProcedureContext';
 import FilesContextProvider from './Contexts/FilesContext';
+import { InactivityDetector } from './Utils/InactivityDetector';
 
 const REACTENV = process.env
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
+    <InactivityDetector />
+
       <NotificationsContextProvider>
         <ProcedureContext>
           <FormContextProvider>

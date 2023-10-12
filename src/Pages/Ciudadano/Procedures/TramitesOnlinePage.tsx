@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import { Pages } from '../../../Routes/Pages';
 import { HiArrowDown } from 'react-icons/hi2';
+import { InactivityDetector } from '../../../Utils/InactivityDetector';
 /*
 const dummyData = [
     {title: 'Solicitud Certificado de Pre-Identificación', description:'El certificado de Pre-Identificación (CPI) es un instrumento con el que podrán contar las personas actualmente indocumentadas para acceder a derechos básicos mientras el trámite de inscripción tardía de nacimiento ante el Registro Civil (ya sea por vía administrativa o por vía judicial), y posteriormente el trámite para obtener el DNI (Documento Nacional de Identidad). La tramitación del CPI no inicia el trámite de inscripción tardía de nacimiento. ...'},
@@ -210,6 +211,7 @@ export const TramitesOnlinePage = () => {
     return(<>
     {citizenLevelError && <CitizenProcedureLevelError procedureTitle={procedureInstance!.getTitle()} userLevel={procedureInstance!.getCitizenLevel()?.split("_")[1]!} close={setCitizenLevelError} />}
     {showNetworkError &&  <NetworkAlertPopUp close={setShowNetworkError} />}
+
     <LayoutColumns className='gap-8 FlexSwitchMobile'>
         <LayoutColumn style={{width:"100%"}} >
             <LayoutTitle>

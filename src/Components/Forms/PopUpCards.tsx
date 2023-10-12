@@ -1,6 +1,6 @@
 import { AiOutlineAlert, AiOutlineClose, AiOutlineNotification, AiOutlineStar, AiOutlineWarning } from "react-icons/ai"
 import { NotificationFullSizeWrapper, Spinner } from "../Elements/StyledComponents"
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents"
+import { LayoutSection, LayoutSectionCentered, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents"
 import { Button } from "./Button"
 import { ElementEditor } from "../../Modules/Actor/ElementEditor"
 import { ElementInstance, FormInstance, ProcedureInstance } from "../../Modules/FormElements/Class"
@@ -315,16 +315,19 @@ export const GenericAlertPopUp: React.FC<GenericAlertProps> = ({ genericMessage,
           <span className="flex-1"></span>
           <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
         </div>
-        <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center" }}>
-          <AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />
-          <p>{genericMessage}</p>
-        </div>
-        <LayoutStackedPanel className="mt-2">
-          <LayoutSpacer/>
-          <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-            <Button onClick={()=>close()}>OK</Button>
+        <LayoutSectionCentered className="content">
+          <div style={{  display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign:"center", marginTop:"15px" }}>
+            {/*<AiOutlineAlert fontSize={"2rem"} color="red" style={{marginBottom:"5px"}} />*/}
+            <h4>{genericMessage}</h4>
           </div>
-        </LayoutStackedPanel>
+          <LayoutStackedPanel className="mt-2">
+            <LayoutSpacer/>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
+              <Button onClick={()=>close()}>OK</Button>
+            </div>
+          </LayoutStackedPanel>
+        </LayoutSectionCentered>
+
       </LayoutSection>
       <LayoutSpacer/>
     </NotificationFullSizeWrapper>
