@@ -30,6 +30,7 @@ export const DA_Procedures_List = () => {
 
   },[])
 
+
   const getMoreNews = () => {
     UpdateProcedures()
   }

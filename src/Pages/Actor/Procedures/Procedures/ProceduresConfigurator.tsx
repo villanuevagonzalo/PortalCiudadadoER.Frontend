@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Table } from "../../../../Components/Elements/Table";
-import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText, RoundedButton } from "../../../../Components/Layout/StyledComponents";
+import { LayoutActorSection, LayoutNote, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText, RoundedButton } from "../../../../Components/Layout/StyledComponents";
 
 import { ColumnDef } from '@tanstack/react-table';
 import { FormikButton } from "../../../../Components/Forms/FormikButton";
@@ -16,7 +16,7 @@ import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { ProcedureInstance } from "../../../../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
-import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
+import { HiArrowDown, HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { BiArrowBack, BiTrash } from "react-icons/bi";
 import { Button } from "../../../../Components/Forms/Button";
 import { FormContext } from "../../../../Contexts/FormContext";
@@ -27,6 +27,7 @@ import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Form, Formik } from "formik";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
 import { BackOfficesProcedureElement } from "../../../../Modules/Actor/ProcedureElement";
+import { showMessageForSeconds } from "../../../../Utils/General";
 
 
 
@@ -34,7 +35,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Config = () => {
 
-  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, setProcedures, procedures , isLoadingProcedure} = useContext(ProcedureContext);
+  const { UpdateProcedures, gotAllActorProcedures, DeleteOneProcedure, SaveProcedure, setProcedures, procedures , isLoadingProcedure, totalActorProceduresReaded, setTotalActorProceduresReaded} = useContext(ProcedureContext);
   const { UpdateForms, formularios} = useContext(FormContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -48,6 +49,9 @@ export const DA_Procedures_Config = () => {
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
   const [searchProcedure, setSearchProcedure] = useState<string>()
   const [filteredProcedure, setFilteredProcedure] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
+
+  const [showMessage, setShowMessage] = useState(false);
+
 
   useEffect(()=>{
     if (procedures.length==0){
@@ -69,6 +73,10 @@ export const DA_Procedures_Config = () => {
 
   },[])
 
+  const getMoreNews = () => {
+    UpdateProcedures()
+  }
+
   useEffect(()=>{
     if (searchProcedure !== undefined &&  searchProcedure != '') {
       const cleanedSearchProcedure = searchProcedure.replace(/\s+\((título|temática)\)$/, '');
@@ -87,6 +95,13 @@ export const DA_Procedures_Config = () => {
         setFilteredProcedure(procedures)
       }
   },[searchProcedure])
+
+  useEffect(()=>{
+   
+    if (gotAllActorProcedures){
+      showMessageForSeconds(1, setShowMessage, setTotalActorProceduresReaded)
+    }
+  },[gotAllActorProcedures])
 
 
   useEffect(()=>{
@@ -154,8 +169,17 @@ export const DA_Procedures_Config = () => {
             <br/>
             <Spinner color='secondary' size="3rem"/><br/>
             <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-            </>:
+            </>:(
+            <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
+
             < TableForms datos={filteredProcedure} setFormToCheck={setProcedureToCheck} setSeeOptions={setSeeOptions} setDeleteProcedure={setDeleteProcedure} setProcedureToDelete={setProcedureToDelete} setCopy={setCopy} />
+            
+              {gotAllActorProcedures ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+              {(showMessage && ! totalActorProceduresReaded) && (<div><LayoutNote>No hay más tramites cargados</LayoutNote></div>)}
+
+              </div>
+
+            )
           }
         </LayoutActorSection>
       </>);

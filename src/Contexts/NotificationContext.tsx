@@ -9,7 +9,7 @@ import { fileTypes, getFileType } from "../Interfaces/FileTypes";
 import { AuthContext } from "./AuthContext";
 import { ResponseError, handleResponse } from "../Config/Axios";
 
-const NotificationsUpdateSecondsInterval = 1000
+//const NotificationsUpdateSecondsInterval = 1000
 
 function cleanJsonString(jsonString:string) {
   return jsonString.replace(/[\x00-\x1F\x7F-\x9F]/g, ''); // Elimina caracteres no válidos
@@ -25,7 +25,8 @@ const ContextValues = () => {
 
   const [actorNotifications, setActorNotifications] = useState<ActorNotification[]>([]);
   const [totalNotificationsActor, setTotalNotificationsActor] = useState <number> (0)
-  const [gotAllActor, setGotAllActor] = useState <Boolean> (false) 
+  const [gotAllActor, setGotAllActor] = useState <boolean> (false) 
+  const [totalNotificationActorReaded, setTotalNotificationsActorReaded] = useState<boolean>(false)
 
   const [userNotifications, setUserNotifications] = useState<CitizenNotification[]>([]);
   const [totalNotifications, setTotalNotifications] = useState <number> (0)
@@ -36,12 +37,13 @@ const ContextValues = () => {
 
   const [realoadAll, setRealoadAll] = useState(false); 
 
+
   const parseAttachements = (data:string) => (data?.match(/\d+/g) || []).map((e: any) => parseInt(e)).filter((e: any) => e > 0);
 
 
   useEffect(()=>{
 
-    if (actorNotifications.length==0 && totalNotificationsActor==0 && !gotAllActor){
+    if (actorNotifications.length==0 && totalNotificationsActor==0 && !gotAllActor && realoadAll){
       GetAllNotifications()
     }
    
@@ -51,6 +53,7 @@ const ContextValues = () => {
     setActorNotifications([])
     setTotalNotificationsActor(0)
     setGotAllActor(false) 
+    setTotalNotificationsActorReaded(false)
     setRealoadAll(true)
   } 
 
@@ -219,17 +222,20 @@ const ContextValues = () => {
        }
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
 
-    if (Notifications.length === 0) {
+    if (Notifications.length == 0) {
         setGotAllActor(true)
     }else{
-        const notificationsToAdd = Notifications.filter((notification: Partial<Notification>) => {
-          // Comprueba si el ID de la notificación actual no está presente en userNotifications
-          return !actorNotifications.some((actorNotification) => actorNotification.ID === notification.ID);
-        });
 
-        setActorNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
-        setTotalNotificationsActor(totalNotificationsActor+21)
+      const notificationsToAdd = Notifications.filter((notification) => {
+        // Comprueba si el ID de la notificación actual no está presente en actorNotifications
+        return !actorNotifications.some((actorNotification) => actorNotification.ID === notification.ID);
+      });
+
+      // Solo agrega notificaciones que no estén duplicadas
+      setActorNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
+    
     }
+    setTotalNotificationsActor(totalNotificationsActor+21)
     setIsUpdatingActorNotifications(false);
     setIsLoading(false);
   }
@@ -285,9 +291,12 @@ const ContextValues = () => {
     if(isLogged){ UpdateNotifications() }
   }, [isLogged])
 
+  
+
   return {
     UpdateNotifications, ReadNotification, realoadActorNotifications, errors,
     isLoading, userNotifications, actorNotifications,
+    totalNotificationActorReaded, setTotalNotificationsActorReaded,
     setUserNotifications, GetScope, GetAttachments, GetScopeByID,
     CreateNotification, GetAllNotifications, DeleteNotification,
     totalNotificationsActor, setTotalNotificationsActor, gotAllActor,

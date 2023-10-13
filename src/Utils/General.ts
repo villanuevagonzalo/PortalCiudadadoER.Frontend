@@ -135,4 +135,14 @@ export function abrirEnlaceExterno(url:string) {
   window.open(url, '_blank');
 }
 
+export const showMessageForSeconds = (seconds: number, setShowMessage:Function, setCancelMessage?:Function) => {
+  setShowMessage(true);
+  setTimeout(() => {
+    setShowMessage(false);
+    if (setCancelMessage!=undefined){
+      setCancelMessage(true)
+    }
+  }, seconds * 1000); // Convertir segundos a milisegundos
+};
+
 export const actionData = (data:string) => JSON.parse(atob(data));

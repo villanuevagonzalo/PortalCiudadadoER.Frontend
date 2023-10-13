@@ -1,7 +1,7 @@
 import { Form, Formik } from "formik";
 import { Spinner, TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
-import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
+import { LayoutActorSection, LayoutNote, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { IFormState } from "../../../../Interfaces/Data";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
@@ -22,13 +22,14 @@ import { BiArrowBack, BiTrash } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxUpdate } from "react-icons/rx";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
+import { showMessageForSeconds } from "../../../../Utils/General";
 
 
 const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
 
-  const { SaveForm, gotAllFormUnits, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const { SaveForm, gotAllFormUnits, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -43,7 +44,7 @@ export const DA_Procedures_Forms_Home = () => {
   const [copy, setCopy] = useState(false)
   const [newCode, setNewCode] = useState("")
   const [errorCarga, setErrorCarga] = useState(false)
-
+  const [showMessage, setShowMessage] = useState(false);
   
   useEffect(()=>{
     
@@ -61,6 +62,16 @@ export const DA_Procedures_Forms_Home = () => {
     };
 
   },[])
+
+
+  useEffect(()=>{
+   
+    if (gotAllFormUnits){
+      showMessageForSeconds(2, setShowMessage, setTotalFormUnitReaded)
+    }
+    
+  },[gotAllFormUnits])
+
 
   const getMoreNews = () => {
     UpdateForms()
@@ -183,6 +194,7 @@ export const DA_Procedures_Forms_Home = () => {
           <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
             < TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
             {gotAllFormUnits ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+            {(showMessage &&!totalFormUnitReaded) && (<div><LayoutNote>No hay más formularios cargados</LayoutNote></div>)}
           </div>
       }
         </LayoutActorSection>

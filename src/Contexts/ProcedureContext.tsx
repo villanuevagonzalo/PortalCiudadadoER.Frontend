@@ -43,6 +43,7 @@ const ContextValues = () => {
 
   const [totalActorProcedures, setTotalActorProcedures] = useState <number> (0)
   const [gotAllActorProcedures, setGotAllActorProcedures] = useState <Boolean> (false) 
+  const [totalActorProceduresReaded, setTotalActorProceduresReaded] = useState<boolean>(false)
 
   const [totalPublishedProcedures, setTotalPublishedProcedures] = useState <number> (0)
   const [gotAllPublishedProcedures, setGotAllPublishedProcedures] = useState <Boolean> (false) 
@@ -62,7 +63,6 @@ const ContextValues = () => {
       //aca comparo titilos pero tengo que comparar sys_exp_id
       const cleanedTitleResponse = titleResponse.replace(/\s+/g, ''); // Elimina los espacios en blanco
       const cleanedTitle = title.replace(/\s+/g, ''); // Elimina los espacios en blanco
-
 
       if (status && cleanedTitleResponse == cleanedTitle) {
 
@@ -309,6 +309,7 @@ const ContextValues = () => {
     categories,
     gotAllActorProcedures, 
     gotAllPublishedProcedures,
+    totalActorProceduresReaded, setTotalActorProceduresReaded,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,

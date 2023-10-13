@@ -19,6 +19,7 @@ const ContextValues = () => {
 
   const [totalFormUnits, setTotalFormUnits] = useState <number> (0)
   const [gotAllFormUnits, setGotAllFormUnits] = useState <Boolean> (false) 
+  const [totalFormUnitReaded, setTotalFormUnitReaded] = useState<boolean>(false)
 
   const [totalFormUnitsPublished, setTotalFormUnitsPublished] = useState <number> (0)
   const [gotAllFormUnitsPublished, setGotAllFormUnitsPublished] = useState <Boolean> (false) 
@@ -64,10 +65,8 @@ const ContextValues = () => {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       const codeResponse = responseData[0].CODE;
-      
       if (status && codeResponse == code ) {
         setFormularios(prevFormularios => prevFormularios.filter(formulario =>formulario.getCode() !== code )); //delete the old form
-     
         setFormularios(prevState => ([...prevState, updateFormulario])); //set the new form
         setIsLoading(false)
         return true;
@@ -79,48 +78,37 @@ const ContextValues = () => {
     }
     setIsLoading(false)
     return false;
-
   }
 
   //delete a form
   const DeleteOneForm = async(code:string, setFormState: Function) => {
     setIsLoading(true);
-    const jsonObject = {
-      code: code
-    };
+    const jsonObject = {code: code};
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.Delete, jsonObject, setFormState);
     setIsLoading(false);
-
     return response;
   }
 
   //get complete forms list
   const UpdateForms = async() => {
-
-
     if (isUpdatingFormUnit) {
       return;
     }
-
     setUpdatingFormUnit(true)
     setIsLoading(true)
-
     const jsonObject = {
       start_position: totalFormUnits,
       end_position: (totalFormUnits+20),
     };
-
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosFormAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-
     if(responseAll && responseAll.status!==204) 
     {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.map((formInstance: any) => {
-        let fields: FieldsType = [];
-      
+       // let fields: FieldsType = [];
           const Formulario = new FormInstance(
             formInstance.CODE,
             formInstance.TITLE,
@@ -131,7 +119,6 @@ const ContextValues = () => {
         );
         formulariosAux.push(Formulario);
       });   
-
       if (FormsObj.length===0){
         setGotAllFormUnits(true)
       }else{
@@ -145,18 +132,12 @@ const ContextValues = () => {
 
   //get complete published forms
   const UpdatePublishedForms = async() => {
-    
     if (isUpdatingPublishedForms) {
       return;
     }
     setUpdatingPublishedForms(true)
     setIsLoading(true)
-
-    const jsonObject = {
-      start_position: totalFormUnitsPublished,
-      end_position: (totalFormUnitsPublished+20),
-    };
-
+    const jsonObject = {start_position: totalFormUnitsPublished, end_position: (totalFormUnitsPublished+20),};
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosFormAPI.GetPublishedAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     if(responseAll && responseAll.status!==204) 
@@ -165,8 +146,7 @@ const ContextValues = () => {
       const FormsObj = JSON.parse(Form_data);
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.map((formInstance: any) => {
-        let fields: FieldsType = [];
-        
+        //let fields: FieldsType = [];
           const Formulario = new FormInstance(
             formInstance.CODE,
             formInstance.TITLE,
@@ -187,25 +167,18 @@ const ContextValues = () => {
     setUpdatingPublishedForms(false)
     setIsLoading(false); 
   }
-
-
   /////////////////////////////////////////////////////////
 
   const GetElementsByCode = async(code:string, setFormState: Function) => {
     setIsLoading(true);
-    const jsonObject = {
-      code: code
-    };
+    const jsonObject = {code: code};
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.GetElements, jsonObject, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const formularioEncontrado = formularios.find(form => form.getCode() === code);
-
       if (status !==204 ){
-
         if (formularioEncontrado) {
           const componentesArray = JSON.parse(response.data.data.replace(/\\"/g, '"'));
-
           componentesArray.forEach((componente:any, index:number) => {
             const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
             aux.update((componente.properties))
@@ -215,38 +188,26 @@ const ContextValues = () => {
           return true
   
         } else {
-          console.log('Formulario no encontrado');
           setIsLoading(false);
           return false;
         }
-
       }else{
-
         setIsLoading(false);
         return false;
-
       }
-      
     }
   }
 
   const GetFormByCode = async(code:string, setFormState: Function) => {
     setIsLoading(true);
-    const jsonObject = {
-      code: code
-    };
+    const jsonObject = {code: code};
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.GetByCode, jsonObject, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const formularioEncontrado = formularios.find(form => form.getCode() === code);
-
-
       if (status !==204 ){
-
         if (formularioEncontrado) {
-          
           const dato= JSON.parse(response.data.data)
-         
           if (dato[0].DESCRIPTION!=undefined){
             formularioEncontrado.setDescription(dato[0].DESCRIPTION)
           }
@@ -256,23 +217,16 @@ const ContextValues = () => {
           if (dato[0].CREATED_AT!=undefined){
             formularioEncontrado.setCreated_at(dato[0].CREATED_AT)
           }
-          
           setIsLoading(false);
           return true
-  
         } else {
-          console.log('Formulario no encontrado');
           setIsLoading(false);
           return false;
         }
-
       }else{
-
         setIsLoading(false);
         return false;
-        
       }
-      
     }
   }
   /////////////////////////////////////////////////////////
@@ -287,6 +241,7 @@ const ContextValues = () => {
     publishedFormularios,
     gotAllFormUnits, 
     gotAllFormUnitsPublished,
+    totalFormUnitReaded, setTotalFormUnitReaded,
     setFormularios,
     SaveForm, 
     UpdateOneForm,

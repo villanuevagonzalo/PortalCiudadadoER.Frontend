@@ -2,7 +2,7 @@ import { AiOutlineDelete, AiOutlineOrderedList, AiOutlinePlus } from "react-icon
 import { GrFormView } from "react-icons/gr";
 import { LayoutNote, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText, LayoutTitle } from "../../../Components/Layout/StyledComponents";
 import { NotificationsContext } from "../../../Contexts/NotificationContext";
-import { useContext, useState, useEffect, useMemo } from "react";
+import { useContext, useState, useEffect, useMemo, useRef } from "react";
 import { Spinner, TableFunctions, TableLabel } from "../../../Components/Elements/StyledComponents";
 import { BiMessage } from "react-icons/bi";
 import { NotificationActionCard } from "../../../Components/Notifications/ActorCard";
@@ -11,7 +11,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Table } from "../../../Components/Elements/Table";
 import moment from "moment";
 import { DeparmentByID, DeparmentNameByID, LocationByID, LocationNameByID, RawLocations } from "../../../Utils/Locations";
-import { stringPreview } from "../../../Utils/General";
+import { showMessageForSeconds, stringPreview } from "../../../Utils/General";
 import { DefaultFormState } from "../../../Data/DefaultValues";
 import { NotificationActorFullSize } from "../../../Components/Notifications/ActorFullSize";
 import { Link } from "react-router-dom";
@@ -29,10 +29,12 @@ type Item = {
 
 export const DA_Notifications = () =>{
 
-  const { isLoading, GetAllNotifications, realoadActorNotifications, actorNotifications, DeleteNotification , gotAllActor } = useContext(NotificationsContext);
+  const { isLoading, GetAllNotifications, realoadActorNotifications, actorNotifications, DeleteNotification , gotAllActor,     totalNotificationActorReaded, setTotalNotificationsActorReaded } = useContext(NotificationsContext);
   const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
   
+  const [showMessage, setShowMessage] = useState(false);
+
 
   const [ FullSizeNotification, setFullSizeNotification ] = useState<ActorNotification | null>(null);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState); 
@@ -62,7 +64,14 @@ export const DA_Notifications = () =>{
   },[])
 
 
+  useEffect(() => {
+    if (gotAllActor) {
+      showMessageForSeconds(1, setShowMessage, setTotalNotificationsActorReaded);
+    }
+  }, [gotAllActor]);
+
   useEffect(()=>{
+
     if(Location.length>0 && actorNotifications.length>0){
   
     const newdata:ActorTableNotification[] = actorNotifications.map((N:ActorNotification)=>{
@@ -91,7 +100,6 @@ export const DA_Notifications = () =>{
 
   const ReloadAllActorNotifications  = ()=> {
     realoadActorNotifications()
-    
   }
 
   const mcolumns = useMemo<ColumnDef<ActorTableNotification>[]>(()=>[
@@ -172,8 +180,11 @@ export const DA_Notifications = () =>{
       </>:(actorNotifications.length > 0
         ?(<div style={{display:"flex", flexDirection:"column", width:"100%"}} >
           <Table columns={mcolumns} data={data} />
-         { gotAllActor ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>}
-          </div>
+          <div style={{display:"flex", flexDirection:"column", width:"100%", marginTop:"20px"}} >
+            { gotAllActor ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>}
+            {(showMessage && !totalNotificationActorReaded) && (<div><LayoutNote>No hay más notificaciones</LayoutNote></div>)}
+         </div>
+        </div>
 
         )
         :<LayoutSection className="items-center">
