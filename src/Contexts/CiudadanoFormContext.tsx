@@ -1,10 +1,11 @@
-import { FC, SetStateAction, createContext, useEffect, useState } from "react";
+import { FC, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { ElementInstance, ElementSchema, FormDataClass, FormInstance, ProcedureData } from "../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/ActorFormAPI";
 import { CiudadanoFormAPI } from "../Services/CiudadanoFormAPI";
+import { AuthContext } from "./AuthContext";
 
 
 export type FieldsType = ElementInstance<ElementSchemaTypes>[];
@@ -24,8 +25,21 @@ const ContextValues = () => {
   //const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
   const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
+  
 
   const [isUpdatingCitizenForms, setUpdatingCitizenForms] = useState<boolean>(true);
+
+  const { isLogged } = useContext(AuthContext);
+  useEffect(() => {
+
+    if(!isLogged){
+      setCiudadanoFormularios([])
+      setIsLoading(true)
+      setErrors("")
+      setUpdatingCitizenForms(true)
+    }
+   
+  }, [isLogged]);
 
   //create a form
   const SaveForm = async (procedureData:ProcedureData, newFormularioData: any, setFormState: Function) => {

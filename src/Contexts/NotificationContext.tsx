@@ -38,6 +38,24 @@ const ContextValues = () => {
   const [realoadAll, setRealoadAll] = useState(false); 
 
 
+  useEffect(() => {
+
+    if(!isLogged){
+      setIsLoading(true);
+      setErrors("");
+      setActorNotifications([]);
+      setTotalNotificationsActor(0);
+      setGotAllActor(false);
+      setTotalNotificationsActorReaded(false)
+      setUserNotifications([]);
+      setTotalNotifications(0);
+      setGotAll(false);
+      setIsUpdatingNotifications(false);
+      setIsUpdatingActorNotifications(false);
+    }
+   
+  }, [isLogged]);
+
   const parseAttachements = (data:string) => (data?.match(/\d+/g) || []).map((e: any) => parseInt(e)).filter((e: any) => e > 0);
 
 

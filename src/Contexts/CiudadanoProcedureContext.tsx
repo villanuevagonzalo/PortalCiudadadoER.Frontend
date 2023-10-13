@@ -1,4 +1,4 @@
-import { FC, SetStateAction, createContext, useEffect, useState } from "react";
+import { FC, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { ElementInstance, ElementSchema, FormInstance, ProcedureData, ProcedureInstance } from "../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import axios, { AxiosResponse } from "axios";
@@ -6,6 +6,7 @@ import { ResponseError, handleResponse } from "../Config/Axios";
 import { CiudadanoProcedureAPI } from "../Services/CiudadanoProcedureAPI";
 import { FileBlob } from "../Interfaces/Data";
 import { getFileType } from "../Interfaces/FileTypes";
+import { AuthContext } from "./AuthContext";
 
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
@@ -24,6 +25,18 @@ const ContextValues = () => {
 
   const [isUpdatingCiudadanoProcedures, setUpdatingCiudadanoProcedures]= useState <Boolean> (false) 
 
+  const { isLogged } = useContext(AuthContext);
+  
+  useEffect(() => {
+    if(!isLogged){
+      setCiudadanoProcedures([])
+      setTotalCitizenProcedures(0)
+      setGotAllCitizenProcedures(false)
+      setUpdatingCiudadanoProcedures(false)
+    }
+   
+  }, [isLogged]);
+  
   //RECURSIVITY
   useEffect(() => {
     if (!gotAllCitizenProcedures) {

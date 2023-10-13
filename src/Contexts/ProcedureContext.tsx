@@ -1,4 +1,4 @@
-import { FC, SetStateAction, createContext, useEffect, useState } from "react";
+import { FC, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { ElementInstance, ElementSchema, FormInstance, ProcedureInstance } from "../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import axios, { AxiosResponse } from "axios";
@@ -7,6 +7,7 @@ import { FormAPI } from "../Services/ActorFormAPI";
 import { ProcedureAPI } from "../Services/ActorProcedureAPI";
 import { removeHTMLTags } from "../Utils/General";
 import { CiudadanoProcedureAPI } from "../Services/CiudadanoProcedureAPI";
+import { AuthContext } from "./AuthContext";
 
 
 export type FieldsType = ProcedureInstance<ElementSchemaTypes>[];
@@ -51,6 +52,27 @@ const ContextValues = () => {
   const [isUpdatingProcedureUnit, setUpdatingProcedureUnit] = useState <Boolean> (false) 
   const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
 
+  
+  const { isLogged } = useContext(AuthContext);
+  useEffect(() => {
+
+    if(!isLogged){
+      setProcedures([]);
+      setProceduresPublished([]);
+      setIsLoading(true);
+      setErrors("");
+      setProceduresByApi([]);
+      setCategories([]);
+      setTotalActorProcedures(0);
+      setGotAllActorProcedures(false);
+      setTotalActorProceduresReaded(false);
+      setTotalPublishedProcedures(0);
+      setGotAllPublishedProcedures(false);
+      setUpdatingProcedureUnit(false);
+      setUpdatingPublishedProcedures(false);
+    }
+   
+  }, [isLogged]);
   
   const SaveProcedure = async (procedure: ProcedureInstance<ElementSchemaTypes>, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure.getJSON(), setFormState);

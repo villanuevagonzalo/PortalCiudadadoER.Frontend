@@ -1,9 +1,10 @@
-import { FC, SetStateAction, createContext, useEffect, useState } from "react";
+import { FC, SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import { ElementInstance, ElementSchema, FormInstance } from "../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/ActorFormAPI";
+import { AuthContext } from "./AuthContext";
 
 
 export type FieldsType = ElementInstance<ElementSchemaTypes>[];
@@ -27,6 +28,24 @@ const ContextValues = () => {
   const [isUpdatingFormUnit, setUpdatingFormUnit] = useState<Boolean> (false)
   const [isUpdatingPublishedForms, setUpdatingPublishedForms] = useState<Boolean> (false)
 
+  const { isLogged } = useContext(AuthContext);
+  
+  useEffect(() => {
+    if(!isLogged){
+      setFormularios([]);
+      setPublishedFormularios([]);
+      setIsLoading(true);
+      setErrors("");
+      setTotalFormUnits(0);
+      setGotAllFormUnits(false);
+      setTotalFormUnitReaded(false);
+      setTotalFormUnitsPublished(0);
+      setGotAllFormUnitsPublished(false);
+      setUpdatingFormUnit(false);
+      setUpdatingPublishedForms(false);
+    }
+  }, [isLogged]);
+  
   //RECURSIVITY
   useEffect(() => {
     if (!gotAllFormUnitsPublished) {

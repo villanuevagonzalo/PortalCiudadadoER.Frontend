@@ -21,6 +21,7 @@ const ContextValues = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLogged, setIsLogged] = useState<boolean>(false);
+  //const [isLoggedOut, setIsLoggedOut] = useState<boolean>(false);
 
   const [authToken, setAuthToken] = useState<IToken>(DefaultToken);    
   const [userData, setUserData] = useState<IUserData>(DefaultUserData);
@@ -73,7 +74,6 @@ const ContextValues = () => {
   const Logout = () => {
     setIsLogged(false);
     setIsLoading(false);
-
     setAuthToken(DefaultToken);
     setUserData(DefaultUserData);
     setUserContact(DefaultUserContact);
@@ -223,7 +223,6 @@ const ContextValues = () => {
   useEffect(() => {
     setContextLoaded(true)
   }, [])
-
 
   return {
     isLoading, isLogged, authToken, userData, userContact, userRol, secretaria,
