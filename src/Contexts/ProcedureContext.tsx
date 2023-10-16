@@ -51,9 +51,9 @@ const ContextValues = () => {
 
   const [isUpdatingProcedureUnit, setUpdatingProcedureUnit] = useState <Boolean> (false) 
   const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
-
   
   const { isLogged } = useContext(AuthContext);
+
   useEffect(() => {
 
     if(!isLogged){
@@ -115,12 +115,10 @@ const ContextValues = () => {
       }
     }
     return false;
-
   }
 
   const DeleteOneProcedure = async(id:number, setFormState: Function) => {
     setIsLoading(true);
-
     const jsonObject = {
       id: id
     };
@@ -147,17 +145,17 @@ const ContextValues = () => {
     
     try { responseAll = await AxiosProcedureAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     //let forms=responseAll!.data.data; 
-   // response_without_backslashes = json.loads(response.replace('\\', ''))
+    //response_without_backslashes = json.loads(response.replace('\\', ''))
     
    //let FormData = "[]";
    if(responseAll && responseAll.status!==204) 
    {
-    const FormData = responseAll.data.data;
-      
-      const jsonStringWithoutEscape =removeHTMLTags(FormData);
-
+    const FormData = JSON.parse(responseAll.data.data)
+    
+     // const jsonStringWithoutEscape =removeHTMLTags(FormData);
       try {
-        const FormsObj = JSON.parse(jsonStringWithoutEscape);
+        //const FormsObj = JSON.parse(jsonStringWithoutEscape);
+        const FormsObj = FormData.data
         const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
       
             const mappedArray = FormsObj.map((procedureInstance: any) => {
@@ -190,23 +188,17 @@ const ContextValues = () => {
               setTotalActorProcedures(totalActorProcedures+21)
               setProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
             }
-            
-
       } catch (error) {
         // Maneja el error si no se puede analizar el JSON
         console.error('Error al analizar el JSON:', error);
-        
       }
-      
    }   
    setUpdatingProcedureUnit(false)
     setIsLoading(false); 
   }
 
-
   const UpdatePublishedProcedures = async() => {
 
-    
     if (isUpdatingPublishedProcedures) {
       return;
     }
@@ -222,17 +214,15 @@ const ContextValues = () => {
     
     try { responseAll = await AxiosCiudadanoProcedureAPI.GetPublished(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     //let forms=responseAll!.data.data; 
-   // response_without_backslashes = json.loads(response.replace('\\', ''))
-    
-   //let FormData = "[]";
+    //response_without_backslashes = json.loads(response.replace('\\', ''))
+    //let FormData = "[]";
    if(responseAll && responseAll.status!==204) 
     {
-      const FormData = responseAll.data.data;
-        
-        const jsonStringWithoutEscape =removeHTMLTags(FormData);
-
+      const FormData = JSON.parse(responseAll.data.data);
+      //const jsonStringWithoutEscape =removeHTMLTags(FormData.data);
+      const totalSize = FormData.count
         try {
-          const FormsObj = JSON.parse(jsonStringWithoutEscape);
+          const FormsObj = FormData.data;
           const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
         
               const mappedArray = FormsObj.map((procedureInstance: any) => {
@@ -253,32 +243,22 @@ const ContextValues = () => {
                   procedureInstance.ORF_ID,
                   procedureInstance.ID
                 );
-              
                 procedureAux.push(newProcedures);
               });   
               
               if (FormsObj.length===0){
                 setGotAllPublishedProcedures(true)
-                
               }else{
                 setTotalPublishedProcedures(totalPublishedProcedures+21)
                 setProceduresPublished(prevProcedures => [...prevProcedures, ...procedureAux]);
-  
               }
-
-        
         } catch (error) {
-          // Maneja el error si no se puede analizar el JSON
           console.error('Error al analizar el JSON:', error);
-          
-        }
-        
+        }      
     }
     setUpdatingPublishedProcedures(false)
     setIsLoading(false); 
   }
-
-
   
   //get procedures title, description and deparment
   const GetProceduresDataFromAPI = async() => {
@@ -298,7 +278,6 @@ const ContextValues = () => {
       }
     }else{
       setIsLoading(false)
-
     }
   }
 
@@ -315,7 +294,6 @@ const ContextValues = () => {
       setCategories(descriptions)
     }else{
       setIsLoading(false)
-
     }
   }
 
@@ -354,4 +332,3 @@ const ProcedureContextProvider: FC<React.PropsWithChildren<{}>> = (props) => {
 }
 
 export default ProcedureContextProvider;
-  

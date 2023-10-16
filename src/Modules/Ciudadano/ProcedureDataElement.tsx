@@ -79,9 +79,9 @@ interface FormGenericData {
         UpdateCitizenForms()
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
         if (filteredProcedure){
-                setProcedureData(filteredProcedure);
-                setProcedureDataAttachments(filteredProcedure.getAttachments()!)
-            }
+            setProcedureData(filteredProcedure);
+            setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+        }
         
     },[])
 
@@ -125,9 +125,7 @@ interface FormGenericData {
     useEffect(()=>{
         
     },[procedureData])
-    
-
-    
+        
     useEffect(()=>{
 
         if (formToComplete!=undefined && procedureData!=undefined){
@@ -150,11 +148,10 @@ interface FormGenericData {
         }
       },[render])
 
-
+    //the next two components renders the forms
     const renderFormComponent = () => {
         if (formToComplete && procedureData) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
             return (
                 <CiudadanoFormElement form={formToComplete} procedureData={procedureData} close={setRender} />
             );
@@ -167,7 +164,6 @@ interface FormGenericData {
 
         if (formToCheck && procedureData) {
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
             return (
                 <CiudadanoFormToCheckElement form={formToCheck} procedureData={procedureData} setFormToCheck={setFormToCheck} close={setRender} />
             );

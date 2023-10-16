@@ -42,6 +42,33 @@ interface Arguments {
     const [showFormCorrectedUploaded, setShowFormCorrectedUploaded] = useState(false)
     const [showFormUploadError, setShowFormUploadError] = useState(false)
 
+    const [fields , setFields ]= useState <ElementInstance<ElementSchemaTypes>[]> ([])
+    
+    useEffect(()=>{
+      console.log("veamos si hay un cambio en forms.elements: "+JSON.stringify(form.elements))
+      setFields(form.elements)
+    },[form])
+
+    useEffect(() => {
+    
+      const fetchData = async () => {
+       
+          // Luego ejecuta GetFormByCode si es necesario
+        if (form.description === undefined && form.subtitle === undefined) {
+          await GetFormByCode(form.getCode(), setFormState);
+        }
+
+        // Comienza por ejecutar GetElementsByCode
+        if (form.elements.length === 0) {
+          await GetElementsByCode(form.getCode(), setFormState);
+        } else {
+          //setFields(form.elements);
+        }
+    
+      };
+      fetchData();
+    }, []); 
+
     const checkValues = () => {
         let hasRequiredEmptyElement = false;
     
@@ -61,28 +88,6 @@ interface Arguments {
             enviar(); // Call enviar() only if there are no required empty elements
         }
     };
-
-    useEffect(() => {
-    
-        const fetchData = async () => {
-         
-            // Luego ejecuta GetFormByCode si es necesario
-          if (form.description === undefined && form.subtitle === undefined) {
-            await GetFormByCode(form.getCode(), setFormState);
-          }
-
-          // Comienza por ejecutar GetElementsByCode
-          if (form.elements.length === 0) {
-            await GetElementsByCode(form.getCode(), setFormState);
-          } else {
-            //setFields(form.elements);
-          }
-      
-          
-        };
-      
-        fetchData();
-      }, []); 
 
 
     const enviar = async () => {
@@ -152,10 +157,10 @@ interface Arguments {
                         }}
                     >
                         <Form autoComplete="off">
-                          {isLoadingFormCitizen ? (
+                          {isLoading ? (
                               <Spinner />
                             ) : (
-                              form.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                              fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                                 <div key={element.name} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
                                   <Element instance={element} className="flex-2" />
                                 </div>

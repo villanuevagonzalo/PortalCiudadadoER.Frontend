@@ -26,7 +26,7 @@ const ContextValues = () => {
   const [isUpdatingCiudadanoProcedures, setUpdatingCiudadanoProcedures]= useState <Boolean> (false) 
 
   const { isLogged } = useContext(AuthContext);
-  
+
   useEffect(() => {
     if(!isLogged){
       setCiudadanoProcedures([])
@@ -152,7 +152,8 @@ const ContextValues = () => {
             const procedureAux: SetStateAction<ProcedureData[]> = [];
 
             const FormsObj = JSON.parse(FormData);
-            const mappedArray = FormsObj.map((procedureInstance: any) => {
+            const totalSize = FormsObj.count
+            const mappedArray = FormsObj.data.map((procedureInstance: any) => {
                 try {
 
                     let parsedForms:any=[]

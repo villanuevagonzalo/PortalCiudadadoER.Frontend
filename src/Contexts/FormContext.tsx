@@ -125,8 +125,9 @@ const ContextValues = () => {
     {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
+      const totalSize = FormsObj.count
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
-      const mappedArray = FormsObj.map((formInstance: any) => {
+      const mappedArray = FormsObj.data.map((formInstance: any) => {
        // let fields: FieldsType = [];
           const Formulario = new FormInstance(
             formInstance.CODE,
@@ -163,8 +164,9 @@ const ContextValues = () => {
     {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
+      const totalSize = FormsObj.count
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
-      const mappedArray = FormsObj.map((formInstance: any) => {
+      const mappedArray = FormsObj.data.map((formInstance: any) => {
         //let fields: FieldsType = [];
           const Formulario = new FormInstance(
             formInstance.CODE,
@@ -192,6 +194,7 @@ const ContextValues = () => {
     setIsLoading(true);
     const jsonObject = {code: code};
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.GetElements, jsonObject, setFormState);
+
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const formularioEncontrado = formularios.find(form => form.getCode() === code);

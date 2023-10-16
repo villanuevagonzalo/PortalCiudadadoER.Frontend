@@ -29,7 +29,7 @@ interface Arguments {
 
   export const CiudadanoFormToCheckElement: React.FC<Arguments> = ({procedureData, form, setFormToCheck, close}) => {
     
-    const { UpdateCitizenForms, UpdateOneForm, GetCitizenElementsByCode, ciudadanoFormularios, isLoadingFormCitizen } = useContext(CiudadanoFormContext);
+    const { GetCitizenFormByCode, UpdateCitizenForms, UpdateOneForm, GetCitizenElementsByCode, ciudadanoFormularios, isLoadingFormCitizen } = useContext(CiudadanoFormContext);
     const { GetFormByCode, isLoading} = useContext(FormContext);
     const [citizenForm, setCitizenForm] = useState<FormDataClass>();
 
@@ -65,46 +65,65 @@ interface Arguments {
     };
 
     useEffect(() => {
-    
-        const fetchData = async () => {
-         
-          if (form.description === undefined && form.subtitle === undefined) {
-            await GetFormByCode(form.getCode(), setFormState);
-          }
+      const fetchData = async () => {
 
-          const elementoBuscado = ciudadanoFormularios.find((elemento) => {
-            return elemento.getFormCode() === form.getCode();
-          });
-          
-          if (elementoBuscado){
-            setCitizenForm(elementoBuscado)
+      const elementoBuscado = ciudadanoFormularios.find((elemento) => {
+        return elemento.getFormCode() == form.getCode();
+      });
+      if (elementoBuscado){
+        if (elementoBuscado.elements!=undefined && elementoBuscado.elements.length == 0){
+          await GetCitizenElementsByCode(form.getCode(), setFormState);
 
-            // Comienza por ejecutar GetElementsByCode
-          if (elementoBuscado.elements.length === 0) {
-            await GetCitizenElementsByCode(form.getCode(), setFormState);
-          } else {
-            //setFields(form.elements);
-          }
+        }
+      }else{
+        GetCitizenFormByCode(form.getCode(), setFormState)
 
-          }
-      
-          
-        };
-        
-        fetchData();
+      }
+    };
+    fetchData()
+
       }, []); 
 
 
+      useEffect(() => {
+        console.log("isLoadingFormCitizen: "+isLoadingFormCitizen)
+        }, [isLoadingFormCitizen]); 
+
     useEffect(()=>{
-      if(citizenForm){
-        setFields(citizenForm.elements);
 
-      }  
-        
-        
-    },[citizenForm])
-
+      const fetchData = async () => {
+        const elementoBuscado = ciudadanoFormularios.find((elemento) => {
+          return elemento.getFormCode() == form.getCode();
+        });
+        if (elementoBuscado){
+          setCitizenForm(elementoBuscado)
+          // Comienza por ejecutar GetElementsByCode
+         if (elementoBuscado.elements.length === 0) {
+            await GetCitizenElementsByCode(form.getCode(), setFormState);
+          } else {
+            setFields(elementoBuscado.elements);
+          }
+        }
+      };
+      
+      fetchData()
     
+    },[ciudadanoFormularios])
+
+
+    useEffect(()=>{
+
+      const elementoBuscado = ciudadanoFormularios.find((elemento) => {
+        return elemento.getFormCode() == form.getCode();
+      });
+      if (elementoBuscado) {
+        setFields(elementoBuscado.elements);
+
+      }
+
+    },[citizenForm?.elements])
+
+
     const enviar = async () => {
 
         const elements_common: FieldsType = [];
@@ -178,7 +197,7 @@ interface Arguments {
                         {isLoadingFormCitizen ? (
                           <Spinner />
                           ) : (
-                        citizenForm?.elements.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                            fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                               <Element instance={element} className="flex-2"/>
                             </div>
@@ -198,6 +217,5 @@ interface Arguments {
             </div>
         </div>
     )
-
 
   }

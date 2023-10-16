@@ -18,6 +18,12 @@ export class CiudadanoFormAPI {
     return this.baseService.get("/v0/dashboard/forms/elements", {params})
   }
 
+  GetByCode = async (params: {
+    form_code:number
+  }) => {
+    return this.baseService.get('/v0/dashboard/forms/getByPk',{params})
+  }
+
   //create a new procedure
   Create = async (params: {
     procedure_data_id: number,
