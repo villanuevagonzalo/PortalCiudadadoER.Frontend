@@ -8,7 +8,7 @@ import { ProcedureInstance } from "../../../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../../../Modules/FormElements/Types";
 import { formGetInitialValues, formGetValidations } from "../../../Interfaces/FormFields";
 import { ProcedureContext } from "../../../Contexts/ProcedureContext";
-import { NavigatorSpacer } from "../../../Components/Elements/StyledComponents";
+import { NavigatorSpacer, Spinner } from "../../../Components/Elements/StyledComponents";
 import { CiudadanoProcedureData } from "../../../Modules/Ciudadano/ProcedureDataElement";
 import { Link, useNavigate } from "react-router-dom";
 import { IFormState } from "../../../Interfaces/Data";
@@ -24,11 +24,10 @@ export const DC_Procedures_Started = () => {
 
   const navigate = useNavigate();
 
-  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , isLoadingProcedureCitizen} = useContext(CiudadanoProcedureContext);
   const { UpdatePublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
 
   const [AllProcedures, setAllProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
-
   const [filteredProcedures, setFilteredProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
   const [searchProcedure, setSearchProcedure] = useState<string>()
   const [procedureInstance, setProcedureInstance] = useState<ProcedureInstance<ElementSchemaTypes>>();
@@ -42,19 +41,20 @@ export const DC_Procedures_Started = () => {
   useEffect(()=>{
 
     if (ciudadanoProcedures != null && ciudadanoProcedures.length > 0) {
+
       const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => item.getProcedureUnitId());
       const proceduresInCiudadano = proceduresPublished.filter((item) =>
         ciudadanoProcedureUnitIds.includes(item.getId()!)
       );
 
       setAllProcedures(proceduresInCiudadano)
+      console.log("esto tiene All Procedures al cargar el componente: "+JSON.stringify(proceduresInCiudadano))
       setFilteredProcedures(proceduresInCiudadano)
 
     }else{
       UpdatePublishedProcedures()
       UpdateCiudadanoProcedures()
     }
-
     
     const handlePopState = () => {
       setRender("home");
@@ -76,10 +76,17 @@ export const DC_Procedures_Started = () => {
         ciudadanoProcedureUnitIds.includes(item.getId()!)
       );
 
-      setAllProcedures(proceduresInCiudadano)
-      setFilteredProcedures(proceduresInCiudadano)
+      if (AllProcedures.length==0){
+        console.log("esto tiene All Procedures al cargar el componente cuando proceduresPublished && ciudadanoProcedures: "+JSON.stringify(proceduresInCiudadano))
+
+        setAllProcedures(proceduresInCiudadano)
+      }
+      if (filteredProcedures.length==0){
+
+        setFilteredProcedures(proceduresInCiudadano)
+      }
   
-  }, [proceduresPublished, ciudadanoProcedures]);
+  }, [proceduresPublished && ciudadanoProcedures]);
 
   useEffect(()=>{
     if (procedureInstance!=null && procedureInstance!=undefined){
@@ -135,6 +142,7 @@ export const DC_Procedures_Started = () => {
 
 
   useEffect(()=>{
+
     if (searchProcedure !== undefined &&  searchProcedure != '') {
       const cleanedSearchProcedure = searchProcedure.replace(/\s+\((título|temática)\)$/, '');
       const filtered = AllProcedures.filter(procedures => procedures.getTitle() === cleanedSearchProcedure);
@@ -149,9 +157,12 @@ export const DC_Procedures_Started = () => {
           }
         } 
       } else {
-        setFilteredProcedures(AllProcedures)
+        if (AllProcedures.length!=0){
+          setFilteredProcedures(AllProcedures)
+        }
       }
   },[searchProcedure])
+
 
   if (render === "procedure" && procedureInstance) {
 
@@ -161,7 +172,6 @@ export const DC_Procedures_Started = () => {
     return (
       <>
         <LayoutTitle>Mis Trámites</LayoutTitle>
-        
         {filteredProcedures.length > 0 ? (<LayoutSection>
           <Formik
             enableReinitialize={true}
@@ -187,7 +197,7 @@ export const DC_Procedures_Started = () => {
           </Formik>
           </LayoutSection>) : null}
         
-        {filteredProcedures.length > 0 ? (
+        { isLoadingProcedureCitizen ? <Spinner />  :(filteredProcedures.length > 0 ? (
         filteredProcedures.map((item, index) => (
           <LayoutSection key={index}>
             <div key={index}>
@@ -249,7 +259,7 @@ export const DC_Procedures_Started = () => {
 
         </LayoutSectionCentered>
 
-      )}
+      )) }
       </>
     );
   } 
