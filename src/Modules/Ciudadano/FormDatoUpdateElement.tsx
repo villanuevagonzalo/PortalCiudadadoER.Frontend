@@ -85,10 +85,6 @@ interface Arguments {
       }, []); 
 
 
-      useEffect(() => {
-        console.log("isLoadingFormCitizen: "+isLoadingFormCitizen)
-        }, [isLoadingFormCitizen]); 
-
     useEffect(()=>{
 
       const fetchData = async () => {

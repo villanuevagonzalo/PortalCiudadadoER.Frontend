@@ -101,11 +101,8 @@ const ContextValues = () => {
         const foundFormData = ciudadanoFormularios.find(formData => formData.getProcedureDataId() == procedureData.getId());
        
         if (foundFormData){
-          console.log("entonces veamos que llega completo: "+JSON.stringify(response.data.data))
-
-          console.log("entonces veamos que llega: "+JSON.stringify(responseData[0]))
           let fields: ElementInstance<ElementSchemaTypes>[] = [];
-          let componentes= JSON.parse(responseData[0].ELEMENTS)
+          let componentes= responseData[0].ELEMENTS
           componentes.map((componente: any, index:number)=> {
                     const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]),componente.value);
                     aux.update((componente.properties))
@@ -151,7 +148,6 @@ const ContextValues = () => {
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosCiudadanoFormAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    console.log("se ejecutó lince?"+ JSON.stringify(responseAll))
 
     if(responseAll && responseAll.status!==204) 
     {

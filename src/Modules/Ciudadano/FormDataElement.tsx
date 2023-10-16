@@ -45,7 +45,6 @@ interface Arguments {
     const [fields , setFields ]= useState <ElementInstance<ElementSchemaTypes>[]> ([])
     
     useEffect(()=>{
-      console.log("veamos si hay un cambio en forms.elements: "+JSON.stringify(form.elements))
       setFields(form.elements)
     },[form])
 
