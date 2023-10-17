@@ -42,12 +42,14 @@ const ContextValues = () => {
 
   const [categories, setCategories]= useState<string []>([])
 
-  const [totalActorProcedures, setTotalActorProcedures] = useState <number> (0)
-  const [gotAllActorProcedures, setGotAllActorProcedures] = useState <Boolean> (false) 
+  const [totalActorProceduresQueried, setTotalActorProceduresQueried] = useState <number> (0)
+  const [totalActorProcedures, setTotalActorProcedures] = useState <number> (0) //total de tramites en la base de datos
+  //const [gotAllActorProcedures, setGotAllActorProcedures] = useState <Boolean> (false) 
   const [totalActorProceduresReaded, setTotalActorProceduresReaded] = useState<boolean>(false)
 
-  const [totalPublishedProcedures, setTotalPublishedProcedures] = useState <number> (0)
-  const [gotAllPublishedProcedures, setGotAllPublishedProcedures] = useState <Boolean> (false) 
+  const [totalPublishedProceduresQueried, setTotalPublishedProceduresQueried] = useState <number> (0)
+  //const [gotAllPublishedProcedures, setGotAllPublishedProcedures] = useState <Boolean> (false) 
+  const [totalPublishedProcedures, setTotalPublishedProcedures] = useState <number> (0) //total de tramites publicados en la base de datos
 
   const [isUpdatingProcedureUnit, setUpdatingProcedureUnit] = useState <Boolean> (false) 
   const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
@@ -63,11 +65,13 @@ const ContextValues = () => {
       setErrors("");
       setProceduresByApi([]);
       setCategories([]);
+      setTotalActorProceduresQueried(0);
       setTotalActorProcedures(0);
-      setGotAllActorProcedures(false);
+     // setGotAllActorProcedures(false);
       setTotalActorProceduresReaded(false);
-      setTotalPublishedProcedures(0);
-      setGotAllPublishedProcedures(false);
+      setTotalPublishedProceduresQueried(0);
+      setTotalPublishedProcedures(0)
+      //setGotAllPublishedProcedures(false);
       setUpdatingProcedureUnit(false);
       setUpdatingPublishedProcedures(false);
     }
@@ -137,8 +141,8 @@ const ContextValues = () => {
     setIsLoading(true)
 
     const jsonObject = {
-      start_position: totalActorProcedures,
-      end_position: (totalActorProcedures+20),
+      start_position: totalActorProceduresQueried,
+      end_position: (totalActorProceduresQueried+20),
     };
 
     let responseAll:AxiosResponse | ResponseError | null = null;
@@ -156,6 +160,7 @@ const ContextValues = () => {
       try {
         //const FormsObj = JSON.parse(jsonStringWithoutEscape);
         const FormsObj = FormData.data
+        setTotalActorProcedures(FormData.count)
         const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
       
             const mappedArray = FormsObj.map((procedureInstance: any) => {
@@ -182,10 +187,10 @@ const ContextValues = () => {
             });   
 
             if (FormsObj.length===0){
-              setGotAllActorProcedures(true)
+              //setGotAllActorProcedures(true)
               
             }else{
-              setTotalActorProcedures(totalActorProcedures+21)
+              setTotalActorProceduresQueried(totalActorProceduresQueried+21)
               setProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
             }
       } catch (error) {
@@ -206,8 +211,8 @@ const ContextValues = () => {
     setIsLoading(true)
 
     const jsonObject = {
-      start_position: totalPublishedProcedures,
-      end_position: (totalPublishedProcedures+20),
+      start_position: totalPublishedProceduresQueried,
+      end_position: (totalPublishedProceduresQueried+20),
     };
 
     let responseAll:AxiosResponse | ResponseError | null = null;
@@ -223,6 +228,7 @@ const ContextValues = () => {
       const totalSize = FormData.count
         try {
           const FormsObj = FormData.data;
+          setTotalPublishedProcedures(FormData.count)
           const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
         
               const mappedArray = FormsObj.map((procedureInstance: any) => {
@@ -247,9 +253,9 @@ const ContextValues = () => {
               });   
               
               if (FormsObj.length===0){
-                setGotAllPublishedProcedures(true)
+                //setGotAllPublishedProcedures(true)
               }else{
-                setTotalPublishedProcedures(totalPublishedProcedures+21)
+                setTotalPublishedProceduresQueried(totalPublishedProceduresQueried+21)
                 setProceduresPublished(prevProcedures => [...prevProcedures, ...procedureAux]);
               }
         } catch (error) {
@@ -307,9 +313,12 @@ const ContextValues = () => {
     proceduresPublished,
     proceduresByApi,
     categories,
-    gotAllActorProcedures, 
-    gotAllPublishedProcedures,
+   // gotAllActorProcedures, 
+    //gotAllPublishedProcedures,
+    totalPublishedProcedures,
     totalActorProceduresReaded, setTotalActorProceduresReaded,
+    totalActorProceduresQueried,
+    totalActorProcedures,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,

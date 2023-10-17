@@ -40,8 +40,8 @@ export const TramitesOnlinePage = () => {
     
   const navigate = useNavigate();
 
-  const { UpdatePublishedProcedures, gotAllPublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
-  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , gotAllCitizenProcedures} = useContext(CiudadanoProcedureContext);
+  const { UpdatePublishedProcedures, totalPublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
+  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , totalCitizenProcedures} = useContext(CiudadanoProcedureContext);
   const [filteredProcedures, setFilteredProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
   const [searchProcedure, setSearchProcedure] = useState<string>()
 
@@ -69,7 +69,7 @@ export const TramitesOnlinePage = () => {
       UpdatePublishedProcedures()
     }
     
-    if(!gotAllCitizenProcedures){
+    if( ciudadanoProcedures.length < totalCitizenProcedures  ){
       UpdateCiudadanoProcedures()
   }
 
@@ -106,7 +106,7 @@ export const TramitesOnlinePage = () => {
 
   const getMoreNews = () => {
     UpdatePublishedProcedures()
-    if(!gotAllCitizenProcedures){
+    if(ciudadanoProcedures.length < totalCitizenProcedures){
         UpdateCiudadanoProcedures()
     }
   }
@@ -171,7 +171,7 @@ export const TramitesOnlinePage = () => {
        
        // Si no se encuentra el procedimiento del ciudadano
       if (!foundCiudadanoProcedure) {
-          if (gotAllCitizenProcedures){
+          if (ciudadanoProcedures.length >= totalCitizenProcedures){
 
               if (CurrentUserRol[0].level.toString() === "3" || CurrentUserRol[0].level.toString() === foundProcedure.getCitizenLevel()?.split("_")[1]) {
                 CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
@@ -277,7 +277,7 @@ export const TramitesOnlinePage = () => {
                 </div>
             </LayoutSection>)
             }
-            {gotAllPublishedProcedures ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+            {(totalPublishedProcedures > proceduresPublished.length ) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
 
         </LayoutColumn>
         {isMobile ? (

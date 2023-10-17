@@ -26,7 +26,6 @@ const ContextValues = () => {
   const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
   
-
   const [isUpdatingCitizenForms, setUpdatingCitizenForms] = useState<boolean>(true);
 
   const { isLogged } = useContext(AuthContext);

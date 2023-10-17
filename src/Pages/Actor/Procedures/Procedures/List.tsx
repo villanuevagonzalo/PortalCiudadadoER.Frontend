@@ -15,7 +15,7 @@ import { BackOfficesProcedureElement } from "../../../../Modules/Actor/Procedure
 
 export const DA_Procedures_List = () => {
 
-  const { UpdateProcedures, gotAllActorProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
+  const { UpdateProcedures, totalActorProcedures, SaveProcedure, setProcedures, procedures } = useContext(ProcedureContext);
   const [procedureToCheck, setProcedureToCheck] = useState<ProcedureInstance<ElementSchemaTypes>>()
   const [procedureToDelete, setProcedureToDelete] = useState<ProcedureInstance<ElementSchemaTypes>>()
   const [seeOptions, setSeeOptions] = useState("home")
@@ -50,7 +50,7 @@ export const DA_Procedures_List = () => {
         Lista de tramites creados
         <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
         < TableForms datos={procedures} setFormToCheck={setProcedureToCheck} setSeeOptions={setSeeOptions} setDeleteProcedure={setDeleteProcedure} setProcedureToDelete={setProcedureToDelete} setCopy={setCopy} />
-        {gotAllActorProcedures ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+        {(totalActorProcedures > procedures.length) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
         </div>
         
       </LayoutSection>

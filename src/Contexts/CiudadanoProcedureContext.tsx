@@ -20,8 +20,10 @@ const ContextValues = () => {
   const [isLoadingProcedureCitizen, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
-  const [totalCitizenProcedures, setTotalCitizenProcedures] = useState <number> (0)
-  const [gotAllCitizenProcedures, setGotAllCitizenProcedures] = useState <Boolean> (false) 
+  const [totalCitizenProceduresQueried, setTotalCitizenProceduresQueried] = useState <number> (0)
+  //const [gotAllCitizenProcedures, setGotAllCitizenProcedures] = useState <Boolean> (false) 
+  const [totalCitizenProcedures, setTotalCitizenProcedures] = useState <number> (0) //cantidad de procedimientos del ciudadano en la base de datos
+
 
   const [isUpdatingCiudadanoProcedures, setUpdatingCiudadanoProcedures]= useState <Boolean> (false) 
 
@@ -30,8 +32,9 @@ const ContextValues = () => {
   useEffect(() => {
     if(!isLogged){
       setCiudadanoProcedures([])
+      setTotalCitizenProceduresQueried(0)
+      //setGotAllCitizenProcedures(false)
       setTotalCitizenProcedures(0)
-      setGotAllCitizenProcedures(false)
       setUpdatingCiudadanoProcedures(false)
     }
    
@@ -39,10 +42,10 @@ const ContextValues = () => {
   
   //RECURSIVITY
   useEffect(() => {
-    if (!gotAllCitizenProcedures) {
+    if (totalCitizenProcedures > ciudadanoProcedures.length) {
       UpdateCiudadanoProcedures();
     }
-  }, [ciudadanoProcedures && totalCitizenProcedures]);
+  }, [ciudadanoProcedures && totalCitizenProceduresQueried]);
 
   const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
     
@@ -88,6 +91,7 @@ const ContextValues = () => {
             );
 
             setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
+            setTotalCitizenProcedures(totalCitizenProcedures+1)
             return true;
           }
         }
@@ -139,8 +143,8 @@ const ContextValues = () => {
     setIsLoading(true);
 
     const jsonObject = {
-      start_position: totalCitizenProcedures,
-      end_position: (totalCitizenProcedures+20),
+      start_position: totalCitizenProceduresQueried,
+      end_position: (totalCitizenProceduresQueried+20),
     };
 
     try {
@@ -152,7 +156,8 @@ const ContextValues = () => {
             const procedureAux: SetStateAction<ProcedureData[]> = [];
 
             const FormsObj = JSON.parse(FormData);
-            const totalSize = FormsObj.count
+            
+            setTotalCitizenProcedures(FormsObj.count)
             const mappedArray = FormsObj.data.map((procedureInstance: any) => {
                 try {
 
@@ -191,9 +196,9 @@ const ContextValues = () => {
             });
 
             if (FormsObj.length===0){
-              setGotAllCitizenProcedures(true)
+              //setGotAllCitizenProcedures(true)
             }else{
-              setTotalCitizenProcedures(totalCitizenProcedures+21)
+              setTotalCitizenProceduresQueried(totalCitizenProceduresQueried+21)
               setCiudadanoProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
             }
 
@@ -320,7 +325,7 @@ const ContextValues = () => {
   return {
     isLoadingProcedureCitizen,
     ciudadanoProcedures,
-    gotAllCitizenProcedures,
+    totalCitizenProcedures,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 
     UpdateOneCiudadanoProcedure,

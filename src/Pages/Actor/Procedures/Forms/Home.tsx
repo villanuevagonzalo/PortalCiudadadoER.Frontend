@@ -29,7 +29,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
 
-  const { SaveForm, gotAllFormUnits, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
+  const { SaveForm, UpdateForms , setFormularios, formularios, totalFormUnits, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -45,6 +45,7 @@ export const DA_Procedures_Forms_Home = () => {
   const [newCode, setNewCode] = useState("")
   const [errorCarga, setErrorCarga] = useState(false)
   const [showMessage, setShowMessage] = useState(false);
+
   
   useEffect(()=>{
     
@@ -62,16 +63,6 @@ export const DA_Procedures_Forms_Home = () => {
     };
 
   },[])
-
-
-  useEffect(()=>{
-   
-    if (gotAllFormUnits){
-      showMessageForSeconds(2, setShowMessage, setTotalFormUnitReaded)
-    }
-    
-  },[gotAllFormUnits])
-
 
   const getMoreNews = () => {
     UpdateForms()
@@ -193,7 +184,7 @@ export const DA_Procedures_Forms_Home = () => {
       </>:
           <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
             < TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
-            {gotAllFormUnits ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+            {(totalFormUnits > formularios.length) ?  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null } 
             {(showMessage &&!totalFormUnitReaded) && (<div><LayoutNote>No hay más formularios cargados</LayoutNote></div>)}
           </div>
       }

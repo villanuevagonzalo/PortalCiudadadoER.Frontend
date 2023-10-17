@@ -24,7 +24,7 @@ export const DC_Procedures_Started = () => {
 
   const navigate = useNavigate();
 
-  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , isLoadingProcedureCitizen} = useContext(CiudadanoProcedureContext);
+  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
   const { UpdatePublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
 
   const [AllProcedures, setAllProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
@@ -197,7 +197,7 @@ export const DC_Procedures_Started = () => {
           </Formik>
           </LayoutSection>) : null}
         
-        { isLoadingProcedureCitizen ? <Spinner />  :(filteredProcedures.length > 0 ? (
+        { isLoadingProcedure ? <Spinner />  :(filteredProcedures.length > 0 ? (
         filteredProcedures.map((item, index) => (
           <LayoutSection key={index}>
             <div key={index}>

@@ -18,12 +18,15 @@ const ContextValues = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
 
-  const [totalFormUnits, setTotalFormUnits] = useState <number> (0)
-  const [gotAllFormUnits, setGotAllFormUnits] = useState <Boolean> (false) 
+  const [totalFormUnitsQueried, setTotalFormUnitsQueried] = useState <number> (0)
+  const [totalFormUnits, setTotalFormUnits] = useState <number> (0) //total de fomularios en la base de datos
+
+  //const [gotAllFormUnits, setGotAllFormUnits] = useState <Boolean> (false) 
   const [totalFormUnitReaded, setTotalFormUnitReaded] = useState<boolean>(false)
 
-  const [totalFormUnitsPublished, setTotalFormUnitsPublished] = useState <number> (0)
-  const [gotAllFormUnitsPublished, setGotAllFormUnitsPublished] = useState <Boolean> (false) 
+  const [totalFormUnitsPublishedQueried, setTotalFormUnitsPublishedQueried] = useState <number> (0)
+  //const [gotAllFormUnitsPublished, setGotAllFormUnitsPublished] = useState <Boolean> (false) 
+  const [totalFormUnitsPublished, setTotalFormUnitsPublished] = useState <number> (0) //total de fomularios publicados en la base de datos
 
   const [isUpdatingFormUnit, setUpdatingFormUnit] = useState<Boolean> (false)
   const [isUpdatingPublishedForms, setUpdatingPublishedForms] = useState<Boolean> (false)
@@ -36,11 +39,11 @@ const ContextValues = () => {
       setPublishedFormularios([]);
       setIsLoading(true);
       setErrors("");
-      setTotalFormUnits(0);
-      setGotAllFormUnits(false);
+      setTotalFormUnitsQueried(0);
+      //setGotAllFormUnits(false);
       setTotalFormUnitReaded(false);
-      setTotalFormUnitsPublished(0);
-      setGotAllFormUnitsPublished(false);
+      setTotalFormUnitsPublishedQueried(0);
+      //setGotAllFormUnitsPublished(false);
       setUpdatingFormUnit(false);
       setUpdatingPublishedForms(false);
     }
@@ -48,10 +51,10 @@ const ContextValues = () => {
   
   //RECURSIVITY
   useEffect(() => {
-    if (!gotAllFormUnitsPublished) {
+    if (totalFormUnitsPublished >publishedFormularios.length ) {
       UpdatePublishedForms();
     }
-  }, [publishedFormularios && totalFormUnitsPublished]);
+  }, [publishedFormularios && totalFormUnitsPublishedQueried]);
 
   //create a form
   const SaveForm = async (newFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string, title:string) => {
@@ -116,8 +119,8 @@ const ContextValues = () => {
     setUpdatingFormUnit(true)
     setIsLoading(true)
     const jsonObject = {
-      start_position: totalFormUnits,
-      end_position: (totalFormUnits+20),
+      start_position: totalFormUnitsQueried,
+      end_position: (totalFormUnitsQueried+20),
     };
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosFormAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
@@ -125,7 +128,8 @@ const ContextValues = () => {
     {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
-      const totalSize = FormsObj.count
+      //const totalSize = FormsObj.count
+      setTotalFormUnits(FormsObj.count)
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.data.map((formInstance: any) => {
        // let fields: FieldsType = [];
@@ -140,9 +144,9 @@ const ContextValues = () => {
         formulariosAux.push(Formulario);
       });   
       if (FormsObj.length===0){
-        setGotAllFormUnits(true)
+        //setGotAllFormUnits(true)
       }else{
-        setTotalFormUnits(totalFormUnits+21)
+        setTotalFormUnitsQueried(totalFormUnitsQueried+21)
         setFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
       }
     }
@@ -157,14 +161,15 @@ const ContextValues = () => {
     }
     setUpdatingPublishedForms(true)
     setIsLoading(true)
-    const jsonObject = {start_position: totalFormUnitsPublished, end_position: (totalFormUnitsPublished+20),};
+    const jsonObject = {start_position: totalFormUnitsPublishedQueried, end_position: (totalFormUnitsPublishedQueried+20),};
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosFormAPI.GetPublishedAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     if(responseAll && responseAll.status!==204) 
     {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
-      const totalSize = FormsObj.count
+     // const totalSize = FormsObj.count
+      setTotalFormUnitsPublished(FormsObj.count)
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.data.map((formInstance: any) => {
         //let fields: FieldsType = [];
@@ -179,9 +184,9 @@ const ContextValues = () => {
         formulariosAux.push(Formulario);
       });   
       if (FormsObj.length===0){
-        setGotAllFormUnitsPublished(true)
+       // setGotAllFormUnitsPublished(true)
       }else{
-        setTotalFormUnitsPublished(totalFormUnitsPublished+21)
+        setTotalFormUnitsPublishedQueried(totalFormUnitsPublishedQueried+21)
         setPublishedFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
       }
     }
@@ -261,8 +266,10 @@ const ContextValues = () => {
     isLoading,
     formularios,
     publishedFormularios,
-    gotAllFormUnits, 
-    gotAllFormUnitsPublished,
+    totalFormUnits,
+    //gotAllFormUnits, 
+    //gotAllFormUnitsPublished,
+    totalFormUnitsPublished,
     totalFormUnitReaded, setTotalFormUnitReaded,
     setFormularios,
     SaveForm, 
