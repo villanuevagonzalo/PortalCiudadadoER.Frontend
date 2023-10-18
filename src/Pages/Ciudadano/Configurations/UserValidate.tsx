@@ -29,11 +29,11 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
       response = await AFIP_getURL({
         cuil: userData.cuil
       }, setFormState);
-    } else if(type==='miargentina'){
+    } else if(type==='Mi Argentina'){
       response = await MIARGENTINA_getURL({
         cuil: userData.cuil
       }, setFormState);
-    } else if(type==='anses') {
+    } else if(type==='ANSES') {
       response = await ANSES_getURL({
         cuil: userData.cuil
       }, setFormState);

@@ -119,6 +119,16 @@ export const RawPages:RawPagesProps = {
             label: 'Mi Argentina',
             element: <DC_UserValidate type="Mi Argentina" />
           },
+          ANSES:{
+            path: 'anses',
+            label: 'ANSES',
+            element: <DC_UserValidate type="ANSES" />
+          },
+          RENAPER:{
+            path: 'renaper',
+            label: 'RENAPER',
+            element: <DC_UserValidate type="RENAPER" />
+          },
         }
       },
       EMAILMODIFY:{
