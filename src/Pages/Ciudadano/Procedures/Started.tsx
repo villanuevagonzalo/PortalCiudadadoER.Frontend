@@ -48,7 +48,6 @@ export const DC_Procedures_Started = () => {
       );
 
       setAllProcedures(proceduresInCiudadano)
-      console.log("esto tiene All Procedures al cargar el componente: "+JSON.stringify(proceduresInCiudadano))
       setFilteredProcedures(proceduresInCiudadano)
 
     }else{
@@ -226,11 +225,11 @@ export const DC_Procedures_Started = () => {
                 )}    
               <div className="text-right flex gap-4">
                 <NavigatorSpacer />
-                {item.getUrl() ? (
+                {item.getId() ? (
                   <Button
                     color="gray"
                     fullwidth={false}
-                    onClick={() => abrirEnlaceExterno(item.getUrl()!)}
+                    onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}
                   >
                     +Información
                   </Button>

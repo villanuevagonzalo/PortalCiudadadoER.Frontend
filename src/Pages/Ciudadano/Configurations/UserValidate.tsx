@@ -24,6 +24,7 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   
   async function getValidationLink( type = 'AFIP' ) {
+    console.log("this is the type: "+type)
     let response: AxiosResponse | null;
     if(type==='AFIP'){
       response = await AFIP_getURL({
@@ -54,12 +55,12 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
-    } else if(type==='miargentina'){
+    } else if(type==='Mi Argentina'){
       response = await MIARGENTINA_checkToken({
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
-    } else if(type==='anses'){
+    } else if(type==='ANSES'){
       response = await ANSES_checkToken({
         'cuil':userData.cuil,
         'code':SearchParams.values.code

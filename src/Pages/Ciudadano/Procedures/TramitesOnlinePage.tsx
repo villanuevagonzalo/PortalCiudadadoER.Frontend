@@ -272,7 +272,7 @@ export const TramitesOnlinePage = () => {
 
                 <div className="text-right flex gap-4">
                 <NavigatorSpacer/> 
-                {item.getUrl() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno(item.getUrl()!)}>+Información </Button>) : null} 
+                {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
                 <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
                 </div>
             </LayoutSection>)
