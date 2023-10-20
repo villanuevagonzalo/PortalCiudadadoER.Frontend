@@ -13,12 +13,20 @@ const ContextValues = () => {
     setFileArray(prevFileArray => [...prevFileArray, ...filesToAdd]);
   };
 
+  const getFileName  = (index: number) => {
+    if (fileArray[index]){
+      return fileArray[index].name
+    }else{
+      return null
+    }
+  }
+
   const clearFileArray = () => {
     setFileArray([])
   }
 
   return {
-    fileArray, setFileArray, addFileToContext, addFilesToContext, clearFileArray
+    fileArray, setFileArray, addFileToContext, addFilesToContext, clearFileArray, getFileName
   }
 }
 

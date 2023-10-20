@@ -27,12 +27,12 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   const {addFilesToContext, setFileArray} = useContext(FilesContext)
   
   const thiserror = getIn(errors, instance.name)
-  
   const [focus, setFocus] = useState(false);
   const [empty, setEmpty] = useState(field.value==='');
 
   const [instanceValue, setInstanceValue] = useState<any> (instance.getValue())
 
+  const [newFileName, setNewFileNAme] = useState("")
   const handleFocus = () => {
     setFocus(!focus)            
     setEmpty(field.value==='')
@@ -73,7 +73,11 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
   
       // Obtén el nombre deseado del archivo
       const EI = instance as ElementInstance<"FILE">
-      const fileName = EI.properties.label;
+     // const fileName = EI.properties.label;
+     const fileName = EI.name;
+      const fileNamee = event.target.files?.[0];
+      const fileNamess = fileNamee ? fileNamee.name : "";
+      
   
       // Agrega el nombre a cada archivo en el array
       const filesWithNames = fileArray.map(file => {
@@ -85,6 +89,9 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       setFieldValue(HelpToken + instance.name, filesWithNames);
       addFilesToContext(filesWithNames);
       instance.setValue(filesWithNames);
+
+      EI.properties.label = fileNamess;
+      setNewFileNAme(fileNamess)
   
     } else {
       console.log("No files selected.");
@@ -181,7 +188,7 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         
       case "file": EI = instance as ElementInstance<"FILE">;
         return (<FileWrapper error={thiserror?true:false} focus={focus || !empty}><div>
-          <label className="text" htmlFor={EI.name}>{EI.properties.label}</label>
+          <label className="text" htmlFor={EI.name}>{EI.name}</label>
           <input type="file" id={EI.name} hidden {...field} onChange={handleFileChange} onFocus={handleFocus} onBlur={handleFocus} multiple />
           <label className="uploader" htmlFor={EI.name}>
             <div className="FormIcon"><basetype.icon /></div>

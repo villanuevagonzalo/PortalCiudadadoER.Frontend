@@ -587,7 +587,17 @@ export class ProcedureData {
     return this.multimedia_id;
   }
 
-  setAttachments(attachments: string[]) {
+
+  setAttachments(attachmentName: string) {
+    // Verificar si 'multimedia_id' es undefined o null y crear un nuevo arreglo si es necesario
+    if (!this.attachments) {
+      this.attachments = [];
+    }
+    
+    this.attachments = [...this.attachments, attachmentName];
+  }
+
+  setAttachmentsArray(attachments: string[]) {
     // Verificar si 'attachments' es undefined o null y crear un nuevo arreglo si es necesario
     if (!this.attachments) {
       this.attachments = [];

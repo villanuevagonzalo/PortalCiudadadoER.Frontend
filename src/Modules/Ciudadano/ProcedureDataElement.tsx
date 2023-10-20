@@ -6,7 +6,7 @@ import {  ElementInstance, ElementSchema, FormInstance, ProcedureData, Procedure
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Button } from "../../Components/Forms/Button";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
@@ -44,7 +44,7 @@ interface FormGenericData {
     const [formToComplete, setFormToComplete] = useState <FormInstance<ElementSchemaTypes>> (); //Form to complete by the citizen
     const [formToCheck, setFormToCheck] = useState <FormInstance<ElementSchemaTypes>> (); // Form completed by the citizen but it can be seeing and updated
 
-    const {fileArray, clearFileArray} = useContext(FilesContext)
+    const {fileArray, clearFileArray, getFileName} = useContext(FilesContext)
     const [procedureInstanceAttachments, setProcedureInstanceAttachments] = useState <ElementInstance<ElementSchemaTypes>[]>([]) // Procedure instance attachments, this are the attachment of the procedure but it doesnt implies that the citizen uploaded it
     const [procedureDataAttachments, setProcedureDataAttachments ] = useState <string[]>([])
 
@@ -96,13 +96,15 @@ interface FormGenericData {
 
 
     useEffect(() => {
+        console.log("veamos el procedure instance123: "+JSON.stringify(ciudadanoProcedures) )
+
         if (procedureInstance) {
 
             if (procedureInstance.getAttachments().length > 0 )
             {
                 let attachmentsAux: ElementInstance<ElementSchemaTypes>[] = [];
                 const newAttachments = procedureInstance.getAttachments().map((attachment, index) => {
-                const Attachments= new ElementInstance(index.toString(),new ElementSchema('FILE',{label:attachment}), null)
+                const Attachments= new ElementInstance(attachment,new ElementSchema('FILE',{label:attachment}), null)
                 attachmentsAux.push(Attachments);
                 });
                 setProcedureInstanceAttachments(attachmentsAux);
@@ -111,8 +113,9 @@ interface FormGenericData {
       }, [procedureInstance]);
     
 
-    useEffect(()=>{
-        
+      useEffect(()=>{
+        console.log("cambio esto ciudadanoProcedures? "+JSON.stringify(procedureData))
+
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
         if (filteredProcedure){
             setProcedureData(filteredProcedure);
@@ -123,7 +126,7 @@ interface FormGenericData {
 
 
     useEffect(()=>{
-        
+        console.log("cambio esto procedureData? "+JSON.stringify(procedureData))
     },[procedureData])
         
     useEffect(()=>{
@@ -216,6 +219,8 @@ interface FormGenericData {
             const multimediaIdAtIndex = multimediaId[position];
             const response = await DeleteCiudadanoProcedureAttachment( procedureData?.getId()!, multimediaIdAtIndex, setFormState);
             if (response){
+                setProcedureDataAttachments((prevState) => prevState.filter((element) => element !== attachmentName));
+
                 setShowAttachmentMessage(true)
                 setAlertMessage ("Documento adjunto eliminado")
             }
@@ -261,8 +266,9 @@ interface FormGenericData {
 
     
     const AttachmentSection: React.FC<{ procedureInstance: ProcedureInstance<ElementSchemaTypes>; procedureData: ProcedureData; completarAdjunto: Function }> = ({ procedureInstance, procedureData, completarAdjunto }) => {
-        return (
-            
+       
+        let elementoName = ""
+        return ( 
             procedureInstance.getAttachments().length > 0 ? (
                 <LayoutSection style={{ margin: "5px 0px 15px 0px" }}>
                     <h1><MdOutlineDataset />Adjuntos del trámite</h1>
@@ -275,26 +281,26 @@ interface FormGenericData {
                         enableReinitialize={true}
                         initialValues={[]}
                         onSubmit={(e:any)=>{
-                            sendFile(procedureData)
+                            sendFile(procedureData, elementoName)
                         }}
                     >
                         <Form autoComplete="off">
                         {procedureInstanceAttachments &&
                         procedureInstanceAttachments.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"30px 0px 15px 0px"}}>
-                                {procedureDataAttachments.includes(element.properties.label) ? (
+                                {procedureDataAttachments.includes(element.name) ? (
                                 <div style={{display:"flex", flexDirection:"column"}} >
-                                    <p>Archivo {element.properties.label} cargado</p>
+                                    <p>Archivo {element.name} cargado</p>
                                     <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop:"15px" }}>
-                                        <Button fullwidth={false}  onClick={() => downloadAttachment(element.properties.label)}  ><HiOutlineMagnifyingGlass/>Ver</Button>
-                                        <Button color="secondary" fullwidth={false}  onClick={() => deleteAttachment(element.properties.label)}><BiTrash />Eliminar</Button>
+                                        <Button fullwidth={false}  onClick={() => downloadAttachment(element.name)}  ><HiOutlineMagnifyingGlass/>Ver</Button>
+                                        <Button color="secondary" fullwidth={false}  onClick={() => deleteAttachment(element.name)}><BiTrash />Eliminar</Button>
                                     </div>
                                 </div>
                                 ) : (
                                     <>
                                     <Element instance={element} className="flex-2" />
                                     <div style={{ display: "flex", alignItems: "flex-end" }}>
-                                      <FormikButton style={{ width: "200px" }} disabled={false} color="secondary" type="submit">
+                                      <FormikButton style={{ width: "200px" }} disabled={false} color="secondary" type="submit" onClick={() => {elementoName = element.name} }>
                                         Cargar archivo
                                       </FormikButton>
                                     </div>
@@ -312,17 +318,23 @@ interface FormGenericData {
     };
     
 
-    const sendFile = async (procedureData: ProcedureData) => {
+    const sendFile = async (procedureData: ProcedureData , elementoName:string) => {
         const data = {
             procedure_data_id: Number(procedureData.getId()),
             attachments: fileArray  // Agregar las attachments solo si hasArray es true
           };
-        
-        const response = await sendProcedureAttachment(procedureData, data, setFormState);
-        if (response){            
-            clearFileArray()
+
+        const response = await sendProcedureAttachment(procedureData.getId(), data, setFormState);
+        if (response){       
+
+            setProcedureDataAttachments (prevState => ([...prevState, elementoName])); //set the new form
+     
             setShowAttachmentMessage(true)
             setAlertMessage ("Documento cargado correctamente")
+            setAlertMessage2 ("")
+
+            clearFileArray()
+
         }else{
             clearFileArray()
             setShowAttachmentMessage(true)

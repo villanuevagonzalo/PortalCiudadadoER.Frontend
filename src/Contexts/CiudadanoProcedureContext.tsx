@@ -215,36 +215,46 @@ const ContextValues = () => {
     setCiudadanoProcedures([]);
   }
 
-  const sendProcedureAttachment = async (procedure_data: ProcedureData, newAttachment:any, setFormState: Function) => {
+  const sendProcedureAttachment = async (procedure_data_id: number, newAttachment:any,  setFormState: Function) => {
 
     setIsLoading(true)
-    try {
-      const response = await handleResponse(AxiosCiudadanoProcedureAPI.SendAttachments, newAttachment, setFormState);
-      
-      if (response && response.data){
-        if (response.data.success) {
+    const elementoEncontrado = ciudadanoProcedures.find(elemento => elemento.getId() === procedure_data_id);
+    if (elementoEncontrado){
 
-          const names = newAttachment.attachments.map((file: { name: any; }) => file.name);
-          procedure_data.setAttachments([...names]);
-          response.data.data.map((multimediaId: number) => {
-            procedure_data.setMultimediaId(multimediaId);
-          });
+      try {
+        const response = await handleResponse(AxiosCiudadanoProcedureAPI.SendAttachments, newAttachment, setFormState);
+        
+        if (response && response.data){
+          if (response.data.success) {
+
+            const names = newAttachment.attachments.map((file: { name: any; }) => file.name);
+
+            elementoEncontrado.setAttachments(names[0]);
+            response.data.data.map((multimediaId: number) => {
+              elementoEncontrado.setMultimediaId(multimediaId);
+            });
+            setIsLoading(false);
+            return true;
+          } else {
+            setIsLoading(false);
+            return false;
+          }
+        }else{
           setIsLoading(false);
-          return true;
-        } else {
-          setIsLoading(false);
-          return false;
+            return false;
         }
-      }else{
+        
+      } catch (error) {
+        console.error("Error al enviar adjunto:", error);
         setIsLoading(false);
-          return false;
+        return false; 
       }
-      
-    } catch (error) {
-      console.error("Error al enviar adjunto:", error);
+
+    }else{
       setIsLoading(false);
-      return false; // Puedes personalizar cómo manejar el error según tus necesidades
+      return false; 
     }
+    
   }
 
   
@@ -300,7 +310,7 @@ const ContextValues = () => {
           
           attachmentArray!.splice(posicion, 1); // Elimina 1 elemento en la posición especificada
   
-          targetProcedure.setAttachments(attachmentArray!)
+          targetProcedure.setAttachmentsArray(attachmentArray!)
           targetProcedure.setMultimediaIdArray(multimediaIdArray!)
   
           setIsLoading(false);
