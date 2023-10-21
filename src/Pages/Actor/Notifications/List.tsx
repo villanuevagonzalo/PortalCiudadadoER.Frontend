@@ -29,7 +29,7 @@ type Item = {
 
 export const DA_Notifications = () =>{
 
-  const { isLoading, GetAllNotifications, realoadActorNotifications, actorNotifications, DeleteNotification , gotAllActor,     totalNotificationActorReaded, setTotalNotificationsActorReaded } = useContext(NotificationsContext);
+  const { isLoading, errors, GetAllNotifications, realoadActorNotifications, actorNotifications, DeleteNotification, totalNotificationsActorInDB } = useContext(NotificationsContext);
   const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
   
@@ -63,12 +63,12 @@ export const DA_Notifications = () =>{
     }
   },[])
 
-
+/*
   useEffect(() => {
     if (gotAllActor) {
       showMessageForSeconds(1, setShowMessage, setTotalNotificationsActorReaded);
     }
-  }, [gotAllActor]);
+  }, [gotAllActor]);*/
 
   useEffect(()=>{
 
@@ -159,6 +159,7 @@ export const DA_Notifications = () =>{
   ],[]);
 
   return (<>
+      {errors!==""?<LayoutNote>{errors}</LayoutNote>:<></>}
     <LayoutNote>
       Administre desde esta sección las notificaciones generales que serán publicadas en <b>Ciudadano Digital</b>.
       <br/>Podrá configurar sus notificaciones por rango de edad, ubicación, y si lo desea, enviarlas por correo electrónico.
@@ -181,8 +182,8 @@ export const DA_Notifications = () =>{
         ?(<div style={{display:"flex", flexDirection:"column", width:"100%"}} >
           <Table columns={mcolumns} data={data} />
           <div style={{display:"flex", flexDirection:"column", width:"100%", marginTop:"20px"}} >
-            { gotAllActor ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>}
-            {(showMessage && !totalNotificationActorReaded) && (<div><LayoutNote>No hay más notificaciones</LayoutNote></div>)}
+            { (totalNotificationsActorInDB > actorNotifications.length  ) ?  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null }
+            {/*(showMessage && !totalNotificationActorReaded) && (<div><LayoutNote>No hay más notificaciones</LayoutNote></div>)*/}
          </div>
         </div>
 

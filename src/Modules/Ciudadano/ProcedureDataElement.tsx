@@ -220,7 +220,6 @@ interface FormGenericData {
             const response = await DeleteCiudadanoProcedureAttachment( procedureData?.getId()!, multimediaIdAtIndex, setFormState);
             if (response){
                 setProcedureDataAttachments((prevState) => prevState.filter((element) => element !== attachmentName));
-
                 setShowAttachmentMessage(true)
                 setAlertMessage ("Documento adjunto eliminado")
             }

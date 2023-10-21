@@ -24,14 +24,13 @@ const ContextValues = () => {
   const [errors, setErrors] = useState<string>("");
 
   const [actorNotifications, setActorNotifications] = useState<ActorNotification[]>([]);
-  const [totalNotificationsActor, setTotalNotificationsActor] = useState <number> (0)
-  const [gotAllActor, setGotAllActor] = useState <boolean> (false) 
-  const [totalNotificationActorReaded, setTotalNotificationsActorReaded] = useState<boolean>(false)
+  const [totalNotificationsActorQueried, setTotalNotificationsActorQueried] = useState <number> (0) //total actor notification queried from db
+  const [totalNotificationsActorInDB, setTotalNotificationsActorInDB] = useState <number> (0) //total actor notification queried from db
 
   const [userNotifications, setUserNotifications] = useState<CitizenNotification[]>([]);
-  const [totalNotifications, setTotalNotifications] = useState <number> (0)
-  const [gotAll, setGotAll] = useState <Boolean> (false) 
-
+  const [totalNotificationsQueried, setTotalNotificationsQueried] = useState <number> (0) //total citizen notification queried from db
+  const [totalNotificationsInDB, setTotalNotificationsInDB] = useState <number> (0) //total citizen notification queried from db
+  
   const [isUpdatingNotifications, setIsUpdatingNotifications] = useState(false); //To prevent UpdateNotifications from running twice in quick succession.
   const [isUpdatingActorNotifications, setIsUpdatingActorNotifications] = useState(false); //To prevent UpdateNotifications from running twice in quick succession.
 
@@ -44,12 +43,13 @@ const ContextValues = () => {
       setIsLoading(true);
       setErrors("");
       setActorNotifications([]);
-      setTotalNotificationsActor(0);
-      setGotAllActor(false);
-      setTotalNotificationsActorReaded(false)
+      setTotalNotificationsActorQueried(0);
+     // setGotAllActor(false);
+     setTotalNotificationsActorInDB(0)
       setUserNotifications([]);
-      setTotalNotifications(0);
-      setGotAll(false);
+      setTotalNotificationsQueried(0);
+      setTotalNotificationsInDB(0);
+      //setGotAll(false);
       setIsUpdatingNotifications(false);
       setIsUpdatingActorNotifications(false);
     }
@@ -59,19 +59,19 @@ const ContextValues = () => {
   const parseAttachements = (data:string) => (data?.match(/\d+/g) || []).map((e: any) => parseInt(e)).filter((e: any) => e > 0);
 
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (actorNotifications.length == 0 && totalNotificationsActorQueried == 0 && realoadAll) {
+      GetAllNotifications();
+      setRealoadAll(false)
 
-    if (actorNotifications.length==0 && totalNotificationsActor==0 && !gotAllActor && realoadAll){
-      GetAllNotifications()
     }
-   
-  },[actorNotifications && totalNotificationsActor && realoadAll && gotAllActor])
+  }, [actorNotifications, totalNotificationsActorQueried, realoadAll]);
 
   const realoadActorNotifications = async() => {
     setActorNotifications([])
-    setTotalNotificationsActor(0)
-    setGotAllActor(false) 
-    setTotalNotificationsActorReaded(false)
+    setTotalNotificationsActorQueried(0)
+    //setGotAllActor(false) 
+    setTotalNotificationsActorInDB(0)
     setRealoadAll(true)
   } 
 
@@ -84,7 +84,7 @@ const ContextValues = () => {
     setIsLoading(true)
 
     const jsonObject = {
-      notification_rows: totalNotifications
+      notification_rows: totalNotificationsQueried
     };
 
     let responseAll:AxiosResponse | ResponseError | null = null;
@@ -93,22 +93,30 @@ const ContextValues = () => {
     try { responseAll = await AxiosNotificationAPI.GetByUserAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     try { responseNew = await AxiosNotificationAPI.GetByUserNews(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales sin leer. Por favor, intente nuevamente mas tarde.") }
 
+
     let notificationsData = "[]";
-    if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
-    else if(responseNew && responseNew.status!==204) notificationsData = responseNew.data.data.notifications;
-    
-    const notificationsAllDataCleaned = cleanJsonString(notificationsData);
-    const notificationsAllArray = JSON.parse(notificationsAllDataCleaned);
-    
+    let totalUserNotiInDB = 0;
+
+    if (responseAll && responseAll.status !== 204) {
+      const responseDataParsed = JSON.parse(responseAll.data.data.notifications);
+      notificationsData = responseDataParsed.data;
+      totalUserNotiInDB = responseDataParsed.count;
+    } else if (responseNew && responseNew.status !== 204) {
+      notificationsData = JSON.parse(responseNew.data.data.notifications).data;
+    }
+
+    setTotalNotificationsInDB(totalUserNotiInDB)
+
+   const notificationsAllArray = JSON.parse(JSON.stringify(notificationsData));
+    //the last code line is a deep copy of notificationsData
 
     let newNotificaionsIDs: number[] = [];
     if(responseNew && responseNew.status!==204){
-      const notificationsNewDataCleaned = cleanJsonString(responseNew.data.data.notifications);
-      newNotificaionsIDs = JSON.parse(notificationsNewDataCleaned).map((notification:Partial<Notification>)=>notification.ID);
+      const notificationsNewData = JSON.parse(responseNew.data.data.notifications).data;
+      newNotificaionsIDs = (notificationsNewData).map((notification:Partial<Notification>)=>notification.ID);
     } 
     
     const Notifications:CitizenNotification[] = notificationsAllArray.map((notification:Partial<Notification>)=>{
-
       return { 
         ID: notification.ID,
         MESSAGE_TITLE: notification.MESSAGE_TITLE,
@@ -121,19 +129,17 @@ const ContextValues = () => {
     }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
 
     if (Notifications.length === 0) {
-      setGotAll(true)
+     // setGotAll(true)
     }else{
-      //elimino si hay array repetidos
       const notificationsToAdd = Notifications.filter((notification: Partial<Notification>) => {
         // Comprueba si el ID de la notificación actual no está presente en userNotifications
         return !userNotifications.some((userNotification) => userNotification.ID === notification.ID);
       });
      
       setUserNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
-      setTotalNotifications(totalNotifications+21)
+      setTotalNotificationsQueried(totalNotificationsQueried+21)
     }
 
-    //setUserNotifications(Notifications);
     setIsUpdatingNotifications(false);
     setIsLoading(false); 
   }
@@ -166,7 +172,10 @@ const ContextValues = () => {
   const CreateNotification = async (data:any, setFormState:Function) => {
 
     const response:AxiosResponse = await handleResponse(AxiosNotificationAPI.Create, data, setFormState);
-    if(response.data) setUserNotifications(prevState => ([...prevState, data]));
+    if(response.data) {
+      setUserNotifications(prevState => ([...prevState, data]));
+     
+    }
     return response;
 
   }
@@ -209,53 +218,74 @@ const ContextValues = () => {
     setIsLoading(true)
     
     const jsonObject = {
-      notification_rows: totalNotificationsActor
+      notification_rows: totalNotificationsActorQueried
     };
 
     let responseAll:AxiosResponse | ResponseError | null = null;
     
     try { responseAll = await AxiosNotificationAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
 
-    let notificationsData = "[]";
-    if(responseAll && responseAll.status!==204) notificationsData = responseAll.data.data.notifications;
+    if (responseAll==null){
+      setErrors("Error en consulta a DB. Contacte a soporte")
+      setIsLoading(false);
 
-    const notificationsDataCleaned = cleanJsonString(notificationsData);
-    const Notifications:ActorNotification[] = JSON.parse(notificationsDataCleaned).map((notification:Partial<Notification>)=>{
-      //console.log(notification)
-      return { 
-        ID: notification.ID,
-        MESSAGE_TITLE: notification.MESSAGE_TITLE,
-        MESSAGE_BODY: notification.MESSAGE_BODY,
-        ATTACHMENTS: parseAttachements(notification.MULTIMEDIA_ID as string),
-        CREATED_AT: notification.CREATED_AT,
-        DELETED_AT: notification.DELETED_AT,
-        DATE_FROM: notification.NOTIFICATION_DATE_FROM,
-        DATE_TO: notification.NOTIFICATION_DATE_TO,
-        AGE_FROM: notification.AGE_FROM,
-        AGE_TO: notification.AGE_TO,
-        LOCALITY: notification.LOCALITY,
-        DEPARTMENT: notification.DEPARTMENT,
-        RECIPIENTS: notification.RECIPIENTS,
-        TYPE: "general"
-       }
-    }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
-
-    if (Notifications.length == 0) {
-        setGotAllActor(true)
     }else{
 
-      const notificationsToAdd = Notifications.filter((notification) => {
-        // Comprueba si el ID de la notificación actual no está presente en actorNotifications
-        return !actorNotifications.some((actorNotification) => actorNotification.ID === notification.ID);
-      });
+      let notificationsData = "[]";
+      let totalActorNotisInDB = 0;
+  
+      if(responseAll && responseAll.status!==204){
+        const responseDataParsead = JSON.parse(responseAll.data.data.notifications);
+  
+        notificationsData = responseDataParsead.data;
+        totalActorNotisInDB = responseDataParsead.count;
+      } 
+  
+      setTotalNotificationsActorInDB(totalActorNotisInDB)
+  
+      const notificationsDataCleaned = JSON.parse(JSON.stringify(notificationsData))
+      //the last line is a deep copy of notificationsData
+  
+      const Notifications:ActorNotification[] = (notificationsDataCleaned).map((notification:Partial<Notification>)=>{
+        //console.log(notification)
+        return { 
+          ID: notification.ID,
+          MESSAGE_TITLE: notification.MESSAGE_TITLE,
+          MESSAGE_BODY: notification.MESSAGE_BODY,
+          ATTACHMENTS: parseAttachements(notification.MULTIMEDIA_ID as string),
+          CREATED_AT: notification.CREATED_AT,
+          DELETED_AT: notification.DELETED_AT,
+          DATE_FROM: notification.NOTIFICATION_DATE_FROM,
+          DATE_TO: notification.NOTIFICATION_DATE_TO,
+          AGE_FROM: notification.AGE_FROM,
+          AGE_TO: notification.AGE_TO,
+          LOCALITY: notification.LOCALITY,
+          DEPARTMENT: notification.DEPARTMENT,
+          RECIPIENTS: notification.RECIPIENTS,
+          TYPE: "general"
+         }
+      }).sort((a:CitizenNotification,b:CitizenNotification)=>(new Date(b.CREATED_AT).getTime() - new Date(a.CREATED_AT).getTime()));
+  
+      if (Notifications.length == 0) {
+         // setGotAllActor(true)
+      }else{
+  
+        const notificationsToAdd = Notifications.filter((notification) => {
+          // Comprueba si el ID de la notificación actual no está presente en actorNotifications
+          return !actorNotifications.some((actorNotification) => actorNotification.ID === notification.ID);
+        });
+  
+        // Solo agrega notificaciones que no estén duplicadas
+        setActorNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
+      
+      }
+      setTotalNotificationsActorQueried(totalNotificationsActorQueried+21)
+      setIsUpdatingActorNotifications(false);
+      setIsLoading(false);
 
-      // Solo agrega notificaciones que no estén duplicadas
-      setActorNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
-    
-    }
-    setTotalNotificationsActor(totalNotificationsActor+21)
-    setIsUpdatingActorNotifications(false);
-    setIsLoading(false);
+    } 
+
+   
   }
 
   const GetScope = async (data:any, setFormState:Function) => await handleResponse(AxiosNotificationAPI.GetScope, data, setFormState);
@@ -314,11 +344,13 @@ const ContextValues = () => {
   return {
     UpdateNotifications, ReadNotification, realoadActorNotifications, errors,
     isLoading, userNotifications, actorNotifications,
-    totalNotificationActorReaded, setTotalNotificationsActorReaded,
+    //totalNotificationActorReaded, setTotalNotificationsActorReaded,
     setUserNotifications, GetScope, GetAttachments, GetScopeByID,
     CreateNotification, GetAllNotifications, DeleteNotification,
-    totalNotificationsActor, setTotalNotificationsActor, gotAllActor,
-    totalNotifications, setTotalNotifications, gotAll
+    totalNotificationsActorQueried, totalNotificationsActorInDB, 
+    totalNotificationsQueried, totalNotificationsInDB
+   /* totalNotificationsActor, setTotalNotificationsActor,
+    totalNotifications, setTotalNotifications,*/
   }
 }
 

@@ -12,7 +12,7 @@ import { HiArrowDown } from 'react-icons/hi2';
 
 export const DC_Notifications = () =>{
 
-  const { isLoading, errors, userNotifications, ReadNotification, UpdateNotifications, gotAll } = useContext(NotificationsContext);
+  const { isLoading, errors, userNotifications, ReadNotification, UpdateNotifications, totalNotificationsInDB } = useContext(NotificationsContext);
   const [ FullSizeNotification, setFullSizeNotification ] = useState<CitizenNotification | null>(null);
   const [ loadingNotification, setLoadingNotification ] = useState<number>(0);
 
@@ -29,7 +29,7 @@ export const DC_Notifications = () =>{
   const CloseNotification = () => setFullSizeNotification(null);
   
   useEffect(()=>{
-    if (userNotifications.length==0){
+    if (userNotifications.length==0 && !isLoading){
       UpdateNotifications()
     }
   },[])
@@ -49,8 +49,8 @@ export const DC_Notifications = () =>{
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
       </> :(userNotifications.length > 0
         ? <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
-          {userNotifications.map((N: CitizenNotification) => <NotificationCard data={N} key={N.ID} onClick={() => ShowNotification(N)} loading={N.ID==loadingNotification}/>)}
-          {gotAll ? null :  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button>} 
+          {userNotifications.map((N: CitizenNotification) => <NotificationCard data={N} key={N.ID} onClick={() => ShowNotification(N)} loading={Boolean(N.ID == loadingNotification)}/>)}
+          {(totalNotificationsInDB > userNotifications.length) ?   <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
           </div>
         :<LayoutSection className="items-center">
           <BiMessage size="3rem" />

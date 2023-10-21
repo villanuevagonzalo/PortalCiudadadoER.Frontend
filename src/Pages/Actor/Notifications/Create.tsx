@@ -41,8 +41,8 @@ export const DA_Notifications_Create = () =>{
   const [ Localities, setLocalities ] = useState<any[]>([]);
 
   const [Fields, setFields] = useState( {
-    Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título'},["isRequired"])),
-    Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_max:100},["isRequired"])),
+    Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título',length_max:100},["isRequired"])),
+    Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_max:500},["isRequired"])),
     StartDate: new ElementInstance("StartDate",new ElementSchema('DATE',{label:'Fecha desde'},["isRequired"]),null),
     EndDate: new ElementInstance("EndDate",new ElementSchema('DATE',{label:'Fecha hasta'},["isRequired"]),null),
     SendByEmail: new ElementInstance("SendByEmail",new ElementSchema('CHECKBOX',{label:'Enviar por Correo'}),false),
