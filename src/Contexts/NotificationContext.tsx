@@ -36,6 +36,7 @@ const ContextValues = () => {
 
   const [realoadAll, setRealoadAll] = useState(false); 
 
+  const nexNotificationToAsk=10
 
   useEffect(() => {
 
@@ -137,7 +138,7 @@ const ContextValues = () => {
       });
      
       setUserNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
-      setTotalNotificationsQueried(totalNotificationsQueried+21)
+      setTotalNotificationsQueried(totalNotificationsQueried+nexNotificationToAsk)
     }
 
     setIsUpdatingNotifications(false);
@@ -235,6 +236,7 @@ const ContextValues = () => {
       let totalActorNotisInDB = 0;
   
       if(responseAll && responseAll.status!==204){
+
         const responseDataParsead = JSON.parse(responseAll.data.data.notifications);
   
         notificationsData = responseDataParsead.data;
@@ -279,7 +281,7 @@ const ContextValues = () => {
         setActorNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
       
       }
-      setTotalNotificationsActorQueried(totalNotificationsActorQueried+21)
+      setTotalNotificationsActorQueried(totalNotificationsActorQueried+nexNotificationToAsk)
       setIsUpdatingActorNotifications(false);
       setIsLoading(false);
 

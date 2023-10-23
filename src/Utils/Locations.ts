@@ -47,9 +47,21 @@ export const DeparmentNameByID = (locations:ILocation[], localityID:number) => {
   return location?CapitalizeWords(location.DEPARTAMENTO):'Invalido'
 }
 
+const LocationByID2 = (locations:ILocation[], id:number) => {
+  const location = locations.find((loc) => loc.ID == id);
+  return location ? CapitalizeWords(location.DEPARTAMENTO+', '+location.NOMBRE): 'Invalido';
+};
+
 export const LocationNameByID = (locations:ILocation[], localityID:number) => {
-  const location = LocationByID(locations, localityID);
-  return location?CapitalizeWords(location.NOMBRE+', '+location.DEPARTAMENTO):'Invalido'
+  
+  if (localityID==0){
+    return 'Todos'
+  }else{
+    const location = LocationByID2(locations, localityID as number);
+    return location
+
+  }
+
 };
 
 
