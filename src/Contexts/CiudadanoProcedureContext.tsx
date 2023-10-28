@@ -42,10 +42,10 @@ const ContextValues = () => {
   
   //RECURSIVITY
   useEffect(() => {
-    if (totalCitizenProcedures > ciudadanoProcedures.length) {
+    if (totalCitizenProcedures > totalCitizenProceduresQueried ) {
       UpdateCiudadanoProcedures();
     }
-  }, [ciudadanoProcedures && totalCitizenProceduresQueried]);
+  }, [ciudadanoProcedures && totalCitizenProceduresQueried && totalCitizenProcedures]);
 
   const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
     
@@ -57,7 +57,6 @@ const ContextValues = () => {
 
       if (status) {
         const responseDataArray = JSON.parse(response.data.data); // Parse as an array
-
         if (responseDataArray.length > 0) {
           const firstResponseData = responseDataArray[0]; // Get the first object in the array
 
@@ -149,6 +148,7 @@ const ContextValues = () => {
 
     try {
         const responseAll = await AxiosCiudadanoProcedureAPI.GetAll(jsonObject);
+        console.log("Esto llegó 1: "+JSON.stringify(responseAll))
 
         if (responseAll && responseAll.status !== 204) {
             const FormData = responseAll.data.data;
@@ -156,7 +156,7 @@ const ContextValues = () => {
             const procedureAux: SetStateAction<ProcedureData[]> = [];
 
             const FormsObj = JSON.parse(FormData);
-            
+            console.log("Esto llegó 2: "+JSON.stringify(responseAll.data.data))
             setTotalCitizenProcedures(FormsObj.count)
             const mappedArray = FormsObj.data.map((procedureInstance: any) => {
                 try {
@@ -198,6 +198,8 @@ const ContextValues = () => {
             if (FormsObj.length===0){
               //setGotAllCitizenProcedures(true)
             }else{
+              console.log("Esto llegó 3: "+JSON.stringify(procedureAux))
+
               setTotalCitizenProceduresQueried(totalCitizenProceduresQueried+21)
               setCiudadanoProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
             }
@@ -336,6 +338,7 @@ const ContextValues = () => {
     isLoadingProcedureCitizen,
     ciudadanoProcedures,
     totalCitizenProcedures,
+    totalCitizenProceduresQueried,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 
     UpdateOneCiudadanoProcedure,

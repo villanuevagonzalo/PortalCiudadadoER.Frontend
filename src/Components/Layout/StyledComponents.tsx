@@ -728,22 +728,24 @@ export const LayoutSection = styled.div<{ }>`
 `;
 
 export const LayoutSectionCentered = styled.div<{ }>`
+  display: flex;
+  flex-direction: column;
   background: var(--maincolor);
   border-radius: 0.5rem;
   border: 1px solid var(--disabled);
   width: 100%;
-  padding: 2rem;
+  padding: 1.5rem;
   color: var(--maincolor_text);
   text-align: center; /* Centrar el texto horizontalmente */
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   gap: 0.75rem;
   align-items: center; /* Centrar todo verticalmente */
 
   & h1 {
     font-size: 1.25rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0rem;
+    text-align: center;
   }
 
   & h2, & h3 {

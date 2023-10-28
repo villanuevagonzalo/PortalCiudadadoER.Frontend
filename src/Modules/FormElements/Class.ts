@@ -110,7 +110,6 @@ export class FormInstance<T extends ElementSchemaTypes>  {
   }
 
   setDescription (description:string){
-    console.log("se cargado descripición")
     this.description=description;
   }
 
@@ -257,8 +256,8 @@ export class ProcedureInstance<T extends ElementSchemaTypes>  {
   addCitizenLevel (citizenLevel:string){
     this.citizenLevel=citizenLevel;
   }
-  getId(){
-    return this.id;
+  getId():number{
+    return this.id!;
   }
   getForms() {
     return this.forms;
@@ -555,8 +554,7 @@ export class ProcedureData {
     return this.procedure_data_id;
   }
   
-  getProcedureUnitId(){
-
+  getProcedureUnitId():number{
     return this.procedure_unit_id;
   }
 

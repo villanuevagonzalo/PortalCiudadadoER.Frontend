@@ -41,7 +41,7 @@ export const TramitesOnlinePage = () => {
   const navigate = useNavigate();
 
   const { UpdatePublishedProcedures, totalPublishedProcedures, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
-  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , totalCitizenProcedures} = useContext(CiudadanoProcedureContext);
+  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , totalCitizenProcedures, totalCitizenProceduresQueried} = useContext(CiudadanoProcedureContext);
   const [filteredProcedures, setFilteredProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
   const [searchProcedure, setSearchProcedure] = useState<string>()
 
@@ -69,9 +69,12 @@ export const TramitesOnlinePage = () => {
       UpdatePublishedProcedures()
     }
     
-    if( ciudadanoProcedures.length < totalCitizenProcedures  ){
+    if (ciudadanoProcedures.length==0){
       UpdateCiudadanoProcedures()
-  }
+    }
+    else if( ciudadanoProcedures.length < totalCitizenProcedures  ){
+      UpdateCiudadanoProcedures()
+    }
 
   UpdateCitizenForms()
 
@@ -114,6 +117,7 @@ export const TramitesOnlinePage = () => {
   useEffect(()=>{
     setFilteredProcedures(proceduresPublished)
   },[proceduresPublished])
+
 
   useEffect(()=>{
     if (searchProcedure !== undefined &&  searchProcedure != '') {
@@ -255,7 +259,7 @@ export const TramitesOnlinePage = () => {
                 <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
                 <h1>{item.getTitle()}</h1>
                 <p>{item.getDescription()}</p>
-                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === item.getId())?.getStatus()}</h2>
+                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
 
                 </div>
             </div>          
@@ -264,7 +268,7 @@ export const TramitesOnlinePage = () => {
                     <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
                         <h1>{item.getTitle()}</h1>
                         <p>{item.getDescription()}</p>
-                        <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === item.getId())?.getStatus()}</h2>
+                        <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
 
                     </div>
                 </div>

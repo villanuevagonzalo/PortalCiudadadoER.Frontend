@@ -1,7 +1,7 @@
 
 import { AiFillSignal, AiOutlineAlert, AiOutlineClose, AiOutlineNotification, AiOutlineStar, AiOutlineUser, AiOutlineWarning } from "react-icons/ai"
 import { NotificationFullSizeWrapper, Spinner } from "../Elements/StyledComponents"
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents"
+import { LayoutSection, LayoutSectionCentered, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../Layout/StyledComponents"
 import { Button } from "./Button"
 import { BiArrowBack, BiSave } from "react-icons/bi"
 import { useState } from "react"
@@ -132,25 +132,29 @@ interface NetworkAlertProps{
   export const CitizenGenericAlertPopUp: React.FC<CitizenGenerictAlertProps> = ({ message, message2, close})  => {
       
     return <NotificationFullSizeWrapper>
-        <LayoutSection className="content">
-          <div className="header">
-            <span className="title"><AiOutlineAlert />Servicios - Gobierno de Entre Ríos</span>
-            <span className="flex-1"></span>
-            <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close()}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <LayoutSectionCentered >
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"center"}} >
+              <h1 >{message}</h1>
           </div>
-          <div style={{display: "flex", flexDirection:"column", justifyContent: "center", textAlign:"center", margin:" 15px 0px 5px 0px" }}>
-            <h1 style={{ color: "primary" }}> {message} </h1>
-            <h4 style={{ color: "primary" }}> {message2} </h4>
-          </div>
+          <h4 >{message2}</h4>
+          {/* <h1>{message2}</h1> */}      
           <LayoutStackedPanel className="mt-2">
             <LayoutSpacer/>
             <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-              <Button onClick={()=>close()}>OK</Button>
+            <Button onClick={()=>close()}>OK</Button>
             </div>
           </LayoutStackedPanel>
-        </LayoutSection>
-        <LayoutSpacer/>
-      </NotificationFullSizeWrapper>
+        </LayoutSectionCentered>
+
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
   };
 
 
@@ -161,23 +165,27 @@ interface NetworkAlertProps{
   export const CitizeProcedureUploadedProps: React.FC<CitizeProcedureUploadedProps> = ({ProcedureTitle, close})  => {
       
     return <NotificationFullSizeWrapper>
-        <LayoutSection className="content">
-          <div className="header">
-            <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
-            <span className="flex-1"></span>
-            <span className="close" onClick={()=>close("home")}><AiOutlineClose fontSize={"1rem"}/></span>
-          </div>
-          <div style={{display: "flex", flexDirection:"column", justifyContent: "center", textAlign:"center", margin:" 15px 0px 15px 0px" }}>
+      <LayoutSection className="content">
+        <div className="header">
+          <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
+          <span className="flex-1"></span>
+          <span className="close" onClick={()=>close("home")}><AiOutlineClose fontSize={"1rem"}/></span>
+        </div>
+        <LayoutSectionCentered >
+          <div style={{display:"flex", flexDirection:"column", justifyContent:"center"}} >
             <h1 style={{ color: "primary" }}>Trámite "{ProcedureTitle}" cargado correctamente!</h1>
           </div>
+            {/* <h1>{message2}</h1> */}      
           <LayoutStackedPanel className="mt-2">
             <LayoutSpacer/>
             <div style={{ display: 'flex', width: '100%', justifyContent: 'center' }}>
-              <Button onClick={()=>close("home")}>OK</Button>
+            <Button onClick={()=>close("home")}>OK</Button>
             </div>
           </LayoutStackedPanel>
-        </LayoutSection>
-        <LayoutSpacer/>
-      </NotificationFullSizeWrapper>
+        </LayoutSectionCentered>
+
+      </LayoutSection>
+      <LayoutSpacer/>
+    </NotificationFullSizeWrapper>
   };
 

@@ -70,13 +70,13 @@ export const DC_Procedures_Started = () => {
 
   useEffect(()=>{
 
-    const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => item.getProcedureUnitId());
-      const proceduresInCiudadano = proceduresPublished.filter((item) =>
-        ciudadanoProcedureUnitIds.includes(item.getId()!)
-      );
+    const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => String(item.getProcedureUnitId()));
+
+    const proceduresInCiudadano = proceduresPublished.filter((item) =>
+      ciudadanoProcedureUnitIds.includes(item.getId()!.toString())
+    );
 
       if (AllProcedures.length==0){
-        console.log("esto tiene All Procedures al cargar el componente cuando proceduresPublished && ciudadanoProcedures: "+JSON.stringify(proceduresInCiudadano))
 
         setAllProcedures(proceduresInCiudadano)
       }

@@ -19,6 +19,7 @@ import { DefaultFormState } from '../../Data/DefaultValues';
 import { IFormState } from '../../Interfaces/Data';
 import { CiudadanoFormToCheckElement } from './FormDatoUpdateElement';
 import { CiudadanoFormContext } from '../../Contexts/CiudadanoFormContext';
+import { json } from 'stream/consumers';
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -34,7 +35,7 @@ interface FormGenericData {
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
 
-    const { ciudadanoProcedures, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
+    const { ciudadanoProcedures, UpdateCiudadanoProcedures, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
     const {UpdateCitizenForms}= useContext(CiudadanoFormContext); //This is the total citizen data procedures
     const [procedureData, setProcedureData] = useState <ProcedureData > (); //Is this procedure citizen data
 
@@ -77,11 +78,22 @@ interface FormGenericData {
     useEffect(()=>{
         UpdateForms()
         UpdateCitizenForms()
-        const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
-        if (filteredProcedure){
-            setProcedureData(filteredProcedure);
-            setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+
+        if (ciudadanoProcedures.length == 0 ){
+            console.log("primero va esto")
+            UpdateCiudadanoProcedures()
+        }else{
+
+            const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() == procedureInstance.getId());
+
+            if (filteredProcedure){
+                setProcedureData(filteredProcedure);
+                setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+            }
+    
+            
         }
+        
         
     },[])
 
@@ -96,7 +108,6 @@ interface FormGenericData {
 
 
     useEffect(() => {
-        console.log("veamos el procedure instance123: "+JSON.stringify(ciudadanoProcedures) )
 
         if (procedureInstance) {
 
@@ -114,8 +125,6 @@ interface FormGenericData {
     
 
       useEffect(()=>{
-        console.log("cambio esto ciudadanoProcedures? "+JSON.stringify(procedureData))
-
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
         if (filteredProcedure){
             setProcedureData(filteredProcedure);
@@ -220,8 +229,10 @@ interface FormGenericData {
             const response = await DeleteCiudadanoProcedureAttachment( procedureData?.getId()!, multimediaIdAtIndex, setFormState);
             if (response){
                 setProcedureDataAttachments((prevState) => prevState.filter((element) => element !== attachmentName));
-                setShowAttachmentMessage(true)
                 setAlertMessage ("Documento adjunto eliminado")
+                setAlertMessage2 ("")
+                setShowAttachmentMessage(true)
+
             }
             // Ahora "multimediaIdAtIndex" contiene el elemento en la posición "position"
         } else {
@@ -336,9 +347,10 @@ interface FormGenericData {
 
         }else{
             clearFileArray()
-            setShowAttachmentMessage(true)
             setAlertMessage ("Error en la carga del documento")
             setAlertMessage2 ("Intente más tarde.")
+            setShowAttachmentMessage(true)
+
         }
     }
 
