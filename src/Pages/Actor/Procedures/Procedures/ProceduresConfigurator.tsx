@@ -35,7 +35,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Config = () => {
 
-  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, totalActorProcedures, setProcedures, procedures , isLoadingProcedure, totalActorProceduresReaded, setTotalActorProceduresReaded} = useContext(ProcedureContext);
+  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, totalActorProceduresInDB, setProcedures, procedures , isLoadingProcedure, totalActorProceduresReaded, setTotalActorProceduresReaded} = useContext(ProcedureContext);
   const { UpdateForms, formularios} = useContext(FormContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -166,7 +166,7 @@ export const DA_Procedures_Config = () => {
 
             < TableForms datos={filteredProcedure} setFormToCheck={setProcedureToCheck} setSeeOptions={setSeeOptions} setDeleteProcedure={setDeleteProcedure} setProcedureToDelete={setProcedureToDelete} setCopy={setCopy} />
             
-              {(totalActorProcedures > procedures.length) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
+              {(totalActorProceduresInDB > procedures.length) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
               {(showMessage && ! totalActorProceduresReaded) && (<div><LayoutNote>No hay más tramites cargados</LayoutNote></div>)}
 
               </div>

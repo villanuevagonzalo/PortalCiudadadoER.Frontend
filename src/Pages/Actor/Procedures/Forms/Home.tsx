@@ -29,7 +29,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
 
-  const { SaveForm, UpdateForms , setFormularios, formularios, totalFormUnits, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
+  const { SaveForm, UpdateForms , setFormularios, formularios, totalFormUnitsInDB, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -184,7 +184,7 @@ export const DA_Procedures_Forms_Home = () => {
       </>:
           <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
             < TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
-            {(totalFormUnits > formularios.length) ?  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null } 
+            {(totalFormUnitsInDB > formularios.length) ?  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null } 
             {(showMessage &&!totalFormUnitReaded) && (<div><LayoutNote>No hay más formularios cargados</LayoutNote></div>)}
           </div>
       }

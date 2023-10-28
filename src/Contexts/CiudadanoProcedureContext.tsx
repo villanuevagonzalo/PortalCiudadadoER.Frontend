@@ -22,7 +22,7 @@ const ContextValues = () => {
 
   const [totalCitizenProceduresQueried, setTotalCitizenProceduresQueried] = useState <number> (0)
   //const [gotAllCitizenProcedures, setGotAllCitizenProcedures] = useState <Boolean> (false) 
-  const [totalCitizenProcedures, setTotalCitizenProcedures] = useState <number> (0) //cantidad de procedimientos del ciudadano en la base de datos
+  const [totalCitizenProceduresInDB, setTotalCitizenProceduresInDB] = useState <number> (0) //cantidad de procedimientos del ciudadano en la base de datos
 
 
   const [isUpdatingCiudadanoProcedures, setUpdatingCiudadanoProcedures]= useState <Boolean> (false) 
@@ -34,7 +34,7 @@ const ContextValues = () => {
       setCiudadanoProcedures([])
       setTotalCitizenProceduresQueried(0)
       //setGotAllCitizenProcedures(false)
-      setTotalCitizenProcedures(0)
+      setTotalCitizenProceduresInDB(0)
       setUpdatingCiudadanoProcedures(false)
     }
    
@@ -42,10 +42,10 @@ const ContextValues = () => {
   
   //RECURSIVITY
   useEffect(() => {
-    if (totalCitizenProcedures > totalCitizenProceduresQueried ) {
+    if (totalCitizenProceduresInDB > totalCitizenProceduresQueried ) {
       UpdateCiudadanoProcedures();
     }
-  }, [ciudadanoProcedures && totalCitizenProceduresQueried && totalCitizenProcedures]);
+  }, [ciudadanoProcedures && totalCitizenProceduresQueried && totalCitizenProceduresInDB]);
 
   const CreateCiudadanoProcedure = async (procedure_id:number, setFormState: Function) => {
     
@@ -90,7 +90,8 @@ const ContextValues = () => {
             );
 
             setCiudadanoProcedures(prevState => ([...prevState, newProceduresData]));
-            setTotalCitizenProcedures(totalCitizenProcedures+1)
+            setTotalCitizenProceduresQueried(totalCitizenProceduresQueried+1)
+
             return true;
           }
         }
@@ -148,7 +149,6 @@ const ContextValues = () => {
 
     try {
         const responseAll = await AxiosCiudadanoProcedureAPI.GetAll(jsonObject);
-        console.log("Esto llegó 1: "+JSON.stringify(responseAll))
 
         if (responseAll && responseAll.status !== 204) {
             const FormData = responseAll.data.data;
@@ -156,8 +156,8 @@ const ContextValues = () => {
             const procedureAux: SetStateAction<ProcedureData[]> = [];
 
             const FormsObj = JSON.parse(FormData);
-            console.log("Esto llegó 2: "+JSON.stringify(responseAll.data.data))
-            setTotalCitizenProcedures(FormsObj.count)
+            setTotalCitizenProceduresInDB(FormsObj.count)
+            const totalCitizenProceduresGot = FormsObj.rows;
             const mappedArray = FormsObj.data.map((procedureInstance: any) => {
                 try {
 
@@ -198,9 +198,8 @@ const ContextValues = () => {
             if (FormsObj.length===0){
               //setGotAllCitizenProcedures(true)
             }else{
-              console.log("Esto llegó 3: "+JSON.stringify(procedureAux))
 
-              setTotalCitizenProceduresQueried(totalCitizenProceduresQueried+21)
+              setTotalCitizenProceduresQueried(totalCitizenProceduresQueried+totalCitizenProceduresGot+1)
               setCiudadanoProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
             }
 
@@ -337,7 +336,7 @@ const ContextValues = () => {
   return {
     isLoadingProcedureCitizen,
     ciudadanoProcedures,
-    totalCitizenProcedures,
+    totalCitizenProceduresInDB,
     totalCitizenProceduresQueried,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 

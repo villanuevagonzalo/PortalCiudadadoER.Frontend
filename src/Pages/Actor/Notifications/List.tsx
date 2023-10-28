@@ -29,7 +29,7 @@ type Item = {
 
 export const DA_Notifications = () =>{
 
-  const { isLoading, errors, GetAllNotifications, realoadActorNotifications, actorNotifications, DeleteNotification, totalNotificationsActorInDB } = useContext(NotificationsContext);
+  const { isLoading, errors, GetAllNotifications, realoadActorNotifications, actorNotifications, DeleteNotification, totalNotificationsActorQueried, totalNotificationsActorInDB } = useContext(NotificationsContext);
   const [ data, setData ] = useState<ActorTableNotification[]>([]);
   const [ Location, setLocation ] = useState<ILocation[]>([]);
   
@@ -157,6 +157,7 @@ export const DA_Notifications = () =>{
     },
 
   ],[]);
+
 
   return (<>
       {errors!==""?<LayoutNote>{errors}</LayoutNote>:<></>}

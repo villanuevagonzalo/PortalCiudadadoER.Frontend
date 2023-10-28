@@ -36,8 +36,6 @@ const ContextValues = () => {
 
   const [realoadAll, setRealoadAll] = useState(false); 
 
-  const nexNotificationToAsk=10
-
   useEffect(() => {
 
     if(!isLogged){
@@ -97,11 +95,13 @@ const ContextValues = () => {
 
     let notificationsData = "[]";
     let totalUserNotiInDB = 0;
+    let totalUserNotiGot = 0;
 
     if (responseAll && responseAll.status !== 204) {
       const responseDataParsed = JSON.parse(responseAll.data.data.notifications);
       notificationsData = responseDataParsed.data;
       totalUserNotiInDB = responseDataParsed.count;
+      totalUserNotiGot = responseDataParsed.rows;
     } else if (responseNew && responseNew.status !== 204) {
       notificationsData = JSON.parse(responseNew.data.data.notifications).data;
     }
@@ -138,7 +138,7 @@ const ContextValues = () => {
       });
      
       setUserNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
-      setTotalNotificationsQueried(totalNotificationsQueried+nexNotificationToAsk)
+      setTotalNotificationsQueried(totalNotificationsQueried+totalUserNotiGot+1)
     }
 
     setIsUpdatingNotifications(false);
@@ -234,13 +234,17 @@ const ContextValues = () => {
 
       let notificationsData = "[]";
       let totalActorNotisInDB = 0;
-  
+      let totalUserNotiGot = 0;
+
       if(responseAll && responseAll.status!==204){
 
         const responseDataParsead = JSON.parse(responseAll.data.data.notifications);
   
         notificationsData = responseDataParsead.data;
         totalActorNotisInDB = responseDataParsead.count;
+        totalUserNotiGot = responseDataParsead.rows;
+      
+
       } 
   
       setTotalNotificationsActorInDB(totalActorNotisInDB)
@@ -281,7 +285,7 @@ const ContextValues = () => {
         setActorNotifications((prevNotifications) => [...prevNotifications, ...notificationsToAdd]);
       
       }
-      setTotalNotificationsActorQueried(totalNotificationsActorQueried+nexNotificationToAsk)
+      setTotalNotificationsActorQueried(totalNotificationsActorQueried+totalUserNotiGot+1)
       setIsUpdatingActorNotifications(false);
       setIsLoading(false);
 

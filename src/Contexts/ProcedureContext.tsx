@@ -43,13 +43,13 @@ const ContextValues = () => {
   const [categories, setCategories]= useState<string []>([])
 
   const [totalActorProceduresQueried, setTotalActorProceduresQueried] = useState <number> (0)
-  const [totalActorProcedures, setTotalActorProcedures] = useState <number> (0) //total de tramites en la base de datos
+  const [totalActorProceduresInDB, setTotalActorProceduresInDB] = useState <number> (0) //total de tramites en la base de datos
   //const [gotAllActorProcedures, setGotAllActorProcedures] = useState <Boolean> (false) 
   const [totalActorProceduresReaded, setTotalActorProceduresReaded] = useState<boolean>(false)
 
   const [totalPublishedProceduresQueried, setTotalPublishedProceduresQueried] = useState <number> (0)
   //const [gotAllPublishedProcedures, setGotAllPublishedProcedures] = useState <Boolean> (false) 
-  const [totalPublishedProcedures, setTotalPublishedProcedures] = useState <number> (0) //total de tramites publicados en la base de datos
+  const [totalPublishedProceduresInDB, setTotalPublishedProceduresInDB] = useState <number> (0) //total de tramites publicados en la base de datos
 
   const [isUpdatingProcedureUnit, setUpdatingProcedureUnit] = useState <Boolean> (false) 
   const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
@@ -66,11 +66,11 @@ const ContextValues = () => {
       setProceduresByApi([]);
       setCategories([]);
       setTotalActorProceduresQueried(0);
-      setTotalActorProcedures(0);
+      setTotalActorProceduresInDB(0);
      // setGotAllActorProcedures(false);
       setTotalActorProceduresReaded(false);
       setTotalPublishedProceduresQueried(0);
-      setTotalPublishedProcedures(0)
+      setTotalPublishedProceduresInDB(0)
       //setGotAllPublishedProcedures(false);
       setUpdatingProcedureUnit(false);
       setUpdatingPublishedProcedures(false);
@@ -160,7 +160,8 @@ const ContextValues = () => {
       try {
         //const FormsObj = JSON.parse(jsonStringWithoutEscape);
         const FormsObj = FormData.data
-        setTotalActorProcedures(FormData.count)
+        setTotalActorProceduresInDB(FormData.count)
+        const totalActorProcedureGot = FormData.rows;
         const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
       
             const mappedArray = FormsObj.map((procedureInstance: any) => {
@@ -190,7 +191,7 @@ const ContextValues = () => {
               //setGotAllActorProcedures(true)
               
             }else{
-              setTotalActorProceduresQueried(totalActorProceduresQueried+21)
+              setTotalActorProceduresQueried(totalActorProceduresQueried+totalActorProcedureGot+1)
               setProcedures(prevProcedures => [...prevProcedures, ...procedureAux]);
             }
       } catch (error) {
@@ -228,7 +229,8 @@ const ContextValues = () => {
       const totalSize = FormData.count
         try {
           const FormsObj = FormData.data;
-          setTotalPublishedProcedures(FormData.count)
+          setTotalPublishedProceduresInDB(FormData.count)
+          const totalPublishedProcedureGot = FormData.rows;
           const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
         
               const mappedArray = FormsObj.map((procedureInstance: any) => {
@@ -255,7 +257,7 @@ const ContextValues = () => {
               if (FormsObj.length===0){
                 //setGotAllPublishedProcedures(true)
               }else{
-                setTotalPublishedProceduresQueried(totalPublishedProceduresQueried+21)
+                setTotalPublishedProceduresQueried(totalPublishedProceduresQueried+totalPublishedProcedureGot+1)
                 setProceduresPublished(prevProcedures => [...prevProcedures, ...procedureAux]);
               }
         } catch (error) {
@@ -315,10 +317,10 @@ const ContextValues = () => {
     categories,
    // gotAllActorProcedures, 
     //gotAllPublishedProcedures,
-    totalPublishedProcedures,
+    totalPublishedProceduresInDB,
     totalActorProceduresReaded, setTotalActorProceduresReaded,
     totalActorProceduresQueried,
-    totalActorProcedures,
+    totalActorProceduresInDB,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,

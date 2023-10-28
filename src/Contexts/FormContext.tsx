@@ -19,14 +19,14 @@ const ContextValues = () => {
   const [errors, setErrors] = useState<string>("");
 
   const [totalFormUnitsQueried, setTotalFormUnitsQueried] = useState <number> (0)
-  const [totalFormUnits, setTotalFormUnits] = useState <number> (0) //total de fomularios en la base de datos
+  const [totalFormUnitsInDB, setTotalFormUnitsInDB] = useState <number> (0) //total de fomularios en la base de datos
 
   //const [gotAllFormUnits, setGotAllFormUnits] = useState <Boolean> (false) 
   const [totalFormUnitReaded, setTotalFormUnitReaded] = useState<boolean>(false)
 
   const [totalFormUnitsPublishedQueried, setTotalFormUnitsPublishedQueried] = useState <number> (0)
   //const [gotAllFormUnitsPublished, setGotAllFormUnitsPublished] = useState <Boolean> (false) 
-  const [totalFormUnitsPublished, setTotalFormUnitsPublished] = useState <number> (0) //total de fomularios publicados en la base de datos
+  const [totalFormUnitsPublishedInDB, setTotalFormUnitsPublishedInDB] = useState <number> (0) //total de fomularios publicados en la base de datos
 
   const [isUpdatingFormUnit, setUpdatingFormUnit] = useState<Boolean> (false)
   const [isUpdatingPublishedForms, setUpdatingPublishedForms] = useState<Boolean> (false)
@@ -51,7 +51,7 @@ const ContextValues = () => {
   
   //RECURSIVITY
   useEffect(() => {
-    if (totalFormUnitsPublished >publishedFormularios.length ) {
+    if (totalFormUnitsPublishedInDB >publishedFormularios.length ) {
       UpdatePublishedForms();
     }
   }, [publishedFormularios && totalFormUnitsPublishedQueried]);
@@ -129,7 +129,8 @@ const ContextValues = () => {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
       //const totalSize = FormsObj.count
-      setTotalFormUnits(FormsObj.count)
+      setTotalFormUnitsInDB(FormsObj.count)
+      const totalFormGot = FormsObj.rows;
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.data.map((formInstance: any) => {
        // let fields: FieldsType = [];
@@ -146,7 +147,7 @@ const ContextValues = () => {
       if (FormsObj.length===0){
         //setGotAllFormUnits(true)
       }else{
-        setTotalFormUnitsQueried(totalFormUnitsQueried+21)
+        setTotalFormUnitsQueried(totalFormUnitsQueried+totalFormGot+1)
         setFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
       }
     }
@@ -169,7 +170,8 @@ const ContextValues = () => {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
      // const totalSize = FormsObj.count
-      setTotalFormUnitsPublished(FormsObj.count)
+      setTotalFormUnitsPublishedInDB(FormsObj.count)
+      const totalFormPublishedGot = FormsObj.rows;
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.data.map((formInstance: any) => {
         //let fields: FieldsType = [];
@@ -186,7 +188,7 @@ const ContextValues = () => {
       if (FormsObj.length===0){
        // setGotAllFormUnitsPublished(true)
       }else{
-        setTotalFormUnitsPublishedQueried(totalFormUnitsPublishedQueried+21)
+        setTotalFormUnitsPublishedQueried(totalFormUnitsPublishedQueried+totalFormPublishedGot+1)
         setPublishedFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
       }
     }
@@ -266,10 +268,10 @@ const ContextValues = () => {
     isLoading,
     formularios,
     publishedFormularios,
-    totalFormUnits,
+    totalFormUnitsInDB,
     //gotAllFormUnits, 
     //gotAllFormUnitsPublished,
-    totalFormUnitsPublished,
+    totalFormUnitsPublishedInDB,
     totalFormUnitReaded, setTotalFormUnitReaded,
     setFormularios,
     SaveForm, 

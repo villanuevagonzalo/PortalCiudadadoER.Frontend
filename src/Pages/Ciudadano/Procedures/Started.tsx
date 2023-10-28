@@ -40,7 +40,7 @@ export const DC_Procedures_Started = () => {
 
   useEffect(()=>{
 
-    if (ciudadanoProcedures != null && ciudadanoProcedures.length > 0) {
+    if (ciudadanoProcedures.length > 0) {
 
       const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => item.getProcedureUnitId());
       const proceduresInCiudadano = proceduresPublished.filter((item) =>
@@ -69,13 +69,13 @@ export const DC_Procedures_Started = () => {
   },[])
 
   useEffect(()=>{
-
+    
     const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => String(item.getProcedureUnitId()));
-
+    
     const proceduresInCiudadano = proceduresPublished.filter((item) =>
       ciudadanoProcedureUnitIds.includes(item.getId()!.toString())
     );
-
+    
       if (AllProcedures.length==0){
 
         setAllProcedures(proceduresInCiudadano)
@@ -85,7 +85,7 @@ export const DC_Procedures_Started = () => {
         setFilteredProcedures(proceduresInCiudadano)
       }
   
-  }, [proceduresPublished && ciudadanoProcedures]);
+  }, [proceduresPublished , ciudadanoProcedures]);
 
   useEffect(()=>{
     if (procedureInstance!=null && procedureInstance!=undefined){
