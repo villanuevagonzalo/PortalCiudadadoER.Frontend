@@ -126,17 +126,18 @@ export const DC_Procedures_Started = () => {
 
   const DataTitle = useMemo(() => {
     const uniqueTitles = Array.from(
-      new Set(proceduresPublished.map((item: any) => item.getTitle() + " (título)"))
+      new Set(filteredProcedures.map((item: any) => item.getTitle() + " (título)"))
     );
     return uniqueTitles;
-  }, [proceduresPublished]);
+  }, [filteredProcedures]);
   
   const DataTheme = useMemo(() => {
     const uniqueThemes = Array.from(
-      new Set(proceduresPublished.map((item: any) => item.getTheme() + " (temática)"))
+      new Set(filteredProcedures.map((item: any) => item.getTheme() + " (temática)"))
     ).flat();
     return uniqueThemes;
-  }, [proceduresPublished]);
+  }, [filteredProcedures]);
+  
   const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme]);
 
 
@@ -212,7 +213,7 @@ export const DC_Procedures_Started = () => {
                 <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
                 <h1>{item.getTitle()}</h1>
                 <p>{item.getDescription()}</p>
-                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === item.getId())?.getStatus()}</h2>
+                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
                 </div>
             </div>          
                 ) : (

@@ -126,7 +126,7 @@ interface Arguments {
         <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
             {showFormCorrectedUploaded && (<CitizeFormCreatedProps close={close} FormTitle={form.getTitle()} />)}
-            { showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
+            {showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
             <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
                 <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
                 <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>

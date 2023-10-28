@@ -267,6 +267,7 @@ const ContextValues = () => {
         attachmentId,
         setFormState
       );
+      console.log("lets see whats coming here: "+JSON.stringify(response))
   /*
       const reader = new FileReader();
   
