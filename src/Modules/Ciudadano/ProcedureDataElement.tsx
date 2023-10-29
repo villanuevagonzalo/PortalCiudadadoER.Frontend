@@ -105,7 +105,6 @@ interface FormGenericData {
 
 
     useEffect(() => {
-
         if (procedureInstance) {
             if (procedureInstance.getAttachments().length > 0 )
             {
