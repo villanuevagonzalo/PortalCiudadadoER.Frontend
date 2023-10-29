@@ -307,7 +307,7 @@ const ContextValues = () => {
         const response = await AxiosNotificationAPI.GetAttachment({ multimedia_id: id });
         const response2 = await AxiosNotificationAPI.GetAttachmentName({ multimedia_id: id });
         const reader = new FileReader();
-  
+
         return new Promise<FileBlob>((resolve, reject) => {
           reader.onloadend = () => {
             const imageDataURL = reader.result as string;

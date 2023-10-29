@@ -41,7 +41,7 @@ export const TramitesOnlinePage = () => {
   const navigate = useNavigate();
 
   const { UpdatePublishedProcedures, totalPublishedProceduresInDB, proceduresPublished, isLoadingProcedure} = useContext(ProcedureContext);
-  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , totalCitizenProceduresInDB, totalCitizenProceduresQueried} = useContext(CiudadanoProcedureContext);
+  const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , totalCitizenProceduresInDB, totalCitizenProceduresQueried, isLoadingProcedureCitizen} = useContext(CiudadanoProcedureContext);
   const [filteredProcedures, setFilteredProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
   const [searchProcedure, setSearchProcedure] = useState<string>()
 
@@ -277,7 +277,7 @@ export const TramitesOnlinePage = () => {
                 <div className="text-right flex gap-4">
                 <NavigatorSpacer/> 
                 {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
-                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >Iniciar</Button>
+                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >{isLoadingProcedureCitizen ? <Spinner /> : "Iniciar"}</Button>
                 </div>
             </LayoutSection>)
             }

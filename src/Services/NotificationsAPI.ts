@@ -51,6 +51,7 @@ export class NotificationsAPI {
   }) => {
     return this.baseService.get('/v0/notification/get/user/attachments', { params, responseType: 'blob' })
   }
+  
   GetAttachmentName = async (params: {
     multimedia_id: number;
   }) => {

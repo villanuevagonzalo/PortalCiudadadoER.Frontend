@@ -5,7 +5,7 @@ import { LayoutSection, LayoutSectionProcedureTitle, LayoutSpacer } from "../../
 import {  ElementInstance, ElementSchema, FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Button } from "../../Components/Forms/Button";
-import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { HiArrowDownTray, HiMiniArrowUpRight, HiOutlineClipboardDocumentList, HiOutlineEnvelope, HiOutlineEnvelopeOpen, HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
@@ -20,6 +20,8 @@ import { IFormState } from '../../Interfaces/Data';
 import { CiudadanoFormToCheckElement } from './FormDatoUpdateElement';
 import { CiudadanoFormContext } from '../../Contexts/CiudadanoFormContext';
 import { json } from 'stream/consumers';
+import { AiFillCaretLeft } from 'react-icons/ai';
+import { Spinner } from '../../Components/Elements/StyledComponents';
 
 interface Arguments {
     procedureInstance:ProcedureInstance<ElementSchemaTypes>;
@@ -35,7 +37,7 @@ interface FormGenericData {
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
 
-    const { ciudadanoProcedures, UpdateCiudadanoProcedures, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
+    const { ciudadanoProcedures, UpdateCiudadanoProcedures, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment, isLoadingProcedureCitizen } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
     const {UpdateCitizenForms}= useContext(CiudadanoFormContext); //This is the total citizen data procedures
     const [procedureData, setProcedureData] = useState <ProcedureData > (); //Is this procedure citizen data
 
@@ -80,20 +82,15 @@ interface FormGenericData {
         UpdateCitizenForms()
 
         if (ciudadanoProcedures.length == 0 ){
-            console.log("primero va esto")
             UpdateCiudadanoProcedures()
         }else{
-
             const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() == procedureInstance.getId());
 
             if (filteredProcedure){
                 setProcedureData(filteredProcedure);
                 setProcedureDataAttachments(filteredProcedure.getAttachments()!)
-            }
-    
-            
+            }   
         }
-        
         
     },[])
 
@@ -134,10 +131,6 @@ interface FormGenericData {
     },[ciudadanoProcedures])
 
 
-    useEffect(()=>{
-        console.log("cambio esto procedureData? "+JSON.stringify(procedureData))
-    },[procedureData])
-        
     useEffect(()=>{
 
         if (formToComplete!=undefined && procedureData!=undefined){
@@ -202,6 +195,7 @@ interface FormGenericData {
             const response = await GetCiudadanoProcedureAttachment(multimediaIdAtIndex, attachmentName, setFormState);
            
         } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             setShowAttachmentMessage(true)
             setAlertMessage ("Error en la visualización del documento")
             setAlertMessage2 ("Intente más tarde.")
@@ -228,6 +222,7 @@ interface FormGenericData {
             const multimediaIdAtIndex = multimediaId[position];
             const response = await DeleteCiudadanoProcedureAttachment( procedureData?.getId()!, multimediaIdAtIndex, setFormState);
             if (response){
+                window.scrollTo({ top: 0, behavior: 'smooth' });
                 setProcedureDataAttachments((prevState) => prevState.filter((element) => element !== attachmentName));
                 setAlertMessage ("Documento adjunto eliminado")
                 setAlertMessage2 ("")
@@ -236,6 +231,7 @@ interface FormGenericData {
             }
             // Ahora "multimediaIdAtIndex" contiene el elemento en la posición "position"
         } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             setAlertMessage ("Error")
             setAlertMessage2 ("Intente más tarde.")
             setShowAttachmentMessage(true)
@@ -260,7 +256,7 @@ interface FormGenericData {
         return (
             <div style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
                 <LayoutSection>
-                    <h1>{form.getTitle()}</h1>
+                    <h1><HiOutlineClipboardDocumentList />{form.getTitle()}</h1>
                     {procedureData && procedureData.getForms().includes(form.getCode().toString()) ? (
                         <div style={{ display: "flex", flexDirection: "column" }}>
                             <h1><MdCheck /> Formulario completado</h1>
@@ -299,26 +295,30 @@ interface FormGenericData {
                         procedureInstanceAttachments.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"30px 0px 15px 0px"}}>
                                 {procedureDataAttachments.includes(element.name) ? (
-                                <div style={{display:"flex", flexDirection:"column"}} >
-                                    <p>Archivo {element.name} cargado</p>
-                                    <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop:"15px" }}>
-                                        <Button fullwidth={false}  onClick={() => downloadAttachment(element.name)}  ><HiOutlineMagnifyingGlass/>Ver</Button>
-                                        <Button color="secondary" fullwidth={false}  onClick={() => deleteAttachment(element.name)}><BiTrash />Eliminar</Button>
+                                <LayoutSection >
+                                    <div style={{display:"flex", flexDirection:"column"}} >
+                                        <h1><HiOutlineEnvelope />Archivo {element.name} cargado</h1>
+                                        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop:"15px" }}>
+                                            <Button fullwidth={false}  onClick={() => downloadAttachment(element.name)}  ><HiArrowDownTray/> Descargar</Button>
+                                            <Button color="secondary" fullwidth={false}  onClick={() => deleteAttachment(element.name)}><BiTrash />Eliminar</Button>
+                                        </div>
                                     </div>
-                                </div>
+                                </LayoutSection>
                                 ) : (
-                                    <>
+                                    <LayoutSection >
+                                    <div style={{display:"flex", flexDirection:"column"}} >
+                                    <h1 style={{marginBottom:"25px"}} ><HiOutlineEnvelopeOpen />Adjunte {element.name}</h1>
                                     <Element instance={element} className="flex-2" />
-                                    <div style={{ display: "flex", alignItems: "flex-end" }}>
-                                      <FormikButton style={{ width: "200px" }} disabled={false} color="secondary" type="submit" onClick={() => {elementoName = element.name} }>
-                                        Cargar archivo
+                                    <div style={{ display: "flex", alignItems: "flex-end", justifyContent:"right" }}>
+                                      <FormikButton style={{with:"400px"}} disabled={false} color="secondary" type="submit" onClick={() => {elementoName = element.name} }>
+                                      {isLoadingProcedureCitizen ? <Spinner /> : <p>Cargar<HiMiniArrowUpRight/></p>} 
                                       </FormikButton>
                                     </div>
-                                  </>                               
+                                  </div >     
+                                  </LayoutSection>                          
                                 )}
                             </div>
                             ))}  
-
                         </Form>
                     </Formik>
                     </div>
@@ -342,7 +342,7 @@ interface FormGenericData {
             setShowAttachmentMessage(true)
             setAlertMessage ("Documento cargado correctamente")
             setAlertMessage2 ("")
-
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             clearFileArray()
 
         }else{
@@ -350,6 +350,7 @@ interface FormGenericData {
             setAlertMessage ("Error en la carga del documento")
             setAlertMessage2 ("Intente más tarde.")
             setShowAttachmentMessage(true)
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
         }
     }

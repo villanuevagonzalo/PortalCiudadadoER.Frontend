@@ -71,10 +71,18 @@ export class CiudadanoProcedureAPI {
     return this.baseService.post('/v0/dashboard/procedures/delete', params)
   }
 
+
+
   GetAttachment = async (params: {
-    attachmentId:number
+    attachmentId: number;
   }) => {
-    return this.baseService.get('/v0/dashboard/procedures/attachments', {params})
+    return this.baseService.get('/v0/dashboard/procedures/attachments', { params, responseType: 'blob' })
+  }
+
+  GetAttachmentName = async (params: {
+    attachmentId: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/attachments/name', { params })
   }
 
   DeleteAttachment = async (params: {
