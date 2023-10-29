@@ -5,7 +5,7 @@ import { LayoutSection, LayoutSectionProcedureTitle, LayoutSpacer } from "../../
 import {  ElementInstance, ElementSchema, FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Button } from "../../Components/Forms/Button";
-import { HiArrowDownTray, HiArrowUpTray, HiMiniArrowUpRight, HiOutlineClipboardDocumentList, HiOutlineEnvelope, HiOutlineEnvelopeOpen, HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { HiArrowDownTray, HiArrowUpTray, HiOutlineClipboardDocumentList, HiOutlineEnvelope, HiOutlineEnvelopeOpen, HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
