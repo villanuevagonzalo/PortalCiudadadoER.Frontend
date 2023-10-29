@@ -63,6 +63,8 @@ export const TramitesOnlinePage = () => {
   const [chekingCitizenProcedure, setCheckingCitizenProcedure] = useState(false)
   const [procedureIdSearched, setProcedureIdSearched] = useState<number>()
 
+  const [loadingProcedure , setLoadingProcedure ] = useState<boolean>(false)
+
   useEffect(()=>{
     
     if (proceduresPublished.length===0){
@@ -106,6 +108,13 @@ export const TramitesOnlinePage = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   },[procedureInstance && seeingProcedure])
+
+
+  useEffect(()=>{
+    
+    setLoadingProcedure(isLoadingProcedureCitizen)
+
+  },[isLoadingProcedureCitizen])
 
   const getMoreNews = () => {
     UpdatePublishedProcedures()
@@ -163,10 +172,12 @@ export const TramitesOnlinePage = () => {
 
     const seeProcedure = async (idBuscado: number) => {
       // Busca el procedimiento en la lista de procedimientos publicados
+      setLoadingProcedure(true)
       const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
     
       // Si no se encuentra el procedimiento, salimos temprano
       if (!foundProcedure) {
+        setLoadingProcedure(false)
         return;
       }
   
@@ -208,9 +219,10 @@ export const TramitesOnlinePage = () => {
             window.scrollTo({ top: 0, behavior: 'smooth' })
           }
       }
+
+      setLoadingProcedure(false)
   }
     
-
     if (render === "procedure" && procedureInstance) {
         
         return <CiudadanoProcedureData procedureInstance={procedureInstance} backFunction={setRender} />;
@@ -277,7 +289,7 @@ export const TramitesOnlinePage = () => {
                 <div className="text-right flex gap-4">
                 <NavigatorSpacer/> 
                 {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
-                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >{isLoadingProcedureCitizen ? <Spinner /> : "Iniciar"}</Button>
+                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >{loadingProcedure ? <Spinner /> : "Iniciar"}</Button>
                 </div>
             </LayoutSection>)
             }

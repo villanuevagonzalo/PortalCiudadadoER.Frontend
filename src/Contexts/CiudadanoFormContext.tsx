@@ -23,7 +23,7 @@ const ContextValues = () => {
   const AxiosCiudadanoFormAPI = new CiudadanoFormAPI();
   const [ciudadanoFormularios, setCiudadanoFormularios] = useState<FormDataClass[]>([]);
   //const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
-  const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(true);
+  const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string>("");
   
   const [isUpdatingCitizenForms, setUpdatingCitizenForms] = useState<boolean>(true);
@@ -33,7 +33,7 @@ const ContextValues = () => {
 
     if(!isLogged){
       setCiudadanoFormularios([])
-      setIsLoading(true)
+      setIsLoading(false)
       setErrors("")
       setUpdatingCitizenForms(true)
     }
@@ -50,7 +50,6 @@ const ContextValues = () => {
       if (status) {
         //let fields: ElementInstance<ElementSchemaTypes>[] = [];
         //console.log("Veamos lo que llega aqui: "+JSON.stringify(responseData.ELEMENTS))
-        console.log("Veamos lo que llega aqui COMPLETO: "+JSON.stringify(responseData))
 
        /* let componentes= JSON.parse(responseData.ELEMENTS)
         componentes.map((componente: any, index:number)=> {
@@ -81,6 +80,7 @@ const ContextValues = () => {
       );
         setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
         procedureData.setForms(responseData.FORM_UNIT)
+        setIsLoading(false)
         return true;
       }
       else{
@@ -268,6 +268,7 @@ const ContextValues = () => {
         );
 
           setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
+          setIsLoading(false)
       }else{
         setIsLoading(false);
         return false;

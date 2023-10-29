@@ -1,5 +1,5 @@
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../Components/Layout/StyledComponents";
 import { ElementInstance, FormInstance, ProcedureData } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
@@ -30,7 +30,7 @@ interface Arguments {
   export const CiudadanoFormElement: React.FC<Arguments> = ({procedureData, form, close}) => {
     
     const { SaveForm, ciudadanoFormularios, isLoadingFormCitizen } = useContext(CiudadanoFormContext);
-    const { ciudadanoProcedures } = useContext(CiudadanoProcedureContext);
+    const { ciudadanoProcedures, setCiudadanoProcedures } = useContext(CiudadanoProcedureContext);
 
     const { GetElementsByCode, GetFormByCode, isLoading} = useContext(FormContext);
 
@@ -109,6 +109,7 @@ interface Arguments {
         const response = await SaveForm(procedureData, data, setFormState);
         if (response) {
           setShowFormCorrectedUploaded(true);
+          
         } else {
           setShowFormUploadError(true);
         }
@@ -123,7 +124,10 @@ interface Arguments {
     }
 
     return (
-        <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
+      (isLoading || isLoadingFormCitizen) ? 
+      (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)
+      :
+      (  <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
             {showFormCorrectedUploaded && (<CitizeFormCreatedProps close={close} FormTitle={form.getTitle()} />)}
             {showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
@@ -156,15 +160,12 @@ interface Arguments {
                         }}
                     >
                         <Form autoComplete="off">
-                          {isLoading ? (
-                              <Spinner />
-                            ) : (
-                              fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                          {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                                 <div key={element.name} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
                                   <Element instance={element} className="flex-2" />
                                 </div>
                               ))
-                            )}
+                            }
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>
@@ -174,9 +175,9 @@ interface Arguments {
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                 <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
-                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >CARGAR<BiSend/> </Button>
+                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >{isLoadingFormCitizen ? <Spinner/> : <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>} </Button>
             </div>
-        </div>
+        </div>)
     )
 
 

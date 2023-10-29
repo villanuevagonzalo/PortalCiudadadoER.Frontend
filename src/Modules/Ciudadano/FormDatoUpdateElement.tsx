@@ -1,5 +1,5 @@
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
-import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../Components/Layout/StyledComponents";
+import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../Components/Layout/StyledComponents";
 import { ElementInstance, FormDataClass, FormInstance, ProcedureData } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
@@ -155,7 +155,10 @@ interface Arguments {
     }
 
     return (
-        <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
+      (isLoading || isLoadingFormCitizen) ? 
+      (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)
+      :
+       ( <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
             {showFormCorrectedUploaded && (<CitizeFormUploadedProps close={close} FormTitle={form.getTitle()} setFormToCheck={setFormToCheck} />)}
             { showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
@@ -190,14 +193,11 @@ interface Arguments {
                         }}
                     >
                         <Form autoComplete="off">
-                        {isLoadingFormCitizen ? (
-                          <Spinner />
-                          ) : (
-                            fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                        {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
                             <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                               <Element instance={element} className="flex-2"/>
                             </div>
-                          )))}
+                          ))}
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>
@@ -211,7 +211,7 @@ interface Arguments {
                 <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >MODIFICAR<BiSend/> </Button>
                 )}
             </div>
-        </div>
+        </div>)
     )
 
   }
