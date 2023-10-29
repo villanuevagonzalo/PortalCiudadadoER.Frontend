@@ -34,6 +34,8 @@ interface FormGenericData {
   }
 
 
+
+
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
 
@@ -310,8 +312,8 @@ interface FormGenericData {
                                     <h1 style={{marginBottom:"25px"}} ><HiOutlineEnvelopeOpen />Adjunte {element.name}</h1>
                                     <Element instance={element} className="flex-2" />
                                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent:"right" }}>
-                                      <FormikButton style={{with:"400px"}} disabled={false} color="secondary" type="submit" onClick={() => {elementoName = element.name} }>
-                                      {isLoadingProcedureCitizen ? <Spinner /> : <p>Cargar<HiMiniArrowUpRight/></p>} 
+                                      <FormikButton  disabled={false} color="secondary" type="submit" onClick={() => {elementoName = element.name} }>
+                                      {isLoadingProcedureCitizen ? <Spinner /> : <p>Cargar</p> } 
                                       </FormikButton>
                                     </div>
                                   </div >     
