@@ -66,10 +66,10 @@ interface FormGenericData {
     const completarForm = (formSelected:FormInstance<ElementSchemaTypes>) => {
         setFormToComplete(formSelected)
     }
+
     const checkForm = (formSelected:FormInstance<ElementSchemaTypes>) => {
         if (formSelected!=undefined){
             setFormToCheck(formSelected)
-
         }
     }
 
@@ -107,7 +107,6 @@ interface FormGenericData {
     useEffect(() => {
 
         if (procedureInstance) {
-
             if (procedureInstance.getAttachments().length > 0 )
             {
                 let attachmentsAux: ElementInstance<ElementSchemaTypes>[] = [];
@@ -148,6 +147,7 @@ interface FormGenericData {
 
 
     useEffect(()=>{
+        console.log("it came from from data element")
         if (render=="home"){
             setFormToComplete(undefined)
         }

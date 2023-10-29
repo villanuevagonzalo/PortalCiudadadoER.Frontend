@@ -569,6 +569,8 @@ export class ProcedureData {
 
   setForms(form: string) {
     // Verificar si 'forms' es undefined o null y crear un nuevo arreglo si es necesario
+    console.log("esto está cambiando: "+form)
+    
     if (!this.forms) {
       this.forms = [];
     }
@@ -584,7 +586,6 @@ export class ProcedureData {
   getMultimediaId(){
     return this.multimedia_id;
   }
-
 
   setAttachments(attachmentName: string) {
     // Verificar si 'multimedia_id' es undefined o null y crear un nuevo arreglo si es necesario
