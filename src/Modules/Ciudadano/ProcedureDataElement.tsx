@@ -5,7 +5,7 @@ import { LayoutSection, LayoutSectionProcedureTitle, LayoutSpacer } from "../../
 import {  ElementInstance, ElementSchema, FormInstance, ProcedureData, ProcedureInstance } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Button } from "../../Components/Forms/Button";
-import { HiArrowDownTray, HiMiniArrowUpRight, HiOutlineClipboardDocumentList, HiOutlineEnvelope, HiOutlineEnvelopeOpen, HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { HiArrowDownTray, HiArrowUpTray, HiMiniArrowUpCircle, HiMiniArrowUpRight, HiOutlineClipboardDocumentList, HiOutlineEnvelope, HiOutlineEnvelopeOpen, HiOutlineMagnifyingGlass } from "react-icons/hi2";
 import { useContext, useEffect, useRef, useState } from "react";
 import { FieldsType, FormContext } from "../../Contexts/FormContext";
 import { CiudadanoFormElement } from "./FormDataElement";
@@ -32,8 +32,6 @@ interface FormGenericData {
     code: string;
     title:string;
   }
-
-
 
 
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
@@ -313,7 +311,7 @@ interface FormGenericData {
                                     <Element instance={element} className="flex-2" />
                                     <div style={{ display: "flex", alignItems: "flex-end", justifyContent:"right" }}>
                                       <FormikButton  disabled={false} color="secondary" type="submit" onClick={() => {elementoName = element.name} }>
-                                      {isLoadingProcedureCitizen ? <Spinner /> : <p>Cargar</p> } 
+                                      {isLoadingProcedureCitizen ? <Spinner /> : <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><HiArrowUpTray/></div>} 
                                       </FormikButton>
                                     </div>
                                   </div >     

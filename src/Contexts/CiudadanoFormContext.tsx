@@ -48,36 +48,39 @@ const ContextValues = () => {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
       if (status) {
-        let fields: ElementInstance<ElementSchemaTypes>[] = [];
-        let componentes= JSON.parse(responseData[0].ELEMENTS)
+        //let fields: ElementInstance<ElementSchemaTypes>[] = [];
+        //console.log("Veamos lo que llega aqui: "+JSON.stringify(responseData.ELEMENTS))
+        console.log("Veamos lo que llega aqui COMPLETO: "+JSON.stringify(responseData))
+
+       /* let componentes= JSON.parse(responseData.ELEMENTS)
         componentes.map((componente: any, index:number)=> {
                   const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
                   aux.update((componente.properties))
                   fields.push(aux);
         });
-        
+        */
         let parsedAttachments=[]
-        if (responseData[0].ATTACHMENTS!=""){
+        if (responseData.ATTACHMENTS!=""){
             parsedAttachments = responseData[0].ATTACHMENTS.split(",");
         }
         let parsedMultimediaID=[]
-        if (responseData[0].MULTIMEDIA_ID!=""){
+        if (responseData.MULTIMEDIA_ID!=""){
           parsedMultimediaID = responseData[0].ATTACHMENTS.split(",");
         }
 
         const newFormData = new FormDataClass(
-          responseData[0].ID,
-          responseData[0].FORM_UNIT,
-          responseData[0].PROCEDURE_DATA_ID,
-          responseData[0].STATUS,                        
+          responseData.ID,
+          responseData.FORM_UNIT,
+          responseData.PROCEDURE_DATA_ID,
+          responseData.STATUS,                        
           parsedAttachments,
           parsedMultimediaID,
-          responseData[0].USER_ID,
-          responseData[0].CREATED_AT,
-          responseData[0].UPDATED_AT
+          responseData.USER_ID,
+          responseData.CREATED_AT,
+          responseData.UPDATED_AT
       );
         setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
-        procedureData.setForms(responseData[0].FORM_UNIT)
+        procedureData.setForms(responseData.FORM_UNIT)
         return true;
       }
       else{
