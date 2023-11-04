@@ -55,6 +55,14 @@ export class CiudadanoProcedureAPI {
     })
   }
 
+  SearchByKeyword = async (params: {
+    keyword: string;
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/search', { params})
+  }
+
   SendAttachments = async (params: {
     data:string
   }) => {
@@ -70,8 +78,6 @@ export class CiudadanoProcedureAPI {
   }) => {
     return this.baseService.post('/v0/dashboard/procedures/delete', params)
   }
-
-
 
   GetAttachment = async (params: {
     attachmentId: number;

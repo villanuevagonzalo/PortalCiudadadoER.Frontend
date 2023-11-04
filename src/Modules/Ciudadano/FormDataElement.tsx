@@ -18,6 +18,7 @@ import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 import { Spinner } from "../../Components/Elements/StyledComponents";
+import { ValidateForm } from "../FormElements/Validators";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -155,9 +156,12 @@ interface Arguments {
                         validateOnChange={false}
                         enableReinitialize={true}
                         initialValues={initialValues}
-                        onSubmit={(e:any)=>{
-                            console.log(e)
+                        onSubmit={async(values:any)=>{
+                            console.log(values)
+                            enviar()
                         }}
+                        validate={(values: any) => ValidateForm(values, mapFieldsToObj(fields))}
+
                     >
                         <Form autoComplete="off">
                           {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
@@ -169,6 +173,8 @@ interface Arguments {
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>
+{/*                            <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
+*/}
                         </Form>
                     </Formik>
                 </LayoutSection> 
@@ -181,4 +187,12 @@ interface Arguments {
     )
 
 
+  }
+
+  function mapFieldsToObj(fields: ElementInstance<ElementSchemaTypes>[]) {
+    const obj: { [key: string]: ElementInstance<ElementSchemaTypes> } = {};
+    fields.forEach((field) => {
+      obj[field.name] = field;
+    });
+    return obj;
   }

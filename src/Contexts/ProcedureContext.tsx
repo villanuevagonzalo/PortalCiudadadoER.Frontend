@@ -35,6 +35,7 @@ const ContextValues = () => {
 
   const [procedures, setProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
   const [proceduresPublished, setProceduresPublished] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
+  const [proceduresSearcedhByKeyword, setProceduresSearcedhByKeyword] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
 
   const [isLoadingProcedure, setIsLoading] = useState<boolean>(true);
   const [errors, setErrors] = useState<string>("");
@@ -44,16 +45,18 @@ const ContextValues = () => {
 
   const [totalActorProceduresQueried, setTotalActorProceduresQueried] = useState <number> (0)
   const [totalActorProceduresInDB, setTotalActorProceduresInDB] = useState <number> (0) //total de tramites en la base de datos
-  //const [gotAllActorProcedures, setGotAllActorProcedures] = useState <Boolean> (false) 
   const [totalActorProceduresReaded, setTotalActorProceduresReaded] = useState<boolean>(false)
 
   const [totalPublishedProceduresQueried, setTotalPublishedProceduresQueried] = useState <number> (0)
-  //const [gotAllPublishedProcedures, setGotAllPublishedProcedures] = useState <Boolean> (false) 
   const [totalPublishedProceduresInDB, setTotalPublishedProceduresInDB] = useState <number> (0) //total de tramites publicados en la base de datos
+
+  const [totalProceduresSearchedByKeyWordQueried, setTotalProceduresSearchedByKeyWordQueried] = useState <number> (0)
+  const [totalProceduresSearchedByKeyWordInDB, setTotalProceduresSearchedByKeyWordInDB] = useState <number> (0) //total de tramites publicados en la base de datos
 
   const [isUpdatingProcedureUnit, setUpdatingProcedureUnit] = useState <Boolean> (false) 
   const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
-  
+  const [isUpdatingProceduresSearchByKeyWord, setUpdatingProceduresSearchByKeyWord] = useState <Boolean> (false) 
+
   const { isLogged } = useContext(AuthContext);
 
   useEffect(() => {
@@ -61,6 +64,7 @@ const ContextValues = () => {
     if(!isLogged){
       setProcedures([]);
       setProceduresPublished([]);
+      setProceduresSearcedhByKeyword([]);
       setIsLoading(true);
       setErrors("");
       setProceduresByApi([]);
@@ -70,7 +74,9 @@ const ContextValues = () => {
      // setGotAllActorProcedures(false);
       setTotalActorProceduresReaded(false);
       setTotalPublishedProceduresQueried(0);
-      setTotalPublishedProceduresInDB(0)
+      setTotalPublishedProceduresInDB(0);
+      setTotalProceduresSearchedByKeyWordQueried(0);
+      setTotalProceduresSearchedByKeyWordInDB(0);
       //setGotAllPublishedProcedures(false);
       setUpdatingProcedureUnit(false);
       setUpdatingPublishedProcedures(false);
@@ -219,14 +225,11 @@ const ContextValues = () => {
     let responseAll:AxiosResponse | ResponseError | null = null;
     
     try { responseAll = await AxiosCiudadanoProcedureAPI.GetPublished(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    //let forms=responseAll!.data.data; 
-    //response_without_backslashes = json.loads(response.replace('\\', ''))
-    //let FormData = "[]";
+    
    if(responseAll && responseAll.status!==204) 
     {
       const FormData = JSON.parse(responseAll.data.data);
       //const jsonStringWithoutEscape =removeHTMLTags(FormData.data);
-      const totalSize = FormData.count
         try {
           const FormsObj = FormData.data;
           setTotalPublishedProceduresInDB(FormData.count)
@@ -268,6 +271,69 @@ const ContextValues = () => {
     setIsLoading(false); 
   }
   
+  const UpdateSearchProceduresByKeyword = async(keyword: string) => {
+
+    if (isUpdatingProceduresSearchByKeyWord) {
+      return;
+    }
+    setUpdatingProceduresSearchByKeyWord(true)
+    setIsLoading(true)
+
+    const jsonObject = {
+      keyword:keyword,
+      start_position: totalProceduresSearchedByKeyWordQueried,
+      end_position: (totalProceduresSearchedByKeyWordQueried+20),
+    };
+
+    let responseAll:AxiosResponse | ResponseError | null = null;
+    
+    try { responseAll = await AxiosCiudadanoProcedureAPI.SearchByKeyword(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
+
+    if(responseAll && responseAll.status!==204) 
+    {
+      const FormData = JSON.parse(responseAll.data.data);
+      //const jsonStringWithoutEscape =removeHTMLTags(FormData.data);
+        try {
+          const FormsObj = FormData.data;
+          setTotalProceduresSearchedByKeyWordInDB(FormData.count)
+          const totalProcedureSearchedGot = FormData.rows;
+          const procedureAux: SetStateAction<ProcedureInstance<ElementSchemaTypes>[]> = [];
+        
+              const mappedArray = FormsObj.map((procedureInstance: any) => {
+                const newProcedures = new ProcedureInstance(
+                  procedureInstance.TITLE,
+                  procedureInstance.DESCRIPTION,
+                  procedureInstance.SECRETARY,
+                  procedureInstance.STATE,
+                  JSON.parse(procedureInstance.FORMS),
+                  JSON.parse(procedureInstance.ATTACHMENTS),
+                  procedureInstance.CITIZEN_LEVEL,
+                  procedureInstance.PRICE,
+                  procedureInstance.THEME,
+                  procedureInstance.URL_TRAMITE,
+                  procedureInstance.ICON,
+                  procedureInstance.C,
+                  procedureInstance.CONTENT_ID,
+                  procedureInstance.ORF_ID,
+                  procedureInstance.ID
+                );
+                procedureAux.push(newProcedures);
+              });   
+              
+              if (FormsObj.length===0){
+                //setGotAllPublishedProcedures(true)
+              }else{
+                setTotalProceduresSearchedByKeyWordQueried(totalProceduresSearchedByKeyWordQueried+totalProcedureSearchedGot+1)
+                setProceduresSearcedhByKeyword(prevProcedures => [...prevProcedures, ...procedureAux]);
+              }
+        } catch (error) {
+          console.error('Error al analizar el JSON:', error);
+        }      
+    }
+    setUpdatingProceduresSearchByKeyWord(false)
+    setIsLoading(false); 
+  }
+
   //get procedures title, description and deparment
   const GetProceduresDataFromAPI = async() => {
     setIsLoading(true)
@@ -309,6 +375,14 @@ const ContextValues = () => {
     setProcedures([]);
   }
 
+  const ClearProcedureSearch = () => {
+
+    setProceduresSearcedhByKeyword([])
+     setTotalProceduresSearchedByKeyWordQueried (0)
+    setTotalProceduresSearchedByKeyWordInDB (0)
+  
+  }
+
   return {
     isLoadingProcedure,
     procedures,
@@ -321,6 +395,10 @@ const ContextValues = () => {
     totalActorProceduresReaded, setTotalActorProceduresReaded,
     totalActorProceduresQueried,
     totalActorProceduresInDB,
+    totalProceduresSearchedByKeyWordInDB,
+    proceduresSearcedhByKeyword,
+    ClearProcedureSearch,
+    UpdateSearchProceduresByKeyword,
     setProcedures,
     SaveProcedure, 
     UpdateOneProcedure,

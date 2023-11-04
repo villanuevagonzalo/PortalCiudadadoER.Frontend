@@ -21,9 +21,7 @@ const ContextValues = () => {
   const [errors, setErrors] = useState<string>("");
 
   const [totalCitizenProceduresQueried, setTotalCitizenProceduresQueried] = useState <number> (0)
-  //const [gotAllCitizenProcedures, setGotAllCitizenProcedures] = useState <Boolean> (false) 
   const [totalCitizenProceduresInDB, setTotalCitizenProceduresInDB] = useState <number> (0) //cantidad de procedimientos del ciudadano en la base de datos
-
 
   const [isUpdatingCiudadanoProcedures, setUpdatingCiudadanoProcedures]= useState <Boolean> (false) 
 

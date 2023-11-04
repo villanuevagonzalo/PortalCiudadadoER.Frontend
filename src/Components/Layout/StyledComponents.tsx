@@ -674,6 +674,7 @@ export const LayoutSection = styled.div<{ }>`
   border-radius:0.5rem;
   border: 1px solid var(--disabled);
   width:100%;
+  height:auto;
   padding:2rem;
   color: var(--maincolor_text);
   align-items: left;
@@ -720,6 +721,13 @@ export const LayoutSection = styled.div<{ }>`
       height: 1.5rem;
       margin-right: 0.75rem;
     }
+  }
+
+  & p{
+    maxWidth: "100%";
+    whiteSpace: "nowrap";
+    overflow: "hidden";
+    textOverflow: "ellipsis";
   }
 
   & button{
