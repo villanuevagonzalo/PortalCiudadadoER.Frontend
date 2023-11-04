@@ -124,7 +124,14 @@ export const DC_Configurations = () => {
         validateOnChange={false}
         validateOnBlur={false}
         validationSchema={formGetValidations(FormRequiredFields).concat(yup.object({
-          'Locality': yup.string().oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
+          'Locality': yup.string()
+            .test('is-valid', 'Debes seleccionar una localidad valida.', (value) => {
+              if (value) {
+                return LocationsFullPath(LocationsValues).includes(value);
+              }
+              return true;
+            })
+            .test('is-empty', 'El campo es obligatorio', (value) => !!value),
         }))}
         onSubmit={async (values: any) => {
           const LocationData = GetLocationByPath(LocationsValues, values.Locality);
@@ -133,7 +140,7 @@ export const DC_Configurations = () => {
             birthday: moment(values.Birthdate).format('DD/MM/YYYY').toString(),
             cellphone_number: values.Cellphone,
             department_id: LocationData?.DEP_ID,
-            locality_id: LocationData?.ID,
+            locality_id: LocationData.ID,
             address_street: values.AddressStreet,
             address_number: values.AddressNumber,
             apartment: values.Apartment
