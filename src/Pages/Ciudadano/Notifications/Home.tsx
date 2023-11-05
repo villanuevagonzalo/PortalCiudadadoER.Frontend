@@ -34,6 +34,11 @@ export const DC_Notifications = () =>{
     }
   },[])
 
+  useEffect(()=>{
+   console.log("cambio userNotifications: "+JSON.stringify(userNotifications))
+  },[userNotifications])
+
+
   const getMoreNews = () => {
     UpdateNotifications()
   }

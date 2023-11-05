@@ -156,7 +156,7 @@ export const DA_Notifications_Create = () =>{
               locality_id: localityFields.getValue() || 0,
               message_title: values.Title,
               message_body: values.Message,
-              attachment: fileArray.length > 0 ? fileArray : "",
+              attachment: fileArray.length > 0 ? fileArray : [],
               send_by_email: values.SendByEmail?true:false,
             };
 
