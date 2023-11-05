@@ -61,7 +61,7 @@ export const NotificationActorFullSize: React.FC<Props> = ({data, func, ...props
     <LayoutSection className="content">
       <div className="header">
         <span className="title"><AiOutlineNotification />Gobierno de Entre Ríos</span>
-        <span className="time">{moment(data.CREATED_AT).fromNow()}</span>
+        <span className="time">{moment(data.CREATED_AT,"DD/MM/YYYY HH:mm:ss").fromNow()}</span>
         <span className="flex-1"></span>
         <span className="close" onClick={()=>func()}><AiOutlineClose fontSize={"1rem"}/></span>
       </div>

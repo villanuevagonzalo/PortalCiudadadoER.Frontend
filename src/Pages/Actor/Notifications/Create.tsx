@@ -26,6 +26,7 @@ import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Pages } from "../../../Routes/Pages";
 import { CountDown } from "../../../Components/Elements/CountDown";
+import { FilesContext } from "../../../Contexts/FilesContext";
 
 export const DA_Notifications_Create = () =>{
 
@@ -40,13 +41,16 @@ export const DA_Notifications_Create = () =>{
   const [ Deparments, setDeparments ] = useState<any[]>([]);
   const [ Localities, setLocalities ] = useState<any[]>([]);
 
+  const {fileArray} = useContext(FilesContext)
+
+
   const [Fields, setFields] = useState( {
     Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título',length_min:10, length_max:100},["isRequired"])),
     Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_min:10, length_max:500},["isRequired"])),
     StartDate: new ElementInstance("StartDate",new ElementSchema('DATE',{label:'Fecha desde'},["isRequired"]),null),
     EndDate: new ElementInstance("EndDate",new ElementSchema('DATE',{label:'Fecha hasta'},["isRequired"]),null),
     SendByEmail: new ElementInstance("SendByEmail",new ElementSchema('CHECKBOX',{label:'Enviar por Correo'}),false),
-    Attachments: new ElementInstance("Attachments",new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+    //Attachments: new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
     Recipients: new ElementInstance("Recipients",new ElementSchema('SELECT',{label:'Seleccione un destinatario',options:[{
       value: "actor",
       label: 'Actores'
@@ -61,6 +65,11 @@ export const DA_Notifications_Create = () =>{
     AgeTo: new ElementInstance("AgeTo",new ElementSchema('NUMBER',{label:'Edad hasta',value_min:1, value_max:120})),
    
   })
+
+  const [Attachments, setAttachments] = useState( 
+    new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+  )
+
   const [departmentFields, setDepartmentsFields] = useState( 
     new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
   )
@@ -147,7 +156,7 @@ export const DA_Notifications_Create = () =>{
               locality_id: localityFields.getValue() || 0,
               message_title: values.Title,
               message_body: values.Message,
-              attachment: values.HELPAttachments,
+              attachment: fileArray.length > 0 ? fileArray : "",
               send_by_email: values.SendByEmail?true:false,
             };
 
@@ -159,7 +168,7 @@ export const DA_Notifications_Create = () =>{
           <Element instance={Fields.Title}/>
           <Element instance={Fields.Message}/>
             <LayoutStackedPanel>
-          <Element instance={Fields.Attachments} className="flex-2"/>
+          <Element instance={Attachments} className="flex-2"/>
               <Element instance={Fields.StartDate} className="flex-1"/>
               <Element instance={Fields.EndDate} className="flex-1"/>
             </LayoutStackedPanel>
