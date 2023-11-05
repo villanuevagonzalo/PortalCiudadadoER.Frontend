@@ -54,10 +54,12 @@ interface FormGenericData {
     const [render, setRender] = useState("home") //diferent render views.
 
     //Alerts
-    const [showProcedureCorrectedUploaded, setShowProcedureCorrectedUploaded] = useState(false) 
-    const [showAttachmentMessage, setShowAttachmentMessage] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertMessage2, setAlertMessage2] = useState("")
+    const [showProcedureCorrectedUploaded, setShowProcedureCorrectedUploaded] = useState<boolean>(false) 
+    const [showAttachmentMessage, setShowAttachmentMessage] = useState<boolean>(false)
+    const [alertMessage, setAlertMessage] = useState<string>("")
+    const [alertMessage2, setAlertMessage2] = useState<string>("")
+
+    const [showMessageMustCompleteForms, setShowMessageMustCompleteForms]= useState<boolean>(false) 
 
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
@@ -354,6 +356,34 @@ interface FormGenericData {
         }
     }
 
+    const sendProcedure = async () => {
+
+       // procedureData //data del procedure
+       if (procedureData==undefined){
+        setAlertMessage("Debe completar los campos del trámite")
+        setAlertMessage2("Debe completar los campos del trámite")
+        setShowMessageMustCompleteForms(true)
+       }
+
+        if (checkArrays(procedureInstance.getForms(), procedureData!.getForms()) ) {
+
+            if (checkArrays(procedureInstance.getAttachments(), procedureData!.getAttachments()!) ){
+
+
+            }else{
+                    setAlertMessage("Trámite incompleto")
+                    setAlertMessage2("Debe completar los adjuntos del trámite")
+                    setShowMessageMustCompleteForms(true)
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }else{
+                setAlertMessage("Trámite incompleto")
+                setAlertMessage2("Debe completar los formularios del trámite")
+                setShowMessageMustCompleteForms(true)
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
     if (!procedureInstance){
         return null;
     }
@@ -372,6 +402,8 @@ interface FormGenericData {
             <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
                 {showProcedureCorrectedUploaded && (<CitizeProcedureUploadedProps close={backFunction} ProcedureTitle={procedureInstance.getTitle()} />)}
                 { showAttachmentMessage && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowAttachmentMessage} />)}
+                { showMessageMustCompleteForms && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowMessageMustCompleteForms} />)}
+
                 <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"row", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
                     <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
                     {currentPath.includes("procedures/started") ? (
@@ -423,11 +455,37 @@ interface FormGenericData {
                     <LayoutSection style={{margin:"5px 0px 15px 0px"}}> 
                         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                             <Button style={{width:"200px", margin:"0px 0px 15px 0px"}} onClick={() => backFunction("home")} > <BiArrowBack/>Volver</Button>
-                            <Button style={{width:"200px", margin:"0px 0px 15px 0px"}}  color={"secondary"} >Cargar<BiSend/> </Button>
+                            <Button style={{width:"200px", margin:"0px 0px 15px 0px"}}  color={"secondary"} onClick={() => sendProcedure()}>Cargar<BiSend/> </Button>
                         </div>
                     </LayoutSection>
                 </div>
             </div>
         )
     }
+  }
+
+
+
+  const checkArrays = (attachments1:string [], attachments2:string []):boolean => {
+
+    if (attachments1 && attachments2) {
+      
+        // Primero, verifica si tienen la misma longitud
+        if (attachments1.length === attachments2.length) {
+          // Luego, compara elemento por elemento
+          const areEqual = attachments1.every((element, index) => element === attachments2[index]);
+      
+          if (areEqual) {
+            return true;
+          } else {
+            // Muestra un mensaje si los arrays de adjuntos son diferentes
+            return false;
+          }
+        } else {
+          // Muestra un mensaje si los arrays de adjuntos tienen diferentes longitudes
+          return false;
+        }
+      } else {
+        return false;
+      }
   }

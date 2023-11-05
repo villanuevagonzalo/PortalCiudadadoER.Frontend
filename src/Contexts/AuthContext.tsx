@@ -201,6 +201,8 @@ const ContextValues = () => {
   }
 
   const UserEmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserEmailChange, data, setFormState);
+  
+    
 
   const PasswordReset = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordReset, data, setFormState);
   const PasswordUpdate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordSave, data, setFormState);
@@ -208,8 +210,25 @@ const ContextValues = () => {
   const EmailValidate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailValidate, data, setFormState);
   const EmailResendVerification = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailResendVerification, data, setFormState);
   const EmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailChange, data, setFormState);
-  const EmailChangeValidate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailChangeValidate, data, setFormState);
+  const EmailChangeValidate = async (data: any, setFormState:Function) => {
 
+    const response: AxiosResponse = await handleResponse(AxiosAuthAPI.EmailChangeValidate, data, setFormState);
+    if(response.data) {
+
+      const CurrentUserData: IUserData = getLSData('UserData');
+
+      // Crea una copia con el campo 'email' modificado
+      const updatedUserData: IUserData = { ...CurrentUserData, email: response.data.data.new_email };
+
+      // Actualiza el estado 'userData' con la copia modificada
+      setUserData(updatedUserData);
+
+      setLSData("UserData", updatedUserData);
+
+    } 
+  }
+  
+  
   const AFIP_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_AFIP_getURL, data, setFormState);
   const AFIP_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_AFIP_checkToken, data, setFormState);
   const MIARGENTINA_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_MIARGENTINA_getURL, data, setFormState);

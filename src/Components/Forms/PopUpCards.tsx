@@ -527,19 +527,19 @@ export const ProcedureSelectedDataPopUp: React.FC<ProcedureSelectedDataPopUp> = 
           <span className="close" onClick={()=>close(false)}><AiOutlineClose fontSize={"1rem"}/></span>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center"}}>
-          <h1>Datos generales del trámite seleccionado</h1>      
-
+          <h1 style={{marginBottom:"1em"}}>Datos generales del trámite seleccionado</h1>      
+        <LayoutSectionCentered  >
           <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "flex-start", textAlign: "left", margin: "15px 0px 15px 0px" }}>
-            <h2>Título:</h2>
-            <h3>{selectedProcedure?.Título}</h3>
-            <h2>Categoría:</h2>
-            <h3>{selectedProcedure?.Categoria}</h3> 
-            <h2>Costo:</h2>
-            <h3>{removeHTMLTags(selectedProcedure?.Costo!)} </h3>      
-            <h2>Descripción:</h2>
-            <h3>{removeHTMLTags(selectedProcedure?.Texto!)}</h3>      
-        
+            <h2 style={{marginBottom:"1em"}}>Título:</h2>
+            <h4>{selectedProcedure?.Título}</h4>
+            <h2 style={{marginBottom:"1em"}}>Categoría:</h2>
+            <h4>{selectedProcedure?.Categoria}</h4> 
+            <h2 style={{marginBottom:"1em"}}>Costo:</h2>
+            <h4>{removeHTMLTags(selectedProcedure?.Costo!)} </h4>      
+            <h2 style={{marginBottom:"1em"}}>Descripción:</h2>
+            <h4>{removeHTMLTags(selectedProcedure?.Texto!)}</h4>      
           </div>
+          </LayoutSectionCentered  >
         </div>
         <LayoutStackedPanel className="mt-2">
           <LayoutSpacer/>

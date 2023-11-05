@@ -125,6 +125,10 @@ export class FormInstance<T extends ElementSchemaTypes>  {
     this.code=code;
   }
 
+  setStatus(status:string){
+    this.status=status;
+  }
+
   getCode(){
     return this.code;
   }

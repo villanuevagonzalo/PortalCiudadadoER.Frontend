@@ -37,7 +37,7 @@ export const TramitesOnlinePage = () => {
   const { UpdatePublishedProcedures, totalPublishedProceduresInDB, proceduresPublished, proceduresSearcedhByKeyword, ClearProcedureSearch, UpdateSearchProceduresByKeyword, totalProceduresSearchedByKeyWordInDB, isLoadingProcedure} = useContext(ProcedureContext);
   const { CreateCiudadanoProcedure, UpdateCiudadanoProcedures, ciudadanoProcedures , totalCitizenProceduresInDB, totalCitizenProceduresQueried, isLoadingProcedureCitizen} = useContext(CiudadanoProcedureContext);
   const [filteredProcedures, setFilteredProcedures] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]); // procedures filtered for search
-  const [searchProcedure, setSearchProcedure] = useState<string>()
+ // const [searchProcedure, setSearchProcedure] = useState<string>()
 
   const { userData} = useContext(UserContext);
   const { UpdateCitizenForms} = useContext(CiudadanoFormContext);
@@ -128,7 +128,7 @@ export const TramitesOnlinePage = () => {
     setFilteredProcedures(proceduresPublished)
   },[proceduresPublished])
 
-
+/*
   useEffect(()=>{
 
     if (searchProcedure !== undefined &&  searchProcedure != '') {
@@ -147,7 +147,7 @@ export const TramitesOnlinePage = () => {
       } else {
         setFilteredProcedures(proceduresPublished)
       }
-  },[searchProcedure])
+  },[searchProcedure])*/
 
 
   useEffect(()=>{
@@ -290,10 +290,10 @@ export const TramitesOnlinePage = () => {
             {isLoadingProcedure && (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)}
             
            {searchedByKeyword? 
-          <ProceduresSearchedTable proceduresSearcedhByKeyword={proceduresSearcedhByKeyword} ciudadanoProcedures={ciudadanoProcedures} totalProceduresSearchedByKeyWordInDB={totalProceduresSearchedByKeyWordInDB} seeProcedure={seeProcedure} getMoreNews={getMoreNewsSearch} loadingProcedure={loadingProcedure} /> 
-          :
-          <PublishedProceduresTable filteredProcedures={filteredProcedures} proceduresPublished={proceduresPublished} ciudadanoProcedures={ciudadanoProcedures} totalPublishedProceduresInDB={totalPublishedProceduresInDB} seeProcedure={seeProcedure} getMoreNews={getMoreNews} loadingProcedure={loadingProcedure} />
-          }       
+            <ProceduresSearchedTable proceduresSearcedhByKeyword={proceduresSearcedhByKeyword} ciudadanoProcedures={ciudadanoProcedures} totalProceduresSearchedByKeyWordInDB={totalProceduresSearchedByKeyWordInDB} seeProcedure={seeProcedure} getMoreNews={getMoreNewsSearch} loadingProcedure={loadingProcedure} /> 
+            :
+            <PublishedProceduresTable filteredProcedures={filteredProcedures} proceduresPublished={proceduresPublished} ciudadanoProcedures={ciudadanoProcedures} totalPublishedProceduresInDB={totalPublishedProceduresInDB} seeProcedure={seeProcedure} getMoreNews={getMoreNews} loadingProcedure={loadingProcedure} />
+            }       
           
           
             
@@ -325,7 +325,7 @@ export const TramitesOnlinePage = () => {
     }
 }
 
-interface PublishedProceduresTableInterface {
+export interface PublishedProceduresTableInterface {
   filteredProcedures: ProcedureInstance<ElementSchemaTypes>[],
   proceduresPublished: ProcedureInstance<ElementSchemaTypes>[],
   ciudadanoProcedures: ProcedureData[],
@@ -337,7 +337,7 @@ interface PublishedProceduresTableInterface {
 }
 
 
-const PublishedProceduresTable: React.FC<PublishedProceduresTableInterface> = ({ filteredProcedures, proceduresPublished, ciudadanoProcedures, totalPublishedProceduresInDB, seeProcedure, loadingProcedure, getMoreNews }) => {
+export const PublishedProceduresTable: React.FC<PublishedProceduresTableInterface> = ({ filteredProcedures, proceduresPublished, ciudadanoProcedures, totalPublishedProceduresInDB, seeProcedure, loadingProcedure, getMoreNews }) => {
 
 return (
   <div>
@@ -384,7 +384,7 @@ return (
 
 
 
-interface ProceduresSearchedTableInterface {
+export interface ProceduresSearchedTableInterface {
   proceduresSearcedhByKeyword: ProcedureInstance<ElementSchemaTypes>[],
   ciudadanoProcedures: ProcedureData[],
   totalProceduresSearchedByKeyWordInDB:number,
@@ -394,8 +394,7 @@ interface ProceduresSearchedTableInterface {
 
 }
 
-
-const ProceduresSearchedTable: React.FC<ProceduresSearchedTableInterface> = ({ proceduresSearcedhByKeyword, ciudadanoProcedures, totalProceduresSearchedByKeyWordInDB, seeProcedure, loadingProcedure, getMoreNews }) => {
+export const ProceduresSearchedTable: React.FC<ProceduresSearchedTableInterface> = ({ proceduresSearcedhByKeyword, ciudadanoProcedures, totalProceduresSearchedByKeyWordInDB, seeProcedure, loadingProcedure, getMoreNews }) => {
 
 return (
   <div>
@@ -445,7 +444,7 @@ interface SearchInputProps {
   onSearch: (query: string) => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
+export const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -29,7 +29,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
 
-  const { SaveForm, UpdateForms , setFormularios, formularios, totalFormUnitsInDB, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
+  const { SaveForm, GetFormByCode, GetElementsByCode, UpdateForms , setFormularios, formularios, totalFormUnitsInDB, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -79,16 +79,33 @@ export const DA_Procedures_Forms_Home = () => {
 
   const handleCopyForm = async (code:string)=> {
     if (code!=""){
-      formToCheck!.setCode(code)
-      const response = await SaveForm(formToCheck!, setFormState, code, formToCheck?.getTitle()!);
-      if (response){
-        setFormToCheck(undefined)
-        setCopy(false)
-        setNewCode("")
-        UpdateForms()
-      }else{
-        setErrorCarga(true)
+
+
+      const formData = GetFormByCode (formToCheck?.getCode()!, setFormState)
+
+      if (await formData){
+
+        const formElements = GetElementsByCode (formToCheck?.getCode()!, setFormState)
+
+        if (await formElements){
+
+          formToCheck!.setCode(code)
+          formToCheck!.setStatus("Borrador")
+          
+          const response = await SaveForm(formToCheck!, setFormState, code, formToCheck?.getTitle()!);
+          if (response){
+            setFormToCheck(undefined)
+            setCopy(false)
+            setNewCode("")
+            UpdateForms()
+          }else{
+            setErrorCarga(true)
+          }
+        }
+
       }
+
+      
     }
   }
 

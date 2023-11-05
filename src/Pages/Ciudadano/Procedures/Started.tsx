@@ -137,14 +137,21 @@ export const DC_Procedures_Started = () => {
     ).flat();
     return uniqueThemes;
   }, [filteredProcedures]);
+
+  const DataDescription = useMemo(() => {
+    const uniqueThemes = Array.from(
+      new Set(filteredProcedures.map((item: any) => item.getDescription() + " (Descripción)"))
+    ).flat();
+    return uniqueThemes;
+  }, [filteredProcedures]);
   
-  const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme]);
+  const ResultArray = useMemo(() => DataTitle.concat(DataTheme), [DataTitle, DataTheme,DataDescription]);
 
 
   useEffect(()=>{
 
     if (searchProcedure !== undefined &&  searchProcedure != '') {
-      const cleanedSearchProcedure = searchProcedure.replace(/\s+\((título|temática)\)$/, '');
+      const cleanedSearchProcedure = searchProcedure.replace(/\s+\((título|temática|Descripción)\)$/, '');
       const filtered = AllProcedures.filter(procedures => procedures.getTitle() === cleanedSearchProcedure);
         if (filtered.length>0){
             setFilteredProcedures(filtered);

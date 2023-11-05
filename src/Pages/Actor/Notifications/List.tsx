@@ -80,8 +80,8 @@ export const DA_Notifications = () =>{
       Date: moment(N.DATE_FROM, "DD/MM/YYYY HH:mm:ss").format("DD/MM/YY") + " a " + moment(N.DATE_TO, "DD/MM/YYYY HH:mm:ss").format("DD/MM/YY"),
       Loc: N.LOCALITY?(LocationNameByID(Location,N.LOCALITY)):(N.DEPARTMENT?DeparmentNameByID(Location,N.DEPARTMENT):"Todos"),
       AgeRange: (N.AGE_FROM == 1
-        ?(N.AGE_TO==120 ? "-" : "< " + N.AGE_TO)
-        :(N.AGE_TO==120 ? N.AGE_FROM + " <" : (N.AGE_FROM + " a " + N.AGE_TO))),
+        ?(N.AGE_TO==120 ? "-" : "< " + N.AGE_TO + " años")
+        :(N.AGE_TO==120 ? N.AGE_FROM + " <" : (N.AGE_FROM + " a " + N.AGE_TO + " años"))),
       Recipients: Recipients[N.RECIPIENTS],
       Attachments: ""+N.ATTACHMENTS.length||"-",
       Active: N.DELETED_AT!=""?"BORRADA":moment().isBetween(moment(N.DATE_FROM, "DD/MM/YYYY HH:mm:ss"), moment(N.DATE_TO, "DD/MM/YYYY HH:mm:ss"))?"ACTIVA":"-",
@@ -127,7 +127,7 @@ export const DA_Notifications = () =>{
       accessorKey: 'Loc',
     },
     {
-      header: 'Rango',
+      header: 'Rango etario',
       accessorKey: 'AgeRange'
     },
     {

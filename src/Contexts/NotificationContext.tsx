@@ -175,7 +175,6 @@ const ContextValues = () => {
     const response:AxiosResponse = await handleResponse(AxiosNotificationAPI.Create, data, setFormState);
     if(response.data) {
       setUserNotifications(prevState => ([...prevState, data]));
-     
     }
     return response;
 

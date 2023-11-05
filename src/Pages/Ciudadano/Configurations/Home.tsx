@@ -47,7 +47,6 @@ export const DC_Configurations = () => {
 
   useEffect(() => {
     if(userContact){
-      console.log(userContact)
       if(userContact.LOCALITY_ID*1!==0 && LocationsValues.length>0){
         setFieldValues({...FieldValues, Locality: LocationFullPath(LocationByID(LocationsValues,userContact.LOCALITY_ID*1))})
       }
