@@ -62,11 +62,11 @@ export const DC_Configurations = () => {
       console.log(e)
     })
 
-    if(userContact){
-      let ConvertedBirthdate = moment(userContact.BIRTHDAY).format("YYYY-MM-DD")
+    if (userContact) {
+      let ConvertedBirthdate = userContact.BIRTHDAY ? moment(userContact.BIRTHDAY).format("YYYY-MM-DD") : '';
       setFieldValues({
         "Cellphone": userContact.CELLPHONE_NUMBER,
-        "Birthdate": ConvertedBirthdate==='Invalid date'?'':ConvertedBirthdate,
+        "Birthdate": ConvertedBirthdate || null,
         "Locality": "",
         "AddressStreet": userContact.ADDRESS_STREET,
         "AddressNumber": userContact.ADDRESS_NUMBER,
