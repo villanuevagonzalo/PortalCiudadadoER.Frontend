@@ -48,7 +48,7 @@ export class CiudadanoProcedureAPI {
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures/update', params,{
+    return this.baseService.post('/v0/dashboard/procedures/updateById', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }

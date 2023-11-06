@@ -571,6 +571,10 @@ export class ProcedureData {
     return this.status;
   }
 
+  setStatus (newStatus:string){
+    this.status=newStatus;
+  }
+
   setForms(form: string) {
     if (!this.forms) {
       this.forms = [];

@@ -37,7 +37,7 @@ interface FormGenericData {
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
 
-    const { ciudadanoProcedures, UpdateCiudadanoProcedures, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment, isLoadingProcedureCitizen } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
+    const { ciudadanoProcedures, UpdateCiudadanoProcedures, UpdateCiudadanoProcedureState, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment, isLoadingProcedureCitizen } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
     const {UpdateCitizenForms}= useContext(CiudadanoFormContext); //This is the total citizen data procedures
     const [procedureData, setProcedureData] = useState <ProcedureData > (); //Is this procedure citizen data
 
@@ -59,7 +59,8 @@ interface FormGenericData {
     const [alertMessage, setAlertMessage] = useState<string>("")
     const [alertMessage2, setAlertMessage2] = useState<string>("")
 
-    const [showMessageMustCompleteForms, setShowMessageMustCompleteForms]= useState<boolean>(false) 
+    const [showMessageMustCompleteForms, setShowMessageMustCompleteForms] = useState<boolean>(false) 
+    const [showProcedureCompleted, setShowProcedureCompleted] = useState<boolean>(false)
 
     const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
@@ -369,6 +370,14 @@ interface FormGenericData {
 
             if (checkArrays(procedureInstance.getAttachments(), procedureData!.getAttachments()!) ){
 
+                const response= UpdateCiudadanoProcedureState(procedureData?.getId()!, "PENDIENTE", setFormState)
+                if (await response){
+                    procedureData?.setStatus("PENDIENTE")
+                    setAlertMessage("Trámite completado")
+                    setAlertMessage2("Espere la aprobación del trámite")
+                    setShowProcedureCompleted(true)
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
 
             }else{
                     setAlertMessage("Trámite incompleto")
@@ -403,6 +412,7 @@ interface FormGenericData {
                 {showProcedureCorrectedUploaded && (<CitizeProcedureUploadedProps close={backFunction} ProcedureTitle={procedureInstance.getTitle()} />)}
                 { showAttachmentMessage && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowAttachmentMessage} />)}
                 { showMessageMustCompleteForms && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowMessageMustCompleteForms} />)}
+                { showProcedureCompleted && (<CitizenGenericAlertPopUp message={alertMessage} message2={alertMessage2} close={setShowProcedureCompleted} />)}
 
                 <LayoutSectionProcedureTitle style={{display:"flex", flexDirection:"row", justifyContent:"center", margin:"5px 0px 15px 0px"}}>
                     <div style={{ width: "25%", display: "flex", alignItems: "center" }}>

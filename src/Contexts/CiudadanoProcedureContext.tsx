@@ -101,20 +101,20 @@ const ContextValues = () => {
   }
   
 
-  const  UpdateOneCiudadanoProcedure = async(procedure: ProcedureData, setFormState: Function, procedure_data_id:number) => {
-    const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.Update, procedure.getJSON(), setFormState);
+  const  UpdateCiudadanoProcedureState = async(procedureDataId: number, newState: string, setFormState: Function) => {
+    
+    const data = { 
+      procedure_data_id: procedureDataId,
+      state:newState
+    }
+
+
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.Update, data, setFormState);
+
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
-      const status = response.data.success;
-      const responseData = JSON.parse(response.data.data);
-      const id = responseData[0].ID;
-      if (status && procedure_data_id == id ) {
-        setCiudadanoProcedures(prevProcedure => prevProcedure.filter(procedure =>procedure.getId() !== id )); //delete the old form
-        setCiudadanoProcedures (prevState => ([...prevState, procedure])); //set the new form
-        return true;
-      }
-      else{
-        return false;
-      }
+     
+     
+      
     }
     return false;
 
@@ -367,13 +367,12 @@ const ContextValues = () => {
     totalCitizenProceduresQueried,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 
-    UpdateOneCiudadanoProcedure,
+    UpdateCiudadanoProcedureState,
     DeleteOneCiudadanoProcedure,
     UpdateCiudadanoProcedures, 
     sendProcedureAttachment,
     GetCiudadanoProcedureAttachment,
     DeleteCiudadanoProcedureAttachment
-
   }
 }
 
