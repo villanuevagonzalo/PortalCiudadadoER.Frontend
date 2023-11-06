@@ -114,6 +114,15 @@ const ContextValues = () => {
 
   const Redirect = async (data: any, setFormState:Function) => {
 
+    await Promise.all([
+      delLSData("authToken"),
+      delLSData("UserData"),
+      delLSData("UserContact"),
+      delLSData("UserRol"),
+      delLSData("ActorActions"),
+      delLSData("Secretary"),
+    ]);
+
     const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserRedirect, data, setFormState);
     if(response.data){
     
@@ -139,6 +148,15 @@ const ContextValues = () => {
   }
 
   const Login = async (data: any, setFormState:Function) => {
+
+    await Promise.all([
+      delLSData("authToken"),
+      delLSData("UserData"),
+      delLSData("UserContact"),
+      delLSData("UserRol"),
+      delLSData("ActorActions"),
+      delLSData("Secretary"),
+    ]);
 
     const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserLogin, data, setFormState);  
     if(response.data){

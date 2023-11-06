@@ -30,7 +30,7 @@ import { FilesContext } from "../../../Contexts/FilesContext";
 
 export const DA_Notifications_Create = () =>{
 
-  const { CreateNotification, GetScope } = useContext(NotificationsContext);
+  const { CreateNotification, GetScope, realoadActorNotifications } = useContext(NotificationsContext);
   const ref:any = useRef(null);
 
   const [ ScopeFormState, setScopeFormState ] = useState<IFormState>(DefaultFormState);
@@ -114,6 +114,43 @@ export const DA_Notifications_Create = () =>{
     }
   }
 
+  const clearAll = async () => {
+    setFields ({
+      Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título',length_min:10, length_max:100},["isRequired"])),
+      Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_min:10, length_max:500},["isRequired"])),
+      StartDate: new ElementInstance("StartDate",new ElementSchema('DATE',{label:'Fecha desde'},["isRequired"]),null),
+      EndDate: new ElementInstance("EndDate",new ElementSchema('DATE',{label:'Fecha hasta'},["isRequired"]),null),
+      SendByEmail: new ElementInstance("SendByEmail",new ElementSchema('CHECKBOX',{label:'Enviar por Correo'}),false),
+      //Attachments: new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+      Recipients: new ElementInstance("Recipients",new ElementSchema('SELECT',{label:'Seleccione un destinatario',options:[{
+        value: "actor",
+        label: 'Actores'
+      },{
+        value: "citizen",
+        label: 'Ciudadanos'
+      },{
+        value: "both",
+        label: 'Todos'
+      }]},["isRequired"]), "both"),
+      AgeFrom: new ElementInstance("AgeFrom",new ElementSchema('NUMBER',{label:'Edad desde',value_min:1, value_max:120})),
+      AgeTo: new ElementInstance("AgeTo",new ElementSchema('NUMBER',{label:'Edad hasta',value_min:1, value_max:120})),
+     
+    })
+
+    setAttachments( 
+      new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+    )
+  
+    setDepartmentsFields( 
+      new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
+    )
+
+    setLocalityFields( 
+      new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
+    )
+  
+  }
+
   useEffect(() => { handleLocations(); },[])
 
   return (<>
@@ -134,7 +171,7 @@ export const DA_Notifications_Create = () =>{
             <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Gestor de Notificaciones</b>                                
           </Button></Link>
           <LayoutSpacer/>
-          <FormikButton disabled={false} color="secondary" onClick={()=>setFormState(prev=>({...prev, finish:false}))}>
+          <FormikButton disabled={false} color="secondary" onClick={() => {setFormState(prev => ({ ...prev, finish: false })); clearAll();}}>
             Crear nueva Notificación
           </FormikButton>
         </LayoutStackedPanel>
@@ -146,7 +183,7 @@ export const DA_Notifications_Create = () =>{
           enableReinitialize={true}
           initialValues={initialValues}
           onSubmit={async(values:any)=>{
-            const test = {
+            const newNotificationData = {
               recipients: values.Recipients,
               age_from: values.AgeFrom===""?1:values.AgeFrom,
               age_to: values.AgeTo===""?120:values.AgeTo,
@@ -160,7 +197,12 @@ export const DA_Notifications_Create = () =>{
               send_by_email: values.SendByEmail?true:false,
             };
 
-            const response = await CreateNotification(test, setFormState);
+            const response = await CreateNotification(newNotificationData, setFormState);
+            console.log("this is the response: "+JSON.stringify(response.data.success))
+            if(response.data.success){
+              realoadActorNotifications()
+            }
+
           }}
           validate={(values:any) => ValidateForm(values, Fields)}
         >
