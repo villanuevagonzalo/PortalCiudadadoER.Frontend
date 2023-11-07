@@ -112,7 +112,8 @@ const ContextValues = () => {
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoProcedureAPI.Update, data, setFormState);
 
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
-     
+    
+      return true;
      
       
     }

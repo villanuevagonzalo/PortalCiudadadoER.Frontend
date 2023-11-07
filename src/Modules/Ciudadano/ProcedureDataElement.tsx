@@ -371,6 +371,7 @@ interface FormGenericData {
             if (checkArrays(procedureInstance.getAttachments(), procedureData!.getAttachments()!) ){
 
                 const response= UpdateCiudadanoProcedureState(procedureData?.getId()!, "PENDIENTE", setFormState)
+                console.log("this is the response: "+JSON.stringify(response))
                 if (await response){
                     procedureData?.setStatus("PENDIENTE")
                     setAlertMessage("Trámite completado")
