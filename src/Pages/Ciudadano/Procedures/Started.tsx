@@ -217,10 +217,12 @@ export const DC_Procedures_Started = () => {
                     style={{ width: "64px", height: "64px" }}
                 />
                 </div>
-                <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
-                <h1>{item.getTitle()}</h1>
-                <p>{item.getDescription()}</p>
-                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                    <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
+                      <h1>{item.getTitle()}</h1>
+                      <p>{item.getDescription()}</p>
+                      <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+                  </div>
                 </div>
             </div>          
                 ) : (
@@ -242,12 +244,17 @@ export const DC_Procedures_Started = () => {
                     +Información
                   </Button>
                 ) : null}
-                <Button
+                 <Button
                   color="secondary"
                   fullwidth={false}
                   onClick={() => seeProcedure(item.getId()!)}
                 >
-                  Ver
+                  {
+                    ciudadanoProcedures.find(
+                      ciudadanoProcedure =>
+                        ciudadanoProcedure.getProcedureUnitId() == item.getId()
+                    )?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar"
+                  }
                 </Button>
               </div>
             </div>

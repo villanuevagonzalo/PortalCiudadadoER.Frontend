@@ -295,8 +295,6 @@ export const TramitesOnlinePage = () => {
             <PublishedProceduresTable filteredProcedures={filteredProcedures} proceduresPublished={proceduresPublished} ciudadanoProcedures={ciudadanoProcedures} totalPublishedProceduresInDB={totalPublishedProceduresInDB} seeProcedure={seeProcedure} getMoreNews={getMoreNews} loadingProcedure={loadingProcedure} />
             }       
           
-          
-            
         </LayoutColumn>
         {isMobile ? (
             <LayoutColumn style={{ width: '100%' }}>
@@ -371,7 +369,18 @@ return (
                 <div className="text-right flex gap-4">
                 <NavigatorSpacer/> 
                 {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
-                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >{loadingProcedure ? <Spinner /> : "Iniciar"}</Button>
+                <Button
+                  color="secondary"
+                  fullwidth={false}
+                  onClick={() => seeProcedure(item.getId()!)}
+                >
+                  {loadingProcedure ? <Spinner /> : (
+                    ciudadanoProcedures.find(
+                      ciudadanoProcedure =>
+                        ciudadanoProcedure.getProcedureUnitId() == item.getId()
+                    )?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar"
+                  )}
+                </Button>
                 </div>
             </LayoutSection>)}
             
@@ -398,9 +407,9 @@ export const ProceduresSearchedTable: React.FC<ProceduresSearchedTableInterface>
 
 return (
   <div>
-  {proceduresSearcedhByKeyword.map((item, index) => <LayoutSection key={index}>
-                {item.getIcon() !== "" ? (
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+  {proceduresSearcedhByKeyword.map((item, index) => <LayoutSection style={{overflow: "hidden", marginBottom:"15px" }} key={index}>
+  {item.getIcon() !== "" ? (
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
                 <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
                 <img
                     src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
@@ -408,18 +417,17 @@ return (
                     style={{ width: "64px", height: "64px" }}
                 />
                 </div>
-                <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
-                <h1>{item.getTitle()}</h1>
-                <p>{item.getDescription()}</p>
-                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
-
+                <div style={{ width: "75%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
+                  <h1>{item.getTitle()}</h1>
+                  <p style={{ maxWidth: "100%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.getDescription()}</p>
+                  <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
                 </div>
             </div>          
                 ) : (
                 <div style={{ display: "flex", flexDirection: "row" }}>
                     <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
                         <h1>{item.getTitle()}</h1>
-                        <p>{item.getDescription()}</p>
+                        <h4>{item.getDescription()}</h4>
                         <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
 
                     </div>
@@ -429,7 +437,18 @@ return (
                 <div className="text-right flex gap-4">
                 <NavigatorSpacer/> 
                 {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
-                <Button color="secondary" fullwidth={false} onClick={ () => seeProcedure (item.getId()!)} >{loadingProcedure ? <Spinner /> : "Iniciar"}</Button>
+                <Button
+                  color="secondary"
+                  fullwidth={false}
+                  onClick={() => seeProcedure(item.getId()!)}
+                >
+                  {loadingProcedure ? <Spinner /> : (
+                    ciudadanoProcedures.find(
+                      ciudadanoProcedure =>
+                        ciudadanoProcedure.getProcedureUnitId() == item.getId()
+                    )?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar"
+                  )}
+                </Button>
                 </div>
             </LayoutSection>)}
             
