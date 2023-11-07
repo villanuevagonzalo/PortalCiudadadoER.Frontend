@@ -139,9 +139,10 @@ export const Auth_Signup = () =>{
             <DivSubtitle><b>La contraseña debe contener:</b></DivSubtitle>
             <DivSubtitle className='-mt-3'>
               <li><span>8 Caracteres o más</span></li>
-              <li><span>1 Letra Mayúscula</span></li>
-              <li><span>1 Letra Minúscula</span></li>
-              <li><span>1 Número</span></li>
+              <li><span>Como mínimo 4 letras</span></li>
+              <li><span>Al menos una Letra Mayúscula</span></li>
+              <li><span>Al menos una Letra Minúscula</span></li>
+              <li><span>2 Números</span></li>
               <li><span>1 Caracter Especial</span></li>
             </DivSubtitle>
           </FormikStep>

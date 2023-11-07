@@ -94,6 +94,7 @@ export const FormFields:FieldProps = {
                         })
                         .test('','La contraseña debe contener como mínimo 4 letras.', (value:any)=>value?[...value.matchAll(/[a-zA-Z]/g)].length>3:false)
                         .minUppercase(1, 'La contraseña debe contener al menos 1 letra mayúscula.')
+                        .minLowercase(1, 'La contraseña debe contener al menos 1 letra minúscula.')
                         .minNumbers(2, 'La contraseña debe contener al menos 2 caracteres numéricos.')
                         .minSymbols(1, 'La contraseña debe contener como mínimo un carácter especial.')
     },
