@@ -1,11 +1,11 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { Table } from "../../../../Components/Elements/Table";
-import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText, RoundedButton } from "../../../../Components/Layout/StyledComponents";
+import { LayoutActorSection, LayoutNote, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText, RoundedButton } from "../../../../Components/Layout/StyledComponents";
 
 import { ColumnDef } from '@tanstack/react-table';
 import { FormikButton } from "../../../../Components/Forms/FormikButton";
 import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RxUpdate } from "react-icons/rx";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
 import { FormWrapperInput } from "../../../../Components/Forms/StyledComponents";
@@ -16,8 +16,8 @@ import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { ProcedureInstance } from "../../../../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
-import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
-import { BiTrash } from "react-icons/bi";
+import { HiArrowDown, HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
+import { BiArrowBack, BiTrash } from "react-icons/bi";
 import { Button } from "../../../../Components/Forms/Button";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { UpdateProcedure } from "./UpdateProcedures";
@@ -27,6 +27,7 @@ import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { Form, Formik } from "formik";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
 import { BackOfficesProcedureElement } from "../../../../Modules/Actor/ProcedureElement";
+import { showMessageForSeconds } from "../../../../Utils/General";
 
 
 
@@ -34,8 +35,8 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Config = () => {
 
-  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, setProcedures, procedures , isLoading} = useContext(ProcedureContext);
-  const { UpdateForms} = useContext(FormContext);
+  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, totalActorProceduresInDB, setProcedures, procedures , isLoadingProcedure, totalActorProceduresReaded, setTotalActorProceduresReaded} = useContext(ProcedureContext);
+  const { UpdateForms, formularios} = useContext(FormContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
@@ -49,10 +50,32 @@ export const DA_Procedures_Config = () => {
   const [searchProcedure, setSearchProcedure] = useState<string>()
   const [filteredProcedure, setFilteredProcedure] = useState<ProcedureInstance<ElementSchemaTypes>[]>([]);
 
+  const [showMessage, setShowMessage] = useState(false);
+
+
   useEffect(()=>{
-    UpdateProcedures()
-    UpdateForms()
+    if (procedures.length==0){
+      UpdateProcedures()
+    }
+    if (formularios.length==0){
+      UpdateForms()
+    }
+    
+
+    const handlePopState = () => {
+      setSeeOptions("home");
+      setProcedureToCheck(undefined)
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+
   },[])
+
+  const getMoreNews = () => {
+    UpdateProcedures()
+  }
 
   useEffect(()=>{
     if (searchProcedure !== undefined &&  searchProcedure != '') {
@@ -72,7 +95,6 @@ export const DA_Procedures_Config = () => {
         setFilteredProcedure(procedures)
       }
   },[searchProcedure])
-
 
   useEffect(()=>{
     setFilteredProcedure(procedures)
@@ -96,14 +118,14 @@ export const DA_Procedures_Config = () => {
       return (
         <>
           <BackOfficesProcedureElement procedure={procedureToCheck!}  />
-          <Button onClick={() => setSeeOptions("home")}>Volver a Configurador</Button>
+          <Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver a Configurador</Button>
         </>
       )
     }else if (seeOptions=="modify"){
       return (
         <>
           <UpdateProcedure procedure={procedureToCheck!}  />
-          <Button onClick={() => setSeeOptions("home")}>Volver a Configurador</Button>
+          <Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver a Configurador</Button>
         </>
       )
     }else{
@@ -135,12 +157,21 @@ export const DA_Procedures_Config = () => {
           </LayoutStackedPanel>
          
           <h4>Lista de tramites creados</h4>
-          {isLoading?<>
+          {isLoadingProcedure?<>
             <br/>
             <Spinner color='secondary' size="3rem"/><br/>
             <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-            </>:
+            </>:(
+            <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
+
             < TableForms datos={filteredProcedure} setFormToCheck={setProcedureToCheck} setSeeOptions={setSeeOptions} setDeleteProcedure={setDeleteProcedure} setProcedureToDelete={setProcedureToDelete} setCopy={setCopy} />
+            
+              {(totalActorProceduresInDB > procedures.length) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
+              {(showMessage && ! totalActorProceduresReaded) && (<div><LayoutNote>No hay más tramites cargados</LayoutNote></div>)}
+
+              </div>
+
+            )
           }
         </LayoutActorSection>
       </>);
@@ -166,6 +197,8 @@ interface TableProps {
 
 const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, setDeleteProcedure, setProcedureToDelete, setCopy }) => {
   
+  const navigate = useNavigate();
+
   return (
     <TableWrapper>
       <thead>
@@ -184,10 +217,10 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
             <td style={{ verticalAlign: 'middle', width:"auto"}}> 
               <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"left"}}> 
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); navigate("/actor/procedures/config/") }}>
                   { item.getState() != "Borrador" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item); navigate("/actor/procedures/config/") }}>
                   < HiOutlinePencil/>
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"0px" }} onClick={()=>{setProcedureToDelete(item);setDeleteProcedure(true) ; window.scrollTo({ top: 0, behavior: 'smooth' });} }>

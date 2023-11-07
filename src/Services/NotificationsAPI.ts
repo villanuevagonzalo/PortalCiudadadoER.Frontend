@@ -28,16 +28,22 @@ export class NotificationsAPI {
     })
   }
 
-  GetAll = async () => {
-    return this.baseService.get('/v0/notification/get/actor/active/news')
+  GetAll = async (params: {
+    notification_rows: number;
+  }) => {
+    return this.baseService.get('/v0/notification/get/actor/active/news',{params})
   }
   
-  GetByUserNews = async () => {
-    return this.baseService.get('/v0/notification/get/user/news')
+  GetByUserNews = async (params: {
+    notification_rows: number;
+  }) => {
+    return this.baseService.get('/v0/notification/get/user/news',{params})
   }
 
-  GetByUserAll = async () => {
-    return this.baseService.get('/v0/notification/get/user/all')
+  GetByUserAll = async (params: {
+    notification_rows: number;
+  }) => {
+    return this.baseService.get('/v0/notification/get/user/all',{params})
   }
 
   GetAttachment = async (params: {
@@ -45,6 +51,7 @@ export class NotificationsAPI {
   }) => {
     return this.baseService.get('/v0/notification/get/user/attachments', { params, responseType: 'blob' })
   }
+  
   GetAttachmentName = async (params: {
     multimedia_id: number;
   }) => {

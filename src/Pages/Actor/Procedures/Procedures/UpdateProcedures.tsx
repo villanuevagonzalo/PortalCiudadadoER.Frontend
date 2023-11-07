@@ -15,6 +15,7 @@ import { IFormState } from "../../../../Interfaces/Data";
 import { DefaultFormState } from "../../../../Data/DefaultValues";
 import { CreateProcedurePopUp, GenericAlertPopUp, ProcedureCreateErrorPopUp, ProcedureCreatedPopUp, UpdateProcedurePopUp } from "../../../../Components/Forms/PopUpCards";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
+import { BiArrowBack } from "react-icons/bi";
 
 interface Arguments {
     procedure:ProcedureInstance<ElementSchemaTypes>;
@@ -26,7 +27,8 @@ interface DatosAdjuntos {
 }
 
 export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
-    const ref:any = useRef(null);
+  
+  const ref:any = useRef(null);
 
   const { UpdateOneProcedure, setProcedures, procedures } = useContext(ProcedureContext);
   const { UpdateForms , formularios, UpdatePublishedForms, publishedFormularios} = useContext(FormContext);
@@ -36,7 +38,6 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
 
   const [proceduresAttached, setProcedureAttached] = useState <ElementInstance<ElementSchemaTypes>[]>([])
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
-  //const [formsToSends, setFilteredForms] = useState<FormInstance<ElementSchemaTypes>[]>([]);
 
   const [datosAdjuntos, setDatosAdjuntos] = useState<DatosAdjuntos[]>([]);
   const [oldDatosAdjuntos, setOldDatosAdjuntos]= useState <string []> ([])
@@ -54,7 +55,11 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
   const [seeOptions, setSeeOptions] = useState("home")
 
   useEffect(() => {
-    UpdatePublishedForms()
+    
+    if(publishedFormularios.length===0){
+      UpdatePublishedForms()
+    }
+
     const listaFormularios: string [] = [];
     const listaAdjuntos: string [] = [];
     procedure.getForms().map((element, index: number) => {
@@ -146,16 +151,23 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
         const jsonObject: any = {};
         jsonObject.Title_Attached = titleAttachedValues;
         const newProcedureToBeSend = new ProcedureInstance(
-            listaFormularios,
-            procedure.getTitle(),
-            "Descripción",
-            procedure.getSecretary(),
-            estadoProcedure,
-            procedure.getTheme(),
-            titleAttachedValues,
-            userLevel,
-            procedure.getId()
-        );
+          procedure.getTitle(),
+          procedure.getDescription(),
+          procedure.getSecretary(),
+          estadoProcedure,
+          listaFormularios,
+          titleAttachedValues,
+          userLevel,
+          procedure.getPrice(),
+          procedure.getTheme(),
+          procedure.getUrl(),
+          undefined,
+          procedure.getC(),
+          procedure.getContentId(),
+          procedure.getOrfId(),
+          procedure.getId(),//procedure id
+          procedure.getSistExpId() // id from sistema de expendiente's table
+      );
         const response = await UpdateOneProcedure(newProcedureToBeSend, setFormState, procedure.getTitle());
         if (response) {
             setCrear(false)
@@ -172,6 +184,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
     const formularioEncontrado = formularios.find((formulario) => formulario.getCode().toUpperCase() === codigoBuscado);
     if (formularioEncontrado){
       setSeeOptions("seeForm"); 
+      window.scrollTo({ top: 0, behavior: 'smooth' })
       setFormToCheck(formularioEncontrado);
     }
   }
@@ -183,7 +196,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
       <>
         <BackOfficesFormElement form={formToCheck!}  />
         <div style={{margin:"10px 0px 15px 0px"}}>
-        <Button onClick={() => setSeeOptions("home")}>Volver a Modificar Trámite</Button>
+        <Button color="secondary" onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver a Modificar Trámite</Button>
         </div>
       </>
     )
@@ -201,16 +214,20 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
             <p>{procedure.getTitle()}</p>
           </LayoutSection>
           <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-            <h1>Temática</h1>
-            <p>{procedure.getTheme()}</p>
+            <h1>Descripción</h1>
+            {procedure.getDescription()}
           </LayoutSection>
           <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-            <h1>Descripción</h1>
-            <p>{procedure.getDescription()}</p>
+            <h1>Categoría</h1>
+            <p>{procedure.getTheme()}</p>
           </LayoutSection>
           <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
             <h1>Organismo</h1>
             <p>{procedure.getSecretary()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Precio</h1>
+            {procedure.getPrice()}
           </LayoutSection>
        </LayoutActorSection>
    
@@ -236,7 +253,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                <Form autoComplete="off">
    
                    {oldForms.length>0 && oldForms.map((form, index) => (
-                     <LayoutSection style={{margin:"0px 0px 10px 0px"}}>
+                     <LayoutSection key={index}  style={{margin:"0px 0px 10px 0px"}}>
                      <p>Formulario cargado con anterioridad</p> 
                      <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 0px 0px" }}>  
                        <h2 >{form}</h2> 
@@ -285,7 +302,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                      <h1><MdDrafts /> Habilitar adjuntar archivos</h1>
                    </LayoutStackedPanel>
                    {oldDatosAdjuntos.length>0 && oldDatosAdjuntos.map((form, index) => (
-                     <LayoutSection style={{margin:"0px 0px 10px 0px"}}>
+                     <LayoutSection key={index}  style={{margin:"0px 0px 10px 0px"}}>
                       <p>Dato a adjuntar cargado con anterioridad</p> 
                      <div key={index} style={{ display: "flex", flexDirection: "column", width: "100%", margin: "0px 0px 20px 0px" }}>  
                      <h2 >{form}</h2> 
@@ -357,7 +374,7 @@ export const UpdateProcedure: React.FC<Arguments> = ({procedure}) => {
                      </div>
                    <LayoutStackedPanel className="mt-3">
                      <LayoutSpacer/>
-                     <FormikButton color="secondary">Cancelar<MdOutlineCancel/></FormikButton>
+                     {/*<FormikButton color="secondary" onClick={{close("home")}} >Cancelar<MdOutlineCancel/></FormikButton>*/}
                      <FormikButton onClick={ ()=>{ setCrear(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Finalizar<AiOutlineSave/></FormikButton>
                    </LayoutStackedPanel>
                </Form>

@@ -22,7 +22,9 @@ export const FormikCaptcha = ({...props}: Props) => {
   
   const { setFieldValue } = useFormikContext();
 
+
   function onChange(value:any) {
+
     if(value){
       setFieldValue(field.name,value)
     } else{

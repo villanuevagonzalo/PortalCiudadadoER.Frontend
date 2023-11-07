@@ -30,6 +30,7 @@ import { DA_PRESENTIAL } from "../Pages/Actor/Presential";
 import { DA_Procedures_Config } from "../Pages/Actor/Procedures/Procedures/ProceduresConfigurator";
 import { DA_Procedures_Associate } from "../Pages/Actor/Procedures/Procedures/AssociateElements";
 import { Auth_EmailModify } from "../Pages/Auth/EmailModify";
+import { DC_Configurations_HomePasswordReset } from "../Pages/Auth/PasswordResetHome";
 
 const REACTENV = process.env
 
@@ -118,6 +119,16 @@ export const RawPages:RawPagesProps = {
             label: 'Mi Argentina',
             element: <DC_UserValidate type="Mi Argentina" />
           },
+          ANSES:{
+            path: 'anses',
+            label: 'ANSES',
+            element: <DC_UserValidate type="ANSES" />
+          },
+          RENAPER:{
+            path: 'renaper',
+            label: 'RENAPER',
+            element: <DC_UserValidate type="RENAPER" />
+          },
         }
       },
       EMAILMODIFY:{
@@ -156,7 +167,12 @@ export const RawPages:RawPagesProps = {
                 element: <DC_Configurations_EmailChangeValidate />
               }
             }
-          }
+          },
+          HOMEPASSWORDRESET:{
+            path: 'homepassword/reset',
+            label: 'Resetear Contraseña',
+            element: <DC_Configurations_HomePasswordReset />
+          },
         }
       },
       NOTIFICATIONS:{

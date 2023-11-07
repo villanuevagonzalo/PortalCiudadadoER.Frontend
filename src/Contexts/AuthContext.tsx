@@ -21,6 +21,7 @@ const ContextValues = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isLogged, setIsLogged] = useState<boolean>(false);
+  //const [isLoggedOut, setIsLoggedOut] = useState<boolean>(false);
 
   const [authToken, setAuthToken] = useState<IToken>(DefaultToken);    
   const [userData, setUserData] = useState<IUserData>(DefaultUserData);
@@ -38,7 +39,6 @@ const ContextValues = () => {
       expiration: new Date(DecodeToken.exp*1000)
     };
     const NewUserRol = GetLevels(isactor?[...DecodeToken.scopes,"actor_1"]:DecodeToken.scopes);
-    console.log(NewUserRol)
 
     setAuthToken(NewToken);
     setUserRol(NewUserRol);
@@ -74,7 +74,6 @@ const ContextValues = () => {
   const Logout = () => {
     setIsLogged(false);
     setIsLoading(false);
-
     setAuthToken(DefaultToken);
     setUserData(DefaultUserData);
     setUserContact(DefaultUserContact);
@@ -115,6 +114,15 @@ const ContextValues = () => {
 
   const Redirect = async (data: any, setFormState:Function) => {
 
+    await Promise.all([
+      delLSData("authToken"),
+      delLSData("UserData"),
+      delLSData("UserContact"),
+      delLSData("UserRol"),
+      delLSData("ActorActions"),
+      delLSData("Secretary"),
+    ]);
+
     const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserRedirect, data, setFormState);
     if(response.data){
     
@@ -140,6 +148,15 @@ const ContextValues = () => {
   }
 
   const Login = async (data: any, setFormState:Function) => {
+
+    await Promise.all([
+      delLSData("authToken"),
+      delLSData("UserData"),
+      delLSData("UserContact"),
+      delLSData("UserRol"),
+      delLSData("ActorActions"),
+      delLSData("Secretary"),
+    ]);
 
     const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserLogin, data, setFormState);  
     if(response.data){
@@ -202,6 +219,8 @@ const ContextValues = () => {
   }
 
   const UserEmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserEmailChange, data, setFormState);
+  
+    
 
   const PasswordReset = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordReset, data, setFormState);
   const PasswordUpdate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordSave, data, setFormState);
@@ -209,18 +228,38 @@ const ContextValues = () => {
   const EmailValidate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailValidate, data, setFormState);
   const EmailResendVerification = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailResendVerification, data, setFormState);
   const EmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailChange, data, setFormState);
-  const EmailChangeValidate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.EmailChangeValidate, data, setFormState);
+  const EmailChangeValidate = async (data: any, setFormState:Function) => {
 
+    const response: AxiosResponse = await handleResponse(AxiosAuthAPI.EmailChangeValidate, data, setFormState);
+    if(response.data) {
+
+      const CurrentUserData: IUserData = getLSData('UserData');
+
+      // Crea una copia con el campo 'email' modificado
+      const updatedUserData: IUserData = { ...CurrentUserData, email: response.data.data.new_email };
+
+      // Actualiza el estado 'userData' con la copia modificada
+      setUserData(updatedUserData);
+
+      setLSData("UserData", updatedUserData);
+
+    } 
+  }
+  
+  
   const AFIP_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_AFIP_getURL, data, setFormState);
   const AFIP_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_AFIP_checkToken, data, setFormState);
   const MIARGENTINA_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_MIARGENTINA_getURL, data, setFormState);
   const MIARGENTINA_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_MIARGENTINA_checkToken, data, setFormState);
+  const ANSES_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_ANSES_getURL, data, setFormState);
+  const ANSES_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_ANSES_checkToken, data, setFormState);
+  const RENAPER_getURL = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_RENAPER_getURL, data, setFormState);
+  const RENAPER_checkToken = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.Autenticar_RENAPER_checkToken, data, setFormState);
 
 
   useEffect(() => {
     setContextLoaded(true)
   }, [])
-  
 
   return {
     isLoading, isLogged, authToken, userData, userContact, userRol, secretaria,
@@ -231,6 +270,8 @@ const ContextValues = () => {
     EmailValidate, EmailResendVerification, EmailChange, EmailChangeValidate,
     AFIP_getURL, AFIP_checkToken,
     MIARGENTINA_getURL, MIARGENTINA_checkToken,
+    ANSES_getURL, ANSES_checkToken,
+    RENAPER_getURL, RENAPER_checkToken,
     ContextLoaded
   }
 }

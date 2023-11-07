@@ -20,17 +20,26 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
 
   const SearchParams = GetParams(["code"]);
 
-  const { userData, userRol, SaveToken, AFIP_checkToken, AFIP_getURL, MIARGENTINA_checkToken, MIARGENTINA_getURL  } = useContext(AuthContext);
+  const { userData, userRol, SaveToken, AFIP_checkToken, AFIP_getURL, MIARGENTINA_checkToken, MIARGENTINA_getURL, ANSES_checkToken, ANSES_getURL, RENAPER_checkToken, RENAPER_getURL  } = useContext(AuthContext);
   const [ FormState, setFormState ] = useState<IFormState>(DefaultFormState);
   
   async function getValidationLink( type = 'AFIP' ) {
+    console.log("this is the type: "+type)
     let response: AxiosResponse | null;
     if(type==='AFIP'){
       response = await AFIP_getURL({
         cuil: userData.cuil
       }, setFormState);
-    } else{
+    } else if(type==='Mi Argentina'){
       response = await MIARGENTINA_getURL({
+        cuil: userData.cuil
+      }, setFormState);
+    } else if(type==='ANSES') {
+      response = await ANSES_getURL({
+        cuil: userData.cuil
+      }, setFormState);
+    } else {
+      response = await RENAPER_getURL({
         cuil: userData.cuil
       }, setFormState);
     }
@@ -46,8 +55,18 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
-    } else{
+    } else if(type==='Mi Argentina'){
       response = await MIARGENTINA_checkToken({
+        'cuil':userData.cuil,
+        'code':SearchParams.values.code
+      }, setFormState);
+    } else if(type==='ANSES'){
+      response = await ANSES_checkToken({
+        'cuil':userData.cuil,
+        'code':SearchParams.values.code
+      }, setFormState);
+    } else {
+      response = await RENAPER_checkToken({
         'cuil':userData.cuil,
         'code':SearchParams.values.code
       }, setFormState);
@@ -120,63 +139,3 @@ export const DC_UserValidate : React.FC<{ type?: string; }>  = ({type='AFIP'}) =
     </LayoutSection>
   </>)
 }
-
-
-/*
-
-
-      {SearchParams.status?<>
-          {FormState.loading?<>
-              <DivTitle2 className='text-center mb-2'>Validación Autenticar</DivTitle2>
-              <DivSubtitle className='text-center'>Estamos validando tu nivel de usuario.</DivSubtitle>
-              <br />
-              <Spinner color='primary' size="3rem"/>
-              <br />
-              <br />
-              <br />
-              <br />
-          </>:<>
-              {FormState.finish?<>
-                  <DivTitle2 className='text-center mb-2'>¡Validación realizada!</DivTitle2>
-                  <DivSubtitle className='text-center'>Alcanzaste el <strong>NIVEL 3</strong> de autenticación.</DivSubtitle>
-                  <br />
-                  <DivLabel>Inicia Sesión para utilizar Ciudadano Digital</DivLabel>
-                  <br />
-                  <Link to={Pages.AUTH_LOGIN} className="w-full"><Button>
-                  Iniciar Sesión
-                  </Button></Link>
-              </>:<>
-                  <DivTitle2 className='text-center mb-2' color="error">Validación Autenticar</DivTitle2>
-                  <DivOutlined color="error">{FormState.error}</DivOutlined>
-                  <br />
-                  <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicite un nuevo codigo de verificación.</DivSubtitle>
-                  <br />
-                  <form>
-                  <Link to={Pages.AUTH_EMAILRESENDVALIDATION} className="w-full"><Button color="secondary">
-                      Solicitar Nuevo Codigo
-                      <AiOutlineLock/>                        
-                  </Button></Link>
-                  <Link to={Pages.INDEX} className="w-full"><Button>
-                      <AiFillHome />
-                      Volver al Inicio
-                  </Button></Link></form>
-              </>}
-          </>}
-      </>:<>
-          <DivTitle2 className='text-center mb-2' color="error">Validación de Correo</DivTitle2>
-          <DivSubtitle className='text-center'>Los siguientes campos presentan un error:</DivSubtitle>
-          <DivOutlined color="error">{SearchParams.errors.map(e=><div>{e}</div>)}</DivOutlined>
-          <br />
-          <DivSubtitle>¡Por favor revisa el mail enviado! o bien, solicita un nuevo codigo de verificación.</DivSubtitle>
-          <br />
-          <form><Link to={Pages.AUTH_EMAILRESENDVALIDATION} className="w-full mb-3"><Button color="secondary">
-            Solicitar Nuevo Codigo
-            <AiOutlineLock/>                        
-        </Button></Link>
-        <Link to={Pages.INDEX} className="w-full"><Button>
-            <AiFillHome />
-            Volver al Inicio
-        </Button></Link></form>
-    </>}
-
-*/

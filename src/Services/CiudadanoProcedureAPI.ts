@@ -9,13 +9,29 @@ export class CiudadanoProcedureAPI {
   }
 
    //Get published procedures
-  GetPublished = async () => {
-    return this.baseService.get('/v0/dashboard/procedures/published')
+  GetPublished = async (params: {
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/published',{params})
   }
 
   //get all user procedures, the procedures that are in process
-  GetAll = async () => {
-    return this.baseService.get('/v0/dashboard/procedures')
+  GetAll = async (params: {
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures',{params})
+  }
+
+  GetByProcedureUnitId = async (params: {
+    id:number
+  }) => {
+    return this.baseService.post('/v0/dashboard/getByProcedureUnitId', params,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
   }
   
   //create a new procedure
@@ -39,11 +55,47 @@ export class CiudadanoProcedureAPI {
     })
   }
 
+  SearchByKeyword = async (params: {
+    keyword: string;
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/search', { params})
+  }
+
+  SendAttachments = async (params: {
+    data:string
+  }) => {
+    return this.baseService.post('/v0/dashboard/procedures/attachments', params,{
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  }
+
   Delete = async (params: {
     data:string
   }) => {
     return this.baseService.post('/v0/dashboard/procedures/delete', params)
   }
 
+  GetAttachment = async (params: {
+    attachmentId: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/attachments', { params, responseType: 'blob' })
+  }
+
+  GetAttachmentName = async (params: {
+    attachmentId: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/procedures/attachments/name', { params })
+  }
+
+  DeleteAttachment = async (params: {
+    procedure_data_id:number,
+    multimedia_id:number
+  }) => {
+    return this.baseService.post('/v0/dashboard/procedures/attachments/delete', params)
+  }
 
 }

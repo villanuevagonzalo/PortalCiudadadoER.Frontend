@@ -120,6 +120,18 @@ export class AuthAPI {
   }) => {
     return this.baseService.get("/v0/authentication/miargentina/getUrl", { params });
   }
+
+  Autenticar_ANSES_getURL = async (params: {
+    cuil: string;
+  }) => {
+    return this.baseService.get("/v0/authentication/anses/getUrl", { params });
+  }
+
+  Autenticar_RENAPER_getURL = async (params: {
+    cuil: string;
+  }) => {
+    return this.baseService.get("/v0/authentication/renaper/getUrl", { params });
+  }
   
   Autenticar_AFIP_checkToken = async (params: {
     cuil: string;
@@ -133,5 +145,19 @@ export class AuthAPI {
     code: string;
   }) => {
     return this.baseService.get("/v0/authentication/miargentina/getToken", { params });
+  }
+
+  Autenticar_ANSES_checkToken = async (params: {
+    cuil: string;
+    code: string;
+  }) => {
+    return this.baseService.get("/v0/authentication/anses/getToken", { params });
+  }
+
+  Autenticar_RENAPER_checkToken = async (params: {
+    cuil: string;
+    code: string;
+  }) => {
+    return this.baseService.get("/v0/authentication/renaper/getToken", { params });
   }
 }

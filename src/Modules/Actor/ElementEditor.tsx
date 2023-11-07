@@ -64,18 +64,18 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     setLista(event.target.value);
   };
 
-  console.log("ESTO ES LO QUE TIENE: "+minLength)
 
   useEffect(() => {
 
     const properties = basetype.properties;
 
-
     const EI = instance as ElementInstance<"TEXT">
 
     if (properties && Array.isArray(properties.required) && properties.required.includes("label")) {
       setHasLabelCondition(true);
-
+      if (EI.properties.label!="Ingresá el Título"){
+        setNombreCampo(EI.properties.label)
+      }
     } else {
       setHasLabelCondition(false);
     }
@@ -131,7 +131,24 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     if (properties &&  Array.isArray(properties.required) && properties.required.includes("options")) {
       setHasOptions(true);
       if ("options" in EI.properties) {
-        setLista(EI.properties.options as string);
+
+        let values =""
+
+        const options = EI.properties.options as { label: string }[];
+
+        options.forEach((option, index) => {
+          // Realiza las acciones que necesitas con "option.label" aquí
+          console.log("Etiqueta:", option.label);
+        
+          values += option.label;
+        
+          // Agregar punto y coma solo si no es el último elemento
+          if (index < options.length - 1) {
+            values += ";";
+          }
+        });
+        console.log("valores: "+values)
+        setLista(values );
       }
     } else {
       setHasOptions(false);

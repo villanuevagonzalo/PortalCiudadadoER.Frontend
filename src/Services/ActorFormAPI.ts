@@ -18,12 +18,18 @@ export class FormAPI {
     })
   }
 
-  GetAll = async () => {
-    return this.baseService.get('/v0/backoffice/forms')
+  GetAll = async (params: {
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/backoffice/forms', {params})
   }
   
-  GetPublishedAll = async () => {
-    return this.baseService.get('/v0/backoffice/forms/published')
+  GetPublishedAll = async (params: {
+    start_position: number;
+    end_position: number;
+  }) => {
+    return this.baseService.get('/v0/backoffice/forms/published', {params})
   }
 
   Update = async (params: {
@@ -34,6 +40,19 @@ export class FormAPI {
         'Content-Type': 'multipart/form-data'
       }
     })
+  }
+
+
+  GetElements = async (params: {
+    code:number
+  }) => {
+    return this.baseService.get("/v0/backoffice/forms/elements", {params})
+  }
+
+  GetByCode = async (params: {
+    code:number
+  }) => {
+    return this.baseService.get('/v0/backoffice/forms/getByPk',{params})
   }
 
   Delete = async (params: {

@@ -89,10 +89,6 @@ interface FormGenericData {
                         <p>{procedure.getTitle()}</p>
                     </LayoutSection>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                        <h1>Temática</h1>
-                        <p>{procedure.getTheme()}</p>
-                    </LayoutSection>
-                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                         <h1>Descripción</h1>
                         <p>{procedure.getDescription()}</p>
                     </LayoutSection>
@@ -100,7 +96,10 @@ interface FormGenericData {
                         <h1>Organismo</h1>
                         <p>{procedure.getSecretary()}</p>
                     </LayoutSection>
-               
+                    <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+                        <h1>Precio</h1>
+                        <p>{procedure.getPrice()}</p>
+                    </LayoutSection>
                  </LayoutSection>    
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
                 <LayoutSection style={{margin:"5px 0px 15px 0px"}}>

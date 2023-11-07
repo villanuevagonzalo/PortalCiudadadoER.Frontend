@@ -35,7 +35,7 @@ export const NotificationActionCard: React.FC<Props> = ({data, loading=false, fu
   return <NotificationCardWrapper {...props} loading={loading}>
   <div className="content">
     <label className="header">
-      <span className="title">{moment(data.CREATED_AT).fromNow()}</span>
+      <span className="title">{moment(data.CREATED_AT,"DD/MM/YYYY HH:mm:ss").fromNow()}</span>
       {moment().isBetween(moment(data.DATE_FROM), moment(data.DATE_TO)) ? <span className="new"><AiOutlineStar /> ACTIVA</span> : <></>}
       {data.ATTACHMENTS.length>0 ? <span className="attachment"><AiOutlinePaperClip/> {data.ATTACHMENTS.length} Archivos adjuntos</span>: <></>}
     </label>

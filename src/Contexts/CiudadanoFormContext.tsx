@@ -1,15 +1,16 @@
-import { FC, SetStateAction, createContext, useEffect, useState } from "react";
-import { ElementInstance, ElementSchema, FormInstance } from "../Modules/FormElements/Class";
+import { FC, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { ElementInstance, ElementSchema, FormDataClass, FormInstance, ProcedureData } from "../Modules/FormElements/Class";
 import { ElementSchemaTypes } from "../Modules/FormElements/Types";
 import { AxiosResponse } from "axios";
 import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/ActorFormAPI";
 import { CiudadanoFormAPI } from "../Services/CiudadanoFormAPI";
+import { AuthContext } from "./AuthContext";
 
 
 export type FieldsType = ElementInstance<ElementSchemaTypes>[];
 
-export type FormData = {
+export type FormDataType = {
     procedure_data_id: number;
     form_unit_code: string;
     form_data: string;
@@ -20,23 +21,58 @@ export type FormData = {
 const ContextValues = () => {
 
   const AxiosCiudadanoFormAPI = new CiudadanoFormAPI();
-  const [formularios, setFormularios] = useState<FormInstance<ElementSchemaTypes>[]>([]);
-  const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [ciudadanoFormularios, setCiudadanoFormularios] = useState<FormDataClass[]>([]);
+  //const [publishedFormularios, setPublishedFormularios]= useState<FormInstance<ElementSchemaTypes>[]>([]);
+  const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string>("");
+  
+  const [isUpdatingCitizenForms, setUpdatingCitizenForms] = useState<boolean>(true);
+
+  const { isLogged } = useContext(AuthContext);
+  useEffect(() => {
+
+    if(!isLogged){
+      setCiudadanoFormularios([])
+      setIsLoading(false)
+      setErrors("")
+      setUpdatingCitizenForms(true)
+    }
+   
+  }, [isLogged]);
 
   //create a form
-  const SaveForm = async (newFormularioData: any, setFormState: Function) => {
+  const SaveForm = async (procedureData:ProcedureData, newFormularioData: any, setFormState: Function) => {
     setIsLoading(true)
     const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.Create, newFormularioData, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
-      const codeResponse = responseData[0].CODE;
-      const titleResponse = responseData[0].TITLE
       if (status) {
-        //setFormularios(prevState => ([...prevState, newFormulario]));
-        //setIsLoading(false)
+     
+        let parsedAttachments=[]
+        if (responseData[0].ATTACHMENTS!=""){
+            parsedAttachments = responseData[0].ATTACHMENTS.split(",");
+        }
+        let parsedMultimediaID=[]
+        if (responseData[0].MULTIMEDIA_ID!=""){
+          parsedMultimediaID = responseData[0].ATTACHMENTS.split(",");
+        }
+
+        const newFormData = new FormDataClass(
+          responseData[0].ID,
+          responseData[0].FORM_UNIT,
+          responseData[0].PROCEDURE_DATA_ID,
+          responseData[0].STATUS,                        
+          parsedAttachments,
+          parsedMultimediaID,
+          responseData[0].USER_ID,
+          responseData[0].CREATED_AT,
+          responseData[0].UPDATED_AT
+      );
+          
+        setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
+        procedureData.setForms(newFormularioData.form_unit_code)
+        setIsLoading(false)
         return true;
       }
       else{
@@ -49,18 +85,31 @@ const ContextValues = () => {
   }
 
   //update a form
-  const UpdateOneForm = async(updateFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string) => {
+  const UpdateOneForm = async(procedureData:ProcedureData, newFormularioData: any, setFormState: Function) => {
     setIsLoading(true)
-    const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.Update, updateFormulario.getJSON(), setFormState);
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.Update, newFormularioData, setFormState);
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const responseData = JSON.parse(response.data.data);
-      const codeResponse = responseData[0].CODE;
-      if (status && codeResponse == code ) {
-        setFormularios(prevFormularios => prevFormularios.filter(formulario =>formulario.getCode() !== code )); //delete the old form
-        setFormularios(prevState => ([...prevState, updateFormulario])); //set the new form
-        setIsLoading(false)
-        return true;
+      if (status  ) {
+        const foundFormData = ciudadanoFormularios.find(formData => formData.getProcedureDataId() == procedureData.getId());
+       
+        if (foundFormData){
+          let fields: ElementInstance<ElementSchemaTypes>[] = [];
+          let componentes= responseData[0].ELEMENTS
+          componentes.map((componente: any, index:number)=> {
+                    const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]),componente.value);
+                    aux.update((componente.properties))
+                    fields.push(aux);
+          });
+          foundFormData.setElements(fields)
+          setIsLoading(false)
+          return true;
+        }else{
+          setIsLoading(false)
+          return false;
+        }
+        
       }
       else{
         setIsLoading(false)
@@ -85,53 +134,153 @@ const ContextValues = () => {
   }
 
   //get complete forms list
-  const UpdateForms = async() => {
+  const UpdateCitizenForms = async() => {
+    if (isUpdatingCitizenForms) {
+      return;
+    }
+    setUpdatingCitizenForms(true)
     setIsLoading(true)
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosCiudadanoFormAPI.GetAll(); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
 
     if(responseAll && responseAll.status!==204) 
     {
-      const FormData = responseAll.data.data;
-      const FormsObj = JSON.parse(FormData);
-      const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
-      const mappedArray = FormsObj.map((formInstance: any) => {
-        let fields: FieldsType = [];
-        let componentes= JSON.parse(formInstance.STATUS)
-        componentes.map((componente: any, index:number)=> {
-          const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-          aux.update((componente.properties))
-          fields.push(aux);
-          });
-        const Formulario = new FormInstance(
-            formInstance.CODE,
-            formInstance.TITLE,
-            formInstance.SUBTITLE,
-            formInstance.DESCRIPTION,
-            formInstance.ELEMENTS,
-            formInstance.KEYWORDS,
-            fields
-        );
-        formulariosAux.push(Formulario);
-      });   
-      setFormularios(formulariosAux);
+      const Form_data = responseAll.data.data;
+      //const Size = responseAll.data.data.count;
+      const responseData = JSON.parse(Form_data);
+      const totalSize = responseData.count 
+
+      if (Array.isArray(responseData.data) && responseData.data.length > 0) {
+        let parsedAttachments=[]
+        if (responseData.data[0].ATTACHMENTS !== undefined && responseData.data[0].ATTACHMENTS.trim() !== "") {
+          parsedAttachments = responseData.data[0].ATTACHMENTS.split(",");
+        }
+        let parsedMultimediaID=[]
+        if ( responseData.data[0].MULTIMEDIA_ID !== undefined && responseData.data[0].MULTIMEDIA_ID.trim() !== ""){
+          parsedMultimediaID = responseData.data[0].ATTACHMENTS.split(",");
+        }
+        const newFormData = new FormDataClass(
+          responseData[0].ID,
+          responseData[0].FORM_UNIT,
+          responseData[0].PROCEDURE_DATA_ID,
+          responseData[0].STATUS,                        
+          parsedAttachments,
+          parsedMultimediaID,
+          responseData[0].USER_ID,
+          responseData[0].CREATED_AT,
+          responseData[0].UPDATED_AT
+       );
+        setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
+      }
     }
+    setUpdatingCitizenForms(false)
     setIsLoading(false); 
   }
 
   const UserClearData = () => {
-    setFormularios([]);
+    setCiudadanoFormularios([]);
   }
 
+  /////////////////////////////////////////////////////////
+
+  const GetCitizenElementsByCode = async(code:string, setFormState: Function) => {
+    setIsLoading(true);
+    const jsonObject = {
+      form_code: code
+    };
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.GetElements, jsonObject, setFormState);
+    
+    if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
+      const status = response.data.success;
+
+      const formularioEncontrado = ciudadanoFormularios.find(form => form.getFormCode() === code);
+
+      if (status !==204 ){
+
+        if (formularioEncontrado) {
+          const componentesArray = JSON.parse(response.data.data.replace(/\\"/g, '"'));
+          componentesArray.forEach((componente:any, index:number) => {
+
+            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]),componente.value);
+            aux.update((componente.properties))
+            formularioEncontrado.addElement(aux)
+          });
+          setIsLoading(false);
+          return true
+  
+        } else {
+          console.log('Formulario no encontrado');
+          setIsLoading(false);
+          return false;
+        }
+
+      }else{
+        setIsLoading(false);
+        return false;
+      }
+    }
+  }
+
+  const GetCitizenFormByCode = async(code:string, setFormState: Function) => {
+    setIsLoading(true);
+    const jsonObject = {form_code: code};
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.GetByCode, jsonObject, setFormState);
+    if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
+      const status = response.data.success;
+      if (status){
+        const responseData = JSON.parse(response.data.data);
+          /*let fields: ElementInstance<ElementSchemaTypes>[] = [];
+          let componentes= JSON.parse(responseData[0].ELEMENTS)
+          componentes.map((componente: any, index:number)=> {
+                    const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+                    aux.update((componente.properties))
+                    fields.push(aux);
+          });
+          */
+
+          let parsedAttachments=[]
+          if (responseData[0].ATTACHMENTS!=""){
+              parsedAttachments = responseData[0].ATTACHMENTS.split(",");
+          }
+          let parsedMultimediaID=[]
+          if (responseData[0].MULTIMEDIA_ID!=""){
+            parsedMultimediaID = responseData[0].ATTACHMENTS.split(",");
+          }
+  
+          const newFormData = new FormDataClass(
+            responseData[0].ID,
+            responseData[0].FORM_UNIT,
+            responseData[0].PROCEDURE_DATA_ID,
+            responseData[0].STATUS,                        
+            parsedAttachments,
+            parsedMultimediaID,
+            responseData[0].USER_ID,
+            responseData[0].CREATED_AT,
+            responseData[0].UPDATED_AT
+        );
+
+          setCiudadanoFormularios(prevState => ([...prevState, newFormData]));
+          setIsLoading(false)
+      }else{
+        setIsLoading(false);
+        return false;
+      }
+    }
+  }
+
+  /////////////////////////////////////////////////////////
+
   return {
-    isLoading,
-    formularios,
-    publishedFormularios,
-    setFormularios,
+    isLoadingFormCitizen,
+    ciudadanoFormularios,
+    //publishedFormularios,
+    setCiudadanoFormularios,
+    GetCitizenFormByCode,
     SaveForm, 
     UpdateOneForm,
     DeleteOneForm,
-    UpdateForms
+    UpdateCitizenForms,
+    GetCitizenElementsByCode
   }
 }
 

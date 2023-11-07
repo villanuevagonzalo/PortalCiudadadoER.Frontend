@@ -12,6 +12,18 @@ export class CiudadanoFormAPI {
     return this.baseService.get('/v0/dashboard/forms')
   }
 
+  GetElements = async (params: {
+    form_code:number
+  }) => {
+    return this.baseService.get("/v0/dashboard/forms/elements", {params})
+  }
+
+  GetByCode = async (params: {
+    form_code:number
+  }) => {
+    return this.baseService.get('/v0/dashboard/forms/getByPk',{params})
+  }
+
   //create a new procedure
   Create = async (params: {
     procedure_data_id: number,
@@ -19,7 +31,7 @@ export class CiudadanoFormAPI {
     form_data: string,
     attachments?: File
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures/forms', params,{
+    return this.baseService.post('/v0/dashboard/forms', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -29,7 +41,7 @@ export class CiudadanoFormAPI {
   Update = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures/update', params,{
+    return this.baseService.post('/v0/dashboard/forms/update', params,{
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -39,7 +51,7 @@ export class CiudadanoFormAPI {
   Delete = async (params: {
     data:string
   }) => {
-    return this.baseService.post('/v0/dashboard/procedures/delete', params)
+    return this.baseService.post('/v0/dashboard/forms/delete', params)
   }
 
 

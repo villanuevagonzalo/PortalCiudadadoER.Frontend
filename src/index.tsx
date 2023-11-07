@@ -10,23 +10,29 @@ import FormContextProvider from './Contexts/FormContext';
 import ProcedureContext from './Contexts/ProcedureContext';
 import CiudadanoFormContextProvider from './Contexts/CiudadanoFormContext';
 import CiudadanoProcedureContextProvider from './Contexts/CiudadanoProcedureContext';
+import FilesContextProvider from './Contexts/FilesContext';
+import { InactivityDetector } from './Utils/InactivityDetector';
 
 const REACTENV = process.env
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthContextProvider>
+    <InactivityDetector />
+
       <NotificationsContextProvider>
         <ProcedureContext>
           <FormContextProvider>
-            <CiudadanoProcedureContextProvider>
-              <CiudadanoFormContextProvider>
-                <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
-                  <App />
-                  <ScrollToTop/>
-                </BrowserRouter>
-                </CiudadanoFormContextProvider>
-              </CiudadanoProcedureContextProvider>
+            <FilesContextProvider> {/*check if it can be local*/}
+              <CiudadanoProcedureContextProvider>
+                <CiudadanoFormContextProvider>
+                  <BrowserRouter basename={REACTENV.PUBLIC_URL+"/"}>
+                    <App />
+                    <ScrollToTop/>
+                  </BrowserRouter>
+                  </CiudadanoFormContextProvider>
+                </CiudadanoProcedureContextProvider>
+              </FilesContextProvider>
             </FormContextProvider>
           </ProcedureContext>
       </NotificationsContextProvider>

@@ -14,6 +14,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const NotificationCard: React.FC<Props> = ({data, loading=false, ...props}) => {
+ 
   return <NotificationCardWrapper new={data.NEW} {...props} loading={loading}>
     <div className="icon">
       {loading?<Spinner color='gray' size="1rem"/>:<AiOutlineNotification />}
@@ -26,7 +27,7 @@ export const NotificationCard: React.FC<Props> = ({data, loading=false, ...props
       <h1>{data.MESSAGE_TITLE}</h1>
       <p>{stringPreview(data.MESSAGE_BODY)}</p>
       <label className="footer">
-        <span className="time">{moment(data.CREATED_AT).fromNow()}</span>
+        <span className="time">{moment(data.CREATED_AT,"DD/MM/YYYY HH:mm:ss").fromNow()}</span>
         {data.ATTACHMENTS.length>0 ? <span className="attachments"><AiOutlinePaperClip/> {data.ATTACHMENTS.length} Archivos adjuntos</span>: <></>}
       </label>
     </div>
@@ -45,7 +46,7 @@ export const NotificationCardReduced: React.FC<Props> = ({data, loading=false, .
       </label>
       <h1>{data.MESSAGE_TITLE}</h1>
       <label className="footer">
-        <span className="time">{moment(data.CREATED_AT).fromNow()}</span>
+        <span className="time">{moment(data.CREATED_AT, "DD/MM/YYYY HH:mm:ss").fromNow()}</span>
         {data.ATTACHMENTS.length>0 ? <span className="attachments"><AiOutlinePaperClip/> {data.ATTACHMENTS.length} Archivos adjuntos</span>: <></>}
       </label>
     </div>

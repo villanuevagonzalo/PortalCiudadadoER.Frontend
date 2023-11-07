@@ -674,6 +674,7 @@ export const LayoutSection = styled.div<{ }>`
   border-radius:0.5rem;
   border: 1px solid var(--disabled);
   width:100%;
+  height:auto;
   padding:2rem;
   color: var(--maincolor_text);
   align-items: left;
@@ -722,8 +723,97 @@ export const LayoutSection = styled.div<{ }>`
     }
   }
 
+  & p{
+    maxWidth: "100%";
+    whiteSpace: "nowrap";
+    overflow: "hidden";
+    textOverflow: "ellipsis";
+  }
+
   & button{
     flex:0.1;
+  }
+`;
+
+export const LayoutSectionCentered = styled.div<{ }>`
+  display: flex;
+  flex-direction: column;
+  background: var(--maincolor);
+  border-radius: 0.5rem;
+  border: 1px solid var(--disabled);
+  width: 100%;
+  padding: 1.5rem;
+  color: var(--maincolor_text);
+  text-align: center; /* Centrar el texto horizontalmente */
+  justify-content: center;
+  gap: 0.75rem;
+  align-items: center; /* Centrar todo verticalmente */
+
+  & h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0rem;
+    text-align: center;
+  }
+
+  & h2, & h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary_tint); /* Aplicar color a h2 y h3 */
+  }
+
+  & h4 {
+    font-size: 1rem;
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+
+  & h1 svg {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
+  }
+
+  & button {
+    flex: 0.1;
+  }
+`;
+
+
+export const LayoutSectionProcedureTitle = styled.div<{ }>`
+  background: var(--maincolor);
+  border-radius:0.5rem;
+  border: 1px solid var(--disabled);
+  width:100%;
+  padding:2rem;
+  color: var(--maincolor_text);
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-self: top;
+  gap:0.75rem;
+
+  & h1{
+    display: flex;
+    width:100%;
+    font-size:1.25rem;
+    flex-direction: row;
+    align-items: center;
+    text-align: center;
+    font-weight:600;
+  }
+
+  & h1 svg{
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.75rem;
+    &.small{
+      width: 1.5rem;
+      height: 1.5rem;
+      margin-right: 0.75rem;
+    }
   }
 `;
 
@@ -839,7 +929,7 @@ export const LayoutListItem = styled.div<{ color?:string, disabled?:boolean }>`
   justify-items: center;
   align-items: top;
   gap:1.5rem;
-  cursor:${props => (props.color==='disabled' ? 'default' : 'pointer')};
+  // cursor:${props => (props.color==='disabled' ? 'default' : 'pointer')};
 
   & .ListItemIcon{
     color: var(--${props => (props.color ? props.color : 'primary')});

@@ -2,7 +2,7 @@ import { ErrorMessage, getIn, useField, useFormikContext,  } from "formik";
 import { Spinner } from "../Elements/StyledComponents";
 import { FormFields } from "../../Interfaces/FormFields";
 import { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
 import { CapitalizeWords } from "../../Utils/General";
 import { FormError, FormWrapper, FormWrapperInput } from "./StyledComponents";
 
@@ -87,25 +87,56 @@ export const FormikSearch = ({...props}: Props) => {
     }else{
       props.setValue("");
     }
-
   }, [field.value])
   
-  const seleccionar = (value:string) =>{
+  const seleccionar = (value:string) => {
   }
 
-  return (<FormWrapper {...props}>
-    <FormWrapperInput error={thiserror?true:false} disabled={props.disabled} focus={focus || !empty} >
-      <div>
-        <label>{props.label?props.label:fieldprops.placeholder}</label>
-        <input type={fieldprops.type} autoFocus={props.autoFocus} {...field} onFocus={handleFocus} onBlurCapture={handleBlur} onChangeCapture={handleChange} onKeyDown={handleKeys}/>
-        <div className="FormIcon">{props.disabled?<Spinner color="gray" />:<FaSearch className="w-4 mr-1"/>}</div>
-      </div>
-      {(ListData.length>0)?<div className="FormDropdown">
-        {ListData.map((item:any, index:number) => (
-          <div dangerouslySetInnerHTML={{__html:parseItem(item, field.value)}} onMouseDown={()=>handleClick(item)} key={index} className={ListDataIndex===index?'active':''} onClick={()=>seleccionar(item)}/>
-        ))}
-      </div>:<></>}
-    </FormWrapperInput>
-    <ErrorMessage name={props.name} component={FormError}/>
-  </FormWrapper>)
+  const handleClearInput = () =>{
+    setListData([])
+  }
+
+  return (
+    <FormWrapper {...props}>
+      <FormWrapperInput error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
+        <div>
+          <label style={{ color: 'your-label-color' }}>{props.label ? props.label : fieldprops.placeholder}</label>
+          <input
+            type={fieldprops.type}
+            autoFocus={props.autoFocus}
+            {...field}
+            onFocus={handleFocus}
+            onBlurCapture={handleBlur}
+            onChangeCapture={handleChange}
+            onKeyDown={handleKeys}
+            style={{ width: '100%', padding: '5px' }} // Agrega los estilos que desees aquí
+          />
+          <div className="FormIcon">
+            {ListData.length > 0 ? <FaTimes className="w-4 mr-1" onClick={handleClearInput} style={{ cursor: 'pointer' }} /> : (props.disabled ? <Spinner color="gray" /> : <FaSearch className="w-4 mr-1" />) }
+            
+          </div>
+        </div>
+        {ListData.length > 0 ? (
+          <div className="FormDropdownContainer" style={{ position: 'relative' }}>
+            <div className="FormDropdown" style={{ position: 'absolute', top: '100%', left: '0', background: '#ffff' }}>
+              {ListData.map((item: any, index: number) => (
+                <div
+                  dangerouslySetInnerHTML={{ __html: parseItem(item, field.value) }}
+                  onMouseDown={() => handleClick(item)}
+                  key={index}
+                  className={ListDataIndex === index ? 'active' : ''}
+                  onClick={() => seleccionar(item)}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+      </FormWrapperInput>
+      <ErrorMessage name={props.name} component={FormError} />
+    </FormWrapper>
+  );
+  
+  
 }

@@ -26,10 +26,11 @@ import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Pages } from "../../../Routes/Pages";
 import { CountDown } from "../../../Components/Elements/CountDown";
+import { FilesContext } from "../../../Contexts/FilesContext";
 
 export const DA_Notifications_Create = () =>{
 
-  const { CreateNotification, GetScope } = useContext(NotificationsContext);
+  const { CreateNotification, GetScope, realoadActorNotifications } = useContext(NotificationsContext);
   const ref:any = useRef(null);
 
   const [ ScopeFormState, setScopeFormState ] = useState<IFormState>(DefaultFormState);
@@ -40,13 +41,16 @@ export const DA_Notifications_Create = () =>{
   const [ Deparments, setDeparments ] = useState<any[]>([]);
   const [ Localities, setLocalities ] = useState<any[]>([]);
 
+  const {fileArray} = useContext(FilesContext)
+
+
   const [Fields, setFields] = useState( {
-    Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título'},["isRequired"])),
-    Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_max:100},["isRequired"])),
+    Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título',length_min:10, length_max:100},["isRequired"])),
+    Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_min:10, length_max:500},["isRequired"])),
     StartDate: new ElementInstance("StartDate",new ElementSchema('DATE',{label:'Fecha desde'},["isRequired"]),null),
     EndDate: new ElementInstance("EndDate",new ElementSchema('DATE',{label:'Fecha hasta'},["isRequired"]),null),
     SendByEmail: new ElementInstance("SendByEmail",new ElementSchema('CHECKBOX',{label:'Enviar por Correo'}),false),
-    Attachments: new ElementInstance("Attachments",new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+    //Attachments: new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
     Recipients: new ElementInstance("Recipients",new ElementSchema('SELECT',{label:'Seleccione un destinatario',options:[{
       value: "actor",
       label: 'Actores'
@@ -59,19 +63,39 @@ export const DA_Notifications_Create = () =>{
     }]},["isRequired"]), "both"),
     AgeFrom: new ElementInstance("AgeFrom",new ElementSchema('NUMBER',{label:'Edad desde',value_min:1, value_max:120})),
     AgeTo: new ElementInstance("AgeTo",new ElementSchema('NUMBER',{label:'Edad hasta',value_min:1, value_max:120})),
-    Department: new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
-    Locality: new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
+   
   })
+
+  const [Attachments, setAttachments] = useState( 
+    new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+  )
+
+  const [departmentFields, setDepartmentsFields] = useState( 
+    new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
+  )
+  const [localityFields, setLocalityFields]= useState( 
+    new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
+  )
 
   const initialValues = Object.entries(Fields).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
 
   const handleChange = (e:any) => {
     setLocalities(GetLocalitysByDeparment(Locations,e.target.value*1))
+    setLocalityFields( 
+      new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:GetLocalitysByDeparment(Locations,e.target.value*1)}))
+    )
   }
+
   const handleLocations = async() => {
     const response = await RawLocations();
     setLocations(response)
-    setDeparments(GetDepartments(response));
+    setLocalityFields( 
+      new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:response}))
+    )
+    setDepartmentsFields( 
+      new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:GetDepartments(response)})),
+    )
+    
   }
   const handleScope = async (e:any) => {
     e.preventDefault()
@@ -80,14 +104,51 @@ export const DA_Notifications_Create = () =>{
       recipients: values.Recipients,
       age_from: values.AgeFrom===""?1:values.AgeFrom,
       age_to: values.AgeTo===""?120:values.AgeTo,
-      department_id: values.Department || 0,
-      locality_id: values.Locality || 0,
+      department_id: departmentFields.getValue() || 0,
+      locality_id: localityFields.getValue() || 0,
       }, setScopeFormState);
     if(ScopeResponse?.data?.success){
       setScope(ScopeResponse.data.data.notification_scope)
     } else{
       setScope(-1)
     }
+  }
+
+  const clearAll = async () => {
+    setFields ({
+      Title: new ElementInstance("Title",new ElementSchema('TEXT',{label:'Título',length_min:10, length_max:100},["isRequired"])),
+      Message: new ElementInstance("Message",new ElementSchema('TEXTAREA',{label:'Mensaje',length_min:10, length_max:500},["isRequired"])),
+      StartDate: new ElementInstance("StartDate",new ElementSchema('DATE',{label:'Fecha desde'},["isRequired"]),null),
+      EndDate: new ElementInstance("EndDate",new ElementSchema('DATE',{label:'Fecha hasta'},["isRequired"]),null),
+      SendByEmail: new ElementInstance("SendByEmail",new ElementSchema('CHECKBOX',{label:'Enviar por Correo'}),false),
+      //Attachments: new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+      Recipients: new ElementInstance("Recipients",new ElementSchema('SELECT',{label:'Seleccione un destinatario',options:[{
+        value: "actor",
+        label: 'Actores'
+      },{
+        value: "citizen",
+        label: 'Ciudadanos'
+      },{
+        value: "both",
+        label: 'Todos'
+      }]},["isRequired"]), "both"),
+      AgeFrom: new ElementInstance("AgeFrom",new ElementSchema('NUMBER',{label:'Edad desde',value_min:1, value_max:120})),
+      AgeTo: new ElementInstance("AgeTo",new ElementSchema('NUMBER',{label:'Edad hasta',value_min:1, value_max:120})),
+     
+    })
+
+    setAttachments( 
+      new ElementInstance('Attachments',new ElementSchema('FILE',{label:'Selecciona un Archivo'}), null),
+    )
+  
+    setDepartmentsFields( 
+      new ElementInstance("Department",new ElementSchema('SELECT',{label:'Departamento',options:Deparments})),
+    )
+
+    setLocalityFields( 
+      new ElementInstance("Locality",new ElementSchema('SELECT',{label:'Localidad',options:Localities})),
+    )
+  
   }
 
   useEffect(() => { handleLocations(); },[])
@@ -110,7 +171,7 @@ export const DA_Notifications_Create = () =>{
             <AiOutlineArrowLeft/>Volver a <b className='-ml-1'>Gestor de Notificaciones</b>                                
           </Button></Link>
           <LayoutSpacer/>
-          <FormikButton disabled={false} color="secondary" onClick={()=>setFormState(prev=>({...prev, finish:false}))}>
+          <FormikButton disabled={false} color="secondary" onClick={() => {setFormState(prev => ({ ...prev, finish: false })); clearAll();}}>
             Crear nueva Notificación
           </FormikButton>
         </LayoutStackedPanel>
@@ -122,21 +183,26 @@ export const DA_Notifications_Create = () =>{
           enableReinitialize={true}
           initialValues={initialValues}
           onSubmit={async(values:any)=>{
-            const test = {
+            const newNotificationData = {
               recipients: values.Recipients,
               age_from: values.AgeFrom===""?1:values.AgeFrom,
               age_to: values.AgeTo===""?120:values.AgeTo,
               notification_date_from: moment(values.StartDate).format("DD/MM/YYYY"),  
               notification_date_to: moment(values.EndDate).format("DD/MM/YYYY"), 
-              department_id: values.Department || 0,
-              locality_id: values.Locality || 0,
+              department_id: departmentFields.getValue() || 0,
+              locality_id: localityFields.getValue() || 0,
               message_title: values.Title,
               message_body: values.Message,
-              attachment: values.HELPAttachments,
+              attachment: fileArray.length > 0 ? fileArray : [],
               send_by_email: values.SendByEmail?true:false,
             };
 
-            const response = await CreateNotification(test, setFormState);
+            const response = await CreateNotification(newNotificationData, setFormState);
+            console.log("this is the response: "+JSON.stringify(response.data.success))
+            if(response.data.success){
+              realoadActorNotifications()
+            }
+
           }}
           validate={(values:any) => ValidateForm(values, Fields)}
         >
@@ -144,7 +210,7 @@ export const DA_Notifications_Create = () =>{
           <Element instance={Fields.Title}/>
           <Element instance={Fields.Message}/>
             <LayoutStackedPanel>
-          <Element instance={Fields.Attachments} className="flex-2"/>
+          <Element instance={Attachments} className="flex-2"/>
               <Element instance={Fields.StartDate} className="flex-1"/>
               <Element instance={Fields.EndDate} className="flex-1"/>
             </LayoutStackedPanel>
@@ -156,8 +222,8 @@ export const DA_Notifications_Create = () =>{
             <Element instance={Fields.AgeTo} className="flex-1"/>
           </LayoutStackedPanel>
           <LayoutStackedPanel>
-            <Element instance={Fields.Department} className="flex-1" disabled={Deparments.length===0} onChange={handleChange}/>
-            <Element instance={Fields.Locality} className="flex-1" disabled={Localities.length===0}/>
+            <Element instance={departmentFields} className="flex-1" disabled={Deparments.length===0} onChange={handleChange}/>
+            <Element instance={localityFields} className="flex-1" disabled={Localities.length===0}/>
             <div><ButtonWrapper onClick={handleScope}>{ScopeFormState.loading ? <Spinner /> : "Ver Alcance"}<FaSearch/></ButtonWrapper></div>
             <div><ButtonWrapper disabled color="gray">{Scope>-1?Scope+" destinatarios":"?"}<MdOutlineAutoGraph/></ButtonWrapper></div>
           </LayoutStackedPanel>

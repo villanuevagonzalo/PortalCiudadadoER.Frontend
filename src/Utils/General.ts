@@ -121,5 +121,28 @@ export const delLSData = (item:string) => {
 
 export const stringPreview = (text:string, len:number=100) => text.length>len?(text.slice(0,len)+"..."):text;
 
+export function removeHTMLTags(text:string) {
+  return text.replace(/<[^>]*>/g, '');
+}
+
+export function abrirEnlaceExterno(url:string) {
+  // Verificar si la URL comienza con "http://" o "https://"
+  if (!url.startsWith("http://") && !url.startsWith("https://")) {
+    // Si no comienza con ninguno de los dos, agregar "https://"
+    url = "https://" + url;
+  }
+  // Abrir la URL en una nueva pestaña
+  window.open(url, '_blank');
+}
+
+export const showMessageForSeconds = (seconds: number, setShowMessage:Function, setCancelMessage?:Function) => {
+  setShowMessage(true);
+  setTimeout(() => {
+    setShowMessage(false);
+    if (setCancelMessage!=undefined){
+      setCancelMessage(true)
+    }
+  }, seconds * 1000); // Convertir segundos a milisegundos
+};
 
 export const actionData = (data:string) => JSON.parse(atob(data));

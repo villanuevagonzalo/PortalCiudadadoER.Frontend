@@ -1,34 +1,35 @@
 import { Form, Formik } from "formik";
 import { Spinner, TableWrapper } from "../../../../Components/Elements/StyledComponents";
 import { FormikSearch } from "../../../../Components/Forms/FormikSearch";
-import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
+import { LayoutActorSection, LayoutNote, LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../../../Components/Layout/StyledComponents";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { IFormState } from "../../../../Interfaces/Data";
 import { formGetInitialValues, formGetValidations } from "../../../../Interfaces/FormFields";
 import { Button } from "../../../../Components/Forms/Button";
 
 import { DefaultFormState } from '../../../../Data/DefaultValues';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Pages } from "../../../../Routes/Pages";
 import { Table } from "../../../../Components/Elements/Table";
 import { ColumnDef } from "@tanstack/react-table";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { ElementSchemaTypes } from "../../../../Modules/FormElements/Types";
 import { FormInstance } from "../../../../Modules/FormElements/Class";
-import { HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
+import { HiArrowDown, HiDocumentDuplicate, HiOutlineMagnifyingGlass, HiOutlinePencil } from "react-icons/hi2";
 import { FormUpdate } from "./Update";
 import { CopyFormPopUp, DeleteFormPopUp, FormCreateErrorPopUp } from "../../../../Components/Forms/PopUpCards";
-import { BiTrash } from "react-icons/bi";
+import { BiArrowBack, BiTrash } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RxUpdate } from "react-icons/rx";
 import { BackOfficesFormElement } from "../../../../Modules/Actor/FormsElement";
+import { showMessageForSeconds } from "../../../../Utils/General";
 
 
 const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
 
-  const { SaveForm, UpdateForms , setFormularios, formularios, isLoading, DeleteOneForm} = useContext(FormContext);
+  const { SaveForm, GetFormByCode, GetElementsByCode, UpdateForms , setFormularios, formularios, totalFormUnitsInDB, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -43,11 +44,30 @@ export const DA_Procedures_Forms_Home = () => {
   const [copy, setCopy] = useState(false)
   const [newCode, setNewCode] = useState("")
   const [errorCarga, setErrorCarga] = useState(false)
+  const [showMessage, setShowMessage] = useState(false);
 
-
+  
   useEffect(()=>{
-    UpdateForms()
+    
+    if(formularios.length==0){
+      UpdateForms()
+    }
+    
+    const handlePopState = () => {
+      setSeeOptions("home");
+      setFormToCheck(undefined)
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+
   },[])
+
+  const getMoreNews = () => {
+    UpdateForms()
+  }
+
 
   const handleDeleteForm = async (code:string)=> {
     const response = await DeleteOneForm(code,setFormState);
@@ -59,16 +79,33 @@ export const DA_Procedures_Forms_Home = () => {
 
   const handleCopyForm = async (code:string)=> {
     if (code!=""){
-      formToCheck!.setCode(code)
-      const response = await SaveForm(formToCheck!, setFormState, code, formToCheck?.getTitle()!);
-      if (response){
-        setFormToCheck(undefined)
-        setCopy(false)
-        setNewCode("")
-        UpdateForms()
-      }else{
-        setErrorCarga(true)
+
+
+      const formData = GetFormByCode (formToCheck?.getCode()!, setFormState)
+
+      if (await formData){
+
+        const formElements = GetElementsByCode (formToCheck?.getCode()!, setFormState)
+
+        if (await formElements){
+
+          formToCheck!.setCode(code)
+          formToCheck!.setStatus("Borrador")
+          
+          const response = await SaveForm(formToCheck!, setFormState, code, formToCheck?.getTitle()!);
+          if (response){
+            setFormToCheck(undefined)
+            setCopy(false)
+            setNewCode("")
+            UpdateForms()
+          }else{
+            setErrorCarga(true)
+          }
+        }
+
       }
+
+      
     }
   }
 
@@ -117,13 +154,13 @@ export const DA_Procedures_Forms_Home = () => {
       return (
         <>
           <BackOfficesFormElement form={formToCheck!}  />
-          <Button onClick={() => setSeeOptions("home")}>Volver</Button>
+          <Button onClick={() => {setSeeOptions("home")}}><BiArrowBack/>Volver</Button>
         </>
       )
     } else if (seeOptions=="modify") {
       return <div>
-          <FormUpdate formToUpdate= {formToCheck!} />
-          <Button onClick={() => setSeeOptions("home")}>Volver</Button>
+          <FormUpdate formToUpdate= {formToCheck!} setVolver={setSeeOptions} />
+          {/*<Button onClick={() => setSeeOptions("home")}><BiArrowBack/>Volver</Button>*/}
         </div>;
     }else {
       return(<>
@@ -161,7 +198,12 @@ export const DA_Procedures_Forms_Home = () => {
         <br/>
         <Spinner color='secondary' size="3rem"/><br/>
         <LayoutText className='text-center'>Cargando Información.<br/>Por favor aguarde.</LayoutText>
-      </>:< TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
+      </>:
+          <div style={{display:"flex", flexDirection:"column", width:"100%"}}>
+            < TableForms datos={filteredForms} setFormToCheck={setFormToCheck} setSeeOptions={setSeeOptions} setDeleteForm={setDeleteForm} setFormToDelete={setFormToDelete} setCopy={setCopy} />
+            {(totalFormUnitsInDB > formularios.length) ?  <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null } 
+            {(showMessage &&!totalFormUnitReaded) && (<div><LayoutNote>No hay más formularios cargados</LayoutNote></div>)}
+          </div>
       }
         </LayoutActorSection>
       </>);
@@ -189,6 +231,7 @@ interface TableProps {
 
 const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions, setDeleteForm, setFormToDelete, setCopy }) => {
   
+  const navigate = useNavigate();
 
   return (
     <TableWrapper>
@@ -210,10 +253,10 @@ const TableForms: React.FC<TableProps> = ({ datos, setFormToCheck, setSeeOptions
             <td style={{ verticalAlign: 'middle', width:"auto"}}> 
               <div style={{display:"flex", flexDirection:"row", width:"auto", margin:"5px 0px 15px 0px", justifyContent:"left"}}> 
                 <div style={{ display: 'flex', width: 'auto', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); }}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }}  onClick={() => { setSeeOptions("seeForm"); setFormToCheck(item); navigate("/actor/procedures/forms");}}>
                   { item.getStatus() != "Borrador" ? <HiOutlineMagnifyingGlass/> : <></>}
                 </div>
-                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item)}}>
+                <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setSeeOptions("modify"); setFormToCheck(item);navigate("/actor/procedures/forms"); }}>
                   < HiOutlinePencil/>
                 </div>
                 <div style={{ display: 'flex', width: 'auto', marginRight:"8px" }} onClick={()=>{setCopy(true); setFormToCheck(item) ; window.scrollTo({ top: 0, behavior: 'smooth' });}}>
