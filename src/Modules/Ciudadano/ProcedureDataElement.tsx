@@ -455,7 +455,7 @@ interface FormGenericData {
                     </LayoutSection>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                         <h1>Precio</h1>
-                        <p>{procedureInstance.getPrice()}</p>
+                        <p>{procedureInstance.getPrice()?.replace(/<[^>]*>/g, '')}</p>
                     </LayoutSection>
                  </LayoutSection>    
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
