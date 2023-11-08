@@ -256,7 +256,11 @@ const ContextValues = () => {
     
   }
   
-  const GetCiudadanoProcedureAttachment = async  (attachmentId: number, Filename: string, setFormState: Function) => {
+  const GetCiudadanoProcedureAttachment = async (
+    attachmentId: number,
+    Filename: string,
+    setFormState: Function
+  ) => {
     setIsLoading(true);
     setFormState(true);
   
@@ -269,17 +273,37 @@ const ContextValues = () => {
         const imageDataURL = reader.result as string;
         const filefile = response2.data.data.attachment_name;
         const filext = filefile.split(".");
+        console.log("this is the response: " + JSON.stringify(response));
+  
         const data: FileBlob = {
           name: filefile,
           type: filext[1],
           data: imageDataURL.replace('text/html', getFileType(filext[1]).fulltype),
         };
-
-        ///////////////////////////////////////////////////////////////////
-        //this is for dowload the file 
-
+  
+        // Función para obtener el tipo MIME basado en la extensión del archivo
+        function getMimeType(extension: string): string {
+          switch (extension) {
+            case 'pdf':
+              return 'application/pdf';
+            case 'jpg':
+            case 'jpeg':
+              return 'image/jpeg';
+            case 'png':
+              return 'image/png';
+            // Agrega más tipos MIME según sea necesario
+            default:
+              return 'application/octet-stream'; // Tipo MIME genérico
+          }
+        }
+  
         const a = document.createElement('a');
         a.href = data.data;
+  
+        // Obtiene la extensión del archivo
+        const fileExtension = data.type;
+        a.type = getMimeType(fileExtension);
+  
         a.download = data.name;
   
         // Programmatically trigger a click event on the anchor
@@ -289,13 +313,9 @@ const ContextValues = () => {
           cancelable: true,
         });
         a.dispatchEvent(clickEvent);
-        ///////////////////////////////////////////////////////////////////
-
-        // Instead of wrapping in an array and Promise.all, directly resolve with data
+  
         setFormState(false);
         setIsLoading(false);
-        // Trigger file download here
-       // downloadFile(data);
       };
   
       reader.onerror = (error) => {
@@ -307,9 +327,8 @@ const ContextValues = () => {
   
       // Start loading the file
       reader.readAsDataURL(response.data.data);
-      console.log(reader)
+      console.log(reader);
       return reader;
-
     } catch (error) {
       setFormState(false);
       setIsLoading(false);
@@ -317,6 +336,7 @@ const ContextValues = () => {
       throw error;
     }
   };
+  
 
   
   const DeleteCiudadanoProcedureAttachment = async(procedure_data_id:number, multimedia_id:number, setFormState: Function) => {
