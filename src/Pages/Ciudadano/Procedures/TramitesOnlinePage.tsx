@@ -344,7 +344,7 @@ return (
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
                 <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
                 <img
-                    src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
+                    src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
                     alt={item.getTitle()}
                     style={{ width: "64px", height: "64px" }}
                 />
@@ -412,7 +412,7 @@ return (
               <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
                 <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
                 <img
-                    src={`../../../public/ProceduresIcons/icono_${item.getIcon()}.svg`}
+                    src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
                     alt={item.getTitle()}
                     style={{ width: "64px", height: "64px" }}
                 />
@@ -491,4 +491,46 @@ export const SearchInput: React.FC<SearchInputProps> = ({ onSearch }) => {
 
     </div>
   );
+};
+
+export const obtenerIcono = (nombre: string): string => {
+  const listaIconos = [
+    "asistenciafinanciera",
+    "cienciatecnologia",
+    "comercioproduccionindustria",
+    "conectividad",
+    "conectividad | inclusiondigital",
+    "cultura",
+    "deportes",
+    "desarrollosocial",
+    "discapacidad",
+    "documentacion",
+    "educacion",
+    "impuestos",
+    "inclusiondigital",
+    "juegosdeazar",
+    "justiciayderechoshumanos",
+    "medioambiente",
+    "prevensionsocial",
+    "registrospublicos",
+    "salud",
+    "seguridad",
+    "servicios",
+    "trabajo",
+    "turismo",
+    "vivienda"
+  ];
+
+  const iconoEncontrado = listaIconos.find(icono => {
+    if (nombre.includes(" | ")) {
+      const [nombreIzquierda] = nombre.split("|");
+      return nombreIzquierda.trim() == icono;
+    }
+    return nombre == icono;
+  });
+  if (iconoEncontrado) {
+    return iconoEncontrado;
+  } else {
+    return "documentacion";
+  }
 };
