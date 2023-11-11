@@ -57,6 +57,8 @@ const ContextValues = () => {
   const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
   const [isUpdatingProceduresSearchByKeyWord, setUpdatingProceduresSearchByKeyWord] = useState <Boolean> (false) 
 
+  const [realoadAll, setRealoadAll] = useState(false); 
+
   const { isLogged } = useContext(AuthContext);
 
   useEffect(() => {
@@ -83,6 +85,22 @@ const ContextValues = () => {
     }
    
   }, [isLogged]);
+
+
+  useEffect(() => {
+    if (procedures.length == 0 && totalActorProceduresQueried == 0 && realoadAll) {
+      UpdateProcedures();
+      setRealoadAll(false)
+
+    }
+  }, [procedures, totalActorProceduresQueried, realoadAll]);
+
+  const realoadActorProcedures = async() => {
+    setProcedures([])
+    setTotalActorProceduresQueried(0)
+    setTotalActorProceduresInDB(0)
+    setRealoadAll(true)
+  } 
   
   const SaveProcedure = async (procedure: ProcedureInstance<ElementSchemaTypes>, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure.getJSON(), setFormState);
@@ -397,6 +415,7 @@ const ContextValues = () => {
     totalActorProceduresInDB,
     totalProceduresSearchedByKeyWordInDB,
     proceduresSearcedhByKeyword,
+    realoadActorProcedures,
     ClearProcedureSearch,
     UpdateSearchProceduresByKeyword,
     setProcedures,

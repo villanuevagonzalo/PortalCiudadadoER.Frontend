@@ -21,15 +21,15 @@ const ContextValues = () => {
   const [totalFormUnitsQueried, setTotalFormUnitsQueried] = useState <number> (0)
   const [totalFormUnitsInDB, setTotalFormUnitsInDB] = useState <number> (0) //total de fomularios en la base de datos
 
-  //const [gotAllFormUnits, setGotAllFormUnits] = useState <Boolean> (false) 
   const [totalFormUnitReaded, setTotalFormUnitReaded] = useState<boolean>(false)
 
   const [totalFormUnitsPublishedQueried, setTotalFormUnitsPublishedQueried] = useState <number> (0)
-  //const [gotAllFormUnitsPublished, setGotAllFormUnitsPublished] = useState <Boolean> (false) 
   const [totalFormUnitsPublishedInDB, setTotalFormUnitsPublishedInDB] = useState <number> (0) //total de fomularios publicados en la base de datos
 
   const [isUpdatingFormUnit, setUpdatingFormUnit] = useState<Boolean> (false)
   const [isUpdatingPublishedForms, setUpdatingPublishedForms] = useState<Boolean> (false)
+
+  const [realoadAll, setRealoadAll] = useState(false); 
 
   const { isLogged } = useContext(AuthContext);
   
@@ -55,6 +55,26 @@ const ContextValues = () => {
       UpdatePublishedForms();
     }
   }, [publishedFormularios && totalFormUnitsPublishedQueried]);
+
+
+
+  useEffect(() => {
+    if (formularios.length == 0 && totalFormUnitsQueried == 0 && realoadAll) {
+      UpdateForms();
+      setRealoadAll(false)
+
+    }
+  }, [formularios, totalFormUnitsQueried, realoadAll]);
+
+
+  const realoadActorForms = async() => {
+
+    setFormularios([])
+    setTotalFormUnitsQueried(0)
+    setTotalFormUnitsInDB(0)
+    setRealoadAll(true)
+  } 
+
 
   //create a form
   const SaveForm = async (newFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string, title:string) => {
@@ -275,6 +295,7 @@ const ContextValues = () => {
     //gotAllFormUnitsPublished,
     totalFormUnitsPublishedInDB,
     totalFormUnitReaded, setTotalFormUnitReaded,
+    realoadActorForms,
     setFormularios,
     SaveForm, 
     UpdateOneForm,
