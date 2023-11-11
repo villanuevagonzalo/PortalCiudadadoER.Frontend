@@ -1,6 +1,6 @@
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../Components/Layout/StyledComponents";
-import { ElementInstance, FormInstance, ProcedureData } from "../FormElements/Class";
+import { ElementInstance, ElementSchema, FormInstance, ProcedureData } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
 import {Element} from '../FormElements/Components/Element';
@@ -18,7 +18,7 @@ import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 import { Spinner } from "../../Components/Elements/StyledComponents";
-import { ValidateForm } from "../FormElements/Validators";
+import { ValidateForm, ValidateForm2 } from "../FormElements/Validators";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -47,6 +47,17 @@ interface Arguments {
     
     useEffect(()=>{
       setFields(form.elements)
+      /*const elementosDelFormulario = form.elements;
+
+      // Usamos setFields para agregar cada elemento al estado
+      console.log(JSON.stringify(elementosDelFormulario))
+
+      elementosDelFormulario.forEach((elemento) => {
+        console.log(JSON.stringify(elemento))
+
+        const elementInstance:  ElementInstance<ElementSchemaTypes>  = new ElementInstance(elemento.properties.label,new ElementSchema(elemento.type,elemento.properties,["isRequired"]), elemento.value)
+         setFields((prevFields) => [...prevFields, elementInstance]);
+      });*/
     },[form])
 
     useEffect(() => {
@@ -69,7 +80,7 @@ interface Arguments {
       fetchData();
     }, []); 
 
-    const checkValues = () => {
+   /* const checkValues = () => {
         let hasRequiredEmptyElement = false;
     
         form.elements.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
@@ -87,7 +98,7 @@ interface Arguments {
         if (!hasRequiredEmptyElement) {
             enviar(); // Call enviar() only if there are no required empty elements
         }
-    };
+    };*/
 
 
     const enviar = async () => {
@@ -157,15 +168,14 @@ interface Arguments {
                         enableReinitialize={true}
                         initialValues={initialValues}
                         onSubmit={async(values:any)=>{
-                            console.log(values)
                             enviar()
                         }}
-                        validate={(values: any) => ValidateForm(values, mapFieldsToObj(fields))}
+                        validate={(values: any) => ValidateForm2(values, fields)}
 
                     >
                         <Form autoComplete="off">
                           {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                                <div key={element.name} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
+                                <div key={index} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
                                   <Element instance={element} className="flex-2" />
                                 </div>
                               ))
@@ -173,26 +183,18 @@ interface Arguments {
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>
-{/*                            <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
-*/}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                              <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
+                              <Button disabled={false} color="secondary" type="submit">{isLoadingFormCitizen ? <Spinner /> :  <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>}</Button>
+                            </div>
                         </Form>
                     </Formik>
                 </LayoutSection> 
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
-                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >{isLoadingFormCitizen ? <Spinner/> : <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>} </Button>
-            </div>
+            
         </div>)
     )
 
 
   }
 
-  function mapFieldsToObj(fields: ElementInstance<ElementSchemaTypes>[]) {
-    const obj: { [key: string]: ElementInstance<ElementSchemaTypes> } = {};
-    fields.forEach((field) => {
-      obj[field.name] = field;
-    });
-    return obj;
-  }

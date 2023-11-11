@@ -209,7 +209,9 @@ const ContextValues = () => {
         if (formularioEncontrado) {
           const componentesArray = JSON.parse(response.data.data.replace(/\\"/g, '"'));
           componentesArray.forEach((componente:any, index:number) => {
-            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+            const aux= new ElementInstance(componente.properties.label,new ElementSchema(componente.type,componente.properties, componente.aditionalValidations), componente.value)
+
+//            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
             aux.update((componente.properties))
             formularioEncontrado.addElement(aux)
           });

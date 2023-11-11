@@ -38,6 +38,11 @@ export class ElementSchema<T extends ElementSchemaTypes> {
     }
   }
 
+
+  updateAditionalValidations(aditionalValidations: string[]): void {
+    this.aditionalValidations = aditionalValidations;
+  }
+
 }
 
 

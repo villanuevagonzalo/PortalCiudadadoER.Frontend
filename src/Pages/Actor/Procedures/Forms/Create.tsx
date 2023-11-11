@@ -51,7 +51,9 @@ export const DA_Procedures_Forms_Create = () => {
 
 
   const addItem = (type: any) => {
-    const newfield = new ElementInstance(fields.length.toString(), new ElementSchema(type, { label: 'Ingresá el Título' }, ["isRequired"]))
+    //const newfield = new ElementInstance(fields.length.toString(), new ElementSchema(type, { label: 'Ingresá el Título' }, ["isRequired"]))
+    const newfield = new ElementInstance(fields.length.toString(), new ElementSchema(type, { label: 'Ingresá el Título' }))
+
     setFields((prev: any) => [...prev, newfield])
   }
 

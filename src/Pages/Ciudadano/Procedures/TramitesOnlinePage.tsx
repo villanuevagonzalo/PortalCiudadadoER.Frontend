@@ -272,7 +272,6 @@ export const TramitesOnlinePage = () => {
                     initialValues={FieldValues}
                     validationSchema={formGetValidations(FormRequiredFields)}
                     onSubmit={async (values: any) => {
-                      console.log("veamos el valor: "+JSON.stringify(values).toString())
                     }}
                 >
                     <Form autoComplete="off">

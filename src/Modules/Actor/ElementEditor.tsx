@@ -147,7 +147,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
             values += ";";
           }
         });
-        console.log("valores: "+values)
+      
         setLista(values );
       }
     } else {
@@ -167,7 +167,7 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
 
   const Guardar = () => {
   
-  const properties = {
+  /*const properties = {
     label: hasLabelCondition ? nombreCampo : "Prueba",
     required: isRequired,
     disabled: false,
@@ -179,7 +179,26 @@ export const ElementEditor: React.FC<Props> = ({ instance, setFields, fields, in
     value_default: "",
     value_regex: "",
     childrens: ""
+  };*/
+
+  const properties = {
+    label: hasLabelCondition ? nombreCampo : "Prueba",
+    disabled: false,
+    length_min: hasLengthMinCondition ? minLength : 0,
+    length_max: hasLengthMaxCondition ? maxLength : 10,
+    value_min: hasValueMin ? valueMin : 0,
+    value_max: hasValueMax ? valueMax : 0,
+    options: hasOptions ? parseStringToList(lista) : '',
+    value_default: "",
+    value_regex: "",
+    childrens: ""
   };
+
+  let aditionalValidation="";
+  if(isRequired){
+    instance.updateAditionalValidations(["isRequired"]);
+  }
+
 
 
   const newProperties = JSON.stringify(properties);

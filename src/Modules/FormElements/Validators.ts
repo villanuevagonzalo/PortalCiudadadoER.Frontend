@@ -102,3 +102,33 @@ const errors: { [key: string]: string } = {};
 
   return errors;
 }
+
+
+export const ValidateForm2 = (values: any, fields: ElementInstance<ElementSchemaTypes>[]) => {
+  const errors: { [key: string]: string } = {};
+
+  fields.forEach((field) => {
+    const key = field.name; // Assuming the name property is used as a unique identifier
+    const value = values[key];
+
+    // Adjust key if it starts with HelpToken
+    let newKey = key;
+    if (key.startsWith(HelpToken)) {
+      newKey = key.substring(HelpToken.length);
+    }
+
+    const validations = field.validators();
+    const required =
+      !(!Object.keys(validations).includes("isRequired") && !!validationFunctions.isRequired(value));
+      console.log("requerido: "+required)
+
+    Object.values(validations).forEach((valid) => {
+      const error = valid(value);
+      if (error && required) {
+        errors[key] = error;
+      }
+    });
+  });
+
+  return errors;
+};
