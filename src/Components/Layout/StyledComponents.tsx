@@ -724,10 +724,10 @@ export const LayoutSection = styled.div<{ }>`
   }
 
   & p{
-    maxWidth: "100%";
-    whiteSpace: "nowrap";
-    overflow: "hidden";
-    textOverflow: "ellipsis";
+    maxWidth: 100%;
+    whiteSpace: nowrap;
+    overflow: hidden;
+    textOverflow: ellipsis;
   }
 
   & button{
