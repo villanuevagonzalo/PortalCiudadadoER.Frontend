@@ -62,39 +62,30 @@ export const TramitesOnlinePage = () => {
   const [searchedByKeyword, setSearchedByKeyword] = useState<boolean>(false)
 
   useEffect(()=>{
-    
     if (proceduresPublished.length===0){
       UpdatePublishedProcedures()
     }
-    
     if (ciudadanoProcedures.length==0){
       UpdateCiudadanoProcedures()
     }
     else if( ciudadanoProcedures.length < totalCitizenProceduresInDB  ){
       UpdateCiudadanoProcedures()
     }
-
-  UpdateCitizenForms()
-
+    UpdateCitizenForms()
     const handlePopState = () => {
         setRender("home");
         setProcedureInstance(undefined)
       };
-  
-      window.addEventListener("popstate", handlePopState);
-  
-      return () => {
-        window.removeEventListener("popstate", handlePopState);
-      };
-
+    window.addEventListener("popstate", handlePopState);
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
   },[])
 
   useEffect(()=>{
-
     if (chekingCitizenProcedure){
-        seeProcedure(procedureIdSearched!)
+      seeProcedure(procedureIdSearched!)
     }
-    
   },[ciudadanoProcedures])
 
   useEffect(()=>{
@@ -107,9 +98,7 @@ export const TramitesOnlinePage = () => {
 
 
   useEffect(()=>{
-    
     setLoadingProcedure(isLoadingProcedureCitizen)
-
   },[isLoadingProcedureCitizen])
 
 
@@ -228,36 +217,27 @@ export const TramitesOnlinePage = () => {
   }
 
   const handleSearch = (query: string) => {
-    // Realiza la lógica de búsqueda aquí con la consulta 'query'
     if (query!=''){
       UpdateSearchProceduresByKeyword(query)
       console.log(`Buscando1: ${query}`);
-
     }else{
       console.log(`Buscando2: ${query}`);
-
       ClearProcedureSearch()
     }
   };
 
   useEffect(()=>{
-    
-    
     if (proceduresSearcedhByKeyword.length > 0 ){
       setSearchedByKeyword(true)
     }else{
       setSearchedByKeyword(false)
     }
-
-   },[proceduresSearcedhByKeyword])
+  },[proceduresSearcedhByKeyword])
 
     
     if (render === "procedure" && procedureInstance) {
-        
-        return <CiudadanoProcedureData procedureInstance={procedureInstance} backFunction={setRender} />;
-    } 
-    else{ 
-
+      return <CiudadanoProcedureData procedureInstance={procedureInstance} backFunction={setRender} />;
+    }else{ 
     return(<>
     {citizenLevelError && <CitizenProcedureLevelError procedureTitle={procedureInstance!.getTitle()} userLevel={procedureInstance!.getCitizenLevel()?.split("_")[1]!} close={setCitizenLevelError} />}
     {showNetworkError &&  <NetworkAlertPopUp close={setShowNetworkError} />}
@@ -336,61 +316,106 @@ export interface PublishedProceduresTableInterface {
 
 export const PublishedProceduresTable: React.FC<PublishedProceduresTableInterface> = ({ filteredProcedures, proceduresPublished, ciudadanoProcedures, totalPublishedProceduresInDB, seeProcedure, loadingProcedure, getMoreNews }) => {
 
-return (
-  <div>
-  {filteredProcedures.map((item, index) => <LayoutSection style={{overflow: "hidden", marginBottom:"15px" }} key={index}>
-                {item.getIcon() !== "" ? (
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
-                <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
-                <img
-                    src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
-                    alt={item.getTitle()}
-                    style={{ width: "64px", height: "64px" }}
-                />
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    // Agrega el listener de evento al montar el componente
+    window.addEventListener('resize', handleResize);
+
+    // Elimina el listener de evento al desmontar el componente
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); // El segundo argumento vacío asegura que el efecto se ejecute solo al montar y desmontar
+  
+  return (
+    <div>
+      {filteredProcedures.map((item, index) => 
+      <LayoutSection style={{overflow: "hidden", marginBottom:"15px" }} key={index}>
+        {item.getIcon() !== "" ? (
+         <>
+         {isMobile ? 
+            (
+              <div style={{ display: "flex", flexDirection:"column", justifyContent: "flex-start" }}>
+                <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent:"center"}}>        
+                  <img
+                      src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
+                      alt={item.getTitle()}
+                      style={{ width: "64px", height: "64px" }}
+                    />     
                 </div>
-                <div style={{ width: "75%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
+                <div style={{ width: "100%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center"}}>
                   <h1>{item.getTitle()}</h1>
-                  <p style={{ maxWidth: "100%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.getDescription()}</p>
+                  <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
                   <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
                 </div>
-            </div>          
-                ) : (
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
-                        <h1>{item.getTitle()}</h1>
-                        <h4>{item.getDescription()}</h4>
-                        <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+              </div>
 
-                    </div>
+            ) : 
+            (
+              <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+                <div style={{ width: "20%", display: "flex", alignItems: "center" }}>        
+                  <img
+                      src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
+                      alt={item.getTitle()}
+                      style={{ width: "64px", height: "64px" }}
+                    />     
                 </div>
-                )}
+                <div style={{ width: "80%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center"}}>
+                  <h1>{item.getTitle()}</h1>
+                  <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+                  <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+                </div>
+              </div>
+            )}
+        </> 
 
-                <div className="text-right flex gap-4">
-                <NavigatorSpacer/> 
-                {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
-                <Button
-                  color="secondary"
-                  fullwidth={false}
-                  onClick={() => seeProcedure(item.getId()!)}
-                >
-                  {loadingProcedure ? <Spinner /> : (
-                    ciudadanoProcedures.find(
-                      ciudadanoProcedure =>
-                        ciudadanoProcedure.getProcedureUnitId() == item.getId()
-                    )?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar"
-                  )}
-                </Button>
-                </div>
-            </LayoutSection>)}
-            
-            {(totalPublishedProceduresInDB > proceduresPublished.length ) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
+        ):(
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
+              <h1>{item.getTitle()}</h1>
+              <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+              <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
             </div>
+          </div>
+        )}
+        
+        <>  
+      {isMobile ? 
+        (
+          <div style={{ display: "flex", flexDirection:"row",width: "100%", justifyContent: "space-between", boxSizing: "border-box" }}>
+            {item.getId() ? (
+              <Button color="gray" style={{ width: "auto" }} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?" + item.getId()?.toString())}>
+                +Información
+              </Button>
+            ) : null}
+            <Button color="secondary" style={{ width: "auto" }} onClick={() => seeProcedure(item.getId()!)}>
+              {loadingProcedure ? <Spinner /> : (ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar")}
+            </Button>
+          </div>
 
-)
+        ):
+        (
+        <div className="text-right flex gap-4">
+          <NavigatorSpacer/> 
+          {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
+            <Button color="secondary" fullwidth={false} onClick={() => seeProcedure(item.getId()!)} >
+              {loadingProcedure ? <Spinner /> : (ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar" )}
+            </Button>
+        </div>
+        )}
+      </> 
 
+      </LayoutSection>
+      )}
+      {(totalPublishedProceduresInDB > proceduresPublished.length ) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
+    </div>
+  )
 }
-
-
 
 export interface ProceduresSearchedTableInterface {
   proceduresSearcedhByKeyword: ProcedureInstance<ElementSchemaTypes>[],
@@ -399,63 +424,105 @@ export interface ProceduresSearchedTableInterface {
   seeProcedure:Function,
   getMoreNews:Function,
   loadingProcedure: boolean,
-
 }
 
 export const ProceduresSearchedTable: React.FC<ProceduresSearchedTableInterface> = ({ proceduresSearcedhByKeyword, ciudadanoProcedures, totalProceduresSearchedByKeyWordInDB, seeProcedure, loadingProcedure, getMoreNews }) => {
 
-return (
-  <div>
-  {proceduresSearcedhByKeyword.map((item, index) => <LayoutSection style={{overflow: "hidden", marginBottom:"15px" }} key={index}>
-  {item.getIcon() !== "" ? (
-              <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
-                <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); 
+  
+  return (
+    <div>
+      {proceduresSearcedhByKeyword.map((item, index) => <LayoutSection style={{overflow: "hidden", marginBottom:"15px" }} key={index}>
+      {item.getIcon() !== "" ? (
+        <>
+        {isMobile ? 
+          (
+            <div style={{ display: "flex", flexDirection:"column", justifyContent: "flex-start" }}>
+              <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent:"center"}}>        
                 <img
                     src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
                     alt={item.getTitle()}
                     style={{ width: "64px", height: "64px" }}
-                />
-                </div>
-                <div style={{ width: "75%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
-                  <h1>{item.getTitle()}</h1>
-                  <p style={{ maxWidth: "100%", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{item.getDescription()}</p>
-                  <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
-                </div>
-            </div>          
-                ) : (
-                <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
-                        <h1>{item.getTitle()}</h1>
-                        <h4>{item.getDescription()}</h4>
-                        <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
-
-                    </div>
-                </div>
-                )}
-
-                <div className="text-right flex gap-4">
-                <NavigatorSpacer/> 
-                {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
-                <Button
-                  color="secondary"
-                  fullwidth={false}
-                  onClick={() => seeProcedure(item.getId()!)}
-                >
-                  {loadingProcedure ? <Spinner /> : (
-                    ciudadanoProcedures.find(
-                      ciudadanoProcedure =>
-                        ciudadanoProcedure.getProcedureUnitId() == item.getId()
-                    )?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar"
-                  )}
-                </Button>
-                </div>
-            </LayoutSection>)}
-            
-            {(totalProceduresSearchedByKeyWordInDB > proceduresSearcedhByKeyword.length ) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
+                  />     
+              </div>
+              <div style={{ width: "100%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center"}}>
+                <h1>{item.getTitle()}</h1>
+                <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+              </div>
             </div>
 
-)
+          ) : 
+          (
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+              <div style={{ width: "20%", display: "flex", alignItems: "center" }}>        
+                <img
+                    src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
+                    alt={item.getTitle()}
+                    style={{ width: "64px", height: "64px" }}
+                  />     
+              </div>
+              <div style={{ width: "80%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center"}}>
+                <h1>{item.getTitle()}</h1>
+                <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+              </div>
+            </div>
+          )}
+        </> 
 
+      ):(
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
+            <h1>{item.getTitle()}</h1>
+            <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+            <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+          </div>
+        </div>
+      )}
+
+      <>  
+      {isMobile ? 
+        (
+          <div style={{ display: "flex", flexDirection:"row",width: "100%", justifyContent: "space-between", boxSizing: "border-box" }}>
+            {item.getId() ? (
+              <Button color="gray" style={{ width: "auto" }} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?" + item.getId()?.toString())}>
+                +Información
+              </Button>
+            ) : null}
+            <Button color="secondary" style={{ width: "auto" }} onClick={() => seeProcedure(item.getId()!)}>
+              {loadingProcedure ? <Spinner /> : (ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar")}
+            </Button>
+          </div>
+
+        ):
+        (
+        <div className="text-right flex gap-4">
+          <NavigatorSpacer/> 
+          {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
+            <Button color="secondary" fullwidth={false} onClick={() => seeProcedure(item.getId()!)} >
+              {loadingProcedure ? <Spinner /> : (ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus() == "PENDIENTE" ? "Revisar" : "Iniciar" )}
+            </Button>
+        </div>
+        )}
+      </> 
+      
+      </LayoutSection>
+      
+      )}
+      {(totalProceduresSearchedByKeyWordInDB > proceduresSearcedhByKeyword.length ) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
+    </div>
+  )
 }
 
 interface SearchInputProps {

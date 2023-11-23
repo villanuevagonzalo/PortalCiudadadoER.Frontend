@@ -55,7 +55,7 @@ export const FormikField = ({ ...props }: Props) => {
             {...props}
             onFocus={handleFocus}
             onBlur={handleFocus}
-            autoComplete={props.disableAutocomplete !== undefined && props.disableAutocomplete ? 'off' : 'on'} // Verifica disableAutocomplete
+            autoComplete={props.disableAutocomplete !== undefined && props.disableAutocomplete ? 'new-password' : 'on'} // Nuevo: Verifica disableAutocomplete
           />
           {fieldprops.type === 'password' ? (
             <div onClick={handleClick} className="FormIcon">

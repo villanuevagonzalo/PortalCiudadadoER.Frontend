@@ -39,6 +39,18 @@ export const DC_Procedures_Started = () => {
   const [showNetworkError,setShowNetworkError] = useState(false)
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []); 
+
   useEffect(()=>{
 
     if (ciudadanoProcedures.length > 0) {
@@ -72,19 +84,16 @@ export const DC_Procedures_Started = () => {
   useEffect(()=>{
     
     const ciudadanoProcedureUnitIds = ciudadanoProcedures.map((item) => String(item.getProcedureUnitId()));
-    
     const proceduresInCiudadano = proceduresPublished.filter((item) =>
       ciudadanoProcedureUnitIds.includes(item.getId()!.toString())
     );
     
-      if (AllProcedures.length==0){
-
-        setAllProcedures(proceduresInCiudadano)
-      }
-      if (filteredProcedures.length==0){
-
-        setFilteredProcedures(proceduresInCiudadano)
-      }
+    if (AllProcedures.length==0){
+      setAllProcedures(proceduresInCiudadano)
+    }
+    if (filteredProcedures.length==0){
+      setFilteredProcedures(proceduresInCiudadano)
+    }
   
   }, [proceduresPublished , ciudadanoProcedures]);
 
@@ -99,28 +108,23 @@ export const DC_Procedures_Started = () => {
   
   const seeProcedure = (idBuscado: number) => {
     const foundProcedure = proceduresPublished.find(procedure => procedure.getId() === idBuscado);
-
     if (foundProcedure) {
-
-        const foundCiudadanoProcedure = ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === idBuscado);
-        
-        if (!foundCiudadanoProcedure){
-                CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
-                .then(response => {
-                    if (response) {
-                        setProcedureInstance(foundProcedure);
-                    }else{
-                        setShowNetworkError(true)
-                    }
-                })
-                .catch(error => {
-                    console.log("error: "+error)
-                    setShowNetworkError(true)
-                });
-        
+      const foundCiudadanoProcedure = ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() === idBuscado);
+      if (!foundCiudadanoProcedure){
+        CreateCiudadanoProcedure(foundProcedure.getId()!, setFormState)
+          .then(response => {
+            if (response) {
+              setProcedureInstance(foundProcedure);
+            }else{
+              setShowNetworkError(true)
+            }
+          })
+          .catch(error => {
+            console.log("error: "+error)
+            setShowNetworkError(true)
+          });
         }else{
-                setProcedureInstance(foundProcedure);
-           
+          setProcedureInstance(foundProcedure); 
         }
     }
 }
@@ -205,71 +209,102 @@ export const DC_Procedures_Started = () => {
           </Formik>
           </LayoutSection>) : null}
         
-        { isLoadingProcedure ? <Spinner />  :(filteredProcedures.length > 0 ? (
-        filteredProcedures.map((item, index) => (
-          <LayoutSection key={index}>
-            <div key={index}>
-            {item.getIcon() !== "" ? (
-                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
-                <div style={{ width: "25%", display: "flex", alignItems: "center" }}>
-                <img
-                    src={`../../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
-                    alt={item.getTitle()}
-                    style={{ width: "64px", height: "64px" }}
-                />
-                </div>
-                <div style={{ width: "75%", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center" }}>
-                <h1>{item.getTitle()}</h1>
-                <p style={{ wordBreak: "break-all" }}>{item.getDescription()}</p>
-                <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
-                </div>
-            </div>          
-                ) : (
+        {isLoadingProcedure ? <Spinner />  :(filteredProcedures.length > 0 ? (
+          filteredProcedures.map((item, index) => (
+            <LayoutSection key={index}>
+              <div key={index}>
+                {item.getIcon() !== "" ? (
+
+                  <>
+                  {isMobile ? 
+                    (
+                      <div style={{ display: "flex", flexDirection:"column", justifyContent: "flex-start" }}>
+                        <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent:"center"}}>        
+                          <img
+                              src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
+                              alt={item.getTitle()}
+                              style={{ width: "64px", height: "64px" }}
+                            />     
+                        </div>
+                        <div style={{ width: "100%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center"}}>
+                          <h1>{item.getTitle()}</h1>
+                          <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+                          <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+                        </div>
+                      </div>
+
+                    ) : 
+                    (
+                      <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
+                        <div style={{ width: "20%", display: "flex", alignItems: "center" }}>        
+                          <img
+                              src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
+                              alt={item.getTitle()}
+                              style={{ width: "64px", height: "64px" }}
+                            />     
+                        </div>
+                        <div style={{ width: "80%", height:"auto", display: "flex", flexDirection: "column", alignItems: "flex-start", justifyContent: "center"}}>
+                          <h1>{item.getTitle()}</h1>
+                          <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+                          <h2 style={{margin:"10px 0px 10px 0px"}} >{ciudadanoProcedures.find(ciudadanoProcedure => ciudadanoProcedure.getProcedureUnitId() == item.getId())?.getStatus()}</h2>
+                        </div>
+                      </div>
+                    )}
+                  </>          
+
+
+              ):(
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                    <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
-                        <h1>{item.getTitle()}</h1>
-                        <p style={{ wordBreak: "break-all" }}>{item.getDescription()}</p>
-                    </div>
+                  <div style={{ width: "100%", display: "flex", flexDirection:"column" }}>
+                    <h1>{item.getTitle()}</h1>
+                    <p style={{display: '-webkit-box', WebkitBoxOrient: 'vertical', overflow: 'hidden', textOverflow: 'ellipsis', WebkitLineClamp: 6, maxWidth: '100%', whiteSpace: 'break-spaces'}}>{item.getDescription()}</p>
+                  </div>
                 </div>
-                )}    
-              <div className="text-right flex gap-4">
-                <NavigatorSpacer />
-                {item.getId() ? (
-                  <Button
-                    color="gray"
-                    fullwidth={false}
-                    onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}
-                  >
-                    +Información
-                  </Button>
-                ) : null}
-                <Button
-                  color="secondary"
-                  fullwidth={false}
-                  onClick={() => seeProcedure(item.getId()!)}
-                >
-                  Ver
-                </Button>
+              )}    
+
+                <>  
+                  {isMobile ? 
+                    (
+                      <div style={{ display: "flex", flexDirection:"row",width: "100%", justifyContent: "space-between", boxSizing: "border-box" }}>
+                        {item.getId() ? (
+                          <Button color="gray" style={{ width: "auto" }} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?" + item.getId()?.toString())}>
+                            +Información
+                          </Button>
+                        ) : null}
+                        <Button color="secondary" fullwidth={false} onClick={() => seeProcedure(item.getId()!)} >
+                          Ver
+                        </Button>
+                      </div>
+
+                    ):
+                    (
+                    <div className="text-right flex gap-4">
+                      <NavigatorSpacer/> 
+                      {item.getId() ? (<Button color="gray" fullwidth={false} onClick={() => abrirEnlaceExterno("https://portal.entrerios.gov.ar/pf/buscador/tramite?"+item.getId()?.toString())}>+Información </Button>) : null} 
+                      <Button color="secondary" fullwidth={false} onClick={() => seeProcedure(item.getId()!)} >
+                        Ver
+                      </Button>
+                    </div>
+                    )}
+                  </> 
+
+
               </div>
-            </div>
-          </LayoutSection>
-        ))
-      ) : (
-        <LayoutSectionCentered>
-          <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <h1><FaClipboardList /></h1>
-            <h1>No ha iniciado ningún trámite</h1>
-            <h4>Le invitamos a explorar la sección de trámites, donde encontrará una lista completa de todos los procedimientos y gestiones disponibles</h4>
-            <Link to={Pages.DC_PROCEDURES}>
+            </LayoutSection>
+          ))
+        ) : (
+          <LayoutSectionCentered>
+            <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+              <h1><FaClipboardList /></h1>
+              <h1>No ha iniciado ningún trámite</h1>
+              <h4>Le invitamos a explorar la sección de trámites, donde encontrará una lista completa de todos los procedimientos y gestiones disponibles</h4>
+              <Link to={Pages.DC_PROCEDURES}>
                 <Button size={1}><b>SECCIÓN TRÁMITES</b></Button>
-            </Link>
-          </div>
-
-        </LayoutSectionCentered>
-
-      )) }
+              </Link>
+            </div>
+          </LayoutSectionCentered>
+        ))}
       </>
     );
   } 
-  
  }  

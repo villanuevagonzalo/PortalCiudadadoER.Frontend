@@ -232,8 +232,6 @@ const ContextValues = () => {
 
   const UserEmailChange = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserEmailChange, data, setFormState);
   
-    
-
   const PasswordReset = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordReset, data, setFormState);
   const PasswordUpdate = async (data: any, setFormState:Function) => await handleResponse(AxiosAuthAPI.UserPasswordSave, data, setFormState);
 
