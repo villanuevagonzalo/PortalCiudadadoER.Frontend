@@ -190,7 +190,19 @@ const ContextValues = () => {
   const UserNameChange = async (data:any, setFormState:Function) => {
 
     const response:AxiosResponse = await handleResponse(AxiosAuthAPI.UserNameChange, data, setFormState);
-    if(response.data) setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
+    if(response.data){
+      setUserData(prevState => ({...prevState, name: data.name, last_name: data.last_name}))
+      const currentUserData: IUserData | null = getLSData('UserData');
+      if (currentUserData) {
+        const newUserData: IUserData = {
+          ...currentUserData,
+          name: data.name,
+          last_name: data.last_name,
+        };
+    
+        setLSData('UserData', newUserData);
+      } 
+    } 
     return response;
   }
 

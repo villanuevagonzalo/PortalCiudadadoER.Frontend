@@ -149,7 +149,7 @@ export const DC_Configurations = () => {
       ><Form autoComplete="off">
         <FormikField name="Cellphone" disabled={FormState.loading}/>
         <h2 className="mt-4">Datos de Ubicación</h2>
-        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length===0} data={LocationsFullPath(LocationsValues)} setValue={setLocations} />
+        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length===0} data={LocationsFullPath(LocationsValues)} setValue={setLocations} disableAutocomplete={true} />
         <LayoutStackedPanel>
           <FormikField name="AddressStreet" disabled={FormState.loading} className="flex-3"/>
           <FormikField name="AddressNumber" disabled={FormState.loading}/>
