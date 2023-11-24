@@ -12,13 +12,11 @@ import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { CitizeFormCreatedProps, CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
-import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
-import { FormikButton } from "../../Components/Forms/FormikButton";
 import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 import { Spinner } from "../../Components/Elements/StyledComponents";
-import { ValidateForm, ValidateForm2 } from "../FormElements/Validators";
+import { ValidateForm2 } from "../FormElements/Validators";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -153,7 +151,7 @@ interface Arguments {
                     >
                         <Form autoComplete="off">
                         {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                            <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                            <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                               <Element instance={element} className="flex-2"/>
                             </div>
                           ))}
@@ -170,7 +168,6 @@ interface Arguments {
                     </Formik>
                 </LayoutSection> 
             </div>
-            
         </div>)
     )
 
