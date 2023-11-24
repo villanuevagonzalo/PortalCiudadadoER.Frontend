@@ -80,59 +80,38 @@ interface Arguments {
       fetchData();
     }, []); 
 
-   /* const checkValues = () => {
-        let hasRequiredEmptyElement = false;
-    
-        form.elements.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
-            const jsonString = JSON.stringify(element.properties);
-            const propertiesObj = JSON.parse(jsonString);
-            const value = element.getValue();
-    
-            if (propertiesObj.required === true && value === "") {
-                setElementToComplete(element.properties.label);
-                setShowAlertCompleteElements(true);
-                hasRequiredEmptyElement = true; // Mark that a required empty element was found
-            }
-        });
-    
-        if (!hasRequiredEmptyElement) {
-            enviar(); // Call enviar() only if there are no required empty elements
-        }
-    };*/
-
-
     const enviar = async () => {
-        const elements_common: FieldsType = [];
-        const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
-          if (element.type === "FILE") {
-            return true;
-          }
-          elements_common.push(element);
-          return false;
-        });
+      console.log("llama al campo enviar")
+      const elements_common: FieldsType = [];
+      const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+      if (element.type === "FILE") {
+        return true;
+      }
+      elements_common.push(element);
+      return false;
+    });
       
-        const data = {
-          procedure_data_id: Number(procedureData.getId()),
-          form_unit_code: form.getCode(),
-          form_data: JSON.stringify(elements_common),
-          ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
-        };
+    const data = {
+      procedure_data_id: Number(procedureData.getId()),
+      form_unit_code: form.getCode(),
+      form_data: JSON.stringify(elements_common),
+      ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
+    };
       
-        const response = await SaveForm(procedureData, data, setFormState);
-        if (response) {
-          setShowFormCorrectedUploaded(true);
-          
-        } else {
-          setShowFormUploadError(true);
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+    const response = await SaveForm(procedureData, data, setFormState);
+    if (response) {
+        setShowFormCorrectedUploaded(true);  
+      } else {
+        setShowFormUploadError(true);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     
     //Required to not render until it is form
     if (!form) {
-        return null;
+      return null;
     }
 
     return (
@@ -168,24 +147,24 @@ interface Arguments {
                         enableReinitialize={true}
                         initialValues={initialValues}
                         onSubmit={async(values:any)=>{
-                            enviar()
-                        }}
-                        validate={(values: any) => ValidateForm2(values, fields)}
-
+                          enviar()
+                      }}
+                      validate={(values: any) => ValidateForm2(values, fields)}
                     >
                         <Form autoComplete="off">
-                          {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                                <div key={index} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
-                                  <Element instance={element} className="flex-2" />
-                                </div>
-                              ))
-                            }
+                        {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                            <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                              <Element instance={element} className="flex-2"/>
+                            </div>
+                          ))}
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                               <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
-                              <Button disabled={false} color="secondary" type="submit">{isLoadingFormCitizen ? <Spinner /> :  <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>}</Button>
+                              <Button color="secondary" type="submit"> 
+                                {isLoadingFormCitizen ? <Spinner /> :  <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>}
+                              </Button>
                             </div>
                         </Form>
                     </Formik>
@@ -194,7 +173,6 @@ interface Arguments {
             
         </div>)
     )
-
 
   }
 
