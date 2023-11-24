@@ -172,17 +172,13 @@ const ContextValues = () => {
     let responseAll:AxiosResponse | ResponseError | null = null;
     
     try { responseAll = await AxiosProcedureAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    //let forms=responseAll!.data.data; 
-    //response_without_backslashes = json.loads(response.replace('\\', ''))
     
-   //let FormData = "[]";
    if(responseAll && responseAll.status!==204) 
    {
-    const FormData = JSON.parse(responseAll.data.data)
     
-     // const jsonStringWithoutEscape =removeHTMLTags(FormData);
-      try {
+    try {
         //const FormsObj = JSON.parse(jsonStringWithoutEscape);
+        const FormData = JSON.parse(responseAll.data.data)
         const FormsObj = FormData.data
         setTotalActorProceduresInDB(FormData.count)
         const totalActorProcedureGot = FormData.rows;

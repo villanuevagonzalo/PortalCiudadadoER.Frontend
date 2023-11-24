@@ -160,7 +160,11 @@ interface Arguments {
 
     return (
       (isLoading || isLoadingFormCitizen) ? 
-      (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)
+      (<>
+          <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
+            <Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText>
+          </LayoutSection>
+      </>)
       :
        ( <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}

@@ -149,6 +149,7 @@ export const FormFields:FieldProps = {
                         .required('El campo es obligatorio')
     },
 
+    /*
     Birthdate:{
         type: 'date',
         defaultvalue: null,
@@ -159,7 +160,31 @@ export const FormFields:FieldProps = {
                             'La fecha de nacimiento no puede tener mas de 120 años')
                         .max(new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()),
                             'La fecha de nacimiento debe tener por lo menos 1 año.')
-    },
+    },*/
+
+    Birthdate: {
+        type: 'date',
+        defaultvalue: null,
+        placeholder: 'Ingresa tu fecha de nacimiento',
+        validations: yup.date()
+          .required('El campo es obligatorio')
+          .test('validar-fecha', 'Ingresa un año válido', function (value) {
+            // Asegurar que el año tenga cuatro dígitos y no comience con ceros
+            const year = value.getFullYear();
+            console.log("the year is: " + year);
+      
+            const currentYear = new Date().getFullYear();
+            const twoDigitYearThreshold = 50; // Ajusta este umbral según tus necesidades
+      
+            if (year < currentYear - 10 || year > currentYear || (year < currentYear - 2000 && year < twoDigitYearThreshold)) {
+              throw this.createError({ message: 'Ingresa un año válido' });
+            }
+      
+            return true;
+          })
+          .min(new Date(new Date().getFullYear() - 120, new Date().getMonth(), new Date().getDate()), 'La fecha de nacimiento no puede tener más de 120 años')
+          .max(new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), 'La fecha de nacimiento debe tener por lo menos 1 año.'),
+      },
 
     Locality:{
         type: 'string',
