@@ -177,7 +177,6 @@ interface Arguments {
                             <Element instance={element} className="flex-2"/>
                           </div>
                         ))}
-                         <AttachmentSection  />
                         <LayoutStackedPanel>
                           <LayoutSpacer/>
                         </LayoutStackedPanel>
