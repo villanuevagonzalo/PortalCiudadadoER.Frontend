@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { AiOutlineSave } from "react-icons/ai";
 import { BiBullseye, BiSave } from "react-icons/bi";
 import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
-import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
+import { FormElementBasesMenu, SelectWrapperWithArrow } from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/Actor/ElementEditor";
 import { CreateFormPopUp, FormCreateCompleteFieldsPopUp, FormCreateErrorPopUp, FormCreatedPopUp, FormFieldsPropertiesPopUp, LoadingFormPopUp, UpdateFormPopUp } from "../../../../Components/Forms/PopUpCards";
@@ -298,15 +298,17 @@ const moveElementDown = (index:number) => {
             </div>
           </LayoutStackedPanel>
   
-          <div>
-          <label>Estado</label>
-            <select value={estadoFormulario} 
-              onInput={(e) => setEstadoFormulario((e.target as HTMLInputElement).value)} 
-              >
-              <option value="Borrador">Borrador</option>
-              <option value="Publicado">Publicado</option>
-            </select>
-          </div>
+          <div style ={{display:"flex", flexDirection:"column", marginTop:"10px"}}>
+            <h1><MdOutlineNewLabel /> Estado</h1>
+            <SelectWrapperWithArrow >
+            <select value={estadoFormulario} onInput={(e) => setEstadoFormulario((e.target as HTMLInputElement).value)}>
+                <option value="" disabled>Seleccione estado del formulario</option>
+                <option value="Borrador">Borrador</option>
+                <option value="Publicado">Publicado</option>
+              </select>
+            </SelectWrapperWithArrow>
+            </div>    
+
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
             <FormikButton  onClick={() => setVer(true)}>Ver<HiOutlineMagnifyingGlass /></FormikButton>
             <div style={{ display: 'flex', flexDirection:"row", justifyContent: 'right', width: '100%' }}>

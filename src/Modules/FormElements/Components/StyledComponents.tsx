@@ -340,6 +340,92 @@ export const SelectWrapper = styled.div<{ error?: boolean, disabled?: boolean, f
 
 `;
 
+export const SelectWrapperWithArrow = styled.div<{ error?: boolean, disabled?: boolean, focus?: boolean }>`
+
+  background-color: var(--maincolor);
+  position: relative;
+  border-radius: 0.5rem;
+  border:2px solid var(--${props => props.error?'error':'disabled'});
+  display: flex;
+  flex-direction:column;
+  opacity: ${props => props.disabled?'0.5':'1'};
+
+  & select{
+    background: transparent;
+    border-radius: 4px;
+    color: var(${props => props.error?'--error':'--maincolor_text'});
+    cursor: pointer;
+    font-size: 0.9rem;
+    outline:none;
+    padding: 0.6rem 0.75rem 0.5rem;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+
+    &:focus {
+      outline: none;
+    }
+    
+  }
+
+  & label.text{
+    background: var(--maincolor);
+    border-radius:0.25rem;
+    color:var(--${props => props.error?'error':'maincolor_text'});
+    font-size: ${props => props.focus?'0.75rem':'0.90rem'};
+    padding: 0 0.25rem;
+    left: 0.5rem;
+    pointer-events: none;
+    position: absolute;
+    top: ${props => props.focus?'-0.65rem':'0.55rem'};
+    transition 0.1s;
+    z-index: 2;
+  }
+
+  & .select-arrow {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  & .select-arrow::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 6px 4px 0 4px;
+    border-color: #666 transparent transparent transparent;
+  }
+
+  & .select-options {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0;
+    z-index: 999;
+    display: none;
+    min-width: 100%;
+    padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  & .select.open .select-options {
+    display: block;
+  }
+  
+  & .select-option {
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  & .select-option:hover {
+    background-color: #f2f2f2;
+  }
+
+`;
 
 export const CheckboxWrapper= styled.div<{ error?: boolean, disabled?: boolean, fullwidth?: boolean , focus?: boolean, checked?: boolean }>`
 

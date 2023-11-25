@@ -3,12 +3,12 @@ import { LayoutActorSection, LayoutSection, LayoutSpacer, LayoutStackedPanel } f
 import { FormikButton } from "../../../../Components/Forms/FormikButton";
 import { AiOutlineCheckCircle, AiOutlineDelete, AiOutlinePlus, AiOutlineSave } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm, ProcedureInstance, FormInstance, SelectWrapper } from "../../../../Modules/FormElements";
+import { ElementInstance, Element, ElementSchema, ElementSchemaTypes, ValidateForm, ProcedureInstance, FormInstance, SelectWrapper, SelectWrapperWithArrow } from "../../../../Modules/FormElements";
 import { Form, Formik } from "formik";
 import { FormikFieldDummy } from "../../../../Components/Forms/FormikFieldDummy";
 import { FormikField } from "../../../../Components/Forms/FormikField";
 import { FormikCheckbox } from "../../../../Components/Forms/FormikCheckbox";
-import { MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdVerifiedUser } from "react-icons/md";
+import { MdAnalytics, MdAssignment, MdDrafts, MdMore, MdOutlineCancel, MdOutlineDataset, MdVerifiedUser } from "react-icons/md";
 import { ProcedureContext } from "../../../../Contexts/ProcedureContext";
 import { FormContext } from "../../../../Contexts/FormContext";
 import { Button } from "../../../../Components/Forms/Button";
@@ -371,29 +371,29 @@ export const DA_Procedures_Associate = () => {
                   <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
                   <h1><MdVerifiedUser />Nivel de ciudadano</h1>
                   <h4>Nivel de ciudadano requerido para realizar este trámite</h4>
-                    <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
+                    <SelectWrapperWithArrow style={{margin:"10px 0px 0px 10px"}}>
                       <select value={userLevel} 
                         onInput={(e) => setUserLevel((e.target as HTMLInputElement).value)} 
                         >
                         <option value="level_3">Nivel 3</option>
                         <option value="level_2">Nivel 2</option>
                       </select>
-                      </SelectWrapper >
+                      </SelectWrapperWithArrow >
                     </div>
                   <p></p>
                   <div style={{display:"flex", flexDirection:"column", margin:"15px 0px 25px 0px"}}>
-                  <h1><MdMore /> Estado</h1>
-                    <SelectWrapper style={{margin:"10px 0px 0px 10px"}}>
+                  <h1><MdAnalytics /> Estado</h1>
+                    <SelectWrapperWithArrow style={{margin:"10px 0px 0px 10px"}}>
                       <select value={estadoProcedure} 
                         onInput={(e) => setEstadoProcedure((e.target as HTMLInputElement).value)} 
                         >
                           <option value="" disabled>
-                            Seleccione el estado
+                            Seleccione el estado del trámite
                           </option>
                         <option value="Borrador">Borrador</option>
                         <option value="Publicado">Publicado</option>
                       </select>
-                      </SelectWrapper >
+                      </SelectWrapperWithArrow >
                     </div>
                   <LayoutStackedPanel className="mt-3">
                     <LayoutSpacer/>

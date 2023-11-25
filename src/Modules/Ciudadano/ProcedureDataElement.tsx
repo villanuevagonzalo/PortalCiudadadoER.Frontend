@@ -211,9 +211,8 @@ interface FormGenericData {
         const attachmentsAux = procedureData?.getAttachments()
         const AttachmentWithoutExtensions: string[] = [];
                 // Iterar sobre los archivos y obtener las extensiones
-                attachmentsAux!.forEach(attachment => {
-            const fileExtension = attachment.split('.')[0];
-                
+        attachmentsAux!.forEach(attachment => {
+            const fileExtension = attachment.split('.')[0];   
             // Asegurarse de que haya una extensión antes de agregarla al array
             if (fileExtension) {
                 AttachmentWithoutExtensions.push(fileExtension);
@@ -259,8 +258,6 @@ interface FormGenericData {
             }
         });
         const attachments = AttachmentWithoutExtensions
-
-
 
         const multimediaId = procedureData?.getMultimediaId()
         let position = -1; 
