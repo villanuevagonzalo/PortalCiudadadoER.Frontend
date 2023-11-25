@@ -194,7 +194,6 @@ const ContextValues = () => {
       const status = response.data.success;
 
       const formularioEncontrado = ciudadanoFormularios.find(form => form.getFormCode() === code);
-
       if (status !==204 ){
 
         if (formularioEncontrado) {

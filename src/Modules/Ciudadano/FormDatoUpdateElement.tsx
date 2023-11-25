@@ -123,6 +123,11 @@ interface Arguments {
 
     },[citizenForm?.elements])
 
+    useEffect(()=>{
+
+      console.log("fields: "+JSON.stringify(fields))
+
+    },[fields])
 
     const enviar = async () => {
 

@@ -45,17 +45,6 @@ interface Arguments {
     
     useEffect(()=>{
       setFields(form.elements)
-      /*const elementosDelFormulario = form.elements;
-
-      // Usamos setFields para agregar cada elemento al estado
-      console.log(JSON.stringify(elementosDelFormulario))
-
-      elementosDelFormulario.forEach((elemento) => {
-        console.log(JSON.stringify(elemento))
-
-        const elementInstance:  ElementInstance<ElementSchemaTypes>  = new ElementInstance(elemento.properties.label,new ElementSchema(elemento.type,elemento.properties,["isRequired"]), elemento.value)
-         setFields((prevFields) => [...prevFields, elementInstance]);
-      });*/
     },[form])
 
     useEffect(() => {
@@ -78,10 +67,9 @@ interface Arguments {
       fetchData();
     }, []); 
 
-    const enviar = async () => {
-      console.log("llama al campo enviar")
-      const elements_common: FieldsType = [];
-      const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+  const enviar = async () => {
+    const elements_common: FieldsType = [];
+    const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
       if (element.type === "FILE") {
         return true;
       }
@@ -120,60 +108,56 @@ interface Arguments {
           </LayoutSection>
       </>)
       :
-      (  <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
-            {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
-            {showFormCorrectedUploaded && (<CitizeFormCreatedProps close={close} FormTitle={form.getTitle()} />)}
-            {showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
-            <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
-                <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
-                <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                    <h1>Título</h1>
-                    <p>{form.getTitle()}</p>
-                </LayoutSection>
-                <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                    <h1>Subtítulo</h1>
-                    <p>{form.getSubtitle()}</p>
-                </LayoutSection>
-                <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
-                    <h1>Descripción</h1>
-                    <p>{form.getDescription()} </p>
-                </LayoutSection>
-              
-            </LayoutSection>    
-            <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
-                <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
-                    <h1><MdOutlineDataset />Campos de formulario</h1>
-                    <Formik
-                        validateOnBlur={false}
-                        validateOnChange={false}
-                        enableReinitialize={true}
-                        initialValues={initialValues}
-                        onSubmit={async(values:any)=>{
-                          enviar()
-                      }}
-                      validate={(values: any) => ValidateForm2(values, fields)}
-                    >
-                        <Form autoComplete="off">
-                        {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                            <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
-                              <Element instance={element} className="flex-2"/>
-                            </div>
-                          ))}
-                            <LayoutStackedPanel>
-                                <LayoutSpacer/>
-                            </LayoutStackedPanel>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                              <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
-                              <Button color="secondary" type="submit"> 
-                                {isLoadingFormCitizen ? <Spinner /> :  <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>}
-                              </Button>
-                            </div>
-                        </Form>
-                    </Formik>
-                </LayoutSection> 
-            </div>
-        </div>)
+      (<div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
+        {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
+        {showFormCorrectedUploaded && (<CitizeFormCreatedProps close={close} FormTitle={form.getTitle()} />)}
+        {showFormUploadError && (<CitizenGenericAlertPopUp message={"Inconvenientes en la carga del formulario"} message2={"Disculpe las molestes. Intente más tarde."} close={setShowFormUploadError} />)}
+        <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
+          <h1><MdOutlineNewLabel />Datos Generales del Formulario</h1>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Título</h1>
+            <p>{form.getTitle()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Subtítulo</h1>
+            <p>{form.getSubtitle()}</p>
+          </LayoutSection>
+          <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
+            <h1>Descripción</h1>
+            <p>{form.getDescription()} </p>
+          </LayoutSection> 
+        </LayoutSection>    
+        <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>
+          <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
+            <h1><MdOutlineDataset />Campos de formulario</h1>
+            <Formik
+              validateOnBlur={false}
+              validateOnChange={false}
+              enableReinitialize={true}
+              initialValues={initialValues}
+              onSubmit={async(values:any)=>{ enviar() }}
+              validate={(values: any) => ValidateForm2(values, fields)}
+            >
+              <Form autoComplete="off">
+                {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                  <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                    <Element instance={element} className="flex-2"/>
+                  </div>
+                ))}
+                <LayoutStackedPanel>
+                  <LayoutSpacer/>
+                </LayoutStackedPanel>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
+                  <Button color="secondary" type="submit"> 
+                    {isLoadingFormCitizen ? <Spinner /> :  <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>}
+                  </Button>
+                </div>
+              </Form>
+            </Formik>
+          </LayoutSection> 
+        </div>
+      </div>)
     )
-
   }
 

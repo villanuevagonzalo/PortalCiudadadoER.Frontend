@@ -130,7 +130,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
     setSelectedValue(e.target.value);
     instance.setValue(e.target.value);
     setInstanceValue(e.target.value)
-
   };
 
   const handleSliderChange= (e: { target: { value: SetStateAction<string>; }; })=> {
@@ -140,6 +139,13 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
   }
 
+  const handleCheckBox= (value:boolean)=> {
+    
+    instance.setValue(value);
+    setSelectedValue(value);
+    setInstanceValue(value)
+
+}
   const renderType = <T extends ElementSchemaTypes>(instance: ElementInstance<T>) => {
     let EI : any;
 
@@ -155,7 +161,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
 
         switch(instance.type){
           case "RADIO":
-            
             return (<div>
               <input 
                 type={basetype.format === 'password' ? (true ? 'password' : 'text') : basetype.format || ""} 
@@ -214,7 +219,6 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
         </div></InputWrapper>);
 
       case "select": EI = instance as ElementInstance<"SELECT">;
-
       return (
         <SelectWrapper error={thiserror ? true : false} disabled={props.disabled} focus={focus || !empty}>
         <div>
@@ -238,17 +242,17 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
       );
       
       case "checkbox": EI = instance as ElementInstance<"CHECKBOX">;
+      console.log("valor del checkbox: "+EI.getValue())
         return (<CheckboxWrapper error={thiserror?true:false} focus={focus || !empty} checked={field.value}><div>
-          <input 
-            type="checkbox" 
-            {...field} 
-            {...props} 
-            hidden  
-            value={EI.value !== "" ? EI.value : false}
-            onChange={(e) => changeValue(e.target.checked)} 
-          />
-          <div className="CheckboxText" onClick={()=>setFieldValue(field.name,!field.value)}>
-            <div>{field.value?<AiOutlineCheckCircle />:<MdRadioButtonUnchecked />}</div>
+       
+          <div className="CheckboxText" onClick={()=>{setFieldValue(field.name,!field.value);handleCheckBox(!field.value)}}>
+          <div>
+            {EI.getValue() !== "" ? (
+              EI.getValue() ? <AiOutlineCheckCircle /> : <MdRadioButtonUnchecked />
+            ) : (
+              <MdRadioButtonUnchecked />
+            )}
+          </div>
             <label>{EI.properties.label}</label>
           </div>
           </div></CheckboxWrapper>);

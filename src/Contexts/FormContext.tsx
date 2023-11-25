@@ -150,8 +150,7 @@ const ContextValues = () => {
       const cleanedFormData = Form_data.trim().startsWith(",") ? Form_data.trim().substring(1) : Form_data;
 
       // Paso 1: Imprimir Form_data para verificar su contenido
-      console.log("Form_data:", Form_data);
-  
+ 
       try {
         // Paso 2: Intentar analizar JSON y manejar errores
         const FormsObj = JSON.parse(cleanedFormData);
@@ -280,6 +279,7 @@ const ContextValues = () => {
             formularioEncontrado.addElement(aux)
           });
           setIsLoading(false);
+
           return true
   
         } else {

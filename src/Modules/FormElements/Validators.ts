@@ -136,13 +136,14 @@ export const ValidateForm2 = (values: any, fields: ElementInstance<ElementSchema
 export const ValidateForm2 = (values: any, fields: ElementInstance<ElementSchemaTypes>[]) => {
 
   const errors: { [key: string]: string } = {};
-
+  console.log("este es el formulario: "+JSON.stringify(fields))
   fields.forEach((field) => {
 
     if (field.type !== "SECTION" && field.type !== "TITLE" && field.type !== "SPACER") {
       const key = field.name; 
       //  const value = values[key];
       const value = field.getValue();
+      console.log("veamos el elemento: "+key+" | y ahora veamos su valor: "+value)
   
       let newKey = key;
       if (key.startsWith(HelpToken)) {
