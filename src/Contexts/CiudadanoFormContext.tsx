@@ -227,22 +227,14 @@ const ContextValues = () => {
       const status = response.data.success;
       if (status){
         const responseData = JSON.parse(response.data.data);
-          /*let fields: ElementInstance<ElementSchemaTypes>[] = [];
-          let componentes= JSON.parse(responseData[0].ELEMENTS)
-          componentes.map((componente: any, index:number)=> {
-                    const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
-                    aux.update((componente.properties))
-                    fields.push(aux);
-          });
-          */
-
+      
           let parsedAttachments=[]
           if (responseData[0].ATTACHMENTS!=""){
               parsedAttachments = responseData[0].ATTACHMENTS.split(",");
           }
           let parsedMultimediaID=[]
           if (responseData[0].MULTIMEDIA_ID!=""){
-            parsedMultimediaID = responseData[0].ATTACHMENTS.split(",");
+            parsedMultimediaID = responseData[0].MULTIMEDIA_ID.split(",");
           }
   
           const newFormData = new FormDataClass(

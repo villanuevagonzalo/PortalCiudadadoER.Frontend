@@ -16,6 +16,7 @@ import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 import { Spinner } from "../../Components/Elements/StyledComponents";
 import { ValidateForm2 } from "../FormElements/Validators";
+import { fromPairs } from "lodash";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -42,119 +43,83 @@ interface Arguments {
     const [showFormCorrectedUploaded, setShowFormCorrectedUploaded] = useState(false)
     const [showFormUploadError, setShowFormUploadError] = useState(false)
 
-   
-   /* const checkValues = () => {
-        let hasRequiredEmptyElement = false;
-    
-        form.elements.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
-            const jsonString = JSON.stringify(element.properties);
-            const propertiesObj = JSON.parse(jsonString);
-            const value = element.getValue();
-    
-            if (propertiesObj.required === true && value === "") {
-                setElementToComplete(element.properties.label);
-                setShowAlertCompleteElements(true);
-                hasRequiredEmptyElement = true; // Mark that a required empty element was found
-            }
-        });
-    
-        if (!hasRequiredEmptyElement) {
-            enviar(); // Call enviar() only if there are no required empty elements
-        }
-    };*/
-
     useEffect(() => {
       const fetchData = async () => {
-
-      const elementoBuscado = ciudadanoFormularios.find((elemento) => {
-        return elemento.getFormCode() == form.getCode();
-      });
-      if (elementoBuscado){
-
-        if (form.description === undefined && form.subtitle === undefined) {
-          await GetFormByCode(form.getCode(), setFormState);
+        const elementoBuscado = ciudadanoFormularios.find((elemento) => {
+          return elemento.getFormCode() == form.getCode();
+        });
+        if (elementoBuscado){
+          if (form.description === undefined && form.subtitle === undefined) {
+            await GetFormByCode(form.getCode(), setFormState);
+          }
+          if (elementoBuscado.elements!=undefined && elementoBuscado.elements.length == 0){
+            await GetCitizenElementsByCode(form.getCode(), setFormState);
+          }
+        }else{
+          GetCitizenFormByCode(form.getCode(), setFormState)
         }
-        
-        if (elementoBuscado.elements!=undefined && elementoBuscado.elements.length == 0){
-          await GetCitizenElementsByCode(form.getCode(), setFormState);
-
-        }
-      }else{
-
-        GetCitizenFormByCode(form.getCode(), setFormState)
-
       }
-    };
-    fetchData()
-
-      }, []); 
+      fetchData()
+    }, []); 
 
 
     useEffect(()=>{
-
       const fetchData = async () => {
         const elementoBuscado = ciudadanoFormularios.find((elemento) => {
           return elemento.getFormCode() == form.getCode();
         });
         if (elementoBuscado){
           setCitizenForm(elementoBuscado)
-          // Comienza por ejecutar GetElementsByCode
          if (elementoBuscado.elements.length === 0) {
             await GetCitizenElementsByCode(form.getCode(), setFormState);
           } else {
             setFields(elementoBuscado.elements);
           }
         }
+        
       };
-      
       fetchData()
-    
+
     },[ciudadanoFormularios])
 
 
     useEffect(()=>{
-
       const elementoBuscado = ciudadanoFormularios.find((elemento) => {
         return elemento.getFormCode() == form.getCode();
       });
       if (elementoBuscado) {
         setFields(elementoBuscado.elements);
       }
-
     },[citizenForm?.elements])
 
-    useEffect(()=>{
-
-      console.log("fields: "+JSON.stringify(fields))
-
-    },[fields])
 
     const enviar = async () => {
-
-        const elements_common: FieldsType = [];
-        const hasArray = citizenForm!.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
-          if (element.type === "FILE") {
-            return true;
-          }
-          elements_common.push(element);
-          return false;
+      const elements_common: FieldsType = [];
+      const hasArray = citizenForm!.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+        if (element.type === "FILE") {
+          return true;
+        }
+        elements_common.push(element);
+        return false;
         });
       
-        const data = {
-          procedure_data_id: Number(procedureData.getId()),
-          form_unit_code: form.getCode(),
-          form_data: JSON.stringify(elements_common),
-          ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
-        };
-      
-        const response = await UpdateOneForm(procedureData, data, setFormState);
-        if (response) {
-          setShowFormCorrectedUploaded(true);
-        } else {
-          setShowFormUploadError(true);
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      const data = {
+        procedure_data_id: Number(procedureData.getId()),
+        form_unit_code: form.getCode(),
+        form_data: JSON.stringify(elements_common),
+        ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
       };
+      
+      const response = await UpdateOneForm(procedureData, data, setFormState);
+      if (response) {
+        setShowFormCorrectedUploaded(true);
+      } else {
+        setShowFormUploadError(true);
+      }
+     window.scrollTo({ top: 0, behavior: 'smooth' });
+   };
+
+ 
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     
@@ -206,28 +171,27 @@ interface Arguments {
                       }}
                       validate={(values: any) => ValidateForm2(values, fields)}
                     >
-                        <Form autoComplete="off">
+                      <Form autoComplete="off">
                         {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                            <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
-                              <Element instance={element} className="flex-2"/>
-                            </div>
-                          ))}
-                            <LayoutStackedPanel>
-                                <LayoutSpacer/>
-                            </LayoutStackedPanel>
+                          <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                            <Element instance={element} className="flex-2"/>
+                          </div>
+                        ))}
+                         <AttachmentSection  />
+                        <LayoutStackedPanel>
+                          <LayoutSpacer/>
+                        </LayoutStackedPanel>
 
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                <Button style={{width:"50px"}} onClick={ () => {close("home"); setFormToCheck(undefined)}} ><BiArrowBack/> VOLVER</Button>
-                                {procedureData.getStatus() === "INICIADO" &&(
-                                <Button disabled={false} color="secondary" type="submit">MODIFICAR<BiSend/></Button>
-
-                                )}
-                            </div>
-                        </Form>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                          <Button style={{width:"50px"}} onClick={ () => {close("home"); setFormToCheck(undefined)}} ><BiArrowBack/> VOLVER</Button>
+                          {procedureData.getStatus() === "INICIADO" &&(
+                            <Button disabled={false} color="secondary" type="submit">MODIFICAR<BiSend/></Button>
+                          )}
+                        </div>
+                      </Form>
                     </Formik>
                 </LayoutSection> 
             </div>
-            
         </div>)
     )
 

@@ -132,36 +132,32 @@ interface FormGenericData {
                 setProcedureInstanceAttachments(attachmentsAux);
             }
         }
-      }, [procedureInstance]);
+    }, [procedureInstance]);
     
 
-      useEffect(()=>{
+    useEffect(()=>{
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
         if (filteredProcedure){
             setProcedureData(filteredProcedure);
             //setProcedureDataAttachments(filteredProcedure.getAttachments()!)
             const attachments = filteredProcedure.getAttachments();
-                // Crear un array para almacenar las extensiones
-                const AttachmentWithoutExtensions: string[] = [];
-                // Iterar sobre los archivos y obtener las extensiones
-                attachments!.forEach(attachment => {
-                const fileExtension = attachment.split('.')[0];
-                
-                // Asegurarse de que haya una extensión antes de agregarla al array
+            // Crear un array para almacenar las extensiones
+            const AttachmentWithoutExtensions: string[] = [];
+            // Iterar sobre los archivos y obtener las extensiones
+            attachments!.forEach(attachment => {
+            const fileExtension = attachment.split('.')[0];
+            // Asegurarse de que haya una extensión antes de agregarla al array
                 if (fileExtension) {
                     AttachmentWithoutExtensions.push(fileExtension);
                 }
-                });
-
-                // Poner el array de extensiones en setProcedureDataAttachments
-                setProcedureDataAttachments(AttachmentWithoutExtensions);
+            });
+            // Poner el array de extensiones en setProcedureDataAttachments
+            setProcedureDataAttachments(AttachmentWithoutExtensions);
         }
-        
     },[ciudadanoProcedures])
 
 
     useEffect(()=>{
-
         if (formToComplete!=undefined && procedureData!=undefined){
             setRender("form")
         }
@@ -169,7 +165,6 @@ interface FormGenericData {
 
 
     useEffect(()=>{
-
         if (formToCheck!=undefined && formToCheck!=undefined){
             setRender("checkForm")
         }
@@ -231,45 +226,38 @@ interface FormGenericData {
           }
         if (position !== -1 && multimediaId) {
             const multimediaIdAtIndex = multimediaId[position];
-
             const response = await GetCiudadanoProcedureAttachment(multimediaIdAtIndex, attachmentName, setFormState);
-           
         } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setShowAttachmentMessage(true)
             setAlertMessage ("Error en la visualización del documento")
             setAlertMessage2 ("Intente más tarde.")
         }
-
     }
 
     const deleteAttachment = async (attachmentName:string) => {
-
         const attachmentsAux = procedureData?.getAttachments()
         const AttachmentWithoutExtensions: string[] = [];
-                // Iterar sobre los archivos y obtener las extensiones
-                attachmentsAux!.forEach(attachment => {
-            const fileExtension = attachment.split('.')[0];
-                
+        // Iterar sobre los archivos y obtener las extensiones
+        attachmentsAux!.forEach(attachment => {
+            const fileExtension = attachment.split('.')[0];    
             // Asegurarse de que haya una extensión antes de agregarla al array
             if (fileExtension) {
                 AttachmentWithoutExtensions.push(fileExtension);
             }
         });
         const attachments = AttachmentWithoutExtensions
-
         const multimediaId = procedureData?.getMultimediaId()
         let position = -1; 
 
         if (attachments && attachmentName) {
             for (let i = 0; i < attachments.length; i++) {
-              if (attachments[i] === attachmentName) {
-                position = i; // Guardamos la posición cuando encontramos el elemento
-                break; // Salimos del bucle una vez que lo encontramos
-              }
+                if (attachments[i] === attachmentName) {
+                    position = i; // Guardamos la posición cuando encontramos el elemento
+                    break; // Salimos del bucle una vez que lo encontramos
+                }
             }
-          }
-
+        }
         if (position !== -1 && multimediaId) {
             const multimediaIdAtIndex = multimediaId[position];
             const response = await DeleteCiudadanoProcedureAttachment( procedureData?.getId()!, multimediaIdAtIndex, setFormState);
@@ -287,9 +275,7 @@ interface FormGenericData {
             setAlertMessage ("Error")
             setAlertMessage2 ("Intente más tarde.")
             setShowAttachmentMessage(true)
-
         }
-
     }
 
     const FormSection: React.FC<{ forms: FormInstance<ElementSchemaTypes>[], procedureData: ProcedureData, completarForm: Function }> = ({ forms, procedureData, completarForm }) => {
