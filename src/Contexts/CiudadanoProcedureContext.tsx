@@ -273,7 +273,7 @@ const ContextValues = () => {
         const imageDataURL = reader.result as string;
         const filefile = response2.data.data.attachment_name;
         const filext = filefile.split(".");
-        console.log("this is the response: " + JSON.stringify(response));
+        console.log("this is the response: " + JSON.stringify(reader.result));
   
         const data: FileBlob = {
           name: filefile,
@@ -336,9 +336,7 @@ const ContextValues = () => {
       throw error;
     }
   };
-  
-
-  
+    
   const DeleteCiudadanoProcedureAttachment = async(procedure_data_id:number, multimedia_id:number, setFormState: Function) => {
     setIsLoading(true);
     const jsonObject = {

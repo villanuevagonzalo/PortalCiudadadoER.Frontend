@@ -77,11 +77,14 @@ export const Element: React.FC<Props> = ({ instance, ...props }) => {
      const fileName = EI.name;
       const fileNamee = event.target.files?.[0];
       const fileNamess = fileNamee ? fileNamee.name : "";
-      
+      const fileExtension = fileNamess.split('.').pop(); // Obtener la extensión del archivo
+
+    console.log("File Extension: " + fileExtension);
+
   
       // Agrega el nombre a cada archivo en el array
       const filesWithNames = fileArray.map(file => {
-        const newFile = new File([file], fileName, { type: file.type });
+        const newFile = new File([file], fileName+"."+fileExtension, { type: file.type });
         return newFile;
       });
     
