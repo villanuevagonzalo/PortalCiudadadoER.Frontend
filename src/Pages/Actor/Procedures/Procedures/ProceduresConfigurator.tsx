@@ -35,7 +35,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Config = () => {
 
-  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, totalActorProceduresInDB, setProcedures, procedures , isLoadingProcedure, totalActorProceduresReaded, setTotalActorProceduresReaded} = useContext(ProcedureContext);
+  const { UpdateProcedures, DeleteOneProcedure, SaveProcedure, totalActorProceduresInDB, setProcedures, procedures , isLoadingProcedure, totalActorProceduresReaded, realoadActorProcedures} = useContext(ProcedureContext);
   const { UpdateForms, formularios} = useContext(FormContext);
 
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
@@ -149,7 +149,7 @@ export const DA_Procedures_Config = () => {
               </Formik></div>
             {/* Botones para crear o actualizar formularios */}
             <div style={{display:"flex", flexDirection:"row"}}>
-                <Button  color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateProcedures()} >Actualizar<RxUpdate/></Button>
+                <Button  color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>realoadActorProcedures()} >Actualizar<RxUpdate/></Button>
                 <Link to={Pages.DA_PROCEDURES_CONFIG_ASSOCIATE} style={{ textDecoration: 'none' }}>
                   <Button style={{ width: '150px', height: '40px' }}>Nuevo<AiOutlinePlus/></Button>
                 </Link>

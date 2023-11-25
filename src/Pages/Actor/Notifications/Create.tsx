@@ -198,7 +198,7 @@ export const DA_Notifications_Create = () =>{
             };
 
             const response = await CreateNotification(newNotificationData, setFormState);
-            console.log("this is the response: "+JSON.stringify(response.data.success))
+            
             if(response.data.success){
               realoadActorNotifications()
             }

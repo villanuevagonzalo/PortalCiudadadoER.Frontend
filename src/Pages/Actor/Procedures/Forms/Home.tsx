@@ -29,7 +29,7 @@ const FormRequiredFields = ["Tramites"];
 
 export const DA_Procedures_Forms_Home = () => {
 
-  const { SaveForm, GetFormByCode, GetElementsByCode, UpdateForms , setFormularios, formularios, totalFormUnitsInDB, isLoading, DeleteOneForm, totalFormUnitReaded, setTotalFormUnitReaded  } = useContext(FormContext);
+  const { SaveForm, GetFormByCode, GetElementsByCode, UpdateForms , setFormularios, formularios, totalFormUnitsInDB, isLoading, DeleteOneForm, totalFormUnitReaded, realoadActorForms  } = useContext(FormContext);
   
   const [FormState, setFormState] = useState<IFormState>(DefaultFormState);
   const [FieldValues, setFieldValues] = useState(formGetInitialValues(FormRequiredFields));
@@ -64,10 +64,10 @@ export const DA_Procedures_Forms_Home = () => {
 
   },[])
 
+
   const getMoreNews = () => {
     UpdateForms()
   }
-
 
   const handleDeleteForm = async (code:string)=> {
     const response = await DeleteOneForm(code,setFormState);
@@ -79,7 +79,6 @@ export const DA_Procedures_Forms_Home = () => {
 
   const handleCopyForm = async (code:string)=> {
     if (code!=""){
-
 
       const formData = GetFormByCode (formToCheck?.getCode()!, setFormState)
 
@@ -184,7 +183,7 @@ export const DA_Procedures_Forms_Home = () => {
               </Formik></div>
             {/* Botones para crear o actualizar formularios */}
             <div style={{display:"flex", flexDirection:"row"}}>
-              <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>UpdateForms()} >
+              <Button disabled={FormState.loading} color="secondary" style={{ width: '150px', height: '40px', marginRight: '10px' }} onClick= {() =>realoadActorForms()} >
                 {FormState.loading ? <Spinner /> : "Actualizar"}<RxUpdate/>
               </Button>
               <Link to={Pages.DA_PROCEDURES_FORMS_NEW} style={{ textDecoration: 'none' }}>

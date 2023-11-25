@@ -21,15 +21,15 @@ const ContextValues = () => {
   const [totalFormUnitsQueried, setTotalFormUnitsQueried] = useState <number> (0)
   const [totalFormUnitsInDB, setTotalFormUnitsInDB] = useState <number> (0) //total de fomularios en la base de datos
 
-  //const [gotAllFormUnits, setGotAllFormUnits] = useState <Boolean> (false) 
   const [totalFormUnitReaded, setTotalFormUnitReaded] = useState<boolean>(false)
 
   const [totalFormUnitsPublishedQueried, setTotalFormUnitsPublishedQueried] = useState <number> (0)
-  //const [gotAllFormUnitsPublished, setGotAllFormUnitsPublished] = useState <Boolean> (false) 
   const [totalFormUnitsPublishedInDB, setTotalFormUnitsPublishedInDB] = useState <number> (0) //total de fomularios publicados en la base de datos
 
   const [isUpdatingFormUnit, setUpdatingFormUnit] = useState<Boolean> (false)
   const [isUpdatingPublishedForms, setUpdatingPublishedForms] = useState<Boolean> (false)
+
+  const [realoadAll, setRealoadAll] = useState(false); 
 
   const { isLogged } = useContext(AuthContext);
   
@@ -55,6 +55,26 @@ const ContextValues = () => {
       UpdatePublishedForms();
     }
   }, [publishedFormularios && totalFormUnitsPublishedQueried]);
+
+
+
+  useEffect(() => {
+    if (formularios.length == 0 && totalFormUnitsQueried == 0 && realoadAll) {
+      UpdateForms();
+      setRealoadAll(false)
+
+    }
+  }, [formularios, totalFormUnitsQueried, realoadAll]);
+
+
+  const realoadActorForms = async() => {
+
+    setFormularios([])
+    setTotalFormUnitsQueried(0)
+    setTotalFormUnitsInDB(0)
+    setRealoadAll(true)
+  } 
+
 
   //create a form
   const SaveForm = async (newFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string, title:string) => {
@@ -124,7 +144,51 @@ const ContextValues = () => {
     };
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosFormAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    if(responseAll && responseAll.status!==204) 
+    if (responseAll && responseAll.status !== 204) {
+
+      const Form_data = responseAll.data.data;
+      const cleanedFormData = Form_data.trim().startsWith(",") ? Form_data.trim().substring(1) : Form_data;
+
+      // Paso 1: Imprimir Form_data para verificar su contenido
+      console.log("Form_data:", Form_data);
+  
+      try {
+        // Paso 2: Intentar analizar JSON y manejar errores
+        const FormsObj = JSON.parse(cleanedFormData);
+  
+        setTotalFormUnitsInDB(FormsObj.count);
+        const totalFormGot = FormsObj.rows;
+  
+        const formulariosAux: FormInstance<ElementSchemaTypes>[] = [];
+  
+        FormsObj.data.forEach((formInstance: any) => {
+          const Formulario = new FormInstance(
+            formInstance.CODE,
+            formInstance.TITLE,
+            formInstance.SUBTITLE,
+            formInstance.DESCRIPTION,
+            formInstance.KEYWORDS,
+            formInstance.STATUS,
+          );
+          formulariosAux.push(Formulario);
+        });
+  
+        if (FormsObj.length === 0) {
+          // setGotAllFormUnits(true)
+        } else {
+          setTotalFormUnitsQueried(totalFormUnitsQueried + totalFormGot + 1);
+          setFormularios((prevProcedures) => [...prevProcedures, ...formulariosAux]);
+        }
+      } catch (error) {
+        // Paso 3: Manejar el error si el JSON no es válido
+        console.error("Error parsing JSON:", error);
+      }
+    }
+  
+    setUpdatingFormUnit(false);
+    setIsLoading(false);
+  };
+   /* if(responseAll && responseAll.status!==204) 
     {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
@@ -153,7 +217,7 @@ const ContextValues = () => {
     }
     setUpdatingFormUnit(false)
     setIsLoading(false); 
-  }
+  }*/
 
   //get complete published forms
   const UpdatePublishedForms = async() => {
@@ -209,7 +273,9 @@ const ContextValues = () => {
         if (formularioEncontrado) {
           const componentesArray = JSON.parse(response.data.data.replace(/\\"/g, '"'));
           componentesArray.forEach((componente:any, index:number) => {
-            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
+            const aux= new ElementInstance(componente.properties.label,new ElementSchema(componente.type,componente.properties, componente.aditionalValidations), componente.value)
+
+//            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
             aux.update((componente.properties))
             formularioEncontrado.addElement(aux)
           });
@@ -273,6 +339,7 @@ const ContextValues = () => {
     //gotAllFormUnitsPublished,
     totalFormUnitsPublishedInDB,
     totalFormUnitReaded, setTotalFormUnitReaded,
+    realoadActorForms,
     setFormularios,
     SaveForm, 
     UpdateOneForm,

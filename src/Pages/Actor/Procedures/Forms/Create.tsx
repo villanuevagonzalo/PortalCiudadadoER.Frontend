@@ -1,5 +1,5 @@
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel } from "../../../../Components/Layout/StyledComponents";
-import { MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
+import { MdAnalytics, MdOutlineCancel, MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { FormElement, GetJSONData } from "../../../../Modules/FormElements/OLDTYPES";
 import { useContext, useEffect, useState } from "react";
 import { Button } from "../../../../Components/Forms/Button";
@@ -9,7 +9,7 @@ import { Form, Formik } from "formik";
 import { AiOutlineSave } from "react-icons/ai";
 import { BiBullseye, BiSave } from "react-icons/bi";
 import { ElementSchemaTypes, FormElementBases } from "../../../../Modules/FormElements/Types";
-import { FormElementBasesMenu } from "../../../../Modules/FormElements/Components/StyledComponents";
+import { FormElementBasesMenu, SelectWrapperWithArrow} from "../../../../Modules/FormElements/Components/StyledComponents";
 import { ValidateForm } from "../../../../Modules/FormElements/Validators";
 import { ElementEditor } from "../../../../Modules/Actor/ElementEditor";
 import { IFormState } from "../../../../Interfaces/Data";
@@ -51,7 +51,9 @@ export const DA_Procedures_Forms_Create = () => {
 
 
   const addItem = (type: any) => {
-    const newfield = new ElementInstance(fields.length.toString(), new ElementSchema(type, { label: 'Ingresá el Título' }, ["isRequired"]))
+    //const newfield = new ElementInstance(fields.length.toString(), new ElementSchema(type, { label: 'Ingresá el Título' }, ["isRequired"]))
+    const newfield = new ElementInstance(fields.length.toString(), new ElementSchema(type, { label: 'Ingresá el Título' }))
+
     setFields((prev: any) => [...prev, newfield])
   }
 
@@ -313,18 +315,17 @@ export const DA_Procedures_Forms_Create = () => {
               </div>
             </LayoutStackedPanel>
 
-            <div>
-              <label>Estado</label>
-              <select value={estadoFormulario}
-                onInput={(e) => setEstadoFormulario((e.target as HTMLInputElement).value)}
-              >
-
+            <div style ={{display:"flex", flexDirection:"column", marginTop:"10px"}}>
+            <h1><MdAnalytics /> Estado</h1>
+            <SelectWrapperWithArrow >
+              <select value={estadoFormulario} onInput={(e) => setEstadoFormulario((e.target as HTMLInputElement).value)} >
+                <option value="" disabled>Seleccione estado del formulario</option>
                 <option value="Borrador">Borrador</option>
                 <option value="Publicado">Publicado</option>
               </select>
+            </SelectWrapperWithArrow>
             </div>
           
-
             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                 <FormikButton  onClick={() => setVer(true)}>Ver<HiOutlineMagnifyingGlass /></FormikButton>
               <div style={{ display: 'flex', justifyContent: 'right', width: '100%' }}>

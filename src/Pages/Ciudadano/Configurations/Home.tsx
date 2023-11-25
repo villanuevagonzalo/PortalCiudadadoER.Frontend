@@ -61,11 +61,11 @@ export const DC_Configurations = () => {
       console.log(e)
     })
 
-    if(userContact){
-      let ConvertedBirthdate = moment(userContact.BIRTHDAY).format("YYYY-MM-DD")
+    if (userContact) {
+      let ConvertedBirthdate = userContact.BIRTHDAY ? moment(userContact.BIRTHDAY).format("YYYY-MM-DD") : '';
       setFieldValues({
         "Cellphone": userContact.CELLPHONE_NUMBER,
-        "Birthdate": ConvertedBirthdate==='Invalid date'?'':ConvertedBirthdate,
+        "Birthdate": ConvertedBirthdate || null,
         "Locality": "",
         "AddressStreet": userContact.ADDRESS_STREET,
         "AddressNumber": userContact.ADDRESS_NUMBER,
@@ -123,7 +123,14 @@ export const DC_Configurations = () => {
         validateOnChange={false}
         validateOnBlur={false}
         validationSchema={formGetValidations(FormRequiredFields).concat(yup.object({
-          'Locality': yup.string().oneOf(LocationsFullPath(LocationsValues), "Debes seleccionar una localidad valida.")
+          'Locality': yup.string()
+            .test('is-valid', 'Debes seleccionar una localidad valida.', (value) => {
+              if (value) {
+                return LocationsFullPath(LocationsValues).includes(value);
+              }
+              return true;
+            })
+            .test('is-empty', 'El campo es obligatorio', (value) => !!value),
         }))}
         onSubmit={async (values: any) => {
           const LocationData = GetLocationByPath(LocationsValues, values.Locality);
@@ -132,7 +139,7 @@ export const DC_Configurations = () => {
             birthday: moment(values.Birthdate).format('DD/MM/YYYY').toString(),
             cellphone_number: values.Cellphone,
             department_id: LocationData?.DEP_ID,
-            locality_id: LocationData?.ID,
+            locality_id: LocationData.ID,
             address_street: values.AddressStreet,
             address_number: values.AddressNumber,
             apartment: values.Apartment
@@ -142,7 +149,7 @@ export const DC_Configurations = () => {
       ><Form autoComplete="off">
         <FormikField name="Cellphone" disabled={FormState.loading}/>
         <h2 className="mt-4">Datos de Ubicación</h2>
-        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length===0} data={LocationsFullPath(LocationsValues)} setValue={setLocations} />
+        <FormikSearch name="Locality" disabled={FormState.loading || LocationsValues.length===0} data={LocationsFullPath(LocationsValues)} setValue={setLocations} disableAutocomplete={true} />
         <LayoutStackedPanel>
           <FormikField name="AddressStreet" disabled={FormState.loading} className="flex-3"/>
           <FormikField name="AddressNumber" disabled={FormState.loading}/>

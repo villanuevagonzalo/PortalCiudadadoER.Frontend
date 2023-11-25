@@ -57,6 +57,8 @@ const ContextValues = () => {
   const [isUpdatingPublishedProcedures, setUpdatingPublishedProcedures] = useState <Boolean> (false) 
   const [isUpdatingProceduresSearchByKeyWord, setUpdatingProceduresSearchByKeyWord] = useState <Boolean> (false) 
 
+  const [realoadAll, setRealoadAll] = useState(false); 
+
   const { isLogged } = useContext(AuthContext);
 
   useEffect(() => {
@@ -83,6 +85,22 @@ const ContextValues = () => {
     }
    
   }, [isLogged]);
+
+
+  useEffect(() => {
+    if (procedures.length == 0 && totalActorProceduresQueried == 0 && realoadAll) {
+      UpdateProcedures();
+      setRealoadAll(false)
+
+    }
+  }, [procedures, totalActorProceduresQueried, realoadAll]);
+
+  const realoadActorProcedures = async() => {
+    setProcedures([])
+    setTotalActorProceduresQueried(0)
+    setTotalActorProceduresInDB(0)
+    setRealoadAll(true)
+  } 
   
   const SaveProcedure = async (procedure: ProcedureInstance<ElementSchemaTypes>, setFormState: Function, title:string) => {
     const response: AxiosResponse = await handleResponse(AxiosProcedureAPI.Create, procedure.getJSON(), setFormState);
@@ -154,17 +172,13 @@ const ContextValues = () => {
     let responseAll:AxiosResponse | ResponseError | null = null;
     
     try { responseAll = await AxiosProcedureAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
-    //let forms=responseAll!.data.data; 
-    //response_without_backslashes = json.loads(response.replace('\\', ''))
     
-   //let FormData = "[]";
    if(responseAll && responseAll.status!==204) 
    {
-    const FormData = JSON.parse(responseAll.data.data)
     
-     // const jsonStringWithoutEscape =removeHTMLTags(FormData);
-      try {
+    try {
         //const FormsObj = JSON.parse(jsonStringWithoutEscape);
+        const FormData = JSON.parse(responseAll.data.data)
         const FormsObj = FormData.data
         setTotalActorProceduresInDB(FormData.count)
         const totalActorProcedureGot = FormData.rows;
@@ -397,6 +411,7 @@ const ContextValues = () => {
     totalActorProceduresInDB,
     totalProceduresSearchedByKeyWordInDB,
     proceduresSearcedhByKeyword,
+    realoadActorProcedures,
     ClearProcedureSearch,
     UpdateSearchProceduresByKeyword,
     setProcedures,

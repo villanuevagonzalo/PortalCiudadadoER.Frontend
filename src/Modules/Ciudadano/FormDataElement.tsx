@@ -1,6 +1,6 @@
 import { MdOutlineDataset, MdOutlineNewLabel } from "react-icons/md";
 import { LayoutSection, LayoutSpacer, LayoutStackedPanel, LayoutText } from "../../Components/Layout/StyledComponents";
-import { ElementInstance, FormInstance, ProcedureData } from "../FormElements/Class";
+import { ElementInstance, ElementSchema, FormInstance, ProcedureData } from "../FormElements/Class";
 import { ElementSchemaTypes } from "../FormElements/Types";
 import { Form, Formik } from "formik";
 import {Element} from '../FormElements/Components/Element';
@@ -12,13 +12,11 @@ import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { CitizeFormCreatedProps, CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
-import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
-import { FormikButton } from "../../Components/Forms/FormikButton";
 import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 import { CiudadanoProcedureContext } from "../../Contexts/CiudadanoProcedureContext";
 import { Spinner } from "../../Components/Elements/StyledComponents";
-import { ValidateForm } from "../FormElements/Validators";
+import { ValidateForm2 } from "../FormElements/Validators";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -47,6 +45,17 @@ interface Arguments {
     
     useEffect(()=>{
       setFields(form.elements)
+      /*const elementosDelFormulario = form.elements;
+
+      // Usamos setFields para agregar cada elemento al estado
+      console.log(JSON.stringify(elementosDelFormulario))
+
+      elementosDelFormulario.forEach((elemento) => {
+        console.log(JSON.stringify(elemento))
+
+        const elementInstance:  ElementInstance<ElementSchemaTypes>  = new ElementInstance(elemento.properties.label,new ElementSchema(elemento.type,elemento.properties,["isRequired"]), elemento.value)
+         setFields((prevFields) => [...prevFields, elementInstance]);
+      });*/
     },[form])
 
     useEffect(() => {
@@ -69,64 +78,47 @@ interface Arguments {
       fetchData();
     }, []); 
 
-    const checkValues = () => {
-        let hasRequiredEmptyElement = false;
-    
-        form.elements.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
-            const jsonString = JSON.stringify(element.properties);
-            const propertiesObj = JSON.parse(jsonString);
-            const value = element.getValue();
-    
-            if (propertiesObj.required === true && value === "") {
-                setElementToComplete(element.properties.label);
-                setShowAlertCompleteElements(true);
-                hasRequiredEmptyElement = true; // Mark that a required empty element was found
-            }
-        });
-    
-        if (!hasRequiredEmptyElement) {
-            enviar(); // Call enviar() only if there are no required empty elements
-        }
-    };
-
-
     const enviar = async () => {
-        const elements_common: FieldsType = [];
-        const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
-          if (element.type === "FILE") {
-            return true;
-          }
-          elements_common.push(element);
-          return false;
-        });
+      console.log("llama al campo enviar")
+      const elements_common: FieldsType = [];
+      const hasArray = form.elements.some((element: ElementInstance<ElementSchemaTypes>, index: number) => {
+      if (element.type === "FILE") {
+        return true;
+      }
+      elements_common.push(element);
+      return false;
+    });
       
-        const data = {
-          procedure_data_id: Number(procedureData.getId()),
-          form_unit_code: form.getCode(),
-          form_data: JSON.stringify(elements_common),
-          ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
-        };
+    const data = {
+      procedure_data_id: Number(procedureData.getId()),
+      form_unit_code: form.getCode(),
+      form_data: JSON.stringify(elements_common),
+      ...(hasArray && { attachments: fileArray }) // Agregar las attachments solo si hasArray es true
+    };
       
-        const response = await SaveForm(procedureData, data, setFormState);
-        if (response) {
-          setShowFormCorrectedUploaded(true);
-          
-        } else {
-          setShowFormUploadError(true);
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      };
+    const response = await SaveForm(procedureData, data, setFormState);
+    if (response) {
+        setShowFormCorrectedUploaded(true);  
+      } else {
+        setShowFormUploadError(true);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
 
     const initialValues = Object.entries(form.elements).reduce((acc, [key, obj]) => ({ ...acc, [key]: obj.value }), {});
     
     //Required to not render until it is form
     if (!form) {
-        return null;
+      return null;
     }
 
     return (
       (isLoading || isLoadingFormCitizen) ? 
-      (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)
+      (<>
+          <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
+            <Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText>
+          </LayoutSection>
+      </>)
       :
       (  <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
@@ -157,42 +149,31 @@ interface Arguments {
                         enableReinitialize={true}
                         initialValues={initialValues}
                         onSubmit={async(values:any)=>{
-                            console.log(values)
-                            enviar()
-                        }}
-                        validate={(values: any) => ValidateForm(values, mapFieldsToObj(fields))}
-
+                          enviar()
+                      }}
+                      validate={(values: any) => ValidateForm2(values, fields)}
                     >
                         <Form autoComplete="off">
-                          {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                                <div key={element.name} style={{ display: "flex", flexDirection: "column", width: "auto", margin: "10px 0px 15px 0px" }}>
-                                  <Element instance={element} className="flex-2" />
-                                </div>
-                              ))
-                            }
+                        {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
+                            <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                              <Element instance={element} className="flex-2"/>
+                            </div>
+                          ))}
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>
-{/*                            <FormikButton disabled={false} color="secondary" type="submit">{FormState.loading ? <Spinner /> : "Enviar Notificación"}</FormikButton>
-*/}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                              <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
+                              <Button color="secondary" type="submit"> 
+                                {isLoadingFormCitizen ? <Spinner /> :  <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>}
+                              </Button>
+                            </div>
                         </Form>
                     </Formik>
                 </LayoutSection> 
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button style={{width:"50px"}} onClick={ () => close("home")} ><BiArrowBack/> VOLVER</Button>
-                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >{isLoadingFormCitizen ? <Spinner/> : <div style={{display:"flex", flexDirection:"row"}} ><p style={{marginRight:"5px", alignItems:"center"}} >Cargar</p><BiSend/></div>} </Button>
-            </div>
         </div>)
     )
 
-
   }
 
-  function mapFieldsToObj(fields: ElementInstance<ElementSchemaTypes>[]) {
-    const obj: { [key: string]: ElementInstance<ElementSchemaTypes> } = {};
-    fields.forEach((field) => {
-      obj[field.name] = field;
-    });
-    return obj;
-  }

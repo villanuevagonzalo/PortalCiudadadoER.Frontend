@@ -12,11 +12,10 @@ import { CiudadanoFormContext } from "../../Contexts/CiudadanoFormContext";
 import { IFormState } from "../../Interfaces/Data";
 import { DefaultFormState } from "../../Data/DefaultValues";
 import { CitizeFormUploadedProps, CitizenGenericAlertPopUp } from "../../Components/Forms/CitizenPopUpCards";
-import { ButtonWrapper } from "../FormElements/Components/StyledComponents";
-import { FormikButton } from "../../Components/Forms/FormikButton";
 import { FilesContext } from "../../Contexts/FilesContext";
 import { FormContext } from "../../Contexts/FormContext";
 import { Spinner } from "../../Components/Elements/StyledComponents";
+import { ValidateForm2 } from "../FormElements/Validators";
 
 interface Arguments {
     procedureData:ProcedureData,
@@ -44,7 +43,7 @@ interface Arguments {
     const [showFormUploadError, setShowFormUploadError] = useState(false)
 
    
-    const checkValues = () => {
+   /* const checkValues = () => {
         let hasRequiredEmptyElement = false;
     
         form.elements.forEach((element: ElementInstance<ElementSchemaTypes>, index: number) => {
@@ -62,7 +61,7 @@ interface Arguments {
         if (!hasRequiredEmptyElement) {
             enviar(); // Call enviar() only if there are no required empty elements
         }
-    };
+    };*/
 
     useEffect(() => {
       const fetchData = async () => {
@@ -71,11 +70,17 @@ interface Arguments {
         return elemento.getFormCode() == form.getCode();
       });
       if (elementoBuscado){
+
+        if (form.description === undefined && form.subtitle === undefined) {
+          await GetFormByCode(form.getCode(), setFormState);
+        }
+        
         if (elementoBuscado.elements!=undefined && elementoBuscado.elements.length == 0){
           await GetCitizenElementsByCode(form.getCode(), setFormState);
 
         }
       }else{
+
         GetCitizenFormByCode(form.getCode(), setFormState)
 
       }
@@ -114,7 +119,6 @@ interface Arguments {
       });
       if (elementoBuscado) {
         setFields(elementoBuscado.elements);
-
       }
 
     },[citizenForm?.elements])
@@ -156,7 +160,11 @@ interface Arguments {
 
     return (
       (isLoading || isLoadingFormCitizen) ? 
-      (<><Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText></>)
+      (<>
+          <LayoutSection style={{margin:"5px 0px 15px 0px"}}>
+            <Spinner color='secondary' size="3rem" /><br /><LayoutText className='text-center'>Cargando Información.<br />Por favor aguarde.</LayoutText>
+          </LayoutSection>
+      </>)
       :
        ( <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto", padding:"15px"}}>
             {showAlertCompleteElements && (<CitizenFormCompleteAllFiles element={elementToComplete!} close={setShowAlertCompleteElements}  />)}
@@ -188,29 +196,33 @@ interface Arguments {
                         validateOnChange={false}
                         enableReinitialize={true}
                         initialValues={initialValues}
-                        onSubmit={(e:any)=>{
-                            console.log(e)
-                        }}
+                        onSubmit={async(values:any)=>{
+                          enviar()
+                      }}
+                      validate={(values: any) => ValidateForm2(values, fields)}
                     >
                         <Form autoComplete="off">
                         {fields.map((element: ElementInstance<ElementSchemaTypes>, index: number) => (
-                            <div key={element.name}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
+                            <div key={index}  style={{display:"flex", flexDirection:"column", width:"auto", margin:"10px 0px 15px 0px"}}>
                               <Element instance={element} className="flex-2"/>
                             </div>
                           ))}
                             <LayoutStackedPanel>
                                 <LayoutSpacer/>
                             </LayoutStackedPanel>
+
+                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                <Button style={{width:"50px"}} onClick={ () => {close("home"); setFormToCheck(undefined)}} ><BiArrowBack/> VOLVER</Button>
+                                {procedureData.getStatus() === "INICIADO" &&(
+                                <Button disabled={false} color="secondary" type="submit">MODIFICAR<BiSend/></Button>
+
+                                )}
+                            </div>
                         </Form>
                     </Formik>
                 </LayoutSection> 
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button style={{width:"50px"}} onClick={ () => {close("home"); setFormToCheck(undefined)}} ><BiArrowBack/> VOLVER</Button>
-                {procedureData.getStatus() === "INICIADO" &&(
-                <Button style={{width:"50px"}} color={"secondary"} onClick={ () => checkValues()} >MODIFICAR<BiSend/> </Button>
-                )}
-            </div>
+            
         </div>)
     )
 

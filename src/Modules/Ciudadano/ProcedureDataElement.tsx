@@ -88,10 +88,23 @@ interface FormGenericData {
             UpdateCiudadanoProcedures()
         }else{
             const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() == procedureInstance.getId());
-
             if (filteredProcedure){
                 setProcedureData(filteredProcedure);
-                setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+                //setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+                const attachments = filteredProcedure.getAttachments();
+                // Crear un array para almacenar las extensiones
+                const AttachmentWithoutExtensions: string[] = [];
+                // Iterar sobre los archivos y obtener las extensiones
+                attachments!.forEach(attachment => {
+                const fileExtension = attachment.split('.')[0];
+                
+                // Asegurarse de que haya una extensión antes de agregarla al array
+                if (fileExtension) {
+                    AttachmentWithoutExtensions.push(fileExtension);
+                }
+                });
+                // Poner el array de extensiones en setProcedureDataAttachments
+                setProcedureDataAttachments(AttachmentWithoutExtensions);
             }   
         }
         
@@ -126,7 +139,22 @@ interface FormGenericData {
         const filteredProcedure = ciudadanoProcedures.find(procedure => procedure.getProcedureUnitId() === procedureInstance.getId());
         if (filteredProcedure){
             setProcedureData(filteredProcedure);
-            setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+            //setProcedureDataAttachments(filteredProcedure.getAttachments()!)
+            const attachments = filteredProcedure.getAttachments();
+                // Crear un array para almacenar las extensiones
+                const AttachmentWithoutExtensions: string[] = [];
+                // Iterar sobre los archivos y obtener las extensiones
+                attachments!.forEach(attachment => {
+                const fileExtension = attachment.split('.')[0];
+                
+                // Asegurarse de que haya una extensión antes de agregarla al array
+                if (fileExtension) {
+                    AttachmentWithoutExtensions.push(fileExtension);
+                }
+                });
+
+                // Poner el array de extensiones en setProcedureDataAttachments
+                setProcedureDataAttachments(AttachmentWithoutExtensions);
         }
         
     },[ciudadanoProcedures])
@@ -180,8 +208,19 @@ interface FormGenericData {
 
     const downloadAttachment = async (attachmentName:string) => {
 
-        const attachments = procedureData?.getAttachments()
+        const attachmentsAux = procedureData?.getAttachments()
+        const AttachmentWithoutExtensions: string[] = [];
+                // Iterar sobre los archivos y obtener las extensiones
+        attachmentsAux!.forEach(attachment => {
+            const fileExtension = attachment.split('.')[0];   
+            // Asegurarse de que haya una extensión antes de agregarla al array
+            if (fileExtension) {
+                AttachmentWithoutExtensions.push(fileExtension);
+            }
+        });
+        const attachments = AttachmentWithoutExtensions
         const multimediaId = procedureData?.getMultimediaId()
+
         let position = -1; 
         if (attachments && attachmentName) {
             for (let i = 0; i < attachments.length; i++) {
@@ -207,7 +246,19 @@ interface FormGenericData {
 
     const deleteAttachment = async (attachmentName:string) => {
 
-        const attachments = procedureData?.getAttachments()
+        const attachmentsAux = procedureData?.getAttachments()
+        const AttachmentWithoutExtensions: string[] = [];
+                // Iterar sobre los archivos y obtener las extensiones
+                attachmentsAux!.forEach(attachment => {
+            const fileExtension = attachment.split('.')[0];
+                
+            // Asegurarse de que haya una extensión antes de agregarla al array
+            if (fileExtension) {
+                AttachmentWithoutExtensions.push(fileExtension);
+            }
+        });
+        const attachments = AttachmentWithoutExtensions
+
         const multimediaId = procedureData?.getMultimediaId()
         let position = -1; 
 
@@ -276,6 +327,7 @@ interface FormGenericData {
     const AttachmentSection: React.FC<{ procedureInstance: ProcedureInstance<ElementSchemaTypes>; procedureData: ProcedureData; completarAdjunto: Function }> = ({ procedureInstance, procedureData, completarAdjunto }) => {
        
         let elementoName = ""
+        console.log("So lets see the procedureInstanceAttachments: "+ JSON.stringify(procedureInstanceAttachments))
         return ( 
             procedureInstance.getAttachments().length > 0 ? (
                 <LayoutSection style={{ margin: "5px 0px 15px 0px" }}>
@@ -455,7 +507,7 @@ interface FormGenericData {
                     </LayoutSection>
                     <LayoutSection style={{margin:"0px 0px 10px 0px", paddingTop:"10px", paddingBottom:"10px"}}>
                         <h1>Precio</h1>
-                        <p>{procedureInstance.getPrice()}</p>
+                        <p>{procedureInstance.getPrice()?.replace(/<[^>]*>/g, '')}</p>
                     </LayoutSection>
                  </LayoutSection>    
                 <div style={{display:"flex", flexDirection:"column", width:"100%", height:"auto"}}>

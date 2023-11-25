@@ -13,9 +13,8 @@ export const ValidationsMessages: {[key: string]: string} = {
 export const validationFunctions:any = {
 
   ERROR: (value: any): string => "Validation function not found",
-
   isRequired: (value: any): string | null => 
-    (value === null || value === undefined || value === '')
+    (value == null || value == undefined || value == '')
     ? 'El campo es obligatorio'
     : null,
 
@@ -97,8 +96,71 @@ const errors: { [key: string]: string } = {};
       if (error && required){  errors[key] = error }
     })
 
-    //console.log(key,": ",validations, !required && !!validationFunctions.isRequired(value) )
   }
 
   return errors;
 }
+/*
+export const ValidateForm2 = (values: any, fields: ElementInstance<ElementSchemaTypes>[]) => {
+  
+  const errors: { [key: string]: string } = {};
+
+  fields.forEach((field) => {
+    const key = field.name; // Assuming the name property is used as a unique identifier
+    //const value = values[key];
+    const value = field.getValue();
+    
+    // Adjust key if it starts with HelpToken
+    let newKey = key;
+    if (key.startsWith(HelpToken)) {
+      newKey = key.substring(HelpToken.length);
+    }
+
+    const validations = field.validators();
+    const isRequiredValidation = !!Object.keys(validations).includes("isRequired");
+    if (isRequiredValidation && (value === null || value === undefined || value === '')) {
+      errors[key] = ValidationsMessages.REQUIRED;
+    }
+
+    Object.values(validations).forEach((valid) => {
+      const error = valid(value);
+      if (error && isRequiredValidation) {
+        errors[key] = error;
+      }
+    });
+  });
+
+  return errors;
+};
+*/
+export const ValidateForm2 = (values: any, fields: ElementInstance<ElementSchemaTypes>[]) => {
+
+  const errors: { [key: string]: string } = {};
+
+  fields.forEach((field) => {
+
+    if (field.type !== "SECTION" && field.type !== "TITLE" && field.type !== "SPACER") {
+      const key = field.name; 
+      //  const value = values[key];
+      const value = field.getValue();
+  
+      let newKey = key;
+      if (key.startsWith(HelpToken)) {
+        newKey = key.substring(HelpToken.length);
+      }
+
+      const validations = field.validators();
+      const required =  !(!Object.keys(validations).includes("isRequired") && !!validationFunctions.isRequired(value));
+
+      Object.values(validations).forEach((valid) => {
+        const error = valid(value);
+        if (error && required) {
+          errors[key] = error;
+        }
+      });
+    
+    }
+    
+  });
+  return errors;
+};
