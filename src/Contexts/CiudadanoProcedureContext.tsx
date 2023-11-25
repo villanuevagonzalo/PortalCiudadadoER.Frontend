@@ -25,6 +25,8 @@ const ContextValues = () => {
 
   const [isUpdatingCiudadanoProcedures, setUpdatingCiudadanoProcedures]= useState <Boolean> (false) 
 
+  const [  loadingProcedureAttachment,  setLoadingProcedureAttachment  ]= useState <boolean> (false) 
+
   const { isLogged } = useContext(AuthContext);
 
   useEffect(() => {
@@ -262,6 +264,7 @@ const ContextValues = () => {
     setFormState: Function
   ) => {
     setIsLoading(true);
+    setLoadingProcedureAttachment(true)
     setFormState(true);
   
     try {
@@ -328,17 +331,22 @@ const ContextValues = () => {
       // Start loading the file
       reader.readAsDataURL(response.data.data);
       console.log(reader);
+      setLoadingProcedureAttachment(false)
       return reader;
     } catch (error) {
       setFormState(false);
       setIsLoading(false);
       console.error('Error al obtener los datos:', error);
+      setLoadingProcedureAttachment(false)
+
       throw error;
     }
   };
     
   const DeleteCiudadanoProcedureAttachment = async(procedure_data_id:number, multimedia_id:number, setFormState: Function) => {
     setIsLoading(true);
+    setLoadingProcedureAttachment(true)
+
     const jsonObject = {
       procedure_data_id: procedure_data_id,
       multimedia_id:multimedia_id
@@ -360,21 +368,24 @@ const ContextValues = () => {
           targetProcedure.setMultimediaIdArray(multimediaIdArray!)
   
           setIsLoading(false);
+          setLoadingProcedureAttachment(false)
           return true;
         }else{
           setIsLoading(false);
+          setLoadingProcedureAttachment(false)
           return false;
         }
         
       }else{
         setIsLoading(false);
+        setLoadingProcedureAttachment(false)
         return false;
       }
     }else{
       setIsLoading(false);
+      setLoadingProcedureAttachment(false)
       return false;
     }
-    
     
   }
 
@@ -383,6 +394,7 @@ const ContextValues = () => {
     ciudadanoProcedures,
     totalCitizenProceduresInDB,
     totalCitizenProceduresQueried,
+    loadingProcedureAttachment,
     setCiudadanoProcedures,
     CreateCiudadanoProcedure, 
     UpdateCiudadanoProcedureState,

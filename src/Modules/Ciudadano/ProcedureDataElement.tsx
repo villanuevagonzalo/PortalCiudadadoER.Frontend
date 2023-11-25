@@ -37,7 +37,7 @@ interface FormGenericData {
   export const CiudadanoProcedureData: React.FC<Arguments> = ({procedureInstance, backFunction}) => {
 
 
-    const { ciudadanoProcedures, UpdateCiudadanoProcedures, UpdateCiudadanoProcedureState, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment, isLoadingProcedureCitizen } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
+    const { ciudadanoProcedures, UpdateCiudadanoProcedures, UpdateCiudadanoProcedureState, sendProcedureAttachment, GetCiudadanoProcedureAttachment, DeleteCiudadanoProcedureAttachment, isLoadingProcedureCitizen, loadingProcedureAttachment } = useContext(CiudadanoProcedureContext); //This is the total citizen data procedures
     const {UpdateCitizenForms}= useContext(CiudadanoFormContext); //This is the total citizen data procedures
     const [procedureData, setProcedureData] = useState <ProcedureData > (); //Is this procedure citizen data
 
@@ -177,7 +177,6 @@ interface FormGenericData {
 
 
     useEffect(()=>{
-        console.log("it came from from data element")
         if (render=="home"){
             setFormToComplete(undefined)
         }
@@ -327,7 +326,6 @@ interface FormGenericData {
     const AttachmentSection: React.FC<{ procedureInstance: ProcedureInstance<ElementSchemaTypes>; procedureData: ProcedureData; completarAdjunto: Function }> = ({ procedureInstance, procedureData, completarAdjunto }) => {
        
         let elementoName = ""
-        console.log("So lets see the procedureInstanceAttachments: "+ JSON.stringify(procedureInstanceAttachments))
         return ( 
             procedureInstance.getAttachments().length > 0 ? (
                 <LayoutSection style={{ margin: "5px 0px 15px 0px" }}>
@@ -353,8 +351,8 @@ interface FormGenericData {
                                     <div style={{display:"flex", flexDirection:"column"}} >
                                         <h1><HiOutlineEnvelope />Archivo {element.name} cargado</h1>
                                         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", marginTop:"15px" }}>
-                                            <Button fullwidth={false}  onClick={() => downloadAttachment(element.name)}  ><HiArrowDownTray/> Descargar</Button>
-                                            <Button color="secondary" fullwidth={false}  onClick={() => deleteAttachment(element.name)}><BiTrash />Eliminar</Button>
+                                            <Button fullwidth={false}  onClick={() => downloadAttachment(element.name)}  ><HiArrowDownTray/>{loadingProcedureAttachment ? <Spinner /> : <><p>Descargar</p></>} </Button>
+                                            <Button color="secondary" fullwidth={false}  onClick={() => deleteAttachment(element.name)}><BiTrash />{loadingProcedureAttachment ? <Spinner /> : <><p>Eliminar</p></>}</Button>
                                         </div>
                                     </div>
                                 </LayoutSection>
