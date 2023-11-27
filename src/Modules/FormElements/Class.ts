@@ -388,7 +388,7 @@ export class FormDataClass   {
   private user_id?:number;
   elements: ElementInstance<ElementSchemaTypes>[];
   private attachments?: string [];
-  private multimedia_id?: string [];
+  private multimedia_id?: number [];
   private status:string;
   created_at?:string;
   private updated_at?:string; 
@@ -399,7 +399,7 @@ export class FormDataClass   {
     procedure_data_id: number,
     status: string,
     attachments?: string[],
-    multimedia_id?: string[],
+    multimedia_id?: number[],
     user_id?: number,
     created_at?: string,
     updated_at?: string,
@@ -452,7 +452,7 @@ export class FormDataClass   {
     return this.attachments;
   }
 
-  getMultimediaId(): string[] | undefined {
+  getMultimediaId(): number[] | undefined {
     return this.multimedia_id;
   }
 
@@ -494,8 +494,27 @@ export class FormDataClass   {
     this.attachments = attachments || [];
   }
 
-  setMultimediaId(multimedia_id?: string[]): void {
+  setMultimediaId(multimedia_id?: number[]): void {
     this.multimedia_id = multimedia_id || [];
+  }
+
+  setAttachmentsArray(attachments: string[]) {
+    // Verificar si 'attachments' es undefined o null y crear un nuevo arreglo si es necesario
+    if (!this.attachments) {
+      this.attachments = [];
+    }
+    // Agregar los nuevos 'attachments' al arreglo 'attachments'
+    this.attachments.push(...attachments);
+  }
+
+setMultimediaIdArray(multimediaId: number[]) {
+    // Verificar si 'attachments' es undefined o null y crear un nuevo arreglo si es necesario
+    if (!this.multimedia_id) {
+      this.multimedia_id = [];
+    }
+  
+    // Agregar los nuevos 'attachments' al arreglo 'attachments'
+    this.multimedia_id.push(...multimediaId);
   }
 
   setStatus(status: string): void {
@@ -611,7 +630,6 @@ export class ProcedureData {
     if (!this.attachments) {
       this.attachments = [];
     }
-  
     // Agregar los nuevos 'attachments' al arreglo 'attachments'
     this.attachments.push(...attachments);
   }

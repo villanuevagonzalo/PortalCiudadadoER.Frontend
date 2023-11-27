@@ -54,5 +54,26 @@ export class CiudadanoFormAPI {
     return this.baseService.post('/v0/dashboard/forms/delete', params)
   }
 
+  ////////////////////////////////////////////////////////////////////////////
+
+  GetAttachment = async (params: {
+    attachmentId: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/forms/attachments', { params, responseType: 'blob' })
+  }
+
+  GetAttachmentName = async (params: {
+    attachmentId: number;
+  }) => {
+    return this.baseService.get('/v0/dashboard/forms/attachments/name', { params })
+  }
+
+  DeleteAttachment = async (params: {
+    form_data_id:number,
+    multimedia_id:number
+  }) => {
+    return this.baseService.post('/v0/dashboard/forms/attachments/delete', params)
+  }
+
 
 }

@@ -6,6 +6,8 @@ import { ResponseError, handleResponse } from "../Config/Axios";
 import { FormAPI } from "../Services/ActorFormAPI";
 import { CiudadanoFormAPI } from "../Services/CiudadanoFormAPI";
 import { AuthContext } from "./AuthContext";
+import { FileBlob } from "../Interfaces/Data";
+import { getFileType } from "../Interfaces/FileTypes";
 
 
 export type FieldsType = ElementInstance<ElementSchemaTypes>[];
@@ -26,6 +28,7 @@ const ContextValues = () => {
   const [isLoadingFormCitizen, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string>("");
   
+  const [loadingFormAttachment, setLoadingFormAttachment] = useState<boolean>(false);
   const [isUpdatingCitizenForms, setUpdatingCitizenForms] = useState<boolean>(true);
 
   const { isLogged } = useContext(AuthContext);
@@ -258,19 +261,152 @@ const ContextValues = () => {
     }
   }
 
+
+  const GetCiudadanoFormAttachment = async (
+    attachmentId: number,
+    Filename: string,
+    setFormState: Function
+  ) => {
+    setIsLoading(true);
+    setLoadingFormAttachment(true)
+    setFormState(true);
+  
+    try {
+      const response = await AxiosCiudadanoFormAPI.GetAttachment({ attachmentId });
+      const response2 = await AxiosCiudadanoFormAPI.GetAttachmentName({ attachmentId });
+      const reader = new FileReader();
+  
+      reader.onloadend = () => {
+        const imageDataURL = reader.result as string;
+        const filefile = response2.data.data.attachment_name;
+        const filext = filefile.split(".");
+  
+        const data: FileBlob = {
+          name: filefile,
+          type: filext[1],
+          data: imageDataURL.replace('text/html', getFileType(filext[1]).fulltype),
+        };
+  
+        // Función para obtener el tipo MIME basado en la extensión del archivo
+        function getMimeType(extension: string): string {
+          switch (extension) {
+            case 'pdf':
+              return 'application/pdf';
+            case 'jpg':
+            case 'jpeg':
+              return 'image/jpeg';
+            case 'png':
+              return 'image/png';
+            // Agrega más tipos MIME según sea necesario
+            default:
+              return 'application/octet-stream'; // Tipo MIME genérico
+          }
+        }
+  
+        const a = document.createElement('a');
+        a.href = data.data;
+  
+        // Obtiene la extensión del archivo
+        const fileExtension = data.type;
+        a.type = getMimeType(fileExtension);
+  
+        a.download = data.name;
+  
+        // Programmatically trigger a click event on the anchor
+        const clickEvent = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: true,
+        });
+        a.dispatchEvent(clickEvent);
+  
+        setFormState(false);
+        setIsLoading(false);
+      };
+  
+      reader.onerror = (error) => {
+        setFormState(false);
+        setIsLoading(false);
+        console.error('Error al obtener los datos:', error);
+        throw error;
+      };
+  
+      // Start loading the file
+      reader.readAsDataURL(response.data.data);
+      setLoadingFormAttachment(false)
+      return reader;
+    } catch (error) {
+      setFormState(false);
+      setIsLoading(false);
+      console.error('Error al obtener los datos:', error);
+      setLoadingFormAttachment(false)
+
+      throw error;
+    }
+  };
+    
+  const DeleteCiudadanoFormAttachment = async(form_data_id:number, multimedia_id:number, setFormState: Function) => {
+    setIsLoading(true);
+    setLoadingFormAttachment(true)
+
+    const jsonObject = {
+      form_data_id: form_data_id,
+      multimedia_id:multimedia_id
+    };
+    const response: AxiosResponse = await handleResponse(AxiosCiudadanoFormAPI.DeleteAttachment, jsonObject, setFormState);
+    
+    if (response.data){
+      if (response.data.data == multimedia_id){
+        const targetProcedure = ciudadanoFormularios.find((element) => element.getFormDataId() === form_data_id);
+        if (targetProcedure){
+          const multimediaId = targetProcedure.getMultimediaId(); // Supongamos que esto es una cadena
+          const posicion = multimediaId!.indexOf(multimedia_id);
+          const multimediaIdArray = multimediaId!.filter((element) => element !== multimedia_id);
+          const attachmentArray= targetProcedure.getAttachments()
+          
+          attachmentArray!.splice(posicion, 1); // Elimina 1 elemento en la posición especificada
+  
+          targetProcedure.setAttachmentsArray(attachmentArray!)
+          targetProcedure.setMultimediaIdArray(multimediaIdArray!)
+  
+          setIsLoading(false);
+          setLoadingFormAttachment(false)
+          return true;
+        }else{
+          setIsLoading(false);
+          setLoadingFormAttachment(false)
+          return false;
+        }
+        
+      }else{
+        setIsLoading(false);
+        setLoadingFormAttachment(false)
+        return false;
+      }
+    }else{
+      setIsLoading(false);
+      setLoadingFormAttachment(false)
+      return false;
+    }
+    
+  }
+
   /////////////////////////////////////////////////////////
 
   return {
     isLoadingFormCitizen,
     ciudadanoFormularios,
     //publishedFormularios,
+    loadingFormAttachment,
     setCiudadanoFormularios,
     GetCitizenFormByCode,
     SaveForm, 
     UpdateOneForm,
     DeleteOneForm,
     UpdateCitizenForms,
-    GetCitizenElementsByCode
+    GetCitizenElementsByCode,
+    GetCiudadanoFormAttachment,
+    DeleteCiudadanoFormAttachment
   }
 }
 

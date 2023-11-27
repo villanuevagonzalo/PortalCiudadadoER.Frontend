@@ -43,7 +43,7 @@ interface FormGenericData {
 
     const {formularios, UpdateForms} = useContext(FormContext); // Is is the total created forms which it does not implies that the citizen has data here. 
     const [formsOfGenericProcedure, setFormsOfGenericProcedure] = useState <FormInstance<ElementSchemaTypes>[]> ([]); // Procedures forms that are not the forms that the citizen has completed but are the forms of the procedure instance
-    //const { ciudadanoFormularios } = useContext(CiudadanoFormContext); //this is the total citizen data forms
+
     const [formToComplete, setFormToComplete] = useState <FormInstance<ElementSchemaTypes>> (); //Form to complete by the citizen
     const [formToCheck, setFormToCheck] = useState <FormInstance<ElementSchemaTypes>> (); // Form completed by the citizen but it can be seeing and updated
 

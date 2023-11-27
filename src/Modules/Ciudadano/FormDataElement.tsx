@@ -50,22 +50,19 @@ interface Arguments {
     useEffect(() => {
     
       const fetchData = async () => {
-       
-          // Luego ejecuta GetFormByCode si es necesario
+        // Luego ejecuta GetFormByCode si es necesario
         if (form.description === undefined && form.subtitle === undefined) {
           await GetFormByCode(form.getCode(), setFormState);
         }
-
         // Comienza por ejecutar GetElementsByCode
         if (form.elements.length === 0) {
           await GetElementsByCode(form.getCode(), setFormState);
         } else {
           //setFields(form.elements);
         }
-    
       };
       fetchData();
-    }, []); 
+   }, []); 
 
   const enviar = async () => {
     const elements_common: FieldsType = [];

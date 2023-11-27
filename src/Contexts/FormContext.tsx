@@ -40,10 +40,8 @@ const ContextValues = () => {
       setIsLoading(true);
       setErrors("");
       setTotalFormUnitsQueried(0);
-      //setGotAllFormUnits(false);
       setTotalFormUnitReaded(false);
       setTotalFormUnitsPublishedQueried(0);
-      //setGotAllFormUnitsPublished(false);
       setUpdatingFormUnit(false);
       setUpdatingPublishedForms(false);
     }
@@ -62,19 +60,16 @@ const ContextValues = () => {
     if (formularios.length == 0 && totalFormUnitsQueried == 0 && realoadAll) {
       UpdateForms();
       setRealoadAll(false)
-
     }
   }, [formularios, totalFormUnitsQueried, realoadAll]);
 
 
   const realoadActorForms = async() => {
-
     setFormularios([])
     setTotalFormUnitsQueried(0)
     setTotalFormUnitsInDB(0)
     setRealoadAll(true)
   } 
-
 
   //create a form
   const SaveForm = async (newFormulario: FormInstance<ElementSchemaTypes>, setFormState: Function, code:string, title:string) => {
@@ -145,21 +140,13 @@ const ContextValues = () => {
     let responseAll:AxiosResponse | ResponseError | null = null;
     try { responseAll = await AxiosFormAPI.GetAll(jsonObject); } catch (error:any) { setErrors("Hubo un problema al cargar las notificaciones generales. Por favor, intente nuevamente mas tarde.") }
     if (responseAll && responseAll.status !== 204) {
-
       const Form_data = responseAll.data.data;
       const cleanedFormData = Form_data.trim().startsWith(",") ? Form_data.trim().substring(1) : Form_data;
-
-      // Paso 1: Imprimir Form_data para verificar su contenido
- 
       try {
-        // Paso 2: Intentar analizar JSON y manejar errores
         const FormsObj = JSON.parse(cleanedFormData);
-  
         setTotalFormUnitsInDB(FormsObj.count);
         const totalFormGot = FormsObj.rows;
-  
         const formulariosAux: FormInstance<ElementSchemaTypes>[] = [];
-  
         FormsObj.data.forEach((formInstance: any) => {
           const Formulario = new FormInstance(
             formInstance.CODE,
@@ -179,46 +166,13 @@ const ContextValues = () => {
           setFormularios((prevProcedures) => [...prevProcedures, ...formulariosAux]);
         }
       } catch (error) {
-        // Paso 3: Manejar el error si el JSON no es válido
         console.error("Error parsing JSON:", error);
       }
     }
-  
     setUpdatingFormUnit(false);
     setIsLoading(false);
   };
-   /* if(responseAll && responseAll.status!==204) 
-    {
-      const Form_data = responseAll.data.data;
-      const FormsObj = JSON.parse(Form_data);
-      //const totalSize = FormsObj.count
-      setTotalFormUnitsInDB(FormsObj.count)
-      const totalFormGot = FormsObj.rows;
-      const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
-      const mappedArray = FormsObj.data.map((formInstance: any) => {
-       // let fields: FieldsType = [];
-          const Formulario = new FormInstance(
-            formInstance.CODE,
-            formInstance.TITLE,
-            formInstance.SUBTITLE,
-            formInstance.DESCRIPTION,
-            formInstance.KEYWORDS,
-            formInstance.STATUS,
-        );
-        formulariosAux.push(Formulario);
-      });   
-      if (FormsObj.length===0){
-        //setGotAllFormUnits(true)
-      }else{
-        setTotalFormUnitsQueried(totalFormUnitsQueried+totalFormGot+1)
-        setFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
-      }
-    }
-    setUpdatingFormUnit(false)
-    setIsLoading(false); 
-  }*/
 
-  //get complete published forms
   const UpdatePublishedForms = async() => {
     if (isUpdatingPublishedForms) {
       return;
@@ -232,24 +186,21 @@ const ContextValues = () => {
     {
       const Form_data = responseAll.data.data;
       const FormsObj = JSON.parse(Form_data);
-     // const totalSize = FormsObj.count
       setTotalFormUnitsPublishedInDB(FormsObj.count)
       const totalFormPublishedGot = FormsObj.rows;
       const formulariosAux: SetStateAction<FormInstance<ElementSchemaTypes>[]> = [];
       const mappedArray = FormsObj.data.map((formInstance: any) => {
-        //let fields: FieldsType = [];
-          const Formulario = new FormInstance(
-            formInstance.CODE,
-            formInstance.TITLE,
-            formInstance.SUBTITLE,
-            formInstance.DESCRIPTION,
-            formInstance.KEYWORDS,
-            formInstance.STATUS,
+        const Formulario = new FormInstance(
+          formInstance.CODE,
+          formInstance.TITLE,
+          formInstance.SUBTITLE,
+          formInstance.DESCRIPTION,
+          formInstance.KEYWORDS,
+          formInstance.STATUS,
         );
         formulariosAux.push(Formulario);
       });   
       if (FormsObj.length===0){
-       // setGotAllFormUnitsPublished(true)
       }else{
         setTotalFormUnitsPublishedQueried(totalFormUnitsPublishedQueried+totalFormPublishedGot+1)
         setPublishedFormularios(prevProcedures => [...prevProcedures, ...formulariosAux]);
@@ -264,7 +215,6 @@ const ContextValues = () => {
     setIsLoading(true);
     const jsonObject = {code: code};
     const response: AxiosResponse = await handleResponse(AxiosFormAPI.GetElements, jsonObject, setFormState);
-
     if (response.data !== undefined && response.data !== null && response.data.success !== undefined) {
       const status = response.data.success;
       const formularioEncontrado = formularios.find(form => form.getCode() === code);
@@ -273,15 +223,11 @@ const ContextValues = () => {
           const componentesArray = JSON.parse(response.data.data.replace(/\\"/g, '"'));
           componentesArray.forEach((componente:any, index:number) => {
             const aux= new ElementInstance(componente.properties.label,new ElementSchema(componente.type,componente.properties, componente.aditionalValidations), componente.value)
-
-//            const aux= new ElementInstance((index+1).toString(), new ElementSchema(componente.type, { label: 'Ingresá el Título' }, ["isRequired"]));
             aux.update((componente.properties))
             formularioEncontrado.addElement(aux)
           });
           setIsLoading(false);
-
           return true
-  
         } else {
           setIsLoading(false);
           return false;
