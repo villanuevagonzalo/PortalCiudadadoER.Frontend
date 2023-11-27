@@ -3,7 +3,7 @@ import { BiChevronsLeft, BiMenu, BiNotification, BiUserCircle } from "react-icon
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { AuthContext } from "../../Contexts/AuthContext";
 import { NotificationsContext } from "../../Contexts/NotificationContext";
-import { LayoutAlert, LayoutBody, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
+import { LayoutAlert, LayoutBody, LayoutBody2, LayoutContainer, LayoutFooter, LayoutHeader, LayoutHeaderSpacer, LayoutOverlay, LayoutRow, LayoutSidebar, LayoutSidebarMenu, LayoutSpacer, LayoutStackedPanel, RoundedButton } from "./StyledComponents";
 import { Card, DivSubtitle, DivTitle2 } from "../Elements/StyledComponents";
 import { Button } from "../Forms/Button";
 import { LogoCiudadanoDigital } from "../Images/LogoCiudadanoDigital";
@@ -105,7 +105,7 @@ export const LayoutCiudadano = () => {
           </div>
         </div>
       </LayoutSidebar>
-      <LayoutBody mobile={mobile}>
+      <LayoutBody2 mobile={mobile}>
         {mobile?<LayoutRow className="mt-7">
           <Link to={Pages.DC_PROCEDURES} className="-mt-7 w-full"><Button color="secondary">VER TODOS LOS TRÁMITES ONLINE</Button></Link>
         </LayoutRow>:<></>}
@@ -125,7 +125,7 @@ export const LayoutCiudadano = () => {
         <LogoER width="150px" color='var(--gray_tint)' />
           <div>Secretaría de Modernización</div> 
         </LayoutFooter>
-      </LayoutBody>
+      </LayoutBody2>
     </LayoutContainer>
   </>);
 };

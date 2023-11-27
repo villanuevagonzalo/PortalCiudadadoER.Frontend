@@ -597,6 +597,16 @@ export const LayoutBody = styled.div<{ mobile?: boolean }>`
   flex: 1;
   gap:${props => props.mobile?'1rem':'2rem'};
   padding:${props => props.mobile?'1rem':'2rem'};
+  width:100%;
+`;
+
+export const LayoutBody2 = styled.div<{ mobile?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  background:white;
+  flex: 1;
+  gap:${props => props.mobile?'1rem':'2rem'};
+  padding:${props => props.mobile?'1rem':'2rem'};
   width:50%;
 `;
 
