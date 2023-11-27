@@ -45,8 +45,8 @@ export const DC_Configurations_NameChange = () => {
     </>:
       FormState.finish?<>
         <DivOutlined className="mt-0 flex-col" color="secondary">
-          <b className='mb-2'>¡Se han actualizado tus Datos Personales!</b>
-          <span className='text-sm'>Por favor aguarda <CountDown time={300} onFinish={()=>setFormState(prev=>({...prev, finish:false}))}/> minutos antes de solicitar un nuevo cambio de nombre.</span>
+          <b className='mb-2'>¡Datos modificados!</b>
+          {/* <span className='text-sm'>Por favor aguarda <CountDown time={300} onFinish={()=>setFormState(prev=>({...prev, finish:false}))}/> minutos antes de solicitar un nuevo cambio de nombre.</span> */}
         </DivOutlined>
       </>:<>
         <div className="-mt-2 text-sm mb-2">Ingresa tus datos de Nombre y Apellido corregidos.</div>
