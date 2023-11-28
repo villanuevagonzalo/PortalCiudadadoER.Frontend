@@ -221,7 +221,7 @@ export const DC_Procedures_Started = () => {
                       <div style={{ display: "flex", flexDirection:"column", justifyContent: "flex-start" }}>
                         <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent:"center"}}>        
                           <img
-                              src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
+                              src={`../../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
                               alt={item.getTitle()}
                               style={{ width: "64px", height: "64px" }}
                             />     
@@ -238,7 +238,7 @@ export const DC_Procedures_Started = () => {
                       <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start" }}>
                         <div style={{ width: "20%", display: "flex", alignItems: "center" }}>        
                           <img
-                              src={`../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
+                              src={`../../../../public/ProceduresIcons/icono_${obtenerIcono(item.getIcon()!)}.svg`}
                               alt={item.getTitle()}
                               style={{ width: "64px", height: "64px" }}
                             />     
