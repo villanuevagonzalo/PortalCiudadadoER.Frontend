@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import YupPassword from 'yup-password'
 import { CheckCUIL } from '../Utils/General';
+import moment from 'moment';
 YupPassword(yup) // extend yup
 
 // Campos de formularios
@@ -171,6 +172,7 @@ export const FormFields:FieldProps = {
           .min(new Date(new Date().getFullYear() - 100, new Date().getMonth(), new Date().getDate()), 'La fecha de nacimiento no puede tener más de 100 años')
           .max(new Date(new Date().getFullYear() - 1, new Date().getMonth(), new Date().getDate()), 'La fecha de nacimiento debe tener por lo menos 1 año.'),
       },
+
 
     Locality:{
         type: 'string',
