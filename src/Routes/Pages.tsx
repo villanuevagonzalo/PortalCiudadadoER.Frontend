@@ -31,6 +31,7 @@ import { DA_Procedures_Config } from "../Pages/Actor/Procedures/Procedures/Proce
 import { DA_Procedures_Associate } from "../Pages/Actor/Procedures/Procedures/AssociateElements";
 import { Auth_EmailModify } from "../Pages/Auth/EmailModify";
 import { DC_Configurations_HomePasswordReset } from "../Pages/Auth/PasswordResetHome";
+import { DA_Metrics } from "../Pages/Actor/Metrics/Home";
 
 const REACTENV = process.env
 
@@ -267,6 +268,11 @@ export const RawPages:RawPagesProps = {
         label: 'Validación Presencial',
         element: <DA_PRESENTIAL />
       },
+      METRICS:{
+        path: 'metricas',
+        label: 'Métricas',
+        element: <DA_Metrics />
+      }
     }
   }
 

@@ -39,8 +39,11 @@ const navigation:INavigation[] =
       { name: 'Configurador de Tramites', href: Pages.DA_PROCEDURES_CONFIG, path: "/ciudadano_digital/tramites/configuracion" },
       { name: 'Asociar elementos', href: Pages.DA_PROCEDURES_CONFIG_ASSOCIATE, path: "/ciudadano_digital/tramites/configuracion/asociar" },
     ] 
-  }
+  },
+ 
 ]
+
+const metricas = { name: 'Métricas Generales', href: Pages.DA_METRICS, icon: TbPencil, path: '/ciudadano_digital/metricas'}
 
 export const LayoutActor = () => { 
   
@@ -110,6 +113,15 @@ export const LayoutActor = () => {
                 </ul>
              </div>
            ))}
+           <div  aria-label={metricas.href + " "+window.location.pathname} 
+              >
+                <ul>
+                  <li className='title'>
+                    <span><metricas.icon/></span>
+                    {metricas.href?<NavLink to={metricas.href} children={metricas.name}/>:<p>{metricas.name}</p>}
+                  </li>
+                </ul>
+             </div>
            </LayoutActorSidebarMenu>
         </div>
       </LayoutActorSidebar>

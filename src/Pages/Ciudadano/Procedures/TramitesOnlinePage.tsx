@@ -412,7 +412,7 @@ export const PublishedProceduresTable: React.FC<PublishedProceduresTableInterfac
 
       </LayoutSection>
       )}
-      {(totalPublishedProceduresInDB > proceduresPublished.length ) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
+      { <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> } 
     </div>
   )
 }
