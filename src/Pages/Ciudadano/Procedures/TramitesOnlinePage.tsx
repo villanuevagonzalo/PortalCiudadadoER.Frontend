@@ -243,7 +243,7 @@ export const TramitesOnlinePage = () => {
     {showNetworkError &&  <NetworkAlertPopUp close={setShowNetworkError} />}
 
     <LayoutColumns className='gap-8 FlexSwitchMobile'>
-        <LayoutColumn style={{width:"60%"}} >
+        <LayoutColumn style={{width:"100%"}} >
             <LayoutTitle>
                 Trámites on line
             </LayoutTitle>
@@ -276,7 +276,7 @@ export const TramitesOnlinePage = () => {
           
         </LayoutColumn>
         {isMobile ? (
-            <LayoutColumn style={{ width: '40%' }}>
+            <LayoutColumn style={{ width: '100%' }}>
                 <Link to={Pages.DC_PROCEDURES_STARTED}>
                     <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button> 
                 </Link>
@@ -286,7 +286,7 @@ export const TramitesOnlinePage = () => {
                 <NuevosTramites />
             </LayoutColumn>
             ) : (
-            <LayoutColumn style={{ width: '40%' }}>
+            <LayoutColumn style={{ width: '65%' }}>
                 <Link to={Pages.DC_PROCEDURES_STARTED}>
                     <Button size={1.5}><b>MIRA TUS TRÁMITES</b></Button>
                 </Link>
@@ -412,7 +412,7 @@ export const PublishedProceduresTable: React.FC<PublishedProceduresTableInterfac
 
       </LayoutSection>
       )}
-      { <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> } 
+      {(totalPublishedProceduresInDB > proceduresPublished.length ) ? <Button style={{marginTop:"20px"}} onClick={() => getMoreNews()}>< HiArrowDown/>VER MÁS</Button> : null} 
     </div>
   )
 }
